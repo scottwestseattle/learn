@@ -4,10 +4,6 @@
 /node_modules
 /public/hot
 /public/storage
-/public/img/entries
-/public/img/receipts
-/public/img/sliders
-/public/img/tours
 /storage/*.key
 /.idea
 /.vagrant
@@ -23,4 +19,3 @@ sitemap-*.txt
 *.lock
 *.xsd
 public/error_log
-/docs/sliders
