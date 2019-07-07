@@ -18,6 +18,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/footer.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -38,6 +40,8 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
+						<li class="nav-item"><a class="nav-link" href="{{ route('register') }}">{{ __('Courses') }}</a></li>
+						
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
@@ -67,6 +71,8 @@
                                 </div>
                             </li>
                         @endguest
+						
+						<li class="nav-item"><a class="nav-link" href="{{ route('register') }}">{{ __('About') }}</a></li>
                     </ul>
                 </div>
             </div>

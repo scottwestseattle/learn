@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
+use Auth;
 
-class HomeController extends Controller
+class FrontPageController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -13,16 +15,16 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('index');
+        $this->middleware('guest');
     }
 	
     /**
-     * Show the application dashboard.
+     * Show the application front page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        return view('home');
-    }
+        return view('frontpage.index');
+    }	
 }
