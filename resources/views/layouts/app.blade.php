@@ -38,7 +38,17 @@
 		<nav style="" class="navbar navbar-expand-md navbar-dark fixed-top power-purple">
 		
 			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
-
+			
+			<!-- Language Selector Dropdown -->
+			<div style="float:left;" class="dropdown" >
+				<a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><img width="25" src="/img/theme1/language-{{App::getLocale()}}.png" /></a>
+				<ul class="dropdown-menu">
+					<li><a href="/language/en"><img src="/img/theme1/language-en.png" /></a></li>
+					<li><a href="/language/es"><img src="/img/theme1/language-es.png" /></a></li>
+					<li><a href="/language/zh"><img src="/img/theme1/language-zh.png" /></a></li>
+				</ul>
+			</div>
+			
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -64,8 +74,12 @@
 	<footer class="footer backin-black">
 		<div class="container marketing text-center" style="padding:50px;">
 			<img src="/img/logo.png" height="60" /> 			
-			<p style="font-size:2em;" class="featurette-heading">Learn English Online</p>
-			<p>&copy; 2019 Learn&nbsp;&middot;&nbsp;<a href="/privacy">Privacy Policy</a>&nbsp;&middot;&nbsp;<a href="/terms">Terms of Use</a>&nbsp;&middot;&nbsp;<a href="/">Back to top</a></p>
+			<!-- p style="font-size:2em;" class="featurette-heading">@LANG('content.Learn English Online')</p -->
+			<p style="font-size:2em;" class="featurette-heading">{{$domainName}}&nbsp;&middot;&nbsp;@LANG('content.Site Title')</p>
+			<p>&copy; 2019 Learn&nbsp;&middot;&nbsp;
+			<a href="/privacy">@LANG('ui.Privacy Policy')</a>&nbsp;&middot;&nbsp;
+			<a href="/terms">@LANG('ui.Terms of Use')</a>&nbsp;&middot;&nbsp;
+			<a href="/">@LANG('ui.Back to Top')</a></p>
 		</div>
 
 	</footer>

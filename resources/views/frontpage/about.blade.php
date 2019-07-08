@@ -17,6 +17,8 @@
 		For more information, please contact info@learnonline.com.			
 	</span>
 	
+	<p style="margin-top: 20px;">{{$domainName}} {{$version}}<p>
+	
 @if (false)
 	<div class="text-center" style="margin-top:50px;">
 		<img style="" src="/img/logo.png" title="@LANG('content.About Page Image')" />

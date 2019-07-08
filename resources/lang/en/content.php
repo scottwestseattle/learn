@@ -35,4 +35,5 @@ return [
 'Comments' => 'Comments',
 'Show All Comments' => 'Show All Comments',
 'Back to Comments' => 'Back to Comments',
+'Site Title' => 'Learn English Online',
 ];

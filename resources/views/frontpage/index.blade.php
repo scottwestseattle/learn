@@ -11,7 +11,7 @@
 		<div class="container text-center">
 		  <h1 class="">Learn English Online With Live Instructors</h1>
 		  <p>Learn and practice English from the comfort of your home.  One-on-one or small group classes for more personal attention.  We teach online so our costs are kept low and these savings are passed on to our students.</p>
-		  <p><a class="btn btn-primary btn-lg" href="/signup" role="button">Learn more &raquo;</a></p>
+		  <p><a class="btn btn-primary btn-lg" href="/signup" role="button">@LANG('ui.Learn More') &raquo;</a></p>
 		</div>
 	</div>
 
@@ -76,7 +76,7 @@
 				<img src="/img/globe.png" width="100%" style="max-width: 350px;" /> 			
 				<h2 class="featurette-heading">Mission Statement</h2>
 				<p class="lead">
-						Our company believes that speaking English is increasingly important in the modern world.  
+						We believe that speaking English is increasingly important in the modern world.  
 						It's better and easier to learn and master this skill early and nobody should be denied the opportunity to do so.</p>
 			</div>
 		</div>

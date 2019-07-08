@@ -105,4 +105,6 @@ return [
 'Terms of Use' => 'Terms of Use',
 'European Union Privacy Notice' => 'This web site uses cookies to personize content and to analyze traffice.',
 'More Information' => 'More Information',
+'Back to Top' => 'Back to Top',
+'Learn More' => 'Learn More',
 ];

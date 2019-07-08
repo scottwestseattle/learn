@@ -23,6 +23,8 @@ Route::get('/contact', 'FrontPageController@contact')->name('contact');
 Route::get('/privacy', 'FrontPageController@privacy')->name('privacy');
 Route::get('/terms', 'FrontPageController@terms')->name('terms');
 Route::get('/signup', 'FrontPageController@signup')->name('signup');
+Route::get('/language/{locale}', 'FrontPageController@language');
+Route::get('/phpinfo', 'FrontPageController@phpinfo');
 
 /* protected pages */
 Route::get('/admin', 'HomeController@admin')->name('admin');
