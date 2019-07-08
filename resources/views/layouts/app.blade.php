@@ -39,15 +39,17 @@
 		
 			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
 			
-			<!-- Language Selector Dropdown -->
-			<div style="float:left;" class="dropdown" >
-				<a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><img width="25" src="/img/theme1/language-{{App::getLocale()}}.png" /></a>
-				<ul class="dropdown-menu">
+			<!-- Language Selector Dropdown -->			
+			<div style="margin-left: 5px; margin-right:10px;" class="dropdown">
+				<a href="#" class="" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
+					<img width="25" src="/img/theme1/language-{{App::getLocale()}}.png" />
+				</a>
+				<ul style="float: left; background-color:transparent; border:0;"  class="dropdown-menu">
 					<li><a href="/language/en"><img src="/img/theme1/language-en.png" /></a></li>
 					<li><a href="/language/es"><img src="/img/theme1/language-es.png" /></a></li>
 					<li><a href="/language/zh"><img src="/img/theme1/language-zh.png" /></a></li>
 				</ul>
-			</div>
+			</div>			
 			
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -58,6 +60,10 @@
 					<li class="nav-item"><a class="nav-link" href="/">@LANG('ui.Home')<span class="sr-only">(current)</span></a></li>
 					<li class="nav-item"><a class="nav-link" href="/contact">@LANG('ui.Contact')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/about">@LANG('ui.About')</a></li>
+					@if (isset($domainName) && $domainName == 'localhost')
+						<li class="nav-item"><a class="nav-link" href="/translations">@LANG('ui.Translations')</a></li>
+						<li class="nav-item"><a class="nav-link" href="/eunoticereset">@LANG('ui.Privacy Notice')</a></li>
+					@endif
 				</ul>
 			</div>
 			
@@ -66,6 +72,20 @@
 	
 <main role="main">
 	<div class="page-layout">
+	
+		@if(session()->has('message.level'))
+			<div style="" class="alert alert-{{ session('message.level') }}"> 
+				{!! session('message.content') !!}
+			</div>
+		@endif
+
+		@if (isset($euNoticeAccepted) && !$euNoticeAccepted)
+			<div style="margin:0; padding: 5px 5px 5px 20px;" id="euNoticeAccepted" class="alert alert-success"> 
+				<span>@LANG('ui.European Union Privacy Notice')</span>
+				<button type="submit" onclick="event.preventDefault(); ajaxexec('/eunoticeaccept'); $('#euNoticeAccepted').hide();" class="btn btn-primary" style="padding:1px 4px; margin:5px;">@LANG('ui.Accept')</button>
+			</div>
+		@endif
+	
 		@yield('content')
 	</div>
 </main>
@@ -75,7 +95,7 @@
 		<div class="container marketing text-center" style="padding:50px;">
 			<img src="/img/logo.png" height="60" /> 			
 			<!-- p style="font-size:2em;" class="featurette-heading">@LANG('content.Learn English Online')</p -->
-			<p style="font-size:2em;" class="featurette-heading">{{$domainName}}&nbsp;&middot;&nbsp;@LANG('content.Site Title')</p>
+			<p style="font-size:2em;" class="featurette-heading">{{isset($domainName) ? $domainName : ''}}&nbsp;&middot;&nbsp;@LANG('content.Site Title')</p>
 			<p>&copy; 2019 Learn&nbsp;&middot;&nbsp;
 			<a href="/privacy">@LANG('ui.Privacy Policy')</a>&nbsp;&middot;&nbsp;
 			<a href="/terms">@LANG('ui.Terms of Use')</a>&nbsp;&middot;&nbsp;
@@ -88,5 +108,36 @@
 	<script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
 	<script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 
+	<script>
+function ajaxexec(url)
+{	
+	var xhttp = new XMLHttpRequest();
+	
+	xhttp.onreadystatechange = function() 
+	{
+		//alert(this.status);
+		
+		if (this.status == 200)
+		{
+			//alert(this.responseText);
+		}
+		else if (this.status == 404)
+		{
+			alert(this.responseText);
+		}
+					
+		if (this.readyState == 4 && this.status == 200) 
+		{	
+			//
+			// results
+			//
+			//alert(this.requestText);
+		}
+	};
+	
+	xhttp.open("GET", url, true);
+	xhttp.send();
+}	
+	</script>
 </body>
 </html>

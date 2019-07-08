@@ -9,8 +9,8 @@
 	<!-- Main jumbotron for a primary marketing message or call to action -->
 	<div class="fpheader">
 		<div class="container text-center">
-		  <h1 class="">Learn English Online With Live Instructors</h1>
-		  <p>Learn and practice English from the comfort of your home.  One-on-one or small group classes for more personal attention.  We teach online so our costs are kept low and these savings are passed on to our students.</p>
+		  <h1 class="">@LANG('content.Frontpage Header Title')</h1>
+		  <p>@LANG('content.Frontpage Header Body')</p>
 		  <p><a class="btn btn-primary btn-lg" href="/signup" role="button">@LANG('ui.Learn More') &raquo;</a></p>
 		</div>
 	</div>
@@ -20,12 +20,8 @@
 	<div class="container marketing">	
 		<div class="row featurette">
 			<div class="col-md-7">
-				<h2 class="featurette-heading">Live Teachers</h2>
-				<p class="lead">
-					For learning a language, there is no substitute for speaking with a live instructor.  
-					Our teachers help you master grammar and pronunciation with an emphasis on real world conversation and constant feedback. 
-					This is the only way to really become fluent and learn the intricacies of a new language.
-				</p>
+				<h2 class="featurette-heading">@LANG('content.Frontpage Section 1 Title')</h2>
+				<p class="lead">@LANG('content.Frontpage Section 1 Body')</p>
 			</div>
 			<div class="col-md-5">
 				<img src="/img/image1.png" width="100%" style="max-width: 350px;" />
@@ -38,8 +34,8 @@
 	<div class="container marketing">	
 		<div class="row featurette">
 			<div class="col-md-7 order-md-2">
-				<h2 class="featurette-heading">Fast Learning</h2>
-				<p class="lead">Our system is optmized for you to learn as fast as possible and to retain as much information as possible.</p>
+				<h2 class="featurette-heading">@LANG('content.Frontpage Section 2 Title')</h2>
+				<p class="lead">@LANG('content.Frontpage Section 2 Body')</p>
 			</div>
 			<div class="col-md-5 order-md-1">
 				<img src="/img/image2.png" width="100%" style="max-width: 350px;" />
@@ -52,12 +48,8 @@
 	<div class="container marketing">	
 		<div class="row featurette">
 		  <div class="col-md-7">
-			<h2 class="featurette-heading">Superior Curriculum</h2>
-			<p class="lead">	
-				We constantly update our course content to make sure that it provides the best possible learning experience for your time.  
-				Our lessons are creative, engaging and designed to maximize retention of the content.  
-				We want you to learn as fast as possible and benefit from our program.		
-			</p>
+			<h2 class="featurette-heading">@LANG('content.Frontpage Section 3 Title')</h2>
+			<p class="lead">@LANG('content.Frontpage Section 3 Body')</p>
 		  </div>
 		  <div class="col-md-5">
 				<img src="/img/image3.png" width="100%" style="max-width: 350px;" />
@@ -73,12 +65,10 @@
 	<div class="grassy-green">
 		<div class="container marketing text-center">
 			<div style="padding:50px;">	
-				<img src="/img/globe.png" width="100%" style="max-width: 350px;" /> 			
-				<h2 class="featurette-heading">Mission Statement</h2>
-				<p class="lead">
-						We believe that speaking English is increasingly important in the modern world.  
-						It's better and easier to learn and master this skill early and nobody should be denied the opportunity to do so.</p>
-			</div>
+				<img src="/img/globe.png" width="100%" style="max-width: 350px;" /> 	
+				<h2 class="featurette-heading">@LANG('content.Frontpage Subfooter Title')</h2>
+				<p class="lead">@LANG('content.Frontpage Subfooter Body')</p>
+			</div>						
 		</div>
 	</div>	
 

@@ -25,8 +25,23 @@ Route::get('/terms', 'FrontPageController@terms')->name('terms');
 Route::get('/signup', 'FrontPageController@signup')->name('signup');
 Route::get('/language/{locale}', 'FrontPageController@language');
 Route::get('/phpinfo', 'FrontPageController@phpinfo');
+Route::get('/eunoticeaccept/', 'FrontPageController@eunoticeaccept');
+Route::get('/eunoticereset/', 'FrontPageController@eunoticereset');
 
 /* protected pages */
 Route::get('/admin', 'HomeController@admin')->name('admin');
 
+// Translations
+Route::group(['prefix' => 'translations'], function () {
+	// index
+	Route::get('/', 'TranslationController@index');
+
+	// add
+	Route::get('/add','TranslationController@add');
+	Route::post('/create','TranslationController@create');
+
+	// edit
+	Route::get('/edit/{filename}','TranslationController@edit');
+	Route::post('/update/{filename}','TranslationController@update');
+});
 

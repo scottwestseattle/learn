@@ -14,6 +14,8 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('web');
+		
+		parent::__construct();
     }
 	
     /**
