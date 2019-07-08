@@ -27,4 +27,30 @@ class FrontPageController extends Controller
     {
         return view('frontpage.index');
     }	
+	
+    public function about()
+    {
+        return view('frontpage.about');
+    }
+
+    public function contact()
+    {
+        return view('frontpage.contact');
+    }
+
+    public function privacy()
+    {
+        return view('frontpage.privacy');
+    }
+
+    public function terms()
+    {
+        return view('frontpage.terms');
+    }
+
+    public function signup()
+    {
+        return view('frontpage.signup');
+    }
+	
 }

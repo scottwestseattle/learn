@@ -11,12 +11,20 @@
 |
 */
 
+/* original laravel page */
 Route::get('/welcome', function () {    return view('welcome');  });
-Route::get('/', function () {    return view('bootstrap');  });
 
 Auth::routes();
 
-Route::get('/frontpage', 'FrontPageController@index')->name('frontpage');
-Route::get('/home', 'HomeController@index')->name('home');
+/* public pages */
+Route::get('/', 'FrontPageController@index')->name('frontpage');
+Route::get('/about', 'FrontPageController@about')->name('about');
+Route::get('/contact', 'FrontPageController@contact')->name('contact');
+Route::get('/privacy', 'FrontPageController@privacy')->name('privacy');
+Route::get('/terms', 'FrontPageController@terms')->name('terms');
+Route::get('/signup', 'FrontPageController@signup')->name('signup');
+
+/* protected pages */
+Route::get('/admin', 'HomeController@admin')->name('admin');
 
 
