@@ -66,7 +66,7 @@
 		<div class="container marketing text-center">
 			<div style="padding:50px;">	
 				<img src="/img/globe.png" width="100%" style="max-width: 350px;" /> 	
-				<h2 class="featurette-heading">@LANG('content.Frontpage Subfooter Title')</h2>
+				<h2 class="section-heading">@LANG('content.Frontpage Subfooter Title')</h2>
 				<p class="lead">@LANG('content.Frontpage Subfooter Body')</p>
 			</div>						
 		</div>

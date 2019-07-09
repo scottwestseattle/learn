@@ -87,7 +87,34 @@ body {
 }
 
 /***************************************************
-Footer
+ Section
+***************************************************/
+
+/* default */
+.section-heading {
+	font-weight: 300;
+	line-height: 1;
+	letter-spacing: -.05rem;
+	margin-top: 2rem;
+}
+
+/* medium */
+@media (min-width: 40em) {
+	.section-heading {
+		font-size: 50px;
+		margin-top: 2rem;
+	}
+}
+
+/* large */
+@media (min-width: 62em) {
+	.section-heading {
+		margin-top: 3rem;
+	}
+}
+
+/***************************************************
+ Footer
 ***************************************************/
 
 .footer-heading {
@@ -114,7 +141,7 @@ Footer
 }
 
 /***************************************************
-Language Menu
+ Language Menu
 ***************************************************/
 
 .dropdown {
