@@ -1,0 +1,38 @@
+Changes
+- Use middleware for function auth
+- Add language routing
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Latest DB Changes
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+// create project
+cd /wamp3.1.9/www
+laravel new projectname
+
+// artisan folder
+cd /wamp3.1.9/www/[project]/
+
+// create auth
+php artisan make:auth
+
+// drop all tables and migrate all
+php artisan migrate:reset
+
+// add field to table
+php artisan make:migration add_settings_to_users --table=users
+
+// migrate / rollback
+php artisan migrate
+php artisan migrate:rollback
+
+// rollback the last migration only, step = how many migrations to rollback
+php artisan migrate:rollback --step=1
+
+// create Migration, Model and Controller (model name is singular!!)
+php artisan make:model Entry -m -c
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

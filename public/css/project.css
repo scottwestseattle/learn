@@ -2,6 +2,15 @@
 -------------------------------------------------- */
 /* Padding below the footer and lighter body text */
 
+/***********************************************************
+Primary Colors:
+
+Header Orange: #FF6900
+Header Blue: #4993FD
+Section and Button Green: #5CB85C
+
+************************************************************/
+
 body {
   padding-top: 3rem;
   padding-bottom: 0;
@@ -77,6 +86,32 @@ body {
 	padding-bottom:15px;
 }
 
+/***************************************************
+Footer
+***************************************************/
+
+.footer-heading {
+	font-weight: 300;
+	line-height: 1;
+	letter-spacing: -.05rem;
+	margin-top: 1rem;
+}
+
+
+/* medium */
+@media (min-width: 40em) {
+  .footer-heading {
+		font-size: 50px;
+		margin-top: 2rem;
+  }
+}
+
+/* large */
+@media (min-width: 62em) {
+  .footer-heading {
+    margin-top: 3rem;
+  }
+}
 
 /***************************************************
 Language Menu

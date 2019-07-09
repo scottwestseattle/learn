@@ -1,3 +1,6 @@
+<?php
+$domainName = isset($domainName) ? $domainName : '';
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -93,15 +96,14 @@
 	<!-- FOOTER -->
 	<footer class="footer backin-black">
 		<div class="container marketing text-center" style="padding:50px;">
-			<img src="/img/logo.png" height="60" /> 			
-			<!-- p style="font-size:2em;" class="featurette-heading">@LANG('content.Learn English Online')</p -->
-			<p style="font-size:2em;" class="featurette-heading">{{isset($domainName) ? $domainName : ''}}&nbsp;&middot;&nbsp;@LANG('content.Site Title')</p>
-			<p>&copy; 2019 Learn&nbsp;&middot;&nbsp;
+			<a href="/"><img src="/img/logo.png" height="60" /></a>
+			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
+			<p style="font-size:1.2em;" class="">@LANG('content.Site Title')</p>
+			<p>&copy; 2019 {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
 			<a href="/privacy">@LANG('ui.Privacy Policy')</a>&nbsp;&middot;&nbsp;
 			<a href="/terms">@LANG('ui.Terms of Use')</a>&nbsp;&middot;&nbsp;
-			<a href="/">@LANG('ui.Back to Top')</a></p>
+			<a href="#">@LANG('ui.Back to Top')</a></p>
 		</div>
-
 	</footer>
 	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

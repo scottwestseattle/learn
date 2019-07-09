@@ -23,7 +23,7 @@
 				<h2 class="featurette-heading">@LANG('content.Frontpage Section 1 Title')</h2>
 				<p class="lead">@LANG('content.Frontpage Section 1 Body')</p>
 			</div>
-			<div class="col-md-5">
+			<div class="col-md-5 text-center">
 				<img src="/img/image1.png" width="100%" style="max-width: 350px;" />
 			</div>
 		</div>
@@ -37,7 +37,7 @@
 				<h2 class="featurette-heading">@LANG('content.Frontpage Section 2 Title')</h2>
 				<p class="lead">@LANG('content.Frontpage Section 2 Body')</p>
 			</div>
-			<div class="col-md-5 order-md-1">
+			<div class="col-md-5 order-md-1 text-center">
 				<img src="/img/image2.png" width="100%" style="max-width: 350px;" />
 			</div>
 		</div>
@@ -51,7 +51,7 @@
 			<h2 class="featurette-heading">@LANG('content.Frontpage Section 3 Title')</h2>
 			<p class="lead">@LANG('content.Frontpage Section 3 Body')</p>
 		  </div>
-		  <div class="col-md-5">
+		  <div class="col-md-5 text-center">
 				<img src="/img/image3.png" width="100%" style="max-width: 350px;" />
 		  </div>
 		</div>

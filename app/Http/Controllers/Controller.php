@@ -12,6 +12,9 @@ use App;
 
 define('SITE_ID', intval(env('SITE_ID')));
 
+define('SHOW_NON_XS', 'hidden-xs');
+define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
+
 // event logger info
 define('LOG_TYPE_INFO', 1);
 define('LOG_TYPE_WARNING', 2);
