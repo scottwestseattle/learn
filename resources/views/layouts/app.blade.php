@@ -66,8 +66,10 @@ $domainName = isset($domainName) ? $domainName : '';
 					@if (isset($domainName) && $domainName == 'localhost')
 						<li class="nav-item"><a class="nav-link" href="/translations">@LANG('ui.Translations')</a></li>
 						<li class="nav-item"><a class="nav-link" href="/eunoticereset">@LANG('ui.Privacy Notice')</a></li>
+						<li class="nav-item"><a class="nav-link" href="/login">@LANG('ui.Login')</a></li>
+						<li class="nav-item"><a class="nav-link" href="/register">@LANG('ui.Register')</a></li>
 					@endif
-					<li class="nav-item"><a class="nav-link" href="/sample">@LANG('ui.Sample')</a></li>
+					<li class="nav-item"><a class="nav-link" href="/visitors">@LANG('ui.Visitors')</a></li>
 				</ul>
 			</div>
 			

@@ -46,3 +46,11 @@ Route::group(['prefix' => 'translations'], function () {
 	Route::post('/update/{filename}','TranslationController@update');
 });
 
+// Visitors
+Route::group(['prefix' => 'visitors'], function () {
+	
+	// index
+	Route::get('/', 'VisitorController@index');
+	Route::post('/', 'VisitorController@index');
+	
+});

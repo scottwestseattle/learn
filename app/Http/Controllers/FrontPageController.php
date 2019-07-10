@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
+use App\Event;
+
+define('LOG_MODEL', 'frontpage');
 
 class FrontPageController extends Controller
 {
@@ -28,38 +31,38 @@ class FrontPageController extends Controller
     public function index()
     {
 		return view('frontpage.index', $this->getViewData([
-		]));		
+		], LOG_MODEL, LOG_PAGE_INDEX));		
     }	
 	
     public function about()
     {
 		return view('frontpage.about', $this->getViewData([
 			'version' => 'Version: 0.0',
-		]));		
+		], LOG_MODEL, 'about'));
     }
 
     public function contact()
     {
 		return view('frontpage.contact', $this->getViewData([
-		]));		
+		], LOG_MODEL, 'contact'));
     }
 
     public function privacy()
     {
 		return view('frontpage.privacy', $this->getViewData([
-		]));		
+		], LOG_MODEL, 'privacy'));		
     }
 
     public function terms()
     {
 		return view('frontpage.terms', $this->getViewData([
-		]));		
+		], LOG_MODEL, 'terms'));		
     }
 
     public function signup()
     {
 		return view('frontpage.signup', $this->getViewData([
-		]));		
+		], LOG_MODEL, 'signup'));	
     }
 	
 	public function language($locale)
@@ -94,7 +97,7 @@ class FrontPageController extends Controller
     public function sample()
     {
 		return view('frontpage.sample', $this->getViewData([
-		]));		
+		], LOG_MODEL, 'sample'));		
     }	
 	
 }

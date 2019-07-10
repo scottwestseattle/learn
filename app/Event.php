@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Auth;
 use DB;
 
-class Event extends Model
+class Event extends Base
 {
     static public function get($limit = 0)
 	{
