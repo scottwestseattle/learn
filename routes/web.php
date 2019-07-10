@@ -27,6 +27,7 @@ Route::get('/language/{locale}', 'FrontPageController@language');
 Route::get('/phpinfo', 'FrontPageController@phpinfo');
 Route::get('/eunoticeaccept/', 'FrontPageController@eunoticeaccept');
 Route::get('/eunoticereset/', 'FrontPageController@eunoticereset');
+Route::get('/sample/', 'FrontPageController@sample');
 
 /* protected pages */
 Route::get('/admin', 'HomeController@admin')->name('admin');

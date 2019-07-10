@@ -67,6 +67,7 @@ $domainName = isset($domainName) ? $domainName : '';
 						<li class="nav-item"><a class="nav-link" href="/translations">@LANG('ui.Translations')</a></li>
 						<li class="nav-item"><a class="nav-link" href="/eunoticereset">@LANG('ui.Privacy Notice')</a></li>
 					@endif
+					<li class="nav-item"><a class="nav-link" href="/sample">@LANG('ui.Sample')</a></li>
 				</ul>
 			</div>
 			
@@ -100,9 +101,11 @@ $domainName = isset($domainName) ? $domainName : '';
 			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
 			<p style="font-size:1.2em;" class="">@LANG('content.Site Title')</p>
 			<p>&copy; 2019 {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
-			<a href="/privacy">@LANG('ui.Privacy Policy')</a>&nbsp;&middot;&nbsp;
-			<a href="/terms">@LANG('ui.Terms of Use')</a>&nbsp;&middot;&nbsp;
-			<a href="#">@LANG('ui.Back to Top')</a></p>
+			<span class="footer-links">
+				<a href="/privacy">@LANG('ui.Privacy Policy')</a>&bull;
+				<a href="/terms">@LANG('ui.Terms of Use')</a>&bull;
+				<a href="#">@LANG('ui.Back to Top')</a></p>
+			</span>
 		</div>
 	</footer>
 	

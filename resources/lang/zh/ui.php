@@ -42,7 +42,7 @@ return [
 'Show All Galleries' => '显示所有的画廊',
 'Show All Articles' => '显示所有文章',
 'Show All Blogs' => '显示所有博客',
-'Show All Tours' => '显示所有旅游',
+'Sample' => '示例课程',
 'CONTACT INFORMATION' => '联系信息',
 'Show Phone Number' => '电话号码',
 'Show Email Address' => '电子邮件地址',

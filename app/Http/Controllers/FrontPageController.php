@@ -90,4 +90,11 @@ class FrontPageController extends Controller
 		
 		return redirect()->back();		
     }	
+	
+    public function sample()
+    {
+		return view('frontpage.sample', $this->getViewData([
+		]));		
+    }	
+	
 }

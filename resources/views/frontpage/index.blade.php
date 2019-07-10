@@ -11,7 +11,7 @@
 		<div class="container text-center">
 		  <h1 class="">@LANG('content.Frontpage Header Title')</h1>
 		  <p>@LANG('content.Frontpage Header Body')</p>
-		  <p><a class="btn btn-primary btn-lg" href="/signup" role="button">@LANG('ui.Learn More') &raquo;</a></p>
+		  <p><a class="btn btn-primary btn-lg" href="/sample" role="button">@LANG('content.Start Learning') &raquo;</a></p>
 		</div>
 	</div>
 
@@ -52,7 +52,7 @@
 			<p class="lead">@LANG('content.Frontpage Section 3 Body')</p>
 		  </div>
 		  <div class="col-md-5 text-center">
-				<img src="/img/image3.png" width="100%" style="max-width: 350px;" />
+				<img src="/img/globe.png" width="100%" style="max-width: 350px;" />
 		  </div>
 		</div>
 	</div>
@@ -65,7 +65,7 @@
 	<div class="grassy-green">
 		<div class="container marketing text-center">
 			<div style="padding:50px;">	
-				<img src="/img/globe.png" width="100%" style="max-width: 350px;" /> 	
+				<img src="/img/image5.png" width="100%" style="max-width: 350px;" /> 	
 				<h2 class="section-heading">@LANG('content.Frontpage Subfooter Title')</h2>
 				<p class="lead">@LANG('content.Frontpage Subfooter Body')</p>
 			</div>						

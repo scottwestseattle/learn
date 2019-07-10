@@ -42,7 +42,7 @@ return [
 'Show All Galleries' => 'Mostrar Todas Las Galerías',
 'Show All Articles' => 'Mostrar Todos Los Articulos',
 'Show All Blogs' => 'Mostrar Todos Los Blogs',
-'Show All Tours' => 'Mostrar Todos Los Tours',
+'Sample' => 'Muestra',
 'CONTACT INFORMATION' => 'INFORMACIÓN DE CONTACTO',
 'Show Phone Number' => 'Número de Teléfono',
 'Show Email Address' => 'Correo Electrónico',

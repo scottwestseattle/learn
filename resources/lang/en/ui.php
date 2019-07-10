@@ -42,7 +42,7 @@ return [
 'Show All Galleries' => 'Show All Galleries',
 'Show All Articles' => 'Show All Articles',
 'Show All Blogs' => 'Show All Blogs',
-'Show All Tours' => 'Show All Tours',
+'Sample' => 'Sample',
 'CONTACT INFORMATION' => 'CONTACT INFORMATION',
 'Show Phone Number' => 'Phone Number',
 'Show Email Address' => 'Email Address',
