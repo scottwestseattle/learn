@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -36,4 +37,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+	protected function isAdmin()
+	{
+		return (Auth::check() && Auth::user()->user_type >= USER_SITE_ADMIN);
+	}
+
+	protected function isSuperAdmin()
+	{
+		return (Auth::check() && Auth::user()->user_type >= USER_SUPER_ADMIN);
+	}
 }

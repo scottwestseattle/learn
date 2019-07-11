@@ -43,7 +43,7 @@ return [
 'Show All Articles' => 'Show All Articles',
 'Show All Blogs' => 'Show All Blogs',
 'Sample' => 'Sample',
-'CONTACT INFORMATION' => 'CONTACT INFORMATION',
+'Logout' => 'Logout',
 'Show Phone Number' => 'Phone Number',
 'Show Email Address' => 'Email Address',
 'SITE MAP' => 'SITE MAP',

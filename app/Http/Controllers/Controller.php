@@ -13,6 +13,7 @@ use Auth;
 use App\Visitor;
 use App\Event;
 use App\Tools;
+use App\User;
 
 define('SITE_ID', intval(env('SITE_ID')));
 
@@ -91,16 +92,6 @@ class Controller extends BaseController
 		return (Auth::check() && Auth::id() == $user_id);
 	}
 
-	protected function isAdmin()
-	{
-		return (Auth::check() && Auth::user()->user_type >= USER_SITE_ADMIN);
-	}
-
-	protected function isSuperAdmin()
-	{
-		return (Auth::check() && Auth::user()->user_type >= USER_SUPER_ADMIN);
-	}
-
 	protected function getViewData($vdata = null, $model = null, $page = null)
 	{
 		//
@@ -131,14 +122,13 @@ class Controller extends BaseController
 			}
             catch (\Exception $e)
             {
-                request()->session()->flash('message.level', 'danger');
-                request()->session()->flash('message.content', 'Error Saving Visitor - Check Events');
-            }
+                Tools::flash('danger', 'Error Saving Visitor - Check Events');
+           }
         }
 
 		return $this->viewData;
 	}
-	
+
 	protected function getDomainName()
 	{
 		// if not set yet
@@ -156,9 +146,9 @@ class Controller extends BaseController
 				$this->domainName = $dn;
 			}
 		}
-		
+
 		return $this->domainName;
-	}	
+	}
 
 	protected function saveVisitor($model, $page, $record_id = null)
 	{
@@ -173,8 +163,8 @@ class Controller extends BaseController
 
 		if (Auth::check())
 			return; // user logged in, don't count views
-			
-		if ($this->isAdmin())
+
+		if (User::isAdmin())
 			return; // admin user, don't count views
 
 		Visitor::add($this->domainName, Tools::getIp(), $model, $page, $record_id);

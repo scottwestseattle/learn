@@ -15,61 +15,20 @@ Kattie has a wide variety of influences and considers herself to be an eclectic 
 
 Latest DB Changes:
 
-ALTER TABLE `visitors` ADD `domain_name` VARCHAR(100) NOT NULL AFTER `visit_count`;
+New Syntax:
 
-CREATE TABLE `visitors` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `site_id` int(10) UNSIGNED NOT NULL,
-  `ip_address` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `host_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_agent` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `referrer` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `organization` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `continent` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `country` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `state_region` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `city` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `visit_count` int(10) UNSIGNED NOT NULL DEFAULT 1,
-  `model` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `page` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `record_id` int(11) DEFAULT NULL,
-  `deleted_flag` tinyint(4) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+request()->session()->flash('message.level', 'danger');
+request()->session()->flash('message.content', $e->getMessage());
 
-ALTER TABLE `visitors`
-  ADD PRIMARY KEY (`id`);
+@auth
+    // The user is authenticated...
+@endauth
 
-ALTER TABLE `visitors`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+@guest
+    // The user is not authenticated...
+@endguest
 
 ############################################################
-
-CREATE TABLE `events` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `deleted_flag` tinyint(4) NOT NULL DEFAULT 0,
-  `site_id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(10) UNSIGNED DEFAULT NULL,
-  `ip_address` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `type_flag` tinyint(4) NOT NULL COMMENT '1=Info, 2=Warning, 3=Error, 4=Exception, 99=other',
-  `model_flag` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `action_flag` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `record_id` int(10) UNSIGNED DEFAULT NULL,
-  `updates` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `error` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `extraInfo` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-ALTER TABLE `events`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `events`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

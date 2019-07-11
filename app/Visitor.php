@@ -34,7 +34,7 @@ class Visitor extends Model
 		$visitor->referrer = Tools::trunc($referrer, VISITOR_MAX_LENGTH);
 
 		// new fields
-		$visitor->domain_name = $domainName;		
+		$visitor->domain_name = $domainName;
 		$visitor->model = $model;
 		$visitor->page = $page;
 		$visitor->record_id = $record_id;
@@ -117,7 +117,7 @@ class Visitor extends Model
 
 	static public function getByIp()
 	{
-		$ip = Controller::getIp();
+		$ip = Tools::getIp();
 
 		$visitor = Visitor::select()
 			->where('ip_address', '=', $ip)

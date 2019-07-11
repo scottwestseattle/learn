@@ -8,13 +8,17 @@ use App\Event;
 class EventController extends Controller
 {
 	protected $prefix = 'events';
-	
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+		parent::__construct();
+    }
+
     public function index($type_flag = null)
     {
 		$type = intval($type_flag);
-		
-		if (!$this->isSuperAdmin())
-             return redirect('/');
 
 		if (isset($type_flag) && $type === 0)
 		{
@@ -45,7 +49,7 @@ class EventController extends Controller
 				->limit(100)
 				->get();
 		}
-		
+
 		// get total stats
 		$totals['info'] = Event::select()->where('site_id', SITE_ID)->where('deleted_flag', 0)->where('type_flag', LOG_TYPE_INFO)->count();
 		$totals['warning'] = Event::select()->where('site_id', SITE_ID)->where('deleted_flag', 0)->where('type_flag', LOG_TYPE_WARNING)->count();
@@ -53,10 +57,10 @@ class EventController extends Controller
 		$totals['exception'] = Event::select()->where('site_id', SITE_ID)->where('deleted_flag', 0)->where('type_flag', LOG_TYPE_EXCEPTION)->count();
 		$totals['other'] = Event::select()->where('site_id', SITE_ID)->where('deleted_flag', 0)->where('type_flag', LOG_TYPE_OTHER)->count();
 		$totals['all'] = $totals['info'] + $totals['warning'] + $totals['error'] + $totals['exception'] + $totals['other'];
-			
+
 		return view($this->prefix . '.index', [
 			'records' => $records,
 			'totals' => $totals,
 		]);
-    }		
+    }
 }

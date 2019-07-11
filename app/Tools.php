@@ -4,10 +4,16 @@ namespace App;
 
 class Tools
 {
+	static public function flash($level, $content)
+	{
+		request()->session()->flash('message.level', $level);
+		request()->session()->flash('message.content', $content);
+    }
+
 	static public function getIp()
 	{
 		$ip = null;
-		
+
 		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
 		{
 			$ip = $_SERVER["HTTP_CLIENT_IP"];
@@ -19,30 +25,30 @@ class Tools
 		else
 		{
 			$ip = $_SERVER["REMOTE_ADDR"];
-		}	
+		}
 
 		return $ip;
 	}
-	
+
 	static public function trunc($string, $length)
 	{
 		$ellipsis = '...';
 		$newLength = $length - strlen($ellipsis);
 		$string = (strlen($string) > $length) ? substr($string, 0, $newLength) . $ellipsis : $string;
-		
+
 		return $string;
 	}
-	
+
 	static public function startsWith($haystack, $needle)
 	{
 		$rc = false;
 		$pos = strpos($haystack, $needle);
 
-		if ($pos === false) 
+		if ($pos === false)
 		{
 			// not found
-		} 
-		else 
+		}
+		else
 		{
 			// found, check for pos == 0
 			if ($pos === 0)
@@ -54,20 +60,20 @@ class Tools
 				// found but string doesn't start with it
 			}
 		}
-		
+
 		return $rc;
 	}
-	
+
 	static public function endsWith($haystack, $needle)
 	{
 		$rc = false;
 		$pos = strrpos($haystack, $needle);
 
-		if ($pos === false) 
+		if ($pos === false)
 		{
 			// not found
-		} 
-		else 
+		}
+		else
 		{
 			// found, check for pos == 0
 			if ($pos === (strlen($haystack) - strlen($needle)))
@@ -79,14 +85,14 @@ class Tools
 				// found but string doesn't start with it
 			}
 		}
-		
+
 		return $rc;
-	}	
-	
+	}
+
 	static public function appendFile($filename, $line)
 	{
 		$rc = false;
-		
+
 		try
 		{
 			$myfile = fopen($filename, "a") or die("Unable to open file!");
@@ -95,7 +101,7 @@ class Tools
 
 			fflush($myfile);
 			fclose($myfile);
-			
+
 			$rc = true;
 		}
 		catch (\Exception $e)

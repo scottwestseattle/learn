@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
+use App\Tools;
+
 class RegisterController extends Controller
 {
     /*
@@ -37,8 +39,9 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
-		
+        //todo: $this->middleware('guest');
+        $this->middleware('auth'); // don't let people register until Admin and Super Admin are set up
+
 		parent::__construct();
     }
 
@@ -64,12 +67,12 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    {	
+    {
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-			'ip_register' => Controller::getIp(),
+			'ip_register' => Tools::getIp(),
         ]);
     }
 }

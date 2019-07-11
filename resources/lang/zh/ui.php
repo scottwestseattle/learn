@@ -43,7 +43,7 @@ return [
 'Show All Articles' => '显示所有文章',
 'Show All Blogs' => '显示所有博客',
 'Sample' => '示例课程',
-'CONTACT INFORMATION' => '联系信息',
+'Logout' => '登出',
 'Show Phone Number' => '电话号码',
 'Show Email Address' => '电子邮件地址',
 'SITE MAP' => '网站地图',

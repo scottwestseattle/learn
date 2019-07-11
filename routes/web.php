@@ -17,7 +17,7 @@ Route::get('/welcome', function () {    return view('welcome');  });
 Auth::routes();
 
 /* public pages */
-Route::get('/', 'FrontPageController@index')->name('frontpage');
+Route::get('/', 'FrontPageController@index')->name('home');
 Route::get('/about', 'FrontPageController@about')->name('about');
 Route::get('/contact', 'FrontPageController@contact')->name('contact');
 Route::get('/privacy', 'FrontPageController@privacy')->name('privacy');
@@ -48,9 +48,16 @@ Route::group(['prefix' => 'translations'], function () {
 
 // Visitors
 Route::group(['prefix' => 'visitors'], function () {
-	
+
 	// index
 	Route::get('/', 'VisitorController@index');
 	Route::post('/', 'VisitorController@index');
-	
+});
+
+// Visitors
+Route::group(['prefix' => 'events'], function () {
+
+	// index
+	Route::get('/', 'EventController@index');
+	Route::post('/', 'EventController@index');
 });

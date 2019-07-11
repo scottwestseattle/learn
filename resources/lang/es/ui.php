@@ -43,7 +43,7 @@ return [
 'Show All Articles' => 'Mostrar Todos Los Articulos',
 'Show All Blogs' => 'Mostrar Todos Los Blogs',
 'Sample' => 'Muestra',
-'CONTACT INFORMATION' => 'INFORMACIÓN DE CONTACTO',
+'Logout' => 'Cerrar Sesión',
 'Show Phone Number' => 'Número de Teléfono',
 'Show Email Address' => 'Correo Electrónico',
 'SITE MAP' => 'MAPA DEL SITIO',

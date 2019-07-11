@@ -8,6 +8,7 @@ use App\Entry;
 use App\Translation;
 use App\Event;
 use Lang;
+use App\Tools;
 
 class TranslationController extends Controller
 {
@@ -19,15 +20,17 @@ class TranslationController extends Controller
 
 	public function __construct ()
 	{
+        $this->middleware('auth');
+
 		parent::__construct();
-	}	
+	}
 
     public function index(Request $request)
-    {		
+    {
 		$records = [];
-		$files = [];	
+		$files = [];
 		$folder = TRANSLATIONS_FOLDER . App::getLocale();
-		
+
 		try
 		{
 			if (is_dir($folder))
@@ -35,20 +38,20 @@ class TranslationController extends Controller
 				// folder exists, nothing to do
 			}
 			else
-			{																
+			{
 				// make the folder with read/execute for everybody
 				mkdir($folder, 0755);
-			}			
+			}
 		}
 		catch (\Exception $e)
 		{
 			$msg = 'Error creating translation folder: ' . $folder;
 			Event::logException(LOG_MODEL_TRANSLATIONS, LOG_ACTION_INDEX, $msg, null, $e->getMessage());
-			
+
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg . ' ' . $e->getMessage());
 		}
-		
+
 		try
 		{
 			$files = scandir($folder);
@@ -57,11 +60,11 @@ class TranslationController extends Controller
 		{
 			$msg = 'Error opening translation folder: ' . $folder;
 			Event::logException(LOG_MODEL_TRANSLATIONS, LOG_ACTION_INDEX, $msg, null, $e->getMessage());
-			
+
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg . ' ' . $e->getMessage());
 		}
-	
+
 		foreach($files as $file)
 		{
 			if ($file != '.' && $file != '..')
@@ -69,34 +72,34 @@ class TranslationController extends Controller
 				$records[] = str_replace('.php', '', $file);
 			}
 		}
-		
+
 		return view('translations.index', $this->getViewData([
 			'records' => $records,
 		]));
 	}
-	
+
     public function add(Request $request)
     {
 		$vdata = $this->getViewData([
 			'records' => $records,
 		]);
-		
+
 		return view('entries.add', $vdata);
 	}
-	
+
     public function edit(Request $request, $filename)
-    {				
+    {
 		$locale = App::getLocale();
-		
+
 		App::setLocale('en');
 		$records[App::getLocale()] = Lang::get($filename);
 
 		App::setLocale('es');
 		$records[App::getLocale()] = Lang::get($filename);
-		
+
 		App::setLocale('zh');
 		$records[App::getLocale()] = Lang::get($filename);
-	
+
 		App::setLocale($locale);
 
 		foreach($records['en'] as $key => $value)
@@ -110,18 +113,18 @@ class TranslationController extends Controller
 				$records['zh'][$key] = null;
 			}
 		}
-		
+
 		$vdata = $this->getViewData([
 			'prefix' => 'translations',
 			'filename' => $filename,
 			'records' => $records,
 		]);
-		
+
 		return view('translations.edit', $vdata);
     }
 
     public function update(Request $request, $filename)
-    {			 
+    {
 		$lines = [];
 		$i = 0;
 
@@ -145,9 +148,9 @@ class TranslationController extends Controller
 							// key exists but not translation, put key in for the value
 							$line = "'" . $request->records[0][$i] . "' => '" . $request->records[0][$i] ."'";
 						}
-						
+
 						//dump($line);
-						
+
 						$array[$j][$i] = $line;
 					}
 					else
@@ -155,22 +158,22 @@ class TranslationController extends Controller
 						$done = true;
 						break;
 					}
-					
+
 					$i++;
-				}				
+				}
 			}
 			else
 			{
 				break;
 			}
 		}
-			
+
 		$this->save('en', $filename, $array[0]);
 		$this->save('es', $filename, $array[1]);
 		$this->save('zh', $filename, $array[2]);
-		
-		return redirect('/translations'); 
-    }			
+
+		return redirect('/translations');
+    }
 
     private function save($locale, $filename, $lines)
     {
@@ -181,48 +184,46 @@ class TranslationController extends Controller
 		{
 			$fp = fopen($path, "wb");
 
-			if ($fp) 
+			if ($fp)
 			{
 				fputs($fp, '<?php' . PHP_EOL);
 				fputs($fp, 'return [' . PHP_EOL);
-				
+
 				foreach($lines as $line)
 				{
 					fputs($fp, $line . ',' . PHP_EOL);
 				}
-					
+
 				fputs($fp, '];' . PHP_EOL);
 			}
-			
-			fclose($fp);			
+
+			fclose($fp);
 		}
 		catch (\Exception $e)
 		{
 			Event::logException(LOG_MODEL_TRANSLATIONS, LOG_ACTION_EDIT, 'Error accessing translation file: ' . $path, null, $e->getMessage());
-			
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $e->getMessage());
+            Tools::flash('danger', $e->getMessage());
 		}
-		
+
 	}
-	
+
     public function updateEntry(Request $request, Entry $entry)
-    {		 
+    {
 		$record = Translation::select()
 			->where('parent_id', $entry->id)
 			->where('parent_table', 'entries')
 			->where('language', $request->language)
 			->first();
-			
+
 		$logMessage = 'Translation has been ';
 		if (!isset($record))
 		{
 			$record = new Translation();
-			
+
 			$record->language = App::getLocale();
 			$record->parent_id = $entry->id;
 			$record->parent_table = 'entries';
-			
+
 			$logAction = LOG_ACTION_ADD;
 			$logMessage .= 'added';
 		}
@@ -233,7 +234,7 @@ class TranslationController extends Controller
 		}
 
     	if ($this->isOwnerOrAdmin($entry->user_id))
-        {	
+        {
 			$record->small_col1		= $this->trimNull($request->small_col1);
 			$record->small_col2		= $this->trimNull($request->small_col2);
 			$record->small_col3		= $this->trimNull($request->small_col3);
@@ -244,7 +245,7 @@ class TranslationController extends Controller
 			$record->small_col8		= $this->trimNull($request->small_col8);
 			$record->small_col9		= $this->trimNull($request->small_col9);
 			$record->small_col10	= $this->trimNull($request->small_col10);
-	
+
 			$record->medium_col1	= $this->trimNull($request->medium_col1);
 			$record->medium_col2	= $this->trimNull($request->medium_col2);
 			$record->medium_col3	= $this->trimNull($request->medium_col3);
@@ -266,25 +267,25 @@ class TranslationController extends Controller
 			$record->large_col8		= $this->trimNull($request->large_col8);
 			$record->large_col9		= $this->trimNull($request->large_col9);
 			$record->large_col10	= $this->trimNull($request->large_col10);
-			
+
 			try
 			{
 				$record->save();
 
-				Event::logEdit(LOG_MODEL_TRANSLATIONS, $entry->title, $entry->id);			
-				
+				Event::logEdit(LOG_MODEL_TRANSLATIONS, $entry->title, $entry->id);
+
 				$request->session()->flash('message.level', 'success');
 				$request->session()->flash('message.content', $logMessage);
 			}
-			catch (\Exception $e) 
+			catch (\Exception $e)
 			{
 				Event::logException(LOG_MODEL_TRANSLATIONS, $logAction, $this->getTextOrShowEmpty($entry->title), null, $e->getMessage());
-				
+
 				$request->session()->flash('message.level', 'danger');
-				$request->session()->flash('message.content', $e->getMessage());		
-			}			
+				$request->session()->flash('message.content', $e->getMessage());
+			}
 		}
 
-		return redirect($this->getReferer($request, '/entries/indexadmin')); 
-    }		
+		return redirect($this->getReferer($request, '/entries/indexadmin'));
+    }
 }
