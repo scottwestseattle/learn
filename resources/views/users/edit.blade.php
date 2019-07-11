@@ -2,17 +2,11 @@
 
 @section('content')
 
-@if (Auth::user()->user_type >= 100)
-
-@component('menu-submenu', ['data' => $data])
-	@component('menu-submenu-user')@endcomponent
+@component('components.menu-submenu', ['data' => $data])
+	@component('users.menu-submenu')@endcomponent
 @endcomponent
 
-@endif
-
 <div class="page-size container">
-
-	<h1>Edit User</h1>
 
 	<form method="POST" action="/users/update/{{ $user->id }}">
 
@@ -23,22 +17,25 @@
 		<div class="form-group">
 			<input type="text" name="email" class="form-control" value="{{$user->email }}"></input>
 		</div>
-
-		@if (Auth::user()->user_type >= 100)
+					
 			<div class="form-group">
-				<input type="text" name="user_type" class="form-control" value="{{$user->user_type}}"></input>
+				<select name="user_type" id="user_type">
+					@foreach ($user->getUserTypes() as $key => $value)
+						<option value="{{$key}}" {{ $key == $user->user_type ? 'selected' : ''}}>@LANG('ui.' . $value)</option>
+					@endforeach
+				</select>			
 			</div>
+			
 			<div class="form-group">
 				<input type="text" name="password" class="form-control" value="{{$user->password}}"></input>
 			</div>
 		<div class="form-group">
 			<input type="checkbox" name="blocked_flag" id="blocked_flag" class="" value="{{$user->blocked_flag }}" {{ ($user->blocked_flag) ? 'checked' : '' }} />
-			<label for="blocked_flag" class="checkbox-big-label">Blocked</label>
+			<label for="blocked_flag" class="checkbox-big-label">@LANG('ui.Blocked')</label>
 		</div>
-		@endif
 
 		<div class="form-group">
-			<button type="submit" name="update" class="btn btn-primary">Update</button>
+			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
 		</div>
 	{{ csrf_field() }}
 	</form>

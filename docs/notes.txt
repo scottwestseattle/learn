@@ -1,6 +1,3 @@
-Changes
-- Use middleware for function auth
-- Add language routing
 
 
 Kattie is a graphic designer, visual artist, and traveler.  Born in Costa Rica, she has traveled to more than 34 countries and counting. She has lived in Barcelona, Panama, Kuala Lumpur, Malaysia and Shanghai, China.  She currently resides in Rotterdam, Holland.
@@ -14,6 +11,10 @@ Kattie has a wide variety of influences and considers herself to be an eclectic 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 Latest DB Changes:
+
+ALTER TABLE `users` ADD `site_id` SMALLINT NOT NULL AFTER `id`;
+
+
 
 New Syntax:
 

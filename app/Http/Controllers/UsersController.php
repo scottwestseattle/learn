@@ -47,12 +47,18 @@ class UsersController extends Controller
 
     public function view(User $user)
     {
-		return view('users.view', ['user' => $user, 'data' => null]);			           	
+		return view('users.view', $this->getViewData([
+				'user' => $user,
+				'data' => null,
+			]));
     }
 	
     public function edit(User $user)
     {
-		return view('users.edit', ['user' => $user, 'data' => null]);			
+		return view('users.edit', $this->getViewData([
+				'user' => $user,
+				'data' => null,
+			]));		
     }
 	
     public function update(Request $request, User $user)
@@ -70,7 +76,10 @@ class UsersController extends Controller
 
     public function confirmdelete(User $user)
     {				 		
-		return view('users.confirmdelete', ['user' => $user, 'data' => $this->viewData]);				
+		return view('users.confirmdelete', $this->getViewData([
+				'user' => $user,
+				'data' => null,
+			]));		
     }
 	
     public function delete(User $user)

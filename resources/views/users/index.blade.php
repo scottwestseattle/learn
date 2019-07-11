@@ -12,15 +12,11 @@
 		</thead>
 		<tbody>@foreach($records as $record)
 			<tr>
-				<td style="width:10px;"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit">Edit</span></a></td>
+				<td style="width:10px;"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit">@LANG('ui.Edit')</span></a></td>
 				<td><a href="/users/view/{{ $record->id }}">{{$record->name}} ({{$record->id}})</a></td>
 				<td>{{$record->email}}</td>
-				<td>{{$record->user_type}}</td>
-				@if ($record->blocked_flag)
-					<td>@LANG('ui.yes')</td>
-				@else
-					<td>@LANG('ui.no')</td>
-				@endif				
+				<td>@LANG('ui.' . $record->getUserType())</td>
+				<td>@LANG('ui.' . $record->getBlocked())</td>
 				<td>{{$record->site_id}}</td>
 			</tr>
 		@endforeach</tbody>

@@ -71,7 +71,7 @@ class Controller extends BaseController
 	protected $euNotice = 'ui.euNotice';
 
 	public function __construct()
-	{
+	{		
 		// session don't work in constructors, work arround:
 		$this->middleware(function ($request, $next){
 
@@ -83,8 +83,14 @@ class Controller extends BaseController
 			if (isset($locale))
 				App::setLocale($locale);
 
+		//todo: where does this go?
+		if (Auth::user() && Auth::user()->blocked_flag)
+		{
+			Auth::logout();
+		}			
+			
 			return $next($request);
-		});
+		});		
 	}
 
 	protected function isOwner($user_id)
