@@ -20,7 +20,7 @@ class TranslationController extends Controller
 
 	public function __construct ()
 	{
-        $this->middleware('auth');
+        $this->middleware('is_admin');
 
 		parent::__construct();
 	}

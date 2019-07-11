@@ -7,6 +7,14 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 
+// user types
+define('USER_UNCONFIRMED', 0);		// user account email unconfirmed
+define('USER_CONFIRMED', 100);		// user confirmed
+define('USER_PAID', 200);			// user paid
+define('USER_AFFILIATE', 300);		// affiliate
+define('USER_SITE_ADMIN', 1000);		// user site admin
+define('USER_SUPER_ADMIN', 10000);	// user super admin
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -38,8 +46,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-	protected function isAdmin()
+	static public function isAdmin()
 	{
+//dump('isAdmin');
 		return (Auth::check() && Auth::user()->user_type >= USER_SITE_ADMIN);
 	}
 

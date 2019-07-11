@@ -9,7 +9,7 @@ class VisitorController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('is_admin');
 		
 		parent::__construct();		
     }
@@ -41,7 +41,7 @@ class VisitorController extends Controller
 		return view('visitors.index', $vdata);
     }
 	
-	static protected function removeRobots($records, $showBots = false)
+	static public function removeRobots($records, $showBots = false)
 	{    
 		$count = 0;
 		$out = [];

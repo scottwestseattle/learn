@@ -29,7 +29,7 @@ return [
 'Confirm Password' => '确认密码',
 'Summary' => 'Summary',
 'Reset Password' => '重设密码',
-'Accounts' => 'Accounts',
+'Super Admin' => '超级管理员',
 'Categories' => 'Categories',
 'Email' => 'Email',
 'Email Address' => '电子邮件地址',

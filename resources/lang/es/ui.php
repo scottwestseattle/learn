@@ -29,7 +29,7 @@ return [
 'Confirm Password' => 'Confirmar Contraseña',
 'Summary' => 'Resumen',
 'Reset Password' => 'Restablecer la Contraseña',
-'Accounts' => 'Cuentas',
+'Super Admin' => 'Super Admin',
 'Categories' => 'Categorías',
 'Email' => 'Email',
 'Email Address' => 'Correo Electrónico',

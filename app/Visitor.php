@@ -108,16 +108,16 @@ class Visitor extends Model
 			$userAgent = $_SERVER["HTTP_USER_AGENT"];
 	}
 
-	static protected function isNewVisitor()
+	static protected function isNew($ip = null)
 	{
-		$record = Visitor::getByIp();
+		$record = Visitor::getByIp($ip);
 
 		return !isset($record);
 	}
 
-	static public function getByIp()
+	static public function getByIp($ip = null)
 	{
-		$ip = Tools::getIp();
+		$ip = isset($ip) ? $ip : Tools::getIp();
 
 		$visitor = Visitor::select()
 			->where('ip_address', '=', $ip)

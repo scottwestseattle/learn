@@ -80,21 +80,24 @@ $domainName = isset($domainName) ? $domainName : '';
                     @else
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                                {{ Auth::user()->name }} ({{Auth::user()->user_type}}) <span class="caret"></span>
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
-                                </a>
-
+                                <a class="dropdown-item" href="/superadmin">@LANG('ui.Super Admin')</a>
+                                <a class="dropdown-item" href="/admin">@LANG('ui.Admin')</a>
                                 <a class="dropdown-item" href="/visitors">@LANG('ui.Visitors')</a>
                                 <a class="dropdown-item" href="/events">@LANG('ui.Events')</a>
                                 <a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
-                                <a class="dropdown-item" href="/eunoticereset">@LANG('ui.Privacy Notice')</a>
+							
+								<div class="dropdown-divider"></div>
+								
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                    <button style="font-size:.8em;" class="btn btn-primary">{{ __('Logout') }}</button>
+                                </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf

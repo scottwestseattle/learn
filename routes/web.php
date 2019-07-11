@@ -17,7 +17,7 @@ Route::get('/welcome', function () {    return view('welcome');  });
 Auth::routes();
 
 /* public pages */
-Route::get('/', 'FrontPageController@index')->name('home');
+Route::get('/', 'FrontPageController@index');
 Route::get('/about', 'FrontPageController@about')->name('about');
 Route::get('/contact', 'FrontPageController@contact')->name('contact');
 Route::get('/privacy', 'FrontPageController@privacy')->name('privacy');
@@ -29,8 +29,14 @@ Route::get('/eunoticeaccept/', 'FrontPageController@eunoticeaccept');
 Route::get('/eunoticereset/', 'FrontPageController@eunoticereset');
 Route::get('/sample/', 'FrontPageController@sample');
 
-/* protected pages */
-Route::get('/admin', 'HomeController@admin')->name('admin');
+Route::get('/home', 'HomeController@index')->name('home');
+
+// Site Admin Pages
+Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
+
+// Super Admin Pages
+Route::get('/superadmin', 'HomeController@superadmin')->middleware('is_admin')->name('superadmin');
+
 
 // Translations
 Route::group(['prefix' => 'translations'], function () {
