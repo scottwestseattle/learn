@@ -75,6 +75,7 @@ $domainName = isset($domainName) ? $domainName : '';
 
                                 <a class="dropdown-item" href="/superadmin">@LANG('ui.Super Admin')</a>
                                 <a class="dropdown-item" href="/admin">@LANG('ui.Admin')</a>
+                                <a class="dropdown-item" href="/users">@LANG('ui.Users')</a>
                                 <a class="dropdown-item" href="/visitors">@LANG('ui.Visitors')</a>
                                 <a class="dropdown-item" href="/events">@LANG('ui.Events')</a>
                                 <a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
@@ -121,8 +122,9 @@ $domainName = isset($domainName) ? $domainName : '';
 				{!! session('message.content') !!}
 			</div>
 		@endif
-
-		@if (isset($euNoticeAccepted) && !$euNoticeAccepted)
+	
+		@if ((isset($euNoticeAccepted) && $euNoticeAccepted) || (Auth::check() && Auth::user()->isAdmin()))
+		@else
 			<div style="margin:0; padding: 5px 5px 5px 20px;" id="euNoticeAccepted" class="alert alert-success">
 				<span>@LANG('ui.European Union Privacy Notice')</span>
 				<button type="submit" onclick="event.preventDefault(); ajaxexec('/eunoticeaccept'); $('#euNoticeAccepted').hide();" class="btn btn-primary" style="padding:1px 4px; margin:5px;">@LANG('ui.Accept')</button>

@@ -6,7 +6,7 @@
 $now = new DateTime();
 ?>
 
-<div class="page-size container">
+<div class="container page-normal">
 
 	<form method="POST" action="/visitors">
 
@@ -20,7 +20,7 @@ $now = new DateTime();
 			<label for="showbots" class="checkbox-label">Show Bots</label>
 		</div>
 		
-		<h1 style="font-size:1.3em;">@LANG('ui.Visitors') ({{count($records)}}) ({{$now->format('Y-m-d H:i:s')}})</h1>
+		<h3>@LANG('ui.Visitors') ({{count($records)}}) ({{$now->format('Y-m-d H:i:s')}})</h3>
 	
 		<table class="table table-striped">
 			<tbody>
