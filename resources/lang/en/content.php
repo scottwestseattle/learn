@@ -14,7 +14,7 @@ return [
 'Frontpage Section 3 Title' => 'Superior Curriculum',
 'Frontpage Section 3 Body' => 'We constantly update our course content to make sure that it provides the best possible learning experience for your time.  Our lessons are creative, engaging and designed to maximize retention of the content.  We want you to learn as fast as possible and benefit from our program.',
 'Frontpage Subfooter Title' => 'Mission Statement',
-'Frontpage Subfooter Body' => 'We believe that speaking English is increasingly important in the modern world. Its better and easier to learn and master this skill early and nobody should be denied the opportunity to do so.',
+'Frontpage Subfooter Body' => 'We believe that speaking English is increasingly important in the modern world and online virtual training is the future of education.',
 'Save Vocabulary' => 'Save Vocabulary',
 'Start Learning' => 'Start Learning',
 'Content Pages' => 'Content Pages',

@@ -33,7 +33,7 @@ return [
 'Categories' => 'Categories',
 'Email' => 'Email',
 'Email Address' => '电子邮件地址',
-'Subcategories' => 'Subcategories',
+'You Are Not Authorized To Access This Page' => '您无权访问此页面',
 'Settings' => 'Settings',
 'Send Password Reset Link' => '发送链接重置密码',
 'Tasks' => 'Tasks',

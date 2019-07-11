@@ -14,7 +14,7 @@ return [
 'Frontpage Section 3 Title' => '高级课程',
 'Frontpage Section 3 Body' => '我们会不断更新课程内容，以确保为您的时间提供最佳的学习体验。 我们的课程富有创意，吸引人且旨在最大限度地保留内容。 我们希望您尽快学习并从我们的计划中受益。',
 'Frontpage Subfooter Title' => '使命宣言',
-'Frontpage Subfooter Body' => '我们相信说英语在现代世界中越来越重要。 早期学习和掌握这项技能会更好，更容易，没有人应该被剥夺这样做的机会。',
+'Frontpage Subfooter Body' => '我们认为说英语在现代世界中越来越重要，在线虚拟培训是教育的未来。',
 'Save Vocabulary' => '节省词汇量',
 'Start Learning' => '开始学习',
 'Content Pages' => '内容页面',

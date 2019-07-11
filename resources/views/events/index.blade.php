@@ -8,7 +8,7 @@
 
 		@component('events.menu-submenu-events-filter', ['totals' => $totals])@endcomponent
 				
-		<h3>Events ({{$records->count()}})</h3>
+		<h3>@LANG('ui.Events') ({{$records->count()}})</h3>
 		
 		<table style="width:100%;" class="xtable xtable-striped">
 			<tbody>

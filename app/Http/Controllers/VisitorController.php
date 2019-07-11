@@ -103,6 +103,7 @@ class VisitorController extends Controller
 			$out[$count]['host'] = $record->host_name;
 			$out[$count]['model'] = $record->model;
 			$out[$count]['ip'] = $record->ip_address;
+			$out[$count]['domain_name'] = $record->domain_name;
 			
 			$count++;
 		}

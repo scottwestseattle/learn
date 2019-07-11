@@ -33,7 +33,7 @@ return [
 'Categories' => 'Categorías',
 'Email' => 'Email',
 'Email Address' => 'Correo Electrónico',
-'Subcategories' => 'Subcategorias',
+'You Are Not Authorized To Access This Page' => '¡No tiene permisos para acceder a esta página!',
 'Settings' => 'Ajustes',
 'Send Password Reset Link' => 'Enviar enlace para restablecer la contraseña',
 'Tasks' => 'Tareas',

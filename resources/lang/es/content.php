@@ -14,7 +14,7 @@ return [
 'Frontpage Section 3 Title' => 'Plan de Estudios Excelente',
 'Frontpage Section 3 Body' => 'Actualizamos constantemente el contenido de nuestro curso para asegurarnos de que proporcione la mejor experiencia de aprendizaje posible para su tiempo. Nuestras lecciones son creativas, atractivas y están diseñadas para maximizar la retención del contenido. Queremos que aprenda lo más rápido posible y se beneficie de nuestro programa.',
 'Frontpage Subfooter Title' => 'La Declaración de la Misión',
-'Frontpage Subfooter Body' => 'Creemos que hablar inglés es cada vez más importante en el mundo moderno. Es mejor y más fácil aprender y dominar esta habilidad temprano y a nadie se le debe negar la oportunidad de hacerlo.',
+'Frontpage Subfooter Body' => 'Creemos que hablar inglés es cada vez más importante en el mundo moderno y la capacitación virtual en línea es el futuro de la educación.',
 'Save Vocabulary' => 'Guardar Vocabulario',
 'Start Learning' => 'Aprenda Ya',
 'Content Pages' => 'Páginas de contenido',

@@ -20,14 +20,16 @@ $now = new DateTime();
 			<label for="showbots" class="checkbox-label">Show Bots</label>
 		</div>
 		
-		<h1 style="font-size:1.3em;">Visitors ({{count($records)}}) ({{$now->format('Y-m-d H:i:s')}})</h1>
+		<h1 style="font-size:1.3em;">@LANG('ui.Visitors') ({{count($records)}}) ({{$now->format('Y-m-d H:i:s')}})</h1>
 	
 		<table class="table table-striped">
 			<tbody>
-				<tr><th>Timestamp</th><th>Page</th><th>IP</th><th>Referrer</th><th>User</th><th>Host</th><th></th></tr>
+				<tr><th>Timestamp</th><th>Site</th><th>Page</th><th>IP</th><th>Referrer</th><th>User</th><th>Host</th><th></th></tr>
 				@foreach($records as $record)
 				<tr>
 					<td>{{$record['date']}}</td>
+					
+					<td>{{$record['domain_name']}}</td>					
 					
 					@if (!isset($record['id']))
 						<td>{{$record['model']}}/{{$record['page']}}</td>

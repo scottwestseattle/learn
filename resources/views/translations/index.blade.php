@@ -11,7 +11,7 @@
 		</tr></table>
 	</div>			
 	
-	<h1>Translations ({{ count($records) }})</h1>
+	<h1>@LANG('ui.Translations') ({{ count($records) }})</h1>
 
 	<table class="table table-striped">
 		<tbody>
