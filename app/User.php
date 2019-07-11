@@ -48,11 +48,10 @@ class User extends Authenticatable
 
 	static public function isAdmin()
 	{
-//dump('isAdmin');
 		return (Auth::check() && Auth::user()->user_type >= USER_SITE_ADMIN);
 	}
 
-	protected function isSuperAdmin()
+	static public function isSuperAdmin()
 	{
 		return (Auth::check() && Auth::user()->user_type >= USER_SUPER_ADMIN);
 	}

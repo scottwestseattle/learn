@@ -35,7 +35,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
 
 // Super Admin Pages
-Route::get('/superadmin', 'HomeController@superadmin')->middleware('is_admin')->name('superadmin');
+Route::get('/superadmin', 'HomeController@superadmin')->middleware('is_admin:super')->name('superadmin');
 
 
 // Translations

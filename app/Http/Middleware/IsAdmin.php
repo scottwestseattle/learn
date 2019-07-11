@@ -13,11 +13,23 @@ class IsAdmin
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role = null)
     {
-        if (auth()->user() && auth()->user()->isAdmin()) {
-            return $next($request);
-        }
+		if (auth()->user())
+		{
+			if ($role == 'super')
+			{
+				if (auth()->user()->isSuperAdmin()) {
+					return $next($request);
+				}
+			}
+			else
+			{
+				if (auth()->user()->isAdmin()) {
+					return $next($request);
+				}
+			}
+		}
 
         return redirect('home');
     }
