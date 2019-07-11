@@ -95,4 +95,26 @@ class Tools
 		return $rc;
 	}	
 	
+	static public function appendFile($filename, $line)
+	{
+		$rc = false;
+		
+		try
+		{
+			$myfile = fopen($filename, "a") or die("Unable to open file!");
+
+			fwrite($myfile, utf8_encode($line . PHP_EOL));
+
+			fflush($myfile);
+			fclose($myfile);
+			
+			$rc = true;
+		}
+		catch (\Exception $e)
+		{
+			dump('error writing file: ' . $filename);
+		}
+
+		return $rc;
+	}
 }

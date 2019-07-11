@@ -112,15 +112,11 @@ class Event extends Base
 			dump($msg . ' - Check ~/appeventlog');
 
 			// write an emergency log file
-			$myfile = fopen("appeventlog.txt", "w") or die("Unable to open appeventlog file!");
-
 			$line = $msg . ': ' . $e->getMessage() . ' / ' . $model . ' / ' . $action . ' / ' . $title;
-
-			fwrite($myfile, utf8_encode($line . PHP_EOL));
-
-            fflush($myfile);
-
-			fclose($myfile);
+			if (!Tools::appendFile('appeventlog.txt', $line))
+			{
+				// already dumping error message
+			}
 		}
     }
 

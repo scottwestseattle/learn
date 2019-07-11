@@ -38,7 +38,6 @@ class VisitorController extends Controller
 			'bots' => $showBots,
 		]);
 
-						
 		return view('visitors.index', $vdata);
     }
 	
