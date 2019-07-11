@@ -11,6 +11,9 @@ $domainName = isset($domainName) ? $domainName : '';
 	<meta name="generator" content="Jekyll v3.8.5">
 	<title>Learn - Remote Virtual Training</title>
 
+    <!-- Scripts -->
+    <script src="{{ asset('js/project.js') }}"></script>
+
 	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet">
 
@@ -115,36 +118,5 @@ $domainName = isset($domainName) ? $domainName : '';
 	<script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
 	<script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 
-	<script>
-function ajaxexec(url)
-{	
-	var xhttp = new XMLHttpRequest();
-	
-	xhttp.onreadystatechange = function() 
-	{
-		//alert(this.status);
-		
-		if (this.status == 200)
-		{
-			//alert(this.responseText);
-		}
-		else if (this.status == 404)
-		{
-			alert(this.responseText);
-		}
-					
-		if (this.readyState == 4 && this.status == 200) 
-		{	
-			//
-			// results
-			//
-			//alert(this.requestText);
-		}
-	};
-	
-	xhttp.open("GET", url, true);
-	xhttp.send();
-}	
-	</script>
 </body>
 </html>

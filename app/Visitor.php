@@ -9,7 +9,7 @@ use App\Tools;
 
 class Visitor extends Model
 {
-    static public function add($ip, $model, $page, $record_id = null)
+    static public function add($domainName, $ip, $model, $page, $record_id = null)
     {
 		$save = false;
 		$host = null;
@@ -34,6 +34,7 @@ class Visitor extends Model
 		$visitor->referrer = Tools::trunc($referrer, VISITOR_MAX_LENGTH);
 
 		// new fields
+		$visitor->domain_name = $domainName;		
 		$visitor->model = $model;
 		$visitor->page = $page;
 		$visitor->record_id = $record_id;
@@ -44,7 +45,7 @@ class Visitor extends Model
 		}
 		catch (\Exception $e)
 		{
-			Event::logException(LOG_MODEL_VISITORS, LOG_ACTION_ADD, 'Error Adding Visitor' . $e->getMessage());
+			Event::logException(LOG_MODEL_VISITORS, LOG_ACTION_ADD, 'Error Adding Visitor', null, $e->getMessage());
 			throw $e;
 		}
 	}

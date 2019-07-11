@@ -23,18 +23,6 @@ class Tools
 
 		return $ip;
 	}
-
-	static public function getDomainName()
-	{
-		$dn = 'ui.Domain Unknown';
-				
-		if (array_key_exists("SERVER_NAME", $_SERVER))
-		{			
-			$dn = $_SERVER["SERVER_NAME"];
-		}
-		
-		return $dn;
-	}
 	
 	static public function trunc($string, $length)
 	{

@@ -17,7 +17,6 @@ Latest DB Changes:
 
 ALTER TABLE `visitors` ADD `domain_name` VARCHAR(100) NOT NULL AFTER `visit_count`;
 
-
 CREATE TABLE `visitors` (
   `id` int(10) UNSIGNED NOT NULL,
   `site_id` int(10) UNSIGNED NOT NULL,

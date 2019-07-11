@@ -65,22 +65,12 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-	protected $domainName = 'Not Set';
+	private $domainName = null;
 	protected $euNoticeAccepted = false;
 	protected $euNotice = 'ui.euNotice';
 
 	public function __construct()
 	{
-		if (array_key_exists("SERVER_NAME", $_SERVER))
-		{
-			$dn = $_SERVER["SERVER_NAME"];
-
-			if (Tools::startsWith($dn, 'www.'))
-				$dn = substr($dn, 4);
-
-			$this->domainName = $dn;
-		}
-
 		// session don't work in constructors, work arround:
 		$this->middleware(function ($request, $next){
 
@@ -123,7 +113,7 @@ class Controller extends BaseController
 		//
 //todo:		$this->viewData['site'] = Controller::getSite();
 		$this->viewData['siteTitle'] = 'content.Site Title';
-		$this->viewData['domainName'] = Tools::getDomainName();
+		$this->viewData['domainName'] = $this->getDomainName();
 		$this->viewData['euNoticeAccepted'] = $this->euNoticeAccepted;
 		$this->viewData['euNotice'] = $this->euNotice;
 
@@ -142,12 +132,33 @@ class Controller extends BaseController
             catch (\Exception $e)
             {
                 request()->session()->flash('message.level', 'danger');
-                request()->session()->flash('message.content', 'Error Saving Visitor - Check Error Log');
+                request()->session()->flash('message.content', 'Error Saving Visitor - Check Events');
             }
         }
 
 		return $this->viewData;
 	}
+	
+	protected function getDomainName()
+	{
+		// if not set yet
+		if (!isset($this->domainName))
+		{
+			// not set yet, get it
+			if (array_key_exists("SERVER_NAME", $_SERVER))
+			{
+				$dn = $_SERVER["SERVER_NAME"];
+
+				// trim the duba duba duba
+				if (Tools::startsWith($dn, 'www.'))
+					$dn = substr($dn, 4);
+
+				$this->domainName = $dn;
+			}
+		}
+		
+		return $this->domainName;
+	}	
 
 	protected function saveVisitor($model, $page, $record_id = null)
 	{
@@ -160,10 +171,13 @@ class Controller extends BaseController
 		if (isset($spy))
 			return; // spy mode, don't count views
 
+		if (Auth::check())
+			return; // user logged in, don't count views
+			
 		if ($this->isAdmin())
 			return; // admin user, don't count views
 
-		Visitor::add(Tools::getIp(), $model, $page, $record_id);
+		Visitor::add($this->domainName, Tools::getIp(), $model, $page, $record_id);
 	}
 
 /****************************************************************************
