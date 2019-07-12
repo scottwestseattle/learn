@@ -67,32 +67,35 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 	private $domainName = null;
-	protected $euNoticeAccepted = false;
-	protected $euNotice = 'ui.euNotice';
 
 	public function __construct()
 	{		
 		// session don't work in constructors, work arround:
 		$this->middleware(function ($request, $next){
 
-			// check for EU notice
-			$this->euNoticeAccepted = session('eunotice', false);
-
 			// set locale according to selected language
 			$locale = session('locale');
 			if (isset($locale))
 				App::setLocale($locale);
 
-		//todo: where does this go?
-		if (Auth::user() && Auth::user()->blocked_flag)
-		{
-			Auth::logout();
-		}			
+			//todo: where does this go?
+			//look at: 
+			if (Auth::user() && Auth::user()->blocked_flag)
+			{
+                Tools::flash('danger', 'Login Error: User is Blocked');
+				Auth::logout();
+			}			
 			
 			return $next($request);
 		});		
 	}
 
+	static private function showPrivacyNotice()
+	{		
+		// don't show for admins or if user has closed it already
+		return session('eunotice', false) && !User::isAdmin();		
+	}
+	
 	protected function isOwner($user_id)
 	{
 		return (Auth::check() && Auth::id() == $user_id);
@@ -111,8 +114,7 @@ class Controller extends BaseController
 //todo:		$this->viewData['site'] = Controller::getSite();
 		$this->viewData['siteTitle'] = 'content.Site Title';
 		$this->viewData['domainName'] = $this->getDomainName();
-		$this->viewData['euNoticeAccepted'] = $this->euNoticeAccepted;
-		$this->viewData['euNotice'] = $this->euNotice;
+		$this->viewData['showPrivacyNotice'] = Controller::showPrivacyNotice();
 
 		if ($this->domainName == 'localhost')
 			$this->viewData['localhost'] = true;

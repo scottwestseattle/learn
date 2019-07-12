@@ -119,12 +119,11 @@ $domainName = isset($domainName) ? $domainName : '';
 
 		@if(session()->has('message.level'))
 			<div style="" class="alert alert-{{ session('message.level') }}">
-				{!! session('message.content') !!}
+				@LANG('flash.' . session('message.content'))
 			</div>
 		@endif
 	
-		@if ((isset($euNoticeAccepted) && $euNoticeAccepted) || (Auth::check() && Auth::user()->isAdmin()))
-		@else
+		@if (isset($showPrivacyNotice) && $showPrivacyNotice)
 			<div style="margin:0; padding: 5px 5px 5px 20px;" id="euNoticeAccepted" class="alert alert-success">
 				<span>@LANG('ui.European Union Privacy Notice')</span>
 				<button type="submit" onclick="event.preventDefault(); ajaxexec('/eunoticeaccept'); $('#euNoticeAccepted').hide();" class="btn btn-primary" style="padding:1px 4px; margin:5px;">@LANG('ui.Accept')</button>

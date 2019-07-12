@@ -73,6 +73,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
 			'ip_register' => Tools::getIp(),
+			'site_id' => SITE_ID,
         ]);
     }
 }
