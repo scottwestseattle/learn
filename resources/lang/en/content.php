@@ -27,8 +27,8 @@ return [
 'Back to Gallery' => 'Back to Gallery',
 'Back to Galleries' => 'Back to Galleries',
 'Gallery Photo Pages' => 'Gallery Photo Pages',
-'Photo Taken on' => 'Photo Taken on',
-'About Page Image' => 'About Page Image',
+'Lessons' => 'Lessons',
+'Lesson' => 'Lesson',
 'Leave a Comment' => 'Leave a Comment',
 'Comment' => 'Comment',
 'Comment Sent For Approval' => 'Comment has been submitted and will be visible as soon as it is approved',
@@ -38,4 +38,5 @@ return [
 'Site Title' => 'Learn English Online',
 'Frontpage Header Title' => 'Learn English Online With Live Instructors',
 'Frontpage Header Body' => 'Learn and practice English from the comfort of your home. One-on-one or small group classes for more personal attention. We teach online so our costs are kept low and these savings are passed on to our students.',
+'Section' => 'Section',
 ];

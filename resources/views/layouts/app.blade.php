@@ -52,6 +52,7 @@ $domainName = isset($domainName) ? $domainName : '';
 
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
+					<li class="nav-item"><a class="nav-link" href="/lessons">@LANG('content.Lessons')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/contact">@LANG('ui.Contact')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/about">@LANG('ui.About')</a></li>
 

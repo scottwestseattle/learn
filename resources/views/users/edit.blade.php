@@ -6,7 +6,7 @@
 	@component('users.menu-submenu')@endcomponent
 @endcomponent
 
-<div class="page-size container">
+<div class="container page-normal">
 
 	<form method="POST" action="/users/update/{{ $user->id }}">
 

@@ -105,4 +105,5 @@ return [
 'More Information' => '更多信息',
 'Back to Top' => '回到顶部',
 'Learn More' => '更多信息',
+'Undelete' => '取消删除',
 ];

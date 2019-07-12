@@ -8,6 +8,7 @@ Section and Button Green: #5CB85C
 
 ************************************************************/
 
+
 .lesson {
 	font-size: 1.2em;
 }
@@ -44,6 +45,7 @@ body {
 .page-normal { /* normal, non-front page spacing */
     padding-top: 2rem;
     margin-bottom: 3rem;
+	min-height: 500px;
 }
 
 .grassy-green {

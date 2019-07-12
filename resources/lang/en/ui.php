@@ -105,4 +105,5 @@ return [
 'More Information' => 'More Information',
 'Back to Top' => 'Back to Top',
 'Learn More' => 'Learn More',
+'Undelete' => 'Undelete',
 ];

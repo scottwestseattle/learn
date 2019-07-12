@@ -67,7 +67,12 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 	private $domainName = null;
-
+	
+	//todo: make private if this is the approach we are using
+	protected $prefix = 'prefix';
+	protected $title = 'Title';
+	protected $titlePlural = 'Titles';	
+	
 	public function __construct()
 	{		
 		// session don't work in constructors, work arround:
@@ -93,7 +98,7 @@ class Controller extends BaseController
 	static private function showPrivacyNotice()
 	{		
 		// don't show for admins or if user has closed it already
-		return session('eunotice', false) && !User::isAdmin();		
+		return session('eunotice', false) && !User::isAdmin();
 	}
 	
 	protected function isOwner($user_id)
@@ -113,10 +118,13 @@ class Controller extends BaseController
 		//
 //todo:		$this->viewData['site'] = Controller::getSite();
 		$this->viewData['siteTitle'] = 'content.Site Title';
-		$this->viewData['domainName'] = $this->getDomainName();
 		$this->viewData['showPrivacyNotice'] = Controller::showPrivacyNotice();
 
-		if ($this->domainName == 'localhost')
+		$this->viewData['prefix'] = $this->prefix;
+		$this->viewData['title'] = $this->title;
+		$this->viewData['titlePlural'] = $this->titlePlural;
+		
+		if ($this->getDomainName() == 'localhost')
 			$this->viewData['localhost'] = true;
 
 		//
@@ -142,17 +150,7 @@ class Controller extends BaseController
 		// if not set yet
 		if (!isset($this->domainName))
 		{
-			// not set yet, get it
-			if (array_key_exists("SERVER_NAME", $_SERVER))
-			{
-				$dn = $_SERVER["SERVER_NAME"];
-
-				// trim the duba duba duba
-				if (Tools::startsWith($dn, 'www.'))
-					$dn = substr($dn, 4);
-
-				$this->domainName = $dn;
-			}
+			$this->domainName = Tools::getDomainName();
 		}
 
 		return $this->domainName;
@@ -162,7 +160,7 @@ class Controller extends BaseController
 	{
 		//todo: add log visitors to site record
 		// ignore these
-		if (strtolower($this->domainName) == 'blog.scotthub.com')
+		if (strtolower($this->getDomainName()) == 'blog.scotthub.com')
 			return;
 
 		$spy = session('spy', null);
@@ -175,7 +173,7 @@ class Controller extends BaseController
 		if (User::isAdmin())
 			return; // admin user, don't count views
 
-		Visitor::add($this->domainName, Tools::getIp(), $model, $page, $record_id);
+		Visitor::add($this->getDomainName(), Tools::getIp(), $model, $page, $record_id);
 	}
 
 /****************************************************************************

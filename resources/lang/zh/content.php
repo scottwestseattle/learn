@@ -27,8 +27,8 @@ return [
 'Back to Gallery' => '回到画廊',
 'Back to Galleries' => '回到画廊',
 'Gallery Photo Pages' => '画廊照片页面',
-'Photo Taken on' => '照片日期',
-'About Page Image' => '关于页面的图像',
+'Lessons' => '教训',
+'Lesson' => '课',
 'Leave a Comment' => '发表评论',
 'Comment' => '评论',
 'Comment Sent For Approval' => '评论已提交，并在获得批准后立即显示',
@@ -38,4 +38,5 @@ return [
 'Site Title' => '在线学习英语',
 'Frontpage Header Title' => '通过现场讲师在线学习英语',
 'Frontpage Header Body' => '在舒适的家中学习和练习英语。 一对一或小组课程，以提高个人关注度。 我们在线教学，因此我们的成本保持在较低水平，这些节省将转嫁给我们的学生。',
+'Section' => '部分',
 ];

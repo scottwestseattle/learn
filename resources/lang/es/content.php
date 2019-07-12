@@ -27,8 +27,8 @@ return [
 'Back to Gallery' => 'Volver a la Galería',
 'Back to Galleries' => 'Volver a las Galerías',
 'Gallery Photo Pages' => 'Páginas de fotos de galería',
-'Photo Taken on' => 'Fecha de la foto',
-'About Page Image' => 'Imagen de la página Acerca de',
+'Lessons' => 'Lecciones',
+'Lesson' => 'Lección',
 'Leave a Comment' => 'Deje un Comentario',
 'Comment' => 'Comentario',
 'Comment Sent For Approval' => 'El comentario ha sido enviado y será visible tan pronto como sea aprobado',
@@ -38,4 +38,5 @@ return [
 'Site Title' => 'Aprende inglés en línea',
 'Frontpage Header Title' => 'Aprende Inglés en Línea con Instructores en Vivo',
 'Frontpage Header Body' => 'Aprende y practica inglés desde la comodidad de tu hogar. Clases individuales o en grupos pequeños para una atención más personalizada. Enseñamos en línea para que nuestros costos se mantengan bajos y estos ahorros se transfieran a nuestros estudiantes.',
+'Section' => 'Sección',
 ];

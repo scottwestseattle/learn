@@ -10,10 +10,6 @@
 
 
 
-
-
-
-
 <a class="btn btn-primary btn-sm" role="button" href="/sample">@LANG('ui.Prev') </a>
 <a class="btn btn-primary btn-sm" role="button" href="/sample">@LANG('ui.Next') </a>
 

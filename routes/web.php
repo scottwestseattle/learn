@@ -37,6 +37,30 @@ Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admi
 // Super Admin Pages
 Route::get('/superadmin', 'HomeController@superadmin')->middleware('is_admin:super')->name('superadmin');
 
+// Lessons
+Route::group(['prefix' => 'lessons'], function () {
+	Route::get('/', 'LessonController@index');
+	Route::get('/admin', 'LessonController@admin');
+	Route::get('/view/{lesson}','LessonController@view');
+
+	// add/create
+	Route::get('/add','LessonController@add');
+	Route::post('/create','LessonController@create');
+
+	// edit/update
+	Route::get('/edit/{lesson}','LessonController@edit');
+	Route::post('/update/{lesson}','LessonController@update');
+
+	// delete
+	Route::get('/confirmdelete/{lesson}','LessonController@confirmdelete');
+	Route::post('/delete/{lesson}','LessonController@delete');
+	Route::get('/undelete', 'LessonController@undelete');
+	
+	// add/create
+	Route::get('/publish/{lesson}','LessonController@publish');
+	Route::post('/publishupdate/{lesson}','LessonController@publishupdate');
+});
+
 // Users
 Route::group(['prefix' => 'users'], function () {
 	Route::get('/', 'UsersController@index');
