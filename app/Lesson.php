@@ -13,14 +13,14 @@ class Lesson extends Base
     }
 
     public function getDisplayNumber()
-    {	
+    {
     	return $this->lesson_number . '.' . $this->section_number;
     }
-	
+
     public function renumber()
-    {	
+    {
 		$renumbered = false;
-		
+
 		// check if record with this section_number already exists
 		$c = Lesson::select()
 			->where('id', '<>', $this->id)
@@ -28,7 +28,7 @@ class Lesson extends Base
 			->where('lesson_number', $this->lesson_number)
 			->where('section_number', $this->section_number)
 			->count();
-			
+
 		if ($c > 0)
 		{
 			// renumber everything
@@ -38,19 +38,21 @@ class Lesson extends Base
 				->where('lesson_number', $this->lesson_number)
 				->where('section_number', '>=', $this->section_number)
 				->get();
-				
+
 			$next = $this->section_number + 1;
 			foreach($records as $record)
 			{
 				$record->section_number = $next++;
 				$record->save();
 				$renumbered = true;
+//dump($record->title . ': ' . $next);
 			}
+//die;
 			//dd($records);
 		}
-		
+
 		return $renumbered;
-    }	
+    }
 
 	static public function getPrev($curr)
 	{
@@ -61,7 +63,7 @@ class Lesson extends Base
 	{
 		return Lesson::getNextPrev($curr, /* next = */ true);
 	}
-	
+
 	// default is prev
 	static protected function getNextPrev($curr, $next = false)
 	{
@@ -75,15 +77,15 @@ class Lesson extends Base
 			->first();
 
 		return $r ? $r->id : null;
-	}			
-	
+	}
+
     static public function getLessonNumbers()
     {
     	return Tools::makeNumberArray(1, 10);
-    }	
-	
+    }
+
     static public function getSectionNumbers()
     {
     	return Tools::makeNumberArray(1, 10);
-    }	
+    }
 }
