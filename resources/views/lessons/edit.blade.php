@@ -14,22 +14,25 @@
 		<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
 					
 		<div style="margin-top: 20px;" class="form-group">
+		
 			<label for="lesson_number" class="control-label">@LANG('content.Lesson'):</label>
 			<select name="lesson_number" id="lesson_number" class="">
 				@foreach ($record->getLessonNumbers() as $key => $value)
 					<option value="{{$key}}" {{ $key == $record->lesson_number ? 'selected' : ''}}>{{$value}}</option>
 				@endforeach
 			</select>			
-		</div>
-
-		<div style="margin-top: 20px;" class="form-group">
+			&nbsp;
 			<label for="section_number" class="control-label">@LANG('content.Section'):</label>
 			<select name="section_number" id="section_number" class="">
 				@foreach ($record->getSectionNumbers() as $key => $value)
 					<option value="{{$key}}" {{ $key == $record->section_number ? 'selected' : ''}}>{{$value}}</option>
 				@endforeach
 			</select>			
-		</div>		
+			&nbsp;
+			<input type="checkbox" name="renumber_flag" id="renumber_flag" class="" />
+			<label for="blocked_flag" class="checkbox-big-label">@LANG('content.Renumber All')</label>
+			
+		</div>
 					
 		<label for="description" class="control-label">@LANG('gen.Description'):</label>
 		<textarea name="description" class="form-control">{{$record->description}}</textarea>

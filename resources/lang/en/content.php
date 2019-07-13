@@ -39,4 +39,5 @@ return [
 'Frontpage Header Title' => 'Learn English Online With Live Instructors',
 'Frontpage Header Body' => 'Learn and practice English from the comfort of your home. One-on-one or small group classes for more personal attention. We teach online so our costs are kept low and these savings are passed on to our students.',
 'Section' => 'Section',
+'Renumber All' => 'Renumber All',
 ];

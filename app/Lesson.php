@@ -17,40 +17,58 @@ class Lesson extends Base
     	return $this->lesson_number . '.' . $this->section_number;
     }
 
-    public function renumber()
+    public function renumber($renumberAll)
     {
 		$renumbered = false;
-
-		// check if record with this section_number already exists
-		$c = Lesson::select()
-			->where('id', '<>', $this->id)
-			->where('deleted_flag', 0)
-			->where('lesson_number', $this->lesson_number)
-			->where('section_number', $this->section_number)
-			->count();
-
-		if ($c > 0)
+		
+		if ($renumberAll)
 		{
-			// renumber everything
+			// renumber all records
 			$records = Lesson::select()
-				->where('id', '<>', $this->id)
 				->where('deleted_flag', 0)
 				->where('lesson_number', $this->lesson_number)
-				->where('section_number', '>=', $this->section_number)
-				->orderBy('lesson_number')
 				->orderBy('section_number')
 				->get();
 
-			$next = $this->section_number + 1;
+			$next = 1;
 			foreach($records as $record)
 			{
 				$record->section_number = $next++;
 				$record->save();
 				$renumbered = true;
-//dump($record->title . ': ' . $next);
+			}			
+		}
+		else
+		{		
+			// check if record with this section_number already exists
+			$c = Lesson::select()
+				->where('id', '<>', $this->id)
+				->where('deleted_flag', 0)
+				->where('lesson_number', $this->lesson_number)
+				->where('section_number', $this->section_number)
+				->count();
+
+			if ($c > 0)
+			{
+				// renumber starting from current record
+				$records = Lesson::select()
+					->where('id', '<>', $this->id)
+					->where('deleted_flag', 0)
+					->where('lesson_number', $this->lesson_number)
+					->where('section_number', '>=', $this->section_number)
+					->orderBy('section_number')
+					->get();
+
+				$next = $this->section_number + 1;
+				foreach($records as $record)
+				{
+					$record->section_number = $next++;
+					$record->save();
+					$renumbered = true;
+					//dump($record->title . ': ' . $next);
+				}
+				//die;
 			}
-//die;
-			//dd($records);
 		}
 
 		return $renumbered;

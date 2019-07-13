@@ -39,4 +39,5 @@ return [
 'Frontpage Header Title' => '通过现场讲师在线学习英语',
 'Frontpage Header Body' => '在舒适的家中学习和练习英语。 一对一或小组课程，以提高个人关注度。 我们在线教学，因此我们的成本保持在较低水平，这些节省将转嫁给我们的学生。',
 'Section' => '部分',
+'Renumber All' => '全部重新编号',
 ];

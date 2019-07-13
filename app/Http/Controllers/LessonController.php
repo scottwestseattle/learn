@@ -188,8 +188,9 @@ class LessonController extends Controller
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml($request->text), $isDirty, $changes);
+		$renumberAll = isset($request->renumber_flag) ? true : false;
 		
-		$numbersChanged = false; // if the numbering changes, then we need to check if an auto-renumber is needed
+		$numbersChanged = $renumberAll; // if the numbering changes, then we need to check if an auto-renumber is needed
 		$record->lesson_number = Tools::copyDirty($record->lesson_number, $request->lesson_number, $numbersChanged, $changes);
 		$record->section_number = Tools::copyDirty($record->section_number, $request->section_number, $numbersChanged, $changes);
 		if ($numbersChanged)
@@ -206,7 +207,7 @@ class LessonController extends Controller
 				
 				if ($numbersChanged)
 				{
-					if ($record->renumber()) // check for renumbering
+					if ($record->renumber($renumberAll)) // check for renumbering
 					{
 						$msg = 'Lessons have been renumbered';
 						Event::logEdit(LOG_MODEL, $msg, $record->id, 'renumbering');			
@@ -222,7 +223,7 @@ class LessonController extends Controller
 		}
 		else
 		{
-			Tools::flash('success', 'No changes made to ' . $this->title);
+			Tools::flash('success', 'No changes made to lesson');
 		}
 
 		return redirect(REDIRECT_ADMIN);
