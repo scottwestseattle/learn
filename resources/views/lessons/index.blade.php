@@ -4,7 +4,11 @@
 
 <div class="container page-normal">
 
-	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})</h1>
+	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})
+	@if (Auth::user() && Auth::user()->isAdmin())
+		<span style="font-size:.6em;"><a href="/{{$prefix}}/admin">Admin</a></span>
+	@endif	
+	</h1>
 	
 	<div class="row" style="margin-bottom:10px;">		
 		@foreach($records as $record)			

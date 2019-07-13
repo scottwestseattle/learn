@@ -205,12 +205,14 @@ class LessonController extends Controller
 				Tools::flash('success', $this->title . ' has been updated');
 				
 				if ($numbersChanged)
+				{
 					if ($record->renumber()) // check for renumbering
 					{
 						$msg = 'Lessons have been renumbered';
 						Event::logEdit(LOG_MODEL, $msg, $record->id, 'renumbering');			
 						Tools::flash('success', $msg);
 					}
+				}
 			}
 			catch (\Exception $e) 
 			{

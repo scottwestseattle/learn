@@ -11,7 +11,12 @@
 		<a class="btn btn-primary btn-sm {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">@LANG('ui.Next')</a>
 	</div>
 
-    <div style="font-size:.8em;">@LANG('content.Lesson')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}</div>
+    <div style="font-size:.8em;">
+		@LANG('content.Lesson')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}
+		@if (Auth::user() && Auth::user()->isAdmin())
+			&ndash;&nbsp;<a href="/{{$prefix}}/edit/{{$record->id}}">Edit</a>
+		@endif
+	</div>
 	<h3 name="title" class="">{{$record->title }}</h3>
 
 	@if (strlen($record->description) > 0)
