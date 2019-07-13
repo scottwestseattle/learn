@@ -29,7 +29,6 @@
 		<a class="btn btn-primary btn-sm {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}"><span class="glyphicon glyphicon-button-prev"></span>@LANG('ui.Prev')</a>
 		<a class="btn btn-primary btn-sm {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">@LANG('ui.Next')<span class="glyphicon glyphicon-button-next"></span></a>
 	</div>
-	<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="/{{$prefix}}/">@LANG('content.Back to Lessons')<span class="glyphicon glyphicon-button-back-to"></span></a></span>
 
 </div>
 @endsection

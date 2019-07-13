@@ -18,7 +18,12 @@
 		@foreach($records as $record)
 			<tr>					
 				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->getDisplayNumber()}}&nbsp;{{$record->title}}</a></td>
-				<td>{{substr($record->description, 0, 200)}}</td>
+				<td>{{substr($record->description, 0, 200)}}</td>				
+				<td>
+					@if ($record->isUnfinished())
+					<a href="/{{$prefix}}/publish/{{$record->id}}"><button type="button" class="btn btn-xsm btn-warning">{{$record->getStatus()}}</button></a>
+					@endif
+				</td>
 				<td><a href="/{{$prefix}}/edit/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
 				<td><a href="/{{$prefix}}/confirmdelete/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
 			</tr>

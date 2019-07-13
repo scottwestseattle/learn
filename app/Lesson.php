@@ -12,6 +12,25 @@ class Lesson extends Base
     	return $this->belongsTo(User::class);
     }
 
+    public function isUnfinished()
+    {
+    	return (!$this->finished_flag || !$this->approved_flag || !$this->published_flag);
+    }
+
+    public function getStatus()
+    {
+		$v = 'Finished';
+		
+		if (!$this->finished_flag)
+			$v = 'Finish';
+		else if (!$this->approved_flag)
+			$v = 'Approve';
+		else if (!$this->published_flag)
+			$v = 'Publish';
+		
+    	return $v;
+    }
+	
     public function getDisplayNumber()
     {
     	return $this->lesson_number . '.' . $this->section_number;

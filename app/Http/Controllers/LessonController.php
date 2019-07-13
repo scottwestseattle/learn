@@ -276,18 +276,14 @@ class LessonController extends Controller
     {	
 		$record = $lesson; 
 		
-		$published = isset($request->published_flag) ? 1 : 0;
-		$record->published_flag = $published;
-		
-		if ($published === 0) // if it goes back to private, then it has to be approved again
-			$record->approved_flag = 0;
-		else
-			$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
+		$record->published_flag = isset($request->published_flag) ? 1 : 0;
+		$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
+		$record->finished_flag = isset($request->finished_flag) ? 1 : 0;		
 		
 		try
 		{
 			$record->save();
-			Event::logEdit(LOG_MODEL, $record->title, $record->id, 'published/approved status updated');			
+			Event::logEdit(LOG_MODEL, $record->title, $record->id, 'published/approved/finished status updated');			
 			Tools::flash('success', $this->title . ' status has been updated');
 		}
 		catch (\Exception $e) 
