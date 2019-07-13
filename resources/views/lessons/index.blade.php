@@ -6,7 +6,7 @@
 
 	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})
 	@if (Auth::user() && Auth::user()->isAdmin())
-		<span style="font-size:.6em;"><a href="/{{$prefix}}/admin">Admin</a></span>
+		<span style="font-size:.6em;"><a href="/{{$prefix}}/admin"><span class="glyphCustom glyphicon glyphicon-admin"></span></a></span>
 	@endif	
 	</h1>
 	

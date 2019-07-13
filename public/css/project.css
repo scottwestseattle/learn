@@ -1,12 +1,25 @@
 
 /***********************************************************
-Primary Colors:
+
+Colors:
 
 Header Orange: #FF6900
 Header Blue: #4993FD
 Section and Button Green: #5CB85C
+Glyph Icon Blue: #286090
 
 ************************************************************/
+.glyphCustom {
+	margin:0 5px;
+	font-size: 22px;
+	color: #286090;
+}
+
+.glyphCustom-sm {
+	margin:0 5px;
+	font-size: 14px;
+	color: #286090;
+}
 
 .drop-box {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);

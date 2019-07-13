@@ -14,7 +14,8 @@
     <div style="font-size:.8em;">
 		@LANG('content.Lesson')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}
 		@if (Auth::user() && Auth::user()->isAdmin())
-			&ndash;&nbsp;<a href="/{{$prefix}}/edit/{{$record->id}}">Edit</a>
+			&nbsp;<a href="/{{$prefix}}/admin"><span class="glyphCustom-sm glyphicon glyphicon-admin"></span></a>
+			&nbsp;<a href="/{{$prefix}}/edit/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a>
 		@endif
 	</div>
 	<h3 name="title" class="">{{$record->title }}</h3>

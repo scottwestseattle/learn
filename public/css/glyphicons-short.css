@@ -1,0 +1,291 @@
+/* 
+	only the glyphicons that are currently being used 
+
+	the full original list is in glyphicons.css
+*/
+
+@font-face {
+    font-family: Glyphicons Halflings;
+    src: url(/fonts/glyphicons-halflings-regular.eot?f4769f9bdb7466be65088239c12046d1);
+    src: url(/fonts/glyphicons-halflings-regular.eot?f4769f9bdb7466be65088239c12046d1?#iefix) format("embedded-opentype"), 
+	url(/fonts/glyphicons-halflings-regular.woff2?448c34a56d699c29117adc64c43affeb) format("woff2"), 
+	url(/fonts/glyphicons-halflings-regular.woff?fa2772327f55d8198301fdb8bcfc8158) format("woff"), 
+	url(/fonts/glyphicons-halflings-regular.ttf?e18bbf611f2a2e43afc071aa2f4e1512) format("truetype"), 
+	url(/fonts/glyphicons-halflings-regular.svg?89889688147bd7575d6327160d64e760#glyphicons_halflingsregular) format("svg")
+}
+
+.glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: Glyphicons Halflings;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+/* project personalized */
+
+.glyphicon-add:before { /* plus-sign */
+    content: "\E081"
+}
+
+.glyphicon-admin:before { /* -cog */
+    content: "\E019"
+}
+
+.glyphicon-back:before { /* -circle-arrow-left */
+    content: "\E132"
+}
+
+.glyphicon-delete:before { /* -trash */
+    content: "\E020"
+}
+
+.glyphicon-index:before { /* -list */
+    content: "\E056"
+}
+
+.glyphicon-view:before { /* -eye-open */
+    content: "\E105"
+}
+
+.glyphicon-publish:before { /* -flash */
+    content: "\E162"
+}
+
+/* originals */
+
+.glyphicon-asterisk:before {
+    content: "*"
+}
+
+.glyphicon-chevron-left:before {
+    content: "\E079"
+}
+
+.glyphicon-chevron-right:before {
+    content: "\E080"
+}
+
+.glyphicon-circle-arrow-right:before {
+    content: "\E131"
+}
+
+.glyphicon-circle-arrow-left:before {
+    content: "\E132"
+}
+
+.glyphicon-circle-arrow-up:before {
+    content: "\E133"
+}
+
+.glyphicon-circle-arrow-down:before {
+    content: "\E134"
+}
+
+.glyphicon-cog:before {
+    content: "\E019"
+}
+
+.glyphicon-cloud-download:before {
+    content: "\E197"
+}
+
+.glyphicon-cloud-upload:before {
+    content: "\E198"
+}
+
+.glyphicon-copy:before {
+    content: "\E205"
+}
+
+.glyphicon-copyright-mark:before {
+    content: "\E194"
+}
+
+.glyphicon-duplicate:before {
+    content: "\E224"
+}
+
+.glyphicon-earphone:before {
+    content: "\E182"
+}
+
+.glyphicon-edit:before {
+    content: "\E065"
+}
+
+.glyphicon-envelope:before {
+    content: "\2709"
+}
+
+.glyphicon-eye-open:before {
+    content: "\E105"
+}
+
+.glyphicon-eye-close:before {
+    content: "\E106"
+}
+
+.glyphicon-flash:before {
+    content: "\E162"
+}
+
+.glyphicon-globe:before {
+    content: "\E135"
+}
+
+.glyphicon-grain:before {
+    content: "\E239"
+}
+
+.glyphicon-hand-right:before {
+    content: "\E127"
+}
+
+.glyphicon-hand-left:before {
+    content: "\E128"
+}
+
+.glyphicon-hand-up:before {
+    content: "\E129"
+}
+
+.glyphicon-hand-down:before {
+    content: "\E130"
+}
+
+.glyphicon-home:before {
+    content: "\E021"
+}
+
+.glyphicon-link:before {
+    content: "\E144"
+}
+
+.glyphicon-list:before {
+    content: "\E056"
+}
+
+.glyphicon-log-in:before {
+    content: "\E161"
+}
+
+.glyphicon-log-out:before {
+    content: "\E163"
+}
+
+.glyphicon-map-marker:before {
+    content: "\E062"
+}
+
+.glyphicon-minus-sign:before {
+    content: "\E082"
+}
+
+.glyphicon-modal-window:before {
+    content: "\E237"
+}
+
+.glyphicon-option-horizontal:before {
+    content: "\E234"
+}
+
+.glyphicon-option-vertical:before {
+    content: "\E235"
+}
+
+.glyphicon-pencil:before {
+    content: "\270F"
+}
+
+.glyphicon-phone:before {
+    content: "\E145"
+}
+
+.glyphicon-picture:before {
+    content: "\E060"
+}
+
+.glyphicon-piggy-bank:before {
+    content: "\E225"
+}
+
+.glyphicon-plus:before {
+    content: "+"
+}
+
+.glyphicon-plus-sign:before {
+    content: "\E081"
+}
+
+.glyphicon-question-sign:before {
+    content: "\E085"
+}
+
+.glyphicon-remove:before {
+    content: "\E014"
+}
+
+.glyphicon-repeat:before {
+    content: "\E030"
+}
+
+.glyphicon-search:before {
+    content: "\E003"
+}
+
+.glyphicon-share-alt:before {
+    content: "\E095"
+}
+
+.glyphicon-spy:before { /* sunglasses */
+    content: "\E240"
+}
+
+.glyphicon-star:before {
+    content: "\E006"
+}
+
+.glyphicon-star-empty:before {
+    content: "\E007"
+}
+
+.glyphicon-sunglasses:before {
+    content: "\E240"
+}
+
+.glyphicon-tag:before {
+    content: "\E041"
+}
+
+.glyphicon-th-list:before {
+    content: "\E012"
+}
+
+.glyphicon-th:before {
+    content: "\E011"
+}
+
+.glyphicon-transfer:before {
+    content: "\E178"
+}
+
+.glyphicon-trash:before {
+    content: "\E020"
+}
+
+.glyphicon-undelete:before { /* -remove */
+    content: "\E014"
+}
+
+.glyphicon-usd:before {
+    content: "\E148"
+}
+
+.glyphicon-user:before {
+    content: "\E008"
+}
