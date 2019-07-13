@@ -87,6 +87,42 @@ class TranslationController extends Controller
 		return view('entries.add', $vdata);
 	}
 
+    public function view(Request $request, $filename)
+    {
+		$locale = App::getLocale();
+
+		App::setLocale('en');
+		$records[App::getLocale()] = Lang::get($filename);
+
+		App::setLocale('es');
+		$records[App::getLocale()] = Lang::get($filename);
+
+		App::setLocale('zh');
+		$records[App::getLocale()] = Lang::get($filename);
+
+		App::setLocale($locale);
+
+		foreach($records['en'] as $key => $value)
+		{
+			if (!array_key_exists($key, $records['es']))
+			{
+				$records['es'][$key] = null;
+			}
+			if (!array_key_exists($key, $records['zh']))
+			{
+				$records['zh'][$key] = null;
+			}
+		}
+
+		$vdata = $this->getViewData([
+			'prefix' => 'translations',
+			'filename' => $filename,
+			'records' => $records,
+		]);
+
+		return view('translations.view', $vdata);
+    }
+	
     public function edit(Request $request, $filename)
     {
 		$locale = App::getLocale();

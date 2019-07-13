@@ -4,12 +4,14 @@
 
 <div class="container page-normal">
 
+@if (false)
 	<!-- Sub-menu ------>
 	<div class="" style="font-size:20px;">
 		<table class=""><tr>			
 			<td style="width:40px;"><a href='/translations/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>			
 		</tr></table>
 	</div>			
+@endif
 	
 	<h1>@LANG('ui.Translations') ({{ count($records) }})</h1>
 
@@ -17,13 +19,11 @@
 		<tbody>
 		@foreach($records as $record)
 			<tr>
-				<td style="width:20px;"><a href='/translations/edit/{{$record}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-				<td>
-					<a href="/translations/edit/{{$record}}">{{$record}}</a>		
-				</td>
-				<td>
-					<a href='/translations/confirmdelete/{{$record}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>
-				</td>
+				<td class="glyphicon-width"><a href='/translations/edit/{{$record}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
+				<td><a href="/translations/view/{{$record}}">{{$record}}</a></td>
+@if (false)				
+				<td class="glyphicon-width"><a href='/translations/confirmdelete/{{$record}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
+@endif
 			</tr>
 		@endforeach
 		</tbody>

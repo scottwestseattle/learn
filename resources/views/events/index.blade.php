@@ -2,11 +2,11 @@
 
 @section('content')
 
-<div class="page-size container">
+<div class="container page-normal">
 		
-		@component('events.menu-submenu-events')@endcomponent
+		@component('events.menu-submenu')@endcomponent
 
-		@component('events.menu-submenu-events-filter', ['totals' => $totals])@endcomponent
+		@component('events.menu-submenu-filter', ['totals' => $totals])@endcomponent
 				
 		<h3>@LANG('ui.Events') ({{$records->count()}})</h3>
 		

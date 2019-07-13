@@ -26,6 +26,10 @@
     -moz-osx-font-smoothing: grayscale
 }
 
+.glyphicon-width {
+	width: 15px;
+}
+
 /* project personalized */
 
 .glyphicon-add:before { /* plus-sign */
@@ -60,6 +64,10 @@
 
 .glyphicon-asterisk:before {
     content: "*"
+}
+
+.glyphicon-calendar:before {
+    content: "\E109"
 }
 
 .glyphicon-chevron-left:before {

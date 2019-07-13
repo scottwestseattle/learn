@@ -86,9 +86,11 @@ Route::group(['prefix' => 'translations'], function () {
 	// index
 	Route::get('/', 'TranslationController@index');
 
+	Route::get('/view/{filename}', 'TranslationController@view');
+	
 	// add
-	Route::get('/add','TranslationController@add');
-	Route::post('/create','TranslationController@create');
+	//todo: Route::get('/add','TranslationController@add');
+	//todo: Route::post('/create','TranslationController@create');
 
 	// edit
 	Route::get('/edit/{filename}','TranslationController@edit');
