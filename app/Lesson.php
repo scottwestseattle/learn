@@ -37,6 +37,8 @@ class Lesson extends Base
 				->where('deleted_flag', 0)
 				->where('lesson_number', $this->lesson_number)
 				->where('section_number', '>=', $this->section_number)
+				->orderBy('lesson_number')
+				->orderBy('section_number')
 				->get();
 
 			$next = $this->section_number + 1;
