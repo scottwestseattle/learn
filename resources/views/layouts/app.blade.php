@@ -47,6 +47,10 @@ $domainName = isset($domainName) ? $domainName : '';
 		<nav style="" class="navbar navbar-expand-md navbar-dark fixed-top power-purple">
 
 			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
+			
+@if (Auth::user() && Auth::user()->isAdmin())			
+			<div style="" class=""><a class="" role="" href="/{{$prefix}}/admin"><span style="color:white;" class="glyphicon glyphicon-admin"></span></a></div>
+@endif
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" 
 				aria-expanded="false" aria-label="Toggle navigation">
@@ -77,11 +81,11 @@ $domainName = isset($domainName) ? $domainName : '';
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                <a class="dropdown-item" href="/superadmin">@LANG('ui.Super Admin')</a>
                                 <a class="dropdown-item" href="/admin">@LANG('ui.Admin')</a>
                                 <a class="dropdown-item" href="/users">@LANG('ui.Users')</a>
                                 <a class="dropdown-item" href="/visitors">@LANG('ui.Visitors')</a>
                                 <a class="dropdown-item" href="/events">@LANG('ui.Events')</a>
+								<div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
                                 <a class="dropdown-item" href="/lessons/admin">@LANG('content.Lessons')</a>
 							
@@ -90,7 +94,7 @@ $domainName = isset($domainName) ? $domainName : '';
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
-                                    <button style="font-size:.8em;" class="btn btn-warning">@LANG('ui.Logout')</button>
+                                    <button style="color: red; font-size:1em;" class="btn btn-warning"><span style="color:red; margin-left:0;" class="glyphCustom-sm glyphicon glyphicon-log-out"></span>@LANG('ui.Logout')</button>
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

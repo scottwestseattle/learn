@@ -2,15 +2,11 @@
 
 @section('content')
 
-@component('components.menu-submenu', ['data' => $data])
-	@component('users.menu-submenu')@endcomponent
-@endcomponent
+@component('users.menu-submenu')@endcomponent
 
-<div class="page-size container">
+<div class="container page-normal">
                
-	<div class="form-group">
-		<h1 name="name" class="">{{ $user->name }} ({{ $user->id }})</h1>
-	</div>
+	<h1 name="name" class="">{{ $user->name }} ({{ $user->id }})</h1>
 
 	<table style="font-size:1.2em;">
 		<tr><td>@LANG('ui.Email'):</td><td><b>{{$user->email}}</b></td></tr>
@@ -21,4 +17,5 @@
 	</table>
 
 </div>
+
 @endsection

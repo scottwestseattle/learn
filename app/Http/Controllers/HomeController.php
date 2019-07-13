@@ -35,6 +35,21 @@ class HomeController extends Controller
     public function admin()
     {
 		//
+		// get Sites
+		//
+		$sites = null;
+		if (User::isSuperAdmin())
+		{
+			$sites = [
+				'English50.com',
+				'Spanish50.com',
+				'VirtualEnglish.xyz',
+				'Conversar.xyz',
+				'LearnFast.xyz',
+			];
+		}
+		
+		//
 		// get unapproved comments
 		//
 		$comments = null;
@@ -46,7 +61,8 @@ class HomeController extends Controller
 			->get();
 		if (count($comments) === 0)
 			$comments = null;
-		*/
+		*/	
+	
 		
 		//
 		// get latest events
@@ -67,61 +83,6 @@ class HomeController extends Controller
 		$visitors = VisitorController::removeRobots(Visitor::getVisitors());
 		$ip = Tools::getIp();
 		return view('home.admin', $this->getViewData([
-			'events' => $events,
-			'users' => $users, 
-			'visitors' => $visitors,
-			'comments' => $comments, 
-			'ip' => $ip, 
-			'new_visitor' => Visitor::isNew($ip),
-		]));
-    }
-
-    public function superadmin()
-    {
-		//
-		// get Sites
-		//
-		$sites = [
-			'English50.com',
-			'Spanish50.com',
-			'VirtualEnglish.xyz',
-			'Conversar.xyz',
-			'LearnFast.xyz',
-		];
-		
-		//
-		// get unapproved comments
-		//
-		$comments = null;
-		/*todo:
-		$comments = Comment::select()
-			->where('deleted_flag', 0)
-			->where('approved_flag', 0)
-			->orderByRaw('id DESC')
-			->get();
-		if (count($comments) === 0)
-			$comments = null;
-		*/
-		
-		//
-		// get latest events
-		//
-		$events = Event::getAlerts(10);
-
-		//
-		// get latest users
-		//
-		$users = User::select()
-			->where('user_type', '<=', USER_UNCONFIRMED)
-			->orderByRaw('id DESC')
-			->get();
-					
-		//
-		// get today's visitors
-		//
-		$visitors = VisitorController::removeRobots(Visitor::getVisitors());
-		$ip = Tools::getIp();
-		return view('home.superadmin', $this->getViewData([
 			'sites' => $sites,
 			'events' => $events,
 			'users' => $users, 
@@ -130,5 +91,5 @@ class HomeController extends Controller
 			'ip' => $ip, 
 			'new_visitor' => Visitor::isNew($ip),
 		]));
-    }	
+    }
 }

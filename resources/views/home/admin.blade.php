@@ -12,7 +12,7 @@
 			<li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
 			@endif
 			<li>My IP:&nbsp;{{$ip}}</li>
-			<li>{{base_path()}}</li>
+			<li>{{substr(base_path(), 0, 20)}}...</li>
 			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}</li>
 			<li>New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}
 				&nbsp;&nbsp;<a href="/eunoticereset">EU Notice</a>
@@ -20,6 +20,26 @@
 			</li>
 		</ul>
 	</div>
+	
+	@if (isset($sites))
+	<div style="margin-bottom:30px;">	
+		<h3>Sites ({{count($sites)}})</h3>
+		<table class="table table-striped">
+			<tbody>
+				@foreach($sites as $record)
+					<tr>
+						<td><a target="_blank" href="http://{{$record}}">{{$record}}</a></td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
+	</div>
+	@endif
+
+	@if (isset($site_admins))
+	<hr />
+	@endif
+	
 	
 	@if (isset($comments))
 	<div>	
@@ -29,11 +49,11 @@
 				<tr><th></th><th>Created</th><th>Name</th><th>Comment</th><th></th></tr>
 				@foreach($comments as $record)
 					<tr>
-						<td style="width:10px;"><a href='/comments/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
+						<td class="glyphicon-width"><a href='/comments/publish/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-publish"></span></a></td>
 						<td>{{$record->created_at}}</td>
 						<td><a href="/comments/publish/{{ $record->id }}">{{$record->name}}</a></td>
 						<td>{{$record->comment}}</td>
-						<td><a href='/comments/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+						<td class="glyphicon-width"><a href='/comments/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
 					</tr>
 				@endforeach
 			</tbody>
@@ -57,12 +77,12 @@
 			<tbody>
 			@foreach($users as $record)
 				<tr>
-					<td style="width:10px;"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td class="glyphicon-width"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
 					<td>{{$record->created_at}}</td>
 					<td><a href="/users/view/{{ $record->id }}">{{$record->name}}</a></td>
 					<td>{{$record->email}}</td>
 					<td>{{$record->user_type}}</td>
-					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+					<td class="glyphicon-width"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
 				</tr>
 				@break
 			@endforeach

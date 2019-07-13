@@ -34,9 +34,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
 
-// Super Admin Pages
-Route::get('/superadmin', 'HomeController@superadmin')->middleware('is_admin:super')->name('superadmin');
-
 // Lessons
 Route::group(['prefix' => 'lessons'], function () {
 	Route::get('/', 'LessonController@index');
