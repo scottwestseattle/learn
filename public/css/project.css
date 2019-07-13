@@ -30,6 +30,14 @@ Glyph Icon Blue: #286090
 	margin: 10px 0;
 }
 
+.page-nav-buttons .glyphicon-button-prev {
+	margin-right: 5px;
+}
+
+.page-nav-buttons .glyphicon-button-next, .page-nav-buttons .glyphicon-button-back-to {
+	margin-left: 5px;
+}
+
 .lesson {
 	font-size: 1.2em;
 }

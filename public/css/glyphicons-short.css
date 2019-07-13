@@ -44,6 +44,18 @@
     content: "\E132"
 }
 
+.glyphicon-button-back-to:before { /* circle-arrow-up */
+    content: "\E133"
+}
+
+.glyphicon-button-next:before { /* circle-arrow-right */
+    content: "\E131"
+}
+
+.glyphicon-button-prev:before { /* circle-arrow-left */
+    content: "\E132"
+}
+
 .glyphicon-delete:before { /* -trash */
     content: "\E020"
 }
