@@ -106,17 +106,17 @@ class Event extends Base
 		}
 		catch (\Exception $e)
 		{
-		    $msg = "Error Adding Event";
+		    $msg = "Fatal Error Adding Event";
 
 			// database failed so show and log event message
-			dump($msg . ' - Check ~/appeventlog');
-
 			// write an emergency log file
 			$line = $msg . ': ' . $e->getMessage() . ' / ' . $model . ' / ' . $action . ' / ' . $title;
 			if (!Tools::appendFile('appeventlog.txt', $line))
 			{
 				// already dumping error message
 			}
+			
+			dd($msg . ' - Check ~/appeventlog');			
 		}
     }
 

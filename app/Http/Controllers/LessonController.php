@@ -184,14 +184,16 @@ class LessonController extends Controller
 		 
 		$isDirty = false;
 		$changes = '';
-		
-		$request->text = Tools::convertFromHtml($request->text);
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-		$record->text = Tools::copyDirty($record->text, $request->text, $isDirty, $changes);
-		$record->lesson_number = Tools::copyDirty($record->lesson_number, $request->lesson_number, $isDirty, $changes);
-		$record->section_number = Tools::copyDirty($record->section_number, $request->section_number, $isDirty, $changes);
+		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml($request->text), $isDirty, $changes);
+		
+		$numbersChanged = false; // if the numbering changes, then we need to check if an auto-renumber is needed
+		$record->lesson_number = Tools::copyDirty($record->lesson_number, $request->lesson_number, $numbersChanged, $changes);
+		$record->section_number = Tools::copyDirty($record->section_number, $request->section_number, $numbersChanged, $changes);
+		if ($numbersChanged)
+			$isDirty = true;
 				
 		if ($isDirty)
 		{						
@@ -201,6 +203,14 @@ class LessonController extends Controller
 
 				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);			
 				Tools::flash('success', $this->title . ' has been updated');
+				
+				if ($numbersChanged)
+					if ($record->renumber()) // check for renumbering
+					{
+						$msg = 'Lessons have been renumbered';
+						Event::logEdit(LOG_MODEL, $msg, $record->id, 'renumbering');			
+						Tools::flash('success', $msg);
+					}
 			}
 			catch (\Exception $e) 
 			{

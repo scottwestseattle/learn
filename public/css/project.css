@@ -8,6 +8,14 @@ Section and Button Green: #5CB85C
 
 ************************************************************/
 
+.drop-box {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* spacing for the lesson prev/next buttons */
+.page-nav-buttons {
+	margin: 10px 0;
+}
 
 .lesson {
 	font-size: 1.2em;
@@ -17,8 +25,18 @@ Section and Button Green: #5CB85C
 	min-width:50px;
 }
 
+.lesson-page {
+	font-size: 1.2em;
+}
+
 .lesson h2, .lesson h3 {
 	margin-top: 20px;
+}
+
+.lesson-examples {
+	color: purple;
+	font-weight: bold;
+	font-style: italic;
 }
 
 .vocab-list div input {
@@ -37,15 +55,20 @@ body {
   color: #5a5a5a;
 }
 
+/* this is the wrapper around the page yield */
 .page-layout {
-    margin-top: .7rem;
+    margin-top: 14px;	/* this adjust for the fixed nav bar height */
+}
+
+/* spacing for normal, non-front pages */
+.page-normal { 
+    padding-top: 15px;
+    margin-bottom: 3rem;
 	min-height: 500px;
 }
 
-.page-normal { /* normal, non-front page spacing */
-    padding-top: 2rem;
-    margin-bottom: 3rem;
-	min-height: 500px;
+.page-normal h1 { 
+	font-size: 1.7em;
 }
 
 .grassy-green {

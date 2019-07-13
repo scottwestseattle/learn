@@ -80,6 +80,7 @@ $domainName = isset($domainName) ? $domainName : '';
                                 <a class="dropdown-item" href="/visitors">@LANG('ui.Visitors')</a>
                                 <a class="dropdown-item" href="/events">@LANG('ui.Events')</a>
                                 <a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
+                                <a class="dropdown-item" href="/lessons/admin">@LANG('content.Lessons')</a>
 							
 								<div class="dropdown-divider"></div>
 								

@@ -18,7 +18,7 @@ return [
 'Save Vocabulary' => 'Save Vocabulary',
 'Start Learning' => 'Start Learning',
 'Content Pages' => 'Content Pages',
-'Photo Pages' => 'Photo Pages',
+'Back to Lessons' => 'Back to Lessons',
 'Static Pages' => 'Static Pages',
 'Site Map Pages' => 'Site Map Pages',
 'Set Location' => 'Set Location',

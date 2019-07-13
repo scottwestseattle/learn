@@ -18,7 +18,7 @@ return [
 'Save Vocabulary' => '节省词汇量',
 'Start Learning' => '开始学习',
 'Content Pages' => '内容页面',
-'Photo Pages' => '照片页面',
+'Back to Lessons' => '回到课程',
 'Static Pages' => '静态页面',
 'Site Map Pages' => '站点地图中的页面',
 'Set Location' => '设置位置',

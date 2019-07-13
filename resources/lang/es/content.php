@@ -18,7 +18,7 @@ return [
 'Save Vocabulary' => 'Guardar Vocabulario',
 'Start Learning' => 'Aprenda Ya',
 'Content Pages' => 'Páginas de contenido',
-'Photo Pages' => 'Páginas de fotos',
+'Back to Lessons' => 'Volver a las Lecciones',
 'Static Pages' => 'Páginas estáticas',
 'Site Map Pages' => 'Páginas en Mapa del Sitio',
 'Set Location' => 'Escoger Localización',
