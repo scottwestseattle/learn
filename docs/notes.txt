@@ -32,6 +32,11 @@ New Syntax:
 
 ############################################################
 
+Notes:
+
+Set up view variables for all views:
+C:\wamp3.1.9\www\learn\app\Providers\AppServiceProvider.php
+
 Callout Example: 
 
 <div class="bs-callout bs-callout-success">

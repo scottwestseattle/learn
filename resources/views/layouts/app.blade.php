@@ -47,10 +47,12 @@ $domainName = isset($domainName) ? $domainName : '';
 		<nav style="" class="navbar navbar-expand-md navbar-dark fixed-top power-purple">
 
 			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
-			
-@if (Auth::user() && Auth::user()->isAdmin())			
-			<div style="" class=""><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-admin"></span></a></div>
-@endif
+
+			@if ($isSuperAdmin)
+				<div style="" class=""><a class="" role="" href="/admin"><span style="color:gold;" class="glyphicon glyphicon-admin"></span></a></div>	
+			@elseif ($isAdmin)
+				<div style="" class=""><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-admin"></span></a></div>
+			@endif
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" 
 				aria-expanded="false" aria-label="Toggle navigation">

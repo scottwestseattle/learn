@@ -24,24 +24,32 @@ class Lesson extends Base
     {
 		$text = '';
 		$color = '';
+		$done = true;
+		$btn = '';
 		
 		if (!$this->finished_flag)
 		{
 			$text = 'Finish';
-			$color = 'btn-danger';
+			$color = 'red';
+			$btn = 'btn-danger';
+			$done = false;
 		}
 		else if (!$this->approved_flag)
 		{
 			$text = 'Approve';
-			$color = 'btn-warning';
+			$color = 'yellow';
+			$btn = 'btn-warning';
+			$done = false;
 		}
 		else if (!$this->published_flag)
 		{
 			$text = 'Publish';
-			$color = 'btn-success';
+			$color = 'green';
+			$btn = 'btn-success';
+			$done = false;
 		}
 		
-    	return ['text' => $text, 'color' => $color];
+    	return ['text' => $text, 'color' => $color, 'btn' => $btn, 'done' => $done];
     }
 	
     public function getDisplayNumber()
@@ -119,14 +127,26 @@ class Lesson extends Base
 	// default is prev
 	static protected function getNextPrev($curr, $next = false)
 	{
-		$r = Lesson::select()
-			->where('deleted_flag', 0)
-			->where('published_flag', 1)
-			->where('approved_flag', 1)
-			->where('lesson_number', $curr->lesson_number)
-			->where('section_number',  $next ? '>' : '<', $curr->section_number)
-			->orderByRaw('lesson_number ASC, section_number ' . ($next ? 'ASC' : 'DESC '))
-			->first();
+		if (Tools::isAdmin())
+		{		
+			$r = Lesson::select()
+				->where('deleted_flag', 0)
+				->where('lesson_number', $curr->lesson_number)
+				->where('section_number',  $next ? '>' : '<', $curr->section_number)
+				->orderByRaw('lesson_number ASC, section_number ' . ($next ? 'ASC' : 'DESC '))
+				->first();
+		}
+		else
+		{
+			$r = Lesson::select()
+				->where('deleted_flag', 0)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
+				->where('lesson_number', $curr->lesson_number)
+				->where('section_number',  $next ? '>' : '<', $curr->section_number)
+				->orderByRaw('lesson_number ASC, section_number ' . ($next ? 'ASC' : 'DESC '))
+				->first();
+		}
 
 		return $r ? $r->id : null;
 	}

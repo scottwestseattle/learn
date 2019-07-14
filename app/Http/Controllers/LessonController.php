@@ -36,14 +36,26 @@ class LessonController extends Controller
 		
 		try
 		{
-			$records = Lesson::select()
-//				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->where('published_flag', 1)
-				->where('approved_flag', 1)
-				->orderBy('lesson_number')
-				->orderBy('section_number')
-				->get();
+			if (Tools::isAdmin())
+			{
+				$records = Lesson::select()
+	//				->where('site_id', SITE_ID)
+					->where('deleted_flag', 0)
+					->orderBy('lesson_number')
+					->orderBy('section_number')
+					->get();
+			}
+			else
+			{
+				$records = Lesson::select()
+	//				->where('site_id', SITE_ID)
+					->where('deleted_flag', 0)
+					->where('published_flag', 1)
+					->where('approved_flag', 1)
+					->orderBy('lesson_number')
+					->orderBy('section_number')
+					->get();
+			}
 		}
 		catch (\Exception $e) 
 		{

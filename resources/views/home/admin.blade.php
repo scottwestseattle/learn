@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container page-normal">
-	<h2 style="">Admin Dashboard</h2>
+	<h2 style="">{{$isSuperAdmin ? 'Super ' : ''}}Admin Dashboard</h2>
 
 	<div style="margin-bottom:40px;">
 		<ul style="font-size: 1.1em; list-style-type: none; padding-left: 0px;">

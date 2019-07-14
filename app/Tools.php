@@ -2,8 +2,23 @@
 
 namespace App;
 
+use Auth;
+use App\User;
+
 class Tools
 {
+	// shortcut
+    static public function isAdmin()
+    {
+		return (Auth::user() && Auth::user()->isAdmin());
+	}
+	
+	// shortcut
+    static public function isSuperAdmin()
+    {
+		return (Auth::user() && Auth::user()->isSuperAdmin());
+	}
+	
     static public function makeNumberArray($start = 1, $end = 10)
     {
 		$v = [];

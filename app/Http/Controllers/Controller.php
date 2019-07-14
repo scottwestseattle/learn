@@ -10,10 +10,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use DB;
 use App;
 use Auth;
+use App\User;
 use App\Visitor;
 use App\Event;
 use App\Tools;
-use App\User;
 
 define('SITE_ID', intval(env('SITE_ID')));
 
@@ -92,7 +92,7 @@ class Controller extends BaseController
 			}			
 			
 			return $next($request);
-		});		
+		});
 	}
 
 	static private function showPrivacyNotice()
@@ -123,6 +123,8 @@ class Controller extends BaseController
 		$this->viewData['prefix'] = $this->prefix;
 		$this->viewData['title'] = $this->title;
 		$this->viewData['titlePlural'] = $this->titlePlural;
+		$this->viewData['isAdmin'] = Tools::isAdmin();
+		$this->viewData['isSuperAdmin'] = Tools::isSuperAdmin();
 		
 		if ($this->getDomainName() == 'localhost')
 			$this->viewData['localhost'] = true;
