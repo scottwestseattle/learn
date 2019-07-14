@@ -16,7 +16,7 @@
 	</div>
 
     <!-- START THE FEATURETTES -->
-
+	
 	<div class="container marketing">	
 		<div class="row featurette">
 			<div class="col-md-7">
@@ -55,6 +55,7 @@
 				<img src="/img/globe.png" width="100%" style="max-width: 350px;" />
 		  </div>
 		</div>
+		
 	</div>
 	
     <div style="padding:50px;"><!-- SPACER ONLY --></div>

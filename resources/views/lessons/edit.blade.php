@@ -30,10 +30,16 @@
 			</select>			
 			&nbsp;
 			<input type="checkbox" name="renumber_flag" id="renumber_flag" class="" />
-			<label for="blocked_flag" class="checkbox-big-label">@LANG('content.Renumber All')</label>
+			<label for="renumber_flag" class="checkbox-big-label">@LANG('content.Renumber All')</label>
 			
 		</div>
-					
+
+		<div class="form-group">
+			<input type="hidden" name="format_flag" value="{{$record->format_flag}}" />
+			<input type="checkbox" name="autoformat" id="autoformat" {{$record->format_flag == LESSON_FORMAT_AUTO ? 'checked' : ''}} />
+			<label for="autoformat" class="checkbox-big-label">@LANG('content.Auto-format')</label>
+		</div>
+		
 		<label for="description" class="control-label">@LANG('gen.Description'):</label>
 		<textarea name="description" class="form-control">{{$record->description}}</textarea>
 

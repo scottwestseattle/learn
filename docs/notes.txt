@@ -12,14 +12,13 @@ Kattie has a wide variety of influences and considers herself to be an eclectic 
 
 Latest DB Changes:
 
+7/10/2019
 ALTER TABLE `users` ADD `site_id` SMALLINT NOT NULL AFTER `id`;
 
-
+7/13/2019
+ALTER TABLE `lessons` ADD `format_flag` TINYINT NOT NULL DEFAULT '0' COMMENT '0=not set/default, 1=auto-format, 99=other' AFTER `deleted_flag`;
 
 New Syntax:
-
-request()->session()->flash('message.level', 'danger');
-request()->session()->flash('message.content', $e->getMessage());
 
 @auth
     // The user is authenticated...
@@ -30,6 +29,18 @@ request()->session()->flash('message.content', $e->getMessage());
 @endguest
 
 ############################################################
+
+Callout Example: 
+
+<div class="bs-callout bs-callout-success">
+<h4>Side Note</h4>
+<p>When a sentence is using the verb 'To Be' then an adjective can come after the verb.&nbsp; For example:</p>
+<p>The tree is <strong>tall</strong>.</p>
+<p>The sky is <strong>blue</strong>.</p>
+</div>
+
+<h3>Summary</h3>
+<p>Adjectives are fun to use because they add colorful descriptions to the language.</p>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

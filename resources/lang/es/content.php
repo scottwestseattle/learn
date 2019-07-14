@@ -40,4 +40,5 @@ return [
 'Frontpage Header Body' => 'Aprende y practica inglés desde la comodidad de tu hogar. Clases individuales o en grupos pequeños para una atención más personalizada. Enseñamos en línea para que nuestros costos se mantengan bajos y estos ahorros se transfieran a nuestros estudiantes.',
 'Section' => 'Sección',
 'Renumber All' => 'Renumerar Todo',
+'Auto-format' => 'Auto-Formato',
 ];

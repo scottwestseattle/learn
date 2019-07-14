@@ -151,10 +151,31 @@ class LessonController extends Controller
 			'record' => $record, 
 			], LOG_MODEL, LOG_PAGE_PERMALINK));
 	}
+
+	private static function autoFormat($text)
+    {
+		$t = $text;
 		
+		$posEx = strpos($t, 'For example:');
+		$posH3 = strpos($t, '<h3>');
+		
+		if ($posEx && $posH3 && $posEx < $posH3)
+		{
+			$t = str_replace('For example:', 'For example:<div class="lesson-examples">', $t);
+			$t = str_replace('<h3>', '</div><h3>', $t);
+		}
+		
+		return $t;
+	}
+	
 	public function view(Lesson $lesson)
     {	
 		$lesson->text = Tools::convertToHtml($lesson->text);
+		
+		if ($lesson->format_flag == LESSON_FORMAT_AUTO)
+		{
+			$lesson->text = LessonController::autoFormat($lesson->text);
+		}
 		
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
@@ -188,6 +209,12 @@ class LessonController extends Controller
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml($request->text), $isDirty, $changes);
+	
+		// autoformat is currently just a checkbox but the db value is a flag
+		$format_flag = isset($request->autoformat) ? LESSON_FORMAT_AUTO : LESSON_FORMAT_DEFAULT;
+		$record->format_flag = Tools::copyDirty($record->format_flag, $format_flag, $isDirty, $changes);
+		
+		// renumber action
 		$renumberAll = isset($request->renumber_flag) ? true : false;
 		
 		$numbersChanged = $renumberAll; // if the numbering changes, then we need to check if an auto-renumber is needed

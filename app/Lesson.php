@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 
+define('LESSON_FORMAT_DEFAULT', 0);
+define('LESSON_FORMAT_AUTO', 1);
+
 class Lesson extends Base
 {
     public function user()
