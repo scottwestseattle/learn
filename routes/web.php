@@ -47,6 +47,8 @@ Route::group(['prefix' => 'lessons'], function () {
 	// edit/update
 	Route::get('/edit/{lesson}','LessonController@edit');
 	Route::post('/update/{lesson}','LessonController@update');
+	Route::get('/edit2/{lesson}','LessonController@edit2');
+	Route::post('/update2/{lesson}','LessonController@update2');
 
 	// delete
 	Route::get('/confirmdelete/{lesson}','LessonController@confirmdelete');

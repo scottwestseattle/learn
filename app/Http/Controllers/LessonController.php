@@ -198,7 +198,7 @@ class LessonController extends Controller
 			'record' => $lesson,
 			]));
     }
-		
+	
     public function update(Request $request, Lesson $lesson)
     {
 		$record = $lesson;
@@ -253,9 +253,48 @@ class LessonController extends Controller
 			Tools::flash('success', 'No changes made to lesson');
 		}
 
-		return redirect(REDIRECT_ADMIN);
+		return redirect('/lessons/view/' . $record->id);
 	}
 		
+	public function edit2(Lesson $lesson)
+    {		 
+		return view(PREFIX . '.edit2', $this->getViewData([
+			'record' => $lesson,
+			]));
+    }
+		
+    public function update2(Request $request, Lesson $lesson)
+    {
+		$record = $lesson;
+		 
+		$isDirty = false;
+		$changes = '';
+
+		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml($request->text), $isDirty, $changes);
+	
+		if ($isDirty)
+		{						
+			try
+			{
+				$record->save();
+
+				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);			
+				Tools::flash('success', $this->title . ' has been updated');
+			}
+			catch (\Exception $e) 
+			{
+				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'title = ' . $record->title, null, $e->getMessage());
+				Tools::flash('danger', $e->getMessage());
+			}				
+		}
+		else
+		{
+			Tools::flash('success', 'No changes made to lesson');
+		}
+
+		return redirect('/lessons/view/' . $record->id);
+	}
+	
     public function confirmdelete(Lesson $lesson)
     {	
 		$vdata = $this->getViewData([

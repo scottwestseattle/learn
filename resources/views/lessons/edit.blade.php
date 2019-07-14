@@ -43,12 +43,25 @@
 		<label for="description" class="control-label">@LANG('gen.Description'):</label>
 		<textarea name="description" class="form-control">{{$record->description}}</textarea>
 
-		<div class="submit-button">
+		<div class="form-group submit-button">
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
 		</div>
-		
+
+@if (false)		
+		<a href='/{{$prefix}}/edit2/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-pencil"></span></a>
 		<label for="text" class="control-label">@LANG('gen.Text'):</label>
-		<textarea style="height:500px" name="text" class="form-control big-text">{{$record->text}}</textarea>
+@endif
+
+		<a href='#' onclick="event.preventDefault(); tinymce.init({selector:'#text'}); "><span class="glyphCustom glyphicon glyphicon-zoom-out"></span></a>
+		<a href='#' onclick='event.preventDefault(); tinymce.remove(); '><span class="glyphCustom glyphicon glyphicon-zoom-in"></span></a>
+		<a href='#' onclick='event.preventDefault(); refreshView();'><span class="glyphCustom glyphicon glyphicon-refresh"></span></a>
+		
+		<div id ="rich" style="display:default;">
+			<textarea style="height:500px" name="text" id="text" class="form-control big-text">{{$record->text}}</textarea>
+		</div>
+		
+		<div id ="preview" style="display:none;">
+		</div>
 		
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
@@ -57,7 +70,36 @@
 		{{ csrf_field() }}
 		
 	</form>
-
+	
 </div>
 
-@stop
+@endsection
+
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"></script>
+<script>
+
+tinymce.init({selector:'#text'});
+
+function refreshView()
+{
+	if ($("#preview").is(":visible"))
+	{
+		$("#preview").hide();
+		$("#rich").show();
+		
+		tinymce.init({selector:'#text'});		
+	}
+	else
+	{
+		tinymce.remove();
+		
+		$("#preview").html(
+			$("#text").text()
+		);
+		
+		$("#preview").show();
+		$("#rich").hide();
+	}
+}
+
+</script>

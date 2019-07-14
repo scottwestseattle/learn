@@ -246,6 +246,10 @@
     content: "\E085"
 }
 
+.glyphicon-refresh:before {
+    content: "\E031"
+}
+
 .glyphicon-remove:before {
     content: "\E014"
 }
@@ -309,3 +313,12 @@
 .glyphicon-user:before {
     content: "\E008"
 }
+
+.glyphicon-zoom-in:before {
+    content: "\E015"
+}
+
+.glyphicon-zoom-out:before {
+    content: "\E016"
+}
+

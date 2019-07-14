@@ -15,6 +15,7 @@
 		@if (Auth::user() && Auth::user()->isAdmin())
 			&nbsp;<a href="/{{$prefix}}/admin"><span class="glyphCustom-sm glyphicon glyphicon-admin"></span></a>
 			&nbsp;<a href="/{{$prefix}}/edit/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a>
+			&nbsp;<a href="/{{$prefix}}/edit2/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
 		@endif
 	</div>
 	<h3 name="title" class="">{{$record->title }}</h3>

@@ -1,3 +1,5 @@
+		<a href='#' onclick='event.preventDefault(); $("#rich").show(); $("#text").html($("#text-raw").html()); $("#raw").hide(); tinymce.init({selector:'#text'}); '><span class="glyphCustom glyphicon glyphicon-zoom-out"></span></a>
+		<a href='#' onclick='event.preventDefault(); tinymce.remove(); $("#text-raw").html($("#text").html()); $("#raw").show();$("#rich").hide(); '><span class="glyphCustom glyphicon glyphicon-zoom-in"></span></a>
 
 
 Kattie is a graphic designer, visual artist, and traveler.  Born in Costa Rica, she has traveled to more than 34 countries and counting. She has lived in Barcelona, Panama, Kuala Lumpur, Malaysia and Shanghai, China.  She currently resides in Rotterdam, Holland.

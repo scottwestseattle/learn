@@ -22,16 +22,26 @@ class Lesson extends Base
 
     public function getStatus()
     {
-		$v = 'Finished';
+		$text = '';
+		$color = '';
 		
 		if (!$this->finished_flag)
-			$v = 'Finish';
+		{
+			$text = 'Finish';
+			$color = 'btn-danger';
+		}
 		else if (!$this->approved_flag)
-			$v = 'Approve';
+		{
+			$text = 'Approve';
+			$color = 'btn-warning';
+		}
 		else if (!$this->published_flag)
-			$v = 'Publish';
+		{
+			$text = 'Publish';
+			$color = 'btn-success';
+		}
 		
-    	return $v;
+    	return ['text' => $text, 'color' => $color];
     }
 	
     public function getDisplayNumber()
