@@ -12,8 +12,10 @@
 			<li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
 			@endif
 			<li>My IP:&nbsp;{{$ip}}</li>
-			<li>{{substr(base_path(), 0, 20)}}...</li>
+			<li>{{substr(base_path(), 0, 32)}}...</li>
 			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}</li>
+			<li>Session Lifetime:&nbsp;{{env('SESSION_LIFETIME', 0)}}</li>
+			<li>SITE_ID: {{SITE_ID}}</li>
 			<li>New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}
 				&nbsp;&nbsp;<a href="/eunoticereset">EU Notice</a>
 				&nbsp;&nbsp;<a href="/hash">Hash</a>				
@@ -22,8 +24,9 @@
 	</div>
 	
 	@if (isset($sites))
-	<div style="margin-bottom:30px;" class="table-responsive">	
+	<div style="margin-bottom:30px;">	
 		<h3>Sites ({{count($sites)}})</h3>
+		<div class="table-responsive">
 		<table class="table table-striped">
 			<tbody>
 				@foreach($sites as $record)
@@ -33,6 +36,7 @@
 				@endforeach
 			</tbody>
 		</table>
+		</div>
 	</div>
 	@endif
 
@@ -42,8 +46,9 @@
 	
 	
 	@if (isset($comments))
-	<div class="table-responsive">	
+	<div>	
 		<h3 style="color:red;">Comments to Approve ({{count($comments)}})</h3>
+		<div class="table-responsive">
 		<table class="table table-striped">
 			<tbody>
 				<tr><th></th><th>Created</th><th>Name</th><th>Comment</th><th></th></tr>
@@ -58,6 +63,7 @@
 				@endforeach
 			</tbody>
 		</table>
+		</div>
 		<a href="/comments/indexadmin">Show All Comments</a>
 	</div>
 	<hr />
@@ -71,8 +77,9 @@
 	@endif
 	
 	@if (count($users) > 0)
-	<div class="table-responsive">	
+	<div>	
 		<h3 style="">Last New User ({{count($users)}} Total)</h3>
+		<div class="table-responsive">
 		<table class="table table-striped">
 			<tbody>
 			@foreach($users as $record)
@@ -88,16 +95,18 @@
 			@endforeach
 			</tbody>
 		</table>
+		</div>
 		<a href="/users/index">Show All Users</a>
 	</div>
 	<hr />
 	@endif
 		
-	<div class="table-responsive">
+	<div>
 		<h3 style="">Latest Events ({{count($events)}})</h3>
 @if (false)		
 		@component('events.menu-submenu-events-filter')@endcomponent	
 @endif
+		<div class="table-responsive">
 		<table class="table table-striped">
 			<tbody>
 				<tr>
@@ -129,6 +138,7 @@
 			@endforeach
 			</tbody>
 		</table>
+		</div>
 		<a href="/events">Show All Events</a>
 	</div>
 	<hr />
