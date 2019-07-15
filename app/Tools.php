@@ -7,32 +7,80 @@ use App\User;
 
 class Tools
 {
+    static public function getHash($text)
+	{
+		$s = sha1(trim($text));
+		$s = str_ireplace('-', '', $s);
+		$s = strtolower($s);
+		$s = substr($s, 0, 8);
+		$final = '';
+
+		for ($i = 0; $i < 6; $i++)
+		{
+			$c = substr($s, $i, 1);
+
+			if ($i % 2 != 0)
+			{
+				if (ctype_digit($c))
+				{
+                    if ($i == 1)
+                    {
+                        $final .= "Q";
+                    }
+                    else if ($i == 3)
+                    {
+                        $final .= "Z";
+                    }
+                    else
+                    {
+                        $final .= $c;
+                    }
+				}
+				else
+				{
+					$final .= strtoupper($c);
+				}
+			}
+			else
+			{
+				$final .= $c;
+			}
+		}
+
+		// add last 2 chars
+		$final .= substr($s, 6, 2);
+
+		//echo $final;
+
+		return $final;
+	}
+
 	// shortcut
     static public function isAdmin()
     {
 		return (Auth::user() && Auth::user()->isAdmin());
 	}
-	
+
 	// shortcut
     static public function isSuperAdmin()
     {
 		return (Auth::user() && Auth::user()->isSuperAdmin());
 	}
-	
+
     static public function makeNumberArray($start = 1, $end = 10)
     {
 		$v = [];
-		
+
 		for ($i = $start; $i < $end; $i++)
 			$v[$i] = $i;
-	
+
 		return $v;
 	}
-	
+
     static public function convertToHtml($text)
-    {	
+    {
 		$v = $text;
-		
+
 		// check for HTML
 		if (strpos($v, '[') !== false)
 		{
@@ -48,14 +96,14 @@ class Tools
 			// no html so add br's
 			$v = nl2br($v);
 		}
-		
+
 		return $v;
 	}
 
     static public function convertFromHtml($text)
-    {	
+    {
 		$v = $text;
-				
+
 		if (strpos($v, '[') !== false)
 		{
 			//$v = str_replace('[', '<', $v);
@@ -67,84 +115,84 @@ class Tools
 			//$v = str_replace('<', '[', $v);
 			//$v = str_replace('>', ']', $v);
 		}
-		
+
 		return $v;
 	}
-	
+
     static public function copyDirty($to, $from, &$isDirty, &$updates = null, $alphanum = false)
-    {	
+    {
 		$from = Tools::trimNull($from, $alphanum);
 		$to = Tools::trimNull($to, $alphanum);
-		
+
 		if ($from != $to)
 		{
 			$isDirty = true;
-			
+
 			if (!isset($updates) || strlen($updates) == 0)
 				$updates = '';
 
 			$updates .= '|';
-				
+
 			if (strlen($to) == 0)
 				$updates .= '(empty)';
 			else
 				$updates .= $to;
 
 			$updates .= '|';
-				
+
 			if (strlen($from) == 0)
 				$updates .= '(empty)';
 			else
 				$updates .= $from;
-			
+
 			$updates .= '|  ';
 		}
-		
+
 		return $from;
-	}	
-		
+	}
+
 	// if string has non-whitespace chars, then it gets trimmed, otherwise gets set to null
 	static protected function trimNull($text, $alphanum = false)
 	{
 		if (isset($text))
 		{
 			$text = trim($text);
-			
+
 			if ($alphanum)
 			{
 				// remove all but the specified chars
 				$text = preg_replace("/[^a-zA-Z0-9!@.,()-+=?!' \r\n]+/", "", $text);
 			}
-			
+
 			if (strlen($text) === 0)
 				$text = null;
 		}
-		
+
 		return $text;
 	}
-		
+
     static public function createPermalink($title, $date = null)
-    {		
+    {
 		$v = null;
-		
+
 		if (isset($title))
 		{
 			$v = $title;
 		}
-		
+
 		if (isset($date))
 		{
 			$v .= '-' . $date;
 		}
-		
+
 		$v = preg_replace('/[^\da-z ]/i', ' ', $v); // replace all non-alphanums with spaces
 		$v = str_replace(" ", "-", $v);				// replace spaces with dashes
 		$v = strtolower($v);						// make all lc
 		$v = Tools::trimNull($v);					// trim it or null it
-		
+
 		return $v;
 	}
-	
+
 	static public function flash($level, $content)
 	{
 		request()->session()->flash('message.level', $level);
@@ -163,10 +211,10 @@ class Tools
 			if (Tools::startsWith($v, 'www.'))
 				$v = substr($v, 4);
 		}
-		
+
 		return $v;
 	}
-	
+
 	static public function getIp()
 	{
 		$ip = null;

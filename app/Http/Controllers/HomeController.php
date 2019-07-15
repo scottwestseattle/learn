@@ -18,10 +18,29 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-		
+
 		parent::__construct();
     }
-	
+
+    public function hash()
+    {
+		return view('home.hash', $this->getViewData([
+			'hash' => '',
+			'hashed' => '',
+		]));
+	}
+
+	public function hasher(Request $request)
+	{
+		$hash = trim($request->get('hash'));
+		$hashed = Tools::getHash($hash);
+
+		return view('home.hash', $this->getViewData([
+			'hash' => $hash,
+			'hashed' => $hashed,
+		]));
+	}
+
     /**
      * Show the application dashboard.
      *
@@ -48,7 +67,7 @@ class HomeController extends Controller
 				'LearnFast.xyz',
 			];
 		}
-		
+
 		//
 		// get unapproved comments
 		//
@@ -61,9 +80,9 @@ class HomeController extends Controller
 			->get();
 		if (count($comments) === 0)
 			$comments = null;
-		*/	
-	
-		
+		*/
+
+
 		//
 		// get latest events
 		//
@@ -76,7 +95,7 @@ class HomeController extends Controller
 			->where('user_type', '<=', USER_UNCONFIRMED)
 			->orderByRaw('id DESC')
 			->get();
-					
+
 		//
 		// get today's visitors
 		//
@@ -85,10 +104,10 @@ class HomeController extends Controller
 		return view('home.admin', $this->getViewData([
 			'sites' => $sites,
 			'events' => $events,
-			'users' => $users, 
+			'users' => $users,
 			'visitors' => $visitors,
-			'comments' => $comments, 
-			'ip' => $ip, 
+			'comments' => $comments,
+			'ip' => $ip,
 			'new_visitor' => Visitor::isNew($ip),
 		]));
     }

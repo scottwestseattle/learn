@@ -29,6 +29,9 @@ Route::get('/eunoticeaccept/', 'FrontPageController@eunoticeaccept');
 Route::get('/eunoticereset/', 'FrontPageController@eunoticereset');
 Route::get('/sample/', 'FrontPageController@sample');
 
+// protected
+Route::get('/hash', 'HomeController@hash');
+Route::post('/hasher', 'HomeController@hasher');
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Site Admin Pages
@@ -54,7 +57,7 @@ Route::group(['prefix' => 'lessons'], function () {
 	Route::get('/confirmdelete/{lesson}','LessonController@confirmdelete');
 	Route::post('/delete/{lesson}','LessonController@delete');
 	Route::get('/undelete', 'LessonController@undelete');
-	
+
 	// add/create
 	Route::get('/publish/{lesson}','LessonController@publish');
 	Route::post('/publishupdate/{lesson}','LessonController@publishupdate');
@@ -86,7 +89,7 @@ Route::group(['prefix' => 'translations'], function () {
 	Route::get('/', 'TranslationController@index');
 
 	Route::get('/view/{filename}', 'TranslationController@view');
-	
+
 	// add
 	//todo: Route::get('/add','TranslationController@add');
 	//todo: Route::post('/create','TranslationController@create');

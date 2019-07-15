@@ -12,6 +12,9 @@ $domainName = isset($domainName) ? $domainName : '';
 	<title>Learn - Remote Virtual Training</title>
 
     <!-- Scripts -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+	<script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
     <script src="{{ asset('js/project.js') }}"></script>
 
 	<!-- Bootstrap core CSS -->
@@ -37,8 +40,8 @@ $domainName = isset($domainName) ? $domainName : '';
     <!-- Custom styles for this template -->
     <link href="/css/project.css" rel="stylesheet">
     <link href="/css/glyphicons-short.css" rel="stylesheet">
-	
-	
+
+
 </head>
 
 <body>
@@ -49,12 +52,14 @@ $domainName = isset($domainName) ? $domainName : '';
 			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
 
 			@if ($isSuperAdmin)
-				<div style="" class=""><a class="" role="" href="/admin"><span style="color:gold;" class="glyphicon glyphicon-admin"></span></a></div>	
+				<div style="" class=""><a class="" role="" href="/admin"><span style="color:gold;" class="glyphicon glyphicon-admin"></span></a></div>
 			@elseif ($isAdmin)
 				<div style="" class=""><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-admin"></span></a></div>
+			@elseif (Auth::check())
+				<div style="" class=""><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
 			@endif
 
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" 
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
 				aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -90,9 +95,9 @@ $domainName = isset($domainName) ? $domainName : '';
 								<div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
                                 <a class="dropdown-item" href="/lessons/admin">@LANG('content.Lessons')</a>
-							
+
 								<div class="dropdown-divider"></div>
-								
+
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
@@ -109,7 +114,7 @@ $domainName = isset($domainName) ? $domainName : '';
 
 				</ul>
 			</div>
-			
+
 			<!-- Language Selector Dropdown -->
 			<div style="margin-left: 5px; margin-right:10px;" class="dropdown">
 				<a href="#" class="" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
@@ -120,7 +125,7 @@ $domainName = isset($domainName) ? $domainName : '';
 					<li><a href="/language/es"><img src="/img/theme1/language-es.png" /></a></li>
 					<li><a href="/language/zh"><img src="/img/theme1/language-zh.png" /></a></li>
 				</ul>
-			</div>			
+			</div>
 
 		</nav>
 	</header>
@@ -133,7 +138,7 @@ $domainName = isset($domainName) ? $domainName : '';
 				@LANG('flash.' . session('message.content'))
 			</div>
 		@endif
-	
+
 		@if (isset($showPrivacyNotice) && $showPrivacyNotice)
 			<div style="margin:0; padding: 5px 5px 5px 20px;" id="euNoticeAccepted" class="alert alert-success">
 				<span>@LANG('ui.European Union Privacy Notice')</span>
@@ -159,10 +164,6 @@ $domainName = isset($domainName) ? $domainName : '';
 			</span>
 		</div>
 	</footer>
-
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-	<script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 
 </body>
 </html>
