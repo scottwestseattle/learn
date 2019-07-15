@@ -258,6 +258,10 @@
     content: "\E030"
 }
 
+.glyphicon-save:before { /* save-file */
+    content: "\E202"
+}
+
 .glyphicon-search:before {
     content: "\E003"
 }

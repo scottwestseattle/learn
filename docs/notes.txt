@@ -1,6 +1,3 @@
-		<a href='#' onclick='event.preventDefault(); $("#rich").show(); $("#text").html($("#text-raw").html()); $("#raw").hide(); tinymce.init({selector:'#text'}); '><span class="glyphCustom glyphicon glyphicon-zoom-out"></span></a>
-		<a href='#' onclick='event.preventDefault(); tinymce.remove(); $("#text-raw").html($("#text").html()); $("#raw").show();$("#rich").hide(); '><span class="glyphCustom glyphicon glyphicon-zoom-in"></span></a>
-
 
 Kattie is a graphic designer, visual artist, and traveler.  Born in Costa Rica, she has traveled to more than 34 countries and counting. She has lived in Barcelona, Panama, Kuala Lumpur, Malaysia and Shanghai, China.  She currently resides in Rotterdam, Holland.
 
@@ -32,10 +29,21 @@ New Syntax:
 
 ############################################################
 
+// tinymce key, used scottscott@yopmail.com
+<script src="https://cdn.tiny.cloud/1/vft1qzd41vab0e8lnjogftv02qxpfv11j340z7i97o2poj6n/tinymce/5/tinymce.min.js"></script>
+
+Html Samples:
+
+long arrows, right and left:
+&rarr;
+&larr;
+
 <div class="table-responsive">
 <table class="table lesson-table">
-<tbody>
+<thead>
 <tr><th></th><th></th><th></th></tr>
+</thead>
+<tbody>
 <tr><td></td><td></td><td></td></tr>
 <tr><td></td><td></td><td></td></tr>
 <tr><td></td><td></td><td></td></tr>

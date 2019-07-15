@@ -6,8 +6,14 @@
 
 	<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="/{{$prefix}}/">@LANG('content.Back to Lessons')<span class="glyphicon glyphicon-button-back-to"></span></a></span>
 	<div class="page-nav-buttons">
-		<a class="btn btn-primary btn-lg {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}"><span class="glyphicon glyphicon-button-prev"></span>@LANG('ui.Prev')</a>
-		<a class="btn btn-primary btn-lg {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">@LANG('ui.Next')<span class="glyphicon glyphicon-button-next"></span></a>
+		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}">
+			<span class="glyphicon glyphicon-button-prev"></span>
+			@LANG('ui.Prev')
+		</a>
+		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">
+			@LANG('ui.Next')
+			<span class="glyphicon glyphicon-button-next"></span>
+		</a>
 	</div>
 
     <div style="font-size:.8em;">
@@ -28,8 +34,8 @@
 	<p>{!! $record->text !!}</p>
 
 	<div class="page-nav-buttons">
-		<a class="btn btn-primary btn-lg {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}"><span class="glyphicon glyphicon-button-prev"></span>@LANG('ui.Prev')</a>
-		<a class="btn btn-primary btn-lg {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">@LANG('ui.Next')<span class="glyphicon glyphicon-button-next"></span></a>
+		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}"><span class="glyphicon glyphicon-button-prev"></span>@LANG('ui.Prev')</a>
+		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">@LANG('ui.Next')<span class="glyphicon glyphicon-button-next"></span></a>
 	</div>
 
 </div>

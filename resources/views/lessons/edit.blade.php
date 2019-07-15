@@ -8,7 +8,7 @@
 
 	<h1>@LANG('ui.Edit') @LANG('content.' . $title)</h1>
 
-	<form method="POST" action="/{{$prefix}}/update/{{$record->id}}">
+	<form method="POST" id="form-edit" action="/{{$prefix}}/update/{{$record->id}}">
 
 		<label for="title" class="control-label">@LANG('gen.Title'):</label>
 		<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
@@ -43,20 +43,21 @@
 		<label for="description" class="control-label">@LANG('gen.Description'):</label>
 		<textarea name="description" class="form-control">{{$record->description}}</textarea>
 
-		<div class="form-group submit-button">
+		<div style="margin-bottom: 20px;" class="submit-button">
+			<button onclick="event.preventDefault(); saveAndStay();" name="update" class="btn btn-success">Save and Stay</button>
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
 		</div>
 
 @if (false)		
 		<a href='/{{$prefix}}/edit2/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-pencil"></span></a>
 		<label for="text" class="control-label">@LANG('gen.Text'):</label>
-@endif
 
 		<a href='#' onclick="event.preventDefault(); tinymce.init({selector:'#text'}); "><span class="glyphCustom glyphicon glyphicon-zoom-out"></span></a>
 		<a href='#' onclick='event.preventDefault(); tinymce.remove(); '><span class="glyphCustom glyphicon glyphicon-zoom-in"></span></a>
 		<a href='#' onclick='event.preventDefault(); refreshView();'><span class="glyphCustom glyphicon glyphicon-refresh"></span></a>
+@endif
 		
-		<div id ="rich" style="display:default;">
+		<div id ="rich" style="clear:both;display:default;">
 			<textarea style="height:500px" name="text" id="text" class="form-control big-text">{{$record->text}}</textarea>
 		</div>
 		
@@ -64,6 +65,7 @@
 		</div>
 		
 		<div class="submit-button">
+			<button onclick="event.preventDefault(); saveAndStay();" name="update" class="btn btn-success">Save and Stay</button>
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
 		</div>
 
@@ -75,17 +77,46 @@
 
 @endsection
 
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/vft1qzd41vab0e8lnjogftv02qxpfv11j340z7i97o2poj6n/tinymce/5/tinymce.min.js"></script>
+
 <script>
 
 //tinymce.init({selector:'#text'});
 
 tinymce.init({
 	selector:'#text',
-	plugins: 'table',
-	toolbar: 'formatselect | bold italic forecolor backcolor permanentpen formatpainter | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol'    
+	plugins: 'table code',
+	toolbar: 'code formatselect | bold italic forecolor backcolor permanentpen formatpainter | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol'
 });
 
+function saveAndStay()
+{
+	alert('Not implemented yet');
+	return;
+	
+	//$.post('/lesson/update/{{$record->id}}', $('#form-edit').serialize());	
+	
+$("#form-edit").submit(function(e) {
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    var form = $(this);
+    var url = form.attr('action');
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           data: form.serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+               alert(data); // show response from the php script.
+           }
+         });
+
+
+});
+	
+}
 
 function refreshView()
 {
