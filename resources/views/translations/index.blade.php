@@ -15,6 +15,8 @@
 	
 	<h1>@LANG('ui.Translations') ({{ count($records) }})</h1>
 
+	<div class="table-responsive">
+	
 	<table class="table table-striped">
 		<tbody>
 		@foreach($records as $record)
@@ -28,6 +30,8 @@
 		@endforeach
 		</tbody>
 	</table>
+	
+	</div>
 	
 </div>
 @endsection

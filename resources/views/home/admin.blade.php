@@ -22,7 +22,7 @@
 	</div>
 	
 	@if (isset($sites))
-	<div style="margin-bottom:30px;">	
+	<div style="margin-bottom:30px;" class="table-responsive">	
 		<h3>Sites ({{count($sites)}})</h3>
 		<table class="table table-striped">
 			<tbody>
@@ -42,7 +42,7 @@
 	
 	
 	@if (isset($comments))
-	<div>	
+	<div class="table-responsive">	
 		<h3 style="color:red;">Comments to Approve ({{count($comments)}})</h3>
 		<table class="table table-striped">
 			<tbody>
@@ -71,7 +71,7 @@
 	@endif
 	
 	@if (count($users) > 0)
-	<div>	
+	<div class="table-responsive">	
 		<h3 style="">Last New User ({{count($users)}} Total)</h3>
 		<table class="table table-striped">
 			<tbody>
@@ -93,7 +93,7 @@
 	<hr />
 	@endif
 		
-	<div>
+	<div class="table-responsive">
 		<h3 style="">Latest Events ({{count($events)}})</h3>
 @if (false)		
 		@component('events.menu-submenu-events-filter')@endcomponent	

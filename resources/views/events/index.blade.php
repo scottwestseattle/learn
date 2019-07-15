@@ -4,11 +4,13 @@
 
 <div class="container page-normal">
 		
-		@component('events.menu-submenu')@endcomponent
+	@component('events.menu-submenu')@endcomponent
 
-		@component('events.menu-submenu-filter', ['totals' => $totals])@endcomponent
+	@component('events.menu-submenu-filter', ['totals' => $totals])@endcomponent
 				
-		<h3>@LANG('ui.Events') ({{$records->count()}})</h3>
+	<h3>@LANG('ui.Events') ({{$records->count()}})</h3>
+		
+	<div class="table-responsive">
 		
 		<table style="width:100%;" class="xtable xtable-striped">
 			<tbody>
@@ -69,6 +71,6 @@
 			@endforeach
 			</tbody>
 		</table>
-	
+	</div>	
 </div>
 @endsection

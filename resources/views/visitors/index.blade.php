@@ -22,31 +22,35 @@ $now = new DateTime();
 		
 		<h3>@LANG('ui.Visitors') ({{count($records)}}) ({{$now->format('Y-m-d H:i:s')}})</h3>
 	
-		<table class="table table-striped">
-			<tbody>
-				<tr><th>Timestamp</th><th>Site</th><th>Page</th><th>IP</th><th>Referrer</th><th>User</th><th>Host</th><th></th></tr>
-				@foreach($records as $record)
-				<tr>
-					<td>{{$record['date']}}</td>
-					
-					<td>{{$record['domain_name']}}</td>					
-					
-					@if (!isset($record['id']))
-						<td>{{$record['model']}}/{{$record['page']}}</td>
-					@else
-						<td>{{$record['model']}}/{{$record['page']}} (<a href="/entries/show/{{$record['id']}}">{{$record['id']}}</a>)</td>
-					@endif
-					
-					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record['ip']}}">{{$record['ip']}}</a></td>
-					<td>{{$record['ref']}}</td>
-					<td>{{$record['agent']}}</td>
-					<td>{{$record['host']}}</td>
-					<td><a href='/entries/confirmdelete/{{$record['id']}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
-				</tr>
-				@endforeach
+		<div class="table-responsive">
+	
+			<table class="table table-striped">
+				<tbody>
+					<tr><th>Timestamp</th><th>Site</th><th>Page</th><th>IP</th><th>Referrer</th><th>User</th><th>Host</th><th></th></tr>
+					@foreach($records as $record)
+					<tr>
+						<td>{{$record['date']}}</td>
+						
+						<td>{{$record['domain_name']}}</td>					
+						
+						@if (!isset($record['id']))
+							<td>{{$record['model']}}/{{$record['page']}}</td>
+						@else
+							<td>{{$record['model']}}/{{$record['page']}} (<a href="/entries/show/{{$record['id']}}">{{$record['id']}}</a>)</td>
+						@endif
+						
+						<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record['ip']}}">{{$record['ip']}}</a></td>
+						<td>{{$record['ref']}}</td>
+						<td>{{$record['agent']}}</td>
+						<td>{{$record['host']}}</td>
+						<td><a href='/entries/confirmdelete/{{$record['id']}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+					</tr>
+					@endforeach
 
-			</tbody>
-		</table>
+				</tbody>
+			</table>
+		
+		</div>
 		
 		{{ csrf_field() }}
     </form>

@@ -4,6 +4,7 @@
 
 <div class="container page-normal">
 	<h1>@LANG('ui.Users') ({{count($records)}})</h1>
+	<div  class="table-responsive">
 	<table class="table">
 		<thead>
 			<tr>
@@ -21,5 +22,6 @@
 			</tr>
 		@endforeach</tbody>
 	</table>
+	</div>
 </div>
 @endsection

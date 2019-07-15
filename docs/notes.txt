@@ -32,6 +32,32 @@ New Syntax:
 
 ############################################################
 
+<div class="table-responsive">
+<table class="table lesson-table">
+<tbody>
+<tr><th></th><th></th><th></th></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="lesson-examples">
+<p>Example one.</p>
+<p>Example two.</p>
+</div>
+
+<div class="lesson-note">
+<h4>Side Note</h4>
+<p>This is a nice formatted side note box.</p>
+<p>This is more information about the awesome side note.</p>
+</div>
+
+
+
+############################################################
+
 Notes:
 
 Set up view variables for all views:

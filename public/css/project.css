@@ -340,11 +340,58 @@ body {
   }
 }
 
+.lesson-note {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    border-left-color: #5cb85c;
+}
+.lesson-note p:last-child {
+    margin-bottom: 0;
+}
+
+
 .lesson-examples {
     padding: 10px 15px;
     margin: 20px 0;
 	border-left: 5px solid #FF6900;
 }
+
+.lesson-examples p:last-child {
+    margin-bottom: 0;
+}
+
+
+
+
+.lesson-table, .lesson-table-sm {
+	max-width:400px;
+}
+
+.lesson-table, .lesson-table-xs {
+	max-width:300px;
+}
+
+.lesson-table-md {
+	max-width:600px;
+}
+
+.lesson-table-lg {
+	max-width:800px;
+}
+
+/* small screen */
+@media (max-width:500px) {
+
+.lesson-table 
+{
+	max-width: 100%;
+}
+
+}
+
 
 .bs-callout-no-border {
     padding: 10px 15px;

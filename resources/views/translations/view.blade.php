@@ -8,9 +8,11 @@
 
 	<h1>@LANG('content.Translations')</h1>
 				
-		<?php $cnt = 0; $recs = $records['en']; ?>
+	<?php $cnt = 0; $recs = $records['en']; ?>
 		
-		<table>
+	<div class="table-responsive">
+		
+		<table style="min-width: 800px;">
 			<tr><th></th><th>@LANG('ui.Key')</th><th>@LANG('ui.English')</th><th>@LANG('ui.Spanish')</th><th>@LANG('ui.Chinese')</th></tr>
 			@foreach($recs as $key => $value)
 			<tr>
@@ -21,8 +23,9 @@
 				<td>{{$records['zh'][$key]}}</td>
 			<tr>
 			@endforeach
-		</table>		
-
+		</table>
+		
+	</div>
 </div>
 
 @stop
