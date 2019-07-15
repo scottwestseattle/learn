@@ -12,7 +12,7 @@
 	
 	<div class="row" style="margin-bottom:10px;">		
 		@foreach($records as $record)			
-		<div style="max-width: 400px; padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
+		<div style="xmax-width: 400px; padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
 
 			<div class="drop-box" style="height:200px;  background-color: #4993FD; color:white;" ><!-- inner col div -->
 

@@ -78,7 +78,14 @@
 <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"></script>
 <script>
 
-tinymce.init({selector:'#text'});
+//tinymce.init({selector:'#text'});
+
+tinymce.init({
+	selector:'#text',
+	plugins: 'table',
+	toolbar: 'formatselect | bold italic forecolor backcolor permanentpen formatpainter | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol'    
+});
+
 
 function refreshView()
 {
