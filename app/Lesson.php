@@ -151,13 +151,13 @@ class Lesson extends Base
 		return $r ? $r->id : null;
 	}
 
-    static public function getLessonNumbers()
+    static public function getLessonNumbers($start = 1, $end = 15)
     {
-    	return Tools::makeNumberArray(1, 10);
+    	return Tools::makeNumberArray($start, $end);
     }
 
-    static public function getSectionNumbers()
+    static public function getSectionNumbers($start = 1, $end = 15)
     {
-    	return Tools::makeNumberArray(1, 10);
+    	return Tools::makeNumberArray($start, $end);
     }
 }
