@@ -17,7 +17,7 @@ use App\Tools;
 
 define('SITE_ID', intval(env('SITE_ID')));
 
-define('SHOW_NON_XS', 'hidden-xs');
+define('SHOW_NON_XS', 'd-none d-sm-block-tablecell');
 define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
 define('VISITOR_MAX_LENGTH', 200);
 
@@ -40,6 +40,8 @@ define('LOG_MODEL_SITES', 'sites');
 define('LOG_MODEL_USERS', 'users');
 define('LOG_MODEL_TRANSLATIONS', 'translations');
 define('LOG_MODEL_VISITORS', 'visitors');
+define('LOG_MODEL_LESSONS', 'lessons');
+define('LOG_MODEL_COURSES', 'courses');
 
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');

@@ -44,4 +44,5 @@ return [
 'Courses' => 'Courses',
 'Course' => 'Course',
 'Back to List' => 'Back to List',
+'Back to Course List' => 'Back to Course List',
 ];

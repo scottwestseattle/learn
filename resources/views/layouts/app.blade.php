@@ -67,7 +67,6 @@ $domainName = isset($domainName) ? $domainName : '';
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link" href="/courses">@LANG('content.Courses')</a></li>
-					<li class="nav-item"><a class="nav-link" href="/lessons">@LANG('content.Lessons')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/contact">@LANG('ui.Contact')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/about">@LANG('ui.About')</a></li>
 
@@ -95,7 +94,7 @@ $domainName = isset($domainName) ? $domainName : '';
                                 <a class="dropdown-item" href="/events">@LANG('ui.Events')</a>
 								<div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
-                                <a class="dropdown-item" href="/lessons/admin">@LANG('content.Lessons')</a>
+                                <a class="dropdown-item" href="/courses/admin">@LANG('content.Courses')</a>
 
 								<div class="dropdown-divider"></div>
 

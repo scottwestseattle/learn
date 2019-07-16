@@ -10,9 +10,21 @@
 
 	<form method="POST" id="form-edit" action="/{{$prefix}}/update/{{$record->id}}">
 
-		<label for="title" class="control-label">@LANG('gen.Title'):</label>
-		<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
-					
+	
+		<div class="form-group">
+			<label for="title" class="control-label">@LANG('gen.Title'):</label>
+			<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
+		</div>
+
+		<div class="form-group">
+			<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
+			<select name="parent_id" class="form-control">
+				@foreach ($courses as $course)
+					<option value="{{$course->id}}" {{ $course->id == $record->parent_id ? 'selected' : ''}}>{{$course->title}}</option>
+				@endforeach
+			</select>
+		</div>
+	
 		<div style="margin-top: 20px;" class="form-group">
 		
 			<label for="lesson_number" class="control-label">@LANG('content.Lesson'):</label>

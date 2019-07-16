@@ -5,7 +5,6 @@
 <div class="container page-normal">
 
 	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})
-	
 	@if ($isAdmin)
 		<span style="font-size:.6em;"><a href="/{{$prefix}}/admin"><span class="glyphCustom glyphicon glyphicon-admin"></span></a></span>
 	@endif	
@@ -19,11 +18,11 @@
 	
 				@if ( ($status=$record->getStatus())['done'] || !$isAdmin )
 					<a style="background-color: #4993FD; height:100%; width:100%;" class="btn btn-primary btn-lg" role="button" href="/{{$prefix}}/view/{{$record->id}}">
-						{{$record->getDisplayNumber()}}&nbsp;{{$record->title}}<br/>{{ $record->description}}
+						{{$record->title}}<br/>{{ $record->description}}
 					</a>
 				@else
 					<a style="height:100%; width:100%;" class="btn {{$status['btn']}} btn-lg" role="button" href="/{{$prefix}}/view/{{$record->id}}">
-						{{$record->getDisplayNumber()}}&nbsp;{{$record->title}}<br/>{{ $record->description}}
+						{{$record->title}}<br/>{{ $record->description}}
 					</a>
 				@endif
 					

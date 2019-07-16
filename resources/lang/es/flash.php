@@ -11,4 +11,5 @@ return [
 'No changes made to course' => 'No se han realizado cambios en el curso',
 'Course has been updated' => 'El curso ha sido actualizado',
 'Course status has been updated' => 'El estado del curso ha sido actualizado',
+'New course has been added' => 'Se ha añadido nuevo curso',
 ];

@@ -44,4 +44,5 @@ return [
 'Courses' => '课程',
 'Course' => '课程',
 'Back to List' => '返回目录',
+'Back to Course List' => '回到课程列表',
 ];

@@ -11,4 +11,5 @@ return [
 'No changes made to course' => '当然没有变化',
 'Course has been updated' => '课程已更新',
 'Course status has been updated' => '课程状态已更新',
+'New course has been added' => '新课程已添加',
 ];

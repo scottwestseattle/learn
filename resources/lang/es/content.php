@@ -44,4 +44,5 @@ return [
 'Courses' => 'Cursos',
 'Course' => 'Curso',
 'Back to List' => 'Volver a la lista',
+'Back to Course List' => 'Volver a la lista de Cursos',
 ];

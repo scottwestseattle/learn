@@ -11,4 +11,5 @@ return [
 'No changes made to course' => 'No changes made to course',
 'Course has been updated' => 'Course has been updated',
 'Course status has been updated' => 'Course status has been updated',
+'New course has been added' => 'New course has been added',
 ];

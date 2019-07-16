@@ -9,6 +9,7 @@ use App\User;
 use App\Event;
 use App\Lesson;
 use App\Tools;
+use App\Course;
 
 define('PREFIX', 'lessons');
 define('LOG_MODEL', 'lessons');
@@ -81,6 +82,7 @@ class LessonController extends Controller
 				->where('deleted_flag', 0)
 //				->where('published_flag', 1)
 //				->where('approved_flag', 1)
+				->orderBy('parent_id')
 				->orderBy('lesson_number')
 				->orderBy('section_number')
 				->get();
@@ -96,12 +98,30 @@ class LessonController extends Controller
 			'records' => $records,
 		]));
     }	
+
+    static public function getCourses($source)
+    {		 
+		$records = []; // make this countable so view will always work
+		try
+		{
+			$records = Course::getIndex();
+		}
+		catch (\Exception $e) 
+		{
+			$msg = 'Lesson: Error getting course list';
+			Event::logException(LOG_MODEL_COURSES, LOG_ACTION_SELECT, $msg . ' (' . $source . ')', null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
+		return $records;
+	}
 	
     public function add()
     {		 
 		return view(PREFIX . '.add', $this->getViewData([
 			'lessonNumbers' => Lesson::getLessonNumbers(),
 			'sectionNumbers' => Lesson::getSectionNumbers(),
+			'courses' => LessonController::getCourses(LOG_ACTION_ADD), // for the course dropdown			
 			]));
 	}
 		
@@ -109,7 +129,7 @@ class LessonController extends Controller
     {					
 		$record = new Lesson();
 		
-		$record->parent_id 		= 1; //todo: set real Course id
+		$record->parent_id 		= 0; //todo: set real Course id
 		$record->user_id 		= Auth::id();				
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
@@ -208,9 +228,10 @@ class LessonController extends Controller
     }
 	
 	public function edit(Lesson $lesson)
-    {		 
+    {		
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $lesson,
+			'courses' => LessonController::getCourses(LOG_ACTION_EDIT), // for the course dropdown
 			]));
     }
 	
@@ -224,6 +245,7 @@ class LessonController extends Controller
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml($request->text), $isDirty, $changes);
+		$record->parent_id = Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
 	
 		// autoformat is currently just a checkbox but the db value is a flag
 		$format_flag = isset($request->autoformat) ? LESSON_FORMAT_AUTO : LESSON_FORMAT_DEFAULT;

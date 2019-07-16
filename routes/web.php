@@ -87,6 +87,7 @@ Route::group(['prefix' => 'lessons'], function () {
 	Route::post('/publishupdate/{lesson}','LessonController@publishupdate');
 });
 
+
 // Users
 Route::group(['prefix' => 'users'], function () {
 	Route::get('/', 'UsersController@index');
@@ -138,3 +139,28 @@ Route::group(['prefix' => 'events'], function () {
 	Route::get('/', 'EventController@index');
 	Route::post('/', 'EventController@index');
 });
+
+// Samples
+Route::group(['prefix' => 'samples'], function () {
+	Route::get('/', 'SampleController@index');
+	Route::get('/admin', 'SampleController@admin');
+	Route::get('/view/{course}','SampleController@view');
+
+	// add/create
+	Route::get('/add','SampleController@add');
+	Route::post('/create','SampleController@create');
+
+	// edit/update
+	Route::get('/edit/{course}','SampleController@edit');
+	Route::post('/update/{course}','SampleController@update');
+
+	// delete
+	Route::get('/confirmdelete/{course}','SampleController@confirmdelete');
+	Route::post('/delete/{course}','SampleController@delete');
+	Route::get('/undelete', 'SampleController@undelete');
+
+	// add/create
+	Route::get('/publish/{course}','SampleController@publish');
+	Route::post('/publishupdate/{course}','SampleController@publishupdate');
+});
+

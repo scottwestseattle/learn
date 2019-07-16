@@ -11,7 +11,7 @@
 		<div class="container text-center">
 		  <h1 class="">@LANG('content.Frontpage Header Title')</h1>
 		  <p>@LANG('content.Frontpage Header Body')</p>
-		  <p><a class="btn btn-primary btn-lg" href="/lessons" role="button">@LANG('content.Start Learning') &raquo;</a></p>
+		  <p><a class="btn btn-primary btn-lg" href="/courses" role="button">@LANG('content.Start Learning') &raquo;</a></p>
 		</div>
 	</div>
 

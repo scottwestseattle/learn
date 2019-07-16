@@ -39,22 +39,7 @@ class CourseController extends Controller
 		
 		try
 		{
-			if (Tools::isAdmin())
-			{
-				$records = Course::select()
-	//				->where('site_id', SITE_ID)
-					->where('deleted_flag', 0)
-					->get();
-			}
-			else
-			{
-				$records = Course::select()
-	//				->where('site_id', SITE_ID)
-					->where('deleted_flag', 0)
-					->where('published_flag', 1)
-					->where('approved_flag', 1)
-					->get();
-			}
+			$records = Course::getIndex();
 		}
 		catch (\Exception $e) 
 		{
@@ -162,15 +147,49 @@ class CourseController extends Controller
     {		
 		$record = $course;
 		
+		$records = []; // make this countable so view will always work
+		try
+		{			
+			if (Tools::isAdmin())
+			{
+				$records = Lesson::select()
+	//				->where('site_id', SITE_ID)
+					->where('parent_id', $record->id)
+					->where('deleted_flag', 0)
+					->orderBy('lesson_number')
+					->orderBy('section_number')
+					->get();
+			}
+			else
+			{
+				$records = Lesson::select()
+	//				->where('site_id', SITE_ID)
+					->where('parent_id', $record->id)
+					->where('deleted_flag', 0)
+					->where('published_flag', 1)
+					->where('approved_flag', 1)
+					->orderBy('lesson_number')
+					->orderBy('section_number')
+					->get();
+			}
+		}
+		catch (\Exception $e) 
+		{			
+			$msg = 'Error getting lesson list';
+			Event::logException(LOG_MODEL, LOG_ACTION_VIEW, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);			
+		}
+		
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
+			'records' => $records,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 	
 	public function edit(Course $course)
     {		 
 		$record = $course;
-		
+
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
 			]));
