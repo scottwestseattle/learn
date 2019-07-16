@@ -41,4 +41,7 @@ return [
 'Section' => 'Section',
 'Renumber All' => 'Renumber All',
 'Auto-format' => 'Auto-format',
+'Courses' => 'Courses',
+'Course' => 'Course',
+'Back to List' => 'Back to List',
 ];

@@ -7,7 +7,7 @@ Header Orange: #FF6900
 Header Blue: #4993FD
 Section and Button Green: #5CB85C
 Glyph Icon Blue: #286090
-
+Super Light Green: #eff7f0
 ************************************************************/
 
 .submit-button {
@@ -344,16 +344,22 @@ body {
 .lesson-note {
     padding: 20px;
     margin: 20px 0;
-    border: 1px solid #eee;
-    border-left-width: 5px;
-    border-radius: 3px;
-    border-left-color: #5cb85c;
+    border: 1px solid #5cb85c; /* original greenish */
+	border: 1px solid LightGray;
+    xborder-left-width: 5px;
+    border-radius: 5px;
+    xborder-left-color: #5cb85c;
+	background-color:#eff7f0;
+	background-color:#fffff6;
+	width:100%;
+	max-width:600px;
 }
 .lesson-note p:last-child {
     margin-bottom: 0;
 }
 .lesson-note h4 {
     color: #5cb85c;
+	color:#666;
     margin-bottom:30px;
 }
 
@@ -394,6 +400,11 @@ body {
 }
 
 
+.lesson-table, .lesson-table input
+{
+	width: 100%;
+}
+
 .lesson-table, .lesson-table-sm {
 	max-width:400px;
 }
@@ -416,12 +427,6 @@ body {
 .btn-nav-lesson {
 	width:49%;
  }
-
-.lesson-table
-{
-	max-width: 100%;
-}
-
 
 }
 

@@ -27,14 +27,7 @@ class Lesson extends Base
 		$done = true;
 		$btn = '';
 		
-		if (!$this->finished_flag)
-		{
-			$text = 'Finish';
-			$color = 'red';
-			$btn = 'btn-danger';
-			$done = false;
-		}
-		else if (!$this->approved_flag)
+		if (!$this->approved_flag)
 		{
 			$text = 'Approve';
 			$color = 'yellow';

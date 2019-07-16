@@ -3,23 +3,23 @@
 @section('content')
 
 <div class="container page-normal">
-	
-	@component($prefix . '.menu-submenu', ['prefix' => $prefix])@endcomponent
+
+	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
 	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})</h1>
 
 	<table class="table table-responsive">
 		<thead>
 			<tr>
-				<th></th><th></th><th>@LANG('gen.Title')</th><th>@LANG('gen.Description')</th><th></th><th></th>
+				<th></th><th></th><th>@LANG('gen.Title')</th><th>@LANG('gen.Description')</th><th></th>
 			</tr>
 		</thead>
 		<tbody>
 		@foreach($records as $record)
-			<tr>					
+			<tr>
 				<td><a href="/{{$prefix}}/edit/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
 				<td><a href="/{{$prefix}}/publish/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-publish"></span></a></td>
-				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->getDisplayNumber()}}&nbsp;{{$record->title}}</a></td>
+				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->title}}</a></td>
 				<td>{{substr($record->description, 0, 200)}}</td>				
 				<td>
 					@if ($record->isUnfinished())

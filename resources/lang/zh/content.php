@@ -41,4 +41,7 @@ return [
 'Section' => '部分',
 'Renumber All' => '全部重新编号',
 'Auto-format' => '自动格式',
+'Courses' => '课程',
+'Course' => '课程',
+'Back to List' => '返回目录',
 ];

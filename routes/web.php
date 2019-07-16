@@ -37,6 +37,30 @@ Route::get('/home', 'HomeController@index')->name('home');
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
 
+// Courses
+Route::group(['prefix' => 'courses'], function () {
+	Route::get('/', 'CourseController@index');
+	Route::get('/admin', 'CourseController@admin');
+	Route::get('/view/{course}','CourseController@view');
+
+	// add/create
+	Route::get('/add','CourseController@add');
+	Route::post('/create','CourseController@create');
+
+	// edit/update
+	Route::get('/edit/{course}','CourseController@edit');
+	Route::post('/update/{course}','CourseController@update');
+
+	// delete
+	Route::get('/confirmdelete/{course}','CourseController@confirmdelete');
+	Route::post('/delete/{course}','CourseController@delete');
+	Route::get('/undelete', 'CourseController@undelete');
+
+	// add/create
+	Route::get('/publish/{course}','CourseController@publish');
+	Route::post('/publishupdate/{course}','CourseController@publishupdate');
+});
+
 // Lessons
 Route::group(['prefix' => 'lessons'], function () {
 	Route::get('/', 'LessonController@index');

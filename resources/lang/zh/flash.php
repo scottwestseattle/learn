@@ -5,4 +5,10 @@ return [
 'Lessons have been renumbered' => '课程重新编号',
 'No changes made to lesson' => '没有改变课程',
 'Lesson status has been updated' => '课程状态已更新',
+'Error getting course list' => '获取课程列表时出错',
+'Error getting lesson list' => '获取课程列表时出错',
+'Error adding new course' => '添加新课程时出错',
+'No changes made to course' => '当然没有变化',
+'Course has been updated' => '课程已更新',
+'Course status has been updated' => '课程状态已更新',
 ];

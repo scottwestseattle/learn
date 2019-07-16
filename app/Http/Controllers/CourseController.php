@@ -3,23 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use DB;
 use Auth;
 use App\User;
+use App\Course;
 use App\Event;
 use App\Lesson;
 use App\Tools;
 
-define('PREFIX', 'lessons');
-define('LOG_MODEL', 'lessons');
-define('TITLE', 'Lesson');
-define('TITLE_LC', 'lesson');
-define('TITLE_PLURAL', 'Lessons');
-define('REDIRECT', '/lessons');
-define('REDIRECT_ADMIN', '/lessons/admin');
+define('PREFIX', 'courses');
+define('LOG_MODEL', 'courses');
+define('TITLE', 'Course');
+define('TITLE_LC', 'course');
+define('TITLE_PLURAL', 'Courses');
+define('REDIRECT', '/courses');
+define('REDIRECT_ADMIN', '/courses/admin');
 
-class LessonController extends Controller
-{	
+class CourseController extends Controller
+{
 	public function __construct ()
 	{
         $this->middleware('is_admin')->except(['index', 'view', 'permalink']);
@@ -36,33 +38,29 @@ class LessonController extends Controller
 		$records = []; // make this countable so view will always work
 		
 		try
-		{			
+		{
 			if (Tools::isAdmin())
 			{
-				$records = Lesson::select()
+				$records = Course::select()
 	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
-					->orderBy('lesson_number')
-					->orderBy('section_number')
 					->get();
 			}
 			else
 			{
-				$records = Lesson::select()
+				$records = Course::select()
 	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
 					->where('published_flag', 1)
 					->where('approved_flag', 1)
-					->orderBy('lesson_number')
-					->orderBy('section_number')
 					->get();
 			}
 		}
 		catch (\Exception $e) 
-		{			
-			$msg = 'Error getting ' . $this->title . ' list';
+		{
+			$msg = 'Error getting ' . TITLE_LC . ' list';
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);			
+			Tools::flash('danger', $msg);
 		}	
 			
 		return view(PREFIX . '.index', $this->getViewData([
@@ -75,19 +73,17 @@ class LessonController extends Controller
 		$records = []; // make this countable so view will always work
 		
 		try
-		{			
-			$records = Lesson::select()
+		{
+			$records = Course::select()
 //				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 //				->where('published_flag', 1)
 //				->where('approved_flag', 1)
-				->orderBy('lesson_number')
-				->orderBy('section_number')
 				->get();
 		}
 		catch (\Exception $e) 
 		{
-			$msg = 'Error getting ' . strtolower($this->title) . ' list';
+			$msg = 'Error getting ' . TITLE_LC . ' list';
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 			Tools::flash('danger', $msg);
 		}	
@@ -100,35 +96,30 @@ class LessonController extends Controller
     public function add()
     {		 
 		return view(PREFIX . '.add', $this->getViewData([
-			'lessonNumbers' => Lesson::getLessonNumbers(),
-			'sectionNumbers' => Lesson::getSectionNumbers(),
 			]));
 	}
 		
     public function create(Request $request)
     {					
-		$record = new Lesson();
+		$record = new Course();
 		
-		$record->parent_id 		= 1; //todo: set real Course id
 		$record->user_id 		= Auth::id();				
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
-		$record->text			= Tools::convertFromHtml($request->text);
 		$record->permalink		= Tools::createPermalink($request->title);
-		$record->lesson_number	= intval($request->lesson_number);
-		$record->section_number	= intval($request->section_number);
 
 		try
 		{
 			$record->save();
 			
 			Event::logAdd(LOG_MODEL, $record->title, $record->site_url, $record->id);			
-			Tools::flash('success', $this->title . ' has been added');
+			Tools::flash('success', 'New ' . TITLE_LC . ' has been added');
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $record->title, null, $e->getMessage());
-			Tools::flash('danger', $e->getMessage());
+			$msg = 'Error adding new ' . TITLE_LC;
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
 
 			return back(); 
 		}	
@@ -144,7 +135,7 @@ class LessonController extends Controller
 			
 		try
 		{
-			$record = Lesson::select()
+			$record = Course::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->where('published_flag', 1)
@@ -166,78 +157,35 @@ class LessonController extends Controller
 			'record' => $record, 
 			], LOG_MODEL, LOG_PAGE_PERMALINK));
 	}
-
-	private static function autoFormat($text)
-    {
-		$t = $text;
-		
-		$posEx = strpos($t, 'For example:');
-		$posH3 = strpos($t, '<h3>');
-		
-		if ($posEx && $posH3 && $posEx < $posH3)
-		{
-			$t = str_replace('For example:', 'For example:<div class="lesson-examples">', $t);
-			$t = str_replace('<h3>', '</div><h3>', $t);
-		}
-		
-		return $t;
-	}
 	
-	public function view(Lesson $lesson)
-    {	
-		$lesson->text = Tools::convertToHtml($lesson->text);
-		
-		if ($lesson->format_flag == LESSON_FORMAT_AUTO)
-		{
-			$lesson->text = LessonController::autoFormat($lesson->text);
-		}
-		
-		$prev = Lesson::getPrev($lesson);
-		$next = Lesson::getNext($lesson);
-		
-		//if (!isset($next))
-		//{
-		//	dump($next);
-		//}
+	public function view(Course $course)
+    {		
+		$record = $course;
 		
 		return view(PREFIX . '.view', $this->getViewData([
-			'record' => $lesson,
-			'prev' => $prev,
-			'next' => $next,
+			'record' => $record,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 	
-	public function edit(Lesson $lesson)
+	public function edit(Course $course)
     {		 
+		$record = $course;
+		
 		return view(PREFIX . '.edit', $this->getViewData([
-			'record' => $lesson,
+			'record' => $record,
 			]));
     }
 	
-    public function update(Request $request, Lesson $lesson)
+    public function update(Request $request, Course $course)
     {
-		$record = $lesson;
+		$record = $course; 
 		 
 		$isDirty = false;
 		$changes = '';
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml($request->text), $isDirty, $changes);
-	
-		// autoformat is currently just a checkbox but the db value is a flag
-		$format_flag = isset($request->autoformat) ? LESSON_FORMAT_AUTO : LESSON_FORMAT_DEFAULT;
-		$record->format_flag = Tools::copyDirty($record->format_flag, $format_flag, $isDirty, $changes);
-		
-		// renumber action
-		$renumberAll = isset($request->renumber_flag) ? true : false;
-		
-		$numbersChanged = $renumberAll; // if the numbering changes, then we need to check if an auto-renumber is needed
-		$record->lesson_number = Tools::copyDirty($record->lesson_number, $request->lesson_number, $numbersChanged, $changes);
-		$record->section_number = Tools::copyDirty($record->section_number, $request->section_number, $numbersChanged, $changes);
-		if ($numbersChanged)
-			$isDirty = true;
-				
+								
 		if ($isDirty)
 		{						
 			try
@@ -245,83 +193,37 @@ class LessonController extends Controller
 				$record->save();
 
 				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);			
-				Tools::flash('success', $this->title . ' has been updated');
-				
-				if ($numbersChanged)
-				{
-					if ($record->renumber($renumberAll)) // check for renumbering
-					{
-						$msg = TITLE_PLURAL . ' have been renumbered';
-						Event::logEdit(LOG_MODEL, $msg, $record->id, 'renumbering');			
-						Tools::flash('success', $msg);
-					}
-				}
+				Tools::flash('success', TITLE . ' has been updated');				
 			}
 			catch (\Exception $e) 
 			{
-				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'title = ' . $record->title, null, $e->getMessage());
-				Tools::flash('danger', $e->getMessage());
+				$msg = 'Error updating ' . TITLE_LC;
+				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $record->title, null, $msg . ': ' . $e->getMessage());
+				Tools::flash('danger', $msg);
 			}				
 		}
 		else
 		{
-			Tools::flash('success', 'No changes made to ' . TITLE);
-		}
-
-		return redirect('/' . PREFIX . '/view/' . $record->id);
-	}
-		
-	public function edit2(Lesson $lesson)
-    {		 
-		return view(PREFIX . '.edit2', $this->getViewData([
-			'record' => $lesson,
-			]));
-    }
-		
-    public function update2(Request $request, Lesson $lesson)
-    {
-		$record = $lesson;
-		 
-		$isDirty = false;
-		$changes = '';
-
-		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml($request->text), $isDirty, $changes);
-	
-		if ($isDirty)
-		{						
-			try
-			{
-				$record->save();
-
-				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);			
-				Tools::flash('success', $this->title . ' has been updated');
-			}
-			catch (\Exception $e) 
-			{
-				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'title = ' . $record->title, null, $e->getMessage());
-				Tools::flash('danger', $e->getMessage());
-			}				
-		}
-		else
-		{
-			Tools::flash('success', 'No changes made to lesson');
+			Tools::flash('success', 'No changes made to ' . TITLE_LC);
 		}
 
 		return redirect('/' . PREFIX . '/view/' . $record->id);
 	}
 	
-    public function confirmdelete(Lesson $lesson)
+    public function confirmdelete(Course $course)
     {	
+		$record = $course; 
+	
 		$vdata = $this->getViewData([
-			'record' => $lesson,
+			'record' => $record,
 		]);				
 		 
 		return view(PREFIX . '.confirmdelete', $vdata);
     }
 	
-    public function delete(Request $request, Lesson $lesson)
+    public function delete(Request $request, Course $course)
     {	
-		$record = $lesson;
+		$record = $course; 
 				
 		try 
 		{
@@ -344,7 +246,7 @@ class LessonController extends Controller
 		
 		try
 		{
-			$records = Lesson::select()
+			$records = Course::select()
 //				->where('site_id', SITE_ID)
 				->where('deleted_flag', 1)
 				->get();
@@ -358,19 +260,21 @@ class LessonController extends Controller
 			
 		return view(PREFIX . '.undelete', $this->getViewData([
 			'records' => $records,
-		]));	
-	}	
+		]));		
+    }
 
-    public function publish(Request $request, Lesson $lesson)
+    public function publish(Request $request, Course $course)
     {			
+		$record = $course; 
+	
 		return view(PREFIX . '.publish', $this->getViewData([
-			'record' => $lesson,
+			'record' => $record,
 		]));
     }
 	
-    public function publishupdate(Request $request, Lesson $lesson)
+    public function publishupdate(Request $request, Course $course)
     {	
-		$record = $lesson; 
+		$record = $course; 
 		
 		$record->published_flag = isset($request->published_flag) ? 1 : 0;
 		$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
@@ -384,7 +288,7 @@ class LessonController extends Controller
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $record->title, null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $e->getMessage());
 			Tools::flash('danger', $e->getMessage());
 		}				
 		

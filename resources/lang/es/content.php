@@ -41,4 +41,7 @@ return [
 'Section' => 'Sección',
 'Renumber All' => 'Renumerar Todo',
 'Auto-format' => 'Auto-Formato',
+'Courses' => 'Cursos',
+'Course' => 'Curso',
+'Back to List' => 'Volver a la lista',
 ];

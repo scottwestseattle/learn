@@ -11,13 +11,21 @@ Kattie has a wide variety of influences and considers herself to be an eclectic 
 
 Latest DB Changes:
 
-7/10/2019
-ALTER TABLE `users` ADD `site_id` SMALLINT NOT NULL AFTER `id`;
+7/16/2019
+ALTER TABLE `events` CHANGE `title` `title` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
 
 7/13/2019
 ALTER TABLE `lessons` ADD `format_flag` TINYINT NOT NULL DEFAULT '0' COMMENT '0=not set/default, 1=auto-format, 99=other' AFTER `deleted_flag`;
 
-New Syntax:
+7/10/2019
+ALTER TABLE `users` ADD `site_id` SMALLINT NOT NULL AFTER `id`;
+
+############################################################
+
+Code Samples:
+
+Set up view variables for all views:
+C:\wamp3.1.9\www\learn\app\Providers\AppServiceProvider.php
 
 @auth
     // The user is authenticated...
@@ -26,6 +34,9 @@ New Syntax:
 @guest
     // The user is not authenticated...
 @endguest
+
+throw new \Exception('here');
+
 
 ############################################################
 
@@ -61,28 +72,6 @@ long arrows, right and left:
 <p>This is a nice formatted side note box.</p>
 <p>This is more information about the awesome side note.</p>
 </div>
-
-
-
-############################################################
-
-Notes:
-
-Set up view variables for all views:
-C:\wamp3.1.9\www\learn\app\Providers\AppServiceProvider.php
-
-Callout Example: 
-
-<div class="bs-callout bs-callout-success">
-<h4>Side Note</h4>
-<p>When a sentence is using the verb 'To Be' then an adjective can come after the verb.&nbsp; For example:</p>
-<p>The tree is <strong>tall</strong>.</p>
-<p>The sky is <strong>blue</strong>.</p>
-</div>
-
-<h3>Summary</h3>
-<p>Adjectives are fun to use because they add colorful descriptions to the language.</p>
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // MacBook - Switching localhost projects
