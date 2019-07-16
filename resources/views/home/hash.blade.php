@@ -13,9 +13,10 @@
 
 	<div id="flash" class="form-group">
 		<span id='entry'>{{ $hashed }}</span>
-		<a href='#' onclick="javascript:clipboardCopy(event, 'entry', 'entry')";>
+		<a href='#' onclick="clipboardCopy(event, 'entry', 'entry')";>
 			<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px; display:{{isset($hashed) && strlen($hashed) > 0 ? 'default' : 'none'}}"></span>
 		</a>
+		<span id='status'></span>
 	</div>
 
 	<div class="form-group">

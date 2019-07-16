@@ -14,10 +14,11 @@ function clipboardCopy(event, idFlash, id)
 	target.setAttribute('readonly', ''); // keeps focus from going to it
     document.body.appendChild(target); // add it to the page
 
-	// do the flash affect
-	$("#" + idFlash + ' p').fadeTo('fast', 0.1).fadeTo('slow', 1.0);
-	$("#" + idFlash).fadeTo('fast', 0.1).fadeTo('slow', 1.0);
-
+	// do the flash affect (only included in full jquery / we are using jquery slim for the moment
+//	$("#" + idFlash + ' p').fadeTo('fast', 0.1).fadeTo('slow', 1.0);
+//	$("#" + idFlash).fadeTo('fast', 0.1).fadeTo('slow', 1.0);
+    $("#status").text('copied');
+	
 	// remove the <br>'s and <p>'s and <span>'s
 	text = text.replace(/(\r\n|\n|\r)/gm, "");
     text = text.trim().replace(/<br\/>/gi, "\n");
@@ -37,8 +38,10 @@ function clipboardCopy(event, idFlash, id)
     var succeed;
     try {
     	  succeed = document.execCommand("copy");
+		  //alert('success');
     } catch(e) {
         succeed = false;
+		alert('error copying text');
 	}
 	
 	// remove the temporary input field
