@@ -63,7 +63,6 @@ Route::group(['prefix' => 'courses'], function () {
 
 // Lessons
 Route::group(['prefix' => 'lessons'], function () {
-	Route::get('/', 'LessonController@index');
 	Route::get('/admin', 'LessonController@admin');
 	Route::get('/view/{lesson}','LessonController@view');
 
@@ -85,6 +84,8 @@ Route::group(['prefix' => 'lessons'], function () {
 	// add/create
 	Route::get('/publish/{lesson}','LessonController@publish');
 	Route::post('/publishupdate/{lesson}','LessonController@publishupdate');
+	
+	Route::get('/{parent_id}', 'LessonController@index');
 });
 
 

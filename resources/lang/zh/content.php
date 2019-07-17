@@ -45,4 +45,6 @@ return [
 'Course' => '课程',
 'Back to List' => '返回目录',
 'Back to Course List' => '回到课程列表',
+'Back to' => '回到',
+'Publish' => '发布',
 ];

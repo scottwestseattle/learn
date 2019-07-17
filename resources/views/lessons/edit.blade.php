@@ -4,7 +4,7 @@
 
 <div class="container page-normal">
 
-	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
+	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
 	<h1>@LANG('ui.Edit') @LANG('content.' . $title)</h1>
 

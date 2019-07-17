@@ -4,13 +4,13 @@
 
 <div class="container page-normal">
 
-	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
+	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
-	<h1>Publish {{$title}}</h1>
+	<h1>@LANG('content.Publish')&nbsp;@LANG('content.' . $title)</h1>
 
 	<form method="POST" action="/{{$prefix}}/publishupdate/{{ $record->id }}">
 
-		<h3 name="title" class="">{{$record->title }}</h3>
+		<h3 name="title" class="">{{$record->course->title}}: {{$record->title }}</h3>
 
 		<div class="form-group">
 			<input type="checkbox" name="finished_flag" id="finished_flag" class="form-control-inline" value="{{$record->finished_flag }}" {{ ($record->finished_flag) ? 'checked' : '' }} />

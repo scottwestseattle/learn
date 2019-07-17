@@ -31,7 +31,7 @@
 	
 				@if ( ($status=$record->getStatus())['done'] || !$isAdmin )
 					<a style="background-color: #4993FD; height:100%; width:100%;" class="btn btn-primary btn-lg" role="button" href="/lessons/view/{{$record->id}}">
-						{{$record->title}}<br/>{{ $record->description}}
+						{{$record->lesson_number}}.{{$record->section_number}}&nbsp;{{$record->title}}<br/>{{ $record->description}}
 					</a>
 				@else
 					<a style="height:100%; width:100%;" class="btn {{$status['btn']}} btn-lg" role="button" href="/lessons/view/{{$record->id}}">

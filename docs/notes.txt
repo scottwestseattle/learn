@@ -48,6 +48,9 @@ Html Samples:
 long arrows, right and left:
 &rarr;
 &larr;
+&bull;
+&laquo; // left chevron arrow
+&raquo; // right chevron arrow
 
 <div class="table-responsive">
 <table class="table lesson-table">

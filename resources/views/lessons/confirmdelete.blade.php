@@ -4,14 +4,14 @@
 
 <div class="container page-normal">
 
-	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
+	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 	
 	<h1>@LANG('ui.Delete') @LANG('content.' . $title)</h1>
+	
+	<h3 name="title" class="">{{$record->course->title}}: {{$record->title }}</h3>
 
 	<form method="POST" action="/{{$prefix}}/delete/{{ $record->id }}">
 			   
-		<h3 name="title" class="">@LANG('content.' . $record->title)</h3>
-
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">@LANG('ui.Confirm Delete')</button>
 		</div>		

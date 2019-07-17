@@ -12,14 +12,10 @@
 			<li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
 			@endif
 			<li>My IP:&nbsp;{{$ip}}</li>
-			<li>{{substr(base_path(), 0, 32)}}...</li>
-			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}</li>
-			<li>Session Lifetime:&nbsp;{{env('SESSION_LIFETIME', 0)}}</li>
-			<li>SITE_ID: {{SITE_ID}}</li>
-			<li>New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}
-				&nbsp;&nbsp;<a href="/eunoticereset">EU Notice</a>
-				&nbsp;&nbsp;<a href="/hash">Hash</a>				
-			</li>
+			<li>{{substr(base_path(), 0, 28)}}...</li>
+			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}, SITE_ID: {{SITE_ID}}</li>
+			<li>Life:&nbsp;{{env('SESSION_LIFETIME', 0)}}, New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</li>
+			<li><a href="/hash">Hash</a>&nbsp;&bull;&nbsp;<a href="/users">Users</a>&nbsp;&bull;&nbsp;<a href="/courses">Courses</a>&nbsp;&bull;&nbsp;<a href="/eunoticereset">Privacy</a></li>
 		</ul>
 	</div>
 	

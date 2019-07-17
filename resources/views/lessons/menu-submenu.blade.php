@@ -1,8 +1,10 @@
 <div class="submenu-view">
 	<table><tr>
 		<td><a href="#" onclick="window.history.back()"><span class="glyphCustom glyphicon glyphicon-back"></span></a></td>
-		<td><a href='/{{$prefix}}/'><span class="glyphCustom glyphicon glyphicon-index"></span></a></td>
-		@if (Auth::user() && Auth::user()->isAdmin())
+		@if (isset($record->course))
+		<td><a href='/courses/view/{{$record->course->id}}/'><span class="glyphCustom glyphicon glyphicon-index"></span></a></td>
+		@endif
+		@if ($isAdmin)
 			<td><a href='/{{$prefix}}/admin'><span class="glyphCustom glyphicon glyphicon-admin"></span></a></td>
 			<td><a href='/{{$prefix}}/add/'><span class="glyphCustom glyphicon glyphicon-add"></span></a></td>
 		@if (isset($record->id))

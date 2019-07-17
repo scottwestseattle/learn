@@ -96,7 +96,7 @@ class Event extends Base
 		$record->title 			= $title;
 
 		$record->description	= $description;
-		$record->record_id 		= $record_id;
+		$record->record_id 		= intval($record_id);
 		$record->error 			= $error;
 		$record->updates 		= $changes;
 

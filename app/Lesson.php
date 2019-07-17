@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use App\Course;
 
 define('LESSON_FORMAT_DEFAULT', 0);
 define('LESSON_FORMAT_AUTO', 1);
@@ -15,6 +16,11 @@ class Lesson extends Base
     	return $this->belongsTo(User::class);
     }
 
+    public function course()
+    {
+    	return $this->belongsTo('App\Course', 'parent_id', 'id');
+    }
+	
     public function isUnfinished()
     {
     	return (!$this->finished_flag || !$this->approved_flag || !$this->published_flag);
@@ -59,6 +65,7 @@ class Lesson extends Base
 			// renumber all records
 			$records = Lesson::select()
 				->where('deleted_flag', 0)
+				->where('parent_id', $this->parent_id)
 				->where('lesson_number', $this->lesson_number)
 				->orderBy('section_number')
 				->get();
@@ -76,6 +83,7 @@ class Lesson extends Base
 			// check if record with this section_number already exists
 			$c = Lesson::select()
 				->where('id', '<>', $this->id)
+				->where('parent_id', $this->parent_id)
 				->where('deleted_flag', 0)
 				->where('lesson_number', $this->lesson_number)
 				->where('section_number', $this->section_number)
@@ -86,6 +94,7 @@ class Lesson extends Base
 				// renumber starting from current record
 				$records = Lesson::select()
 					->where('id', '<>', $this->id)
+					->where('parent_id', $this->parent_id)
 					->where('deleted_flag', 0)
 					->where('lesson_number', $this->lesson_number)
 					->where('section_number', '>=', $this->section_number)
@@ -124,6 +133,7 @@ class Lesson extends Base
 		{		
 			$r = Lesson::select()
 				->where('deleted_flag', 0)
+				->where('parent_id', $curr->parent_id)
 				->where('lesson_number', $curr->lesson_number)
 				->where('section_number',  $next ? '>' : '<', $curr->section_number)
 				->orderByRaw('lesson_number ASC, section_number ' . ($next ? 'ASC' : 'DESC '))
@@ -133,6 +143,7 @@ class Lesson extends Base
 		{
 			$r = Lesson::select()
 				->where('deleted_flag', 0)
+				->where('parent_id', $curr->parent_id)
 				->where('published_flag', 1)
 				->where('approved_flag', 1)
 				->where('lesson_number', $curr->lesson_number)

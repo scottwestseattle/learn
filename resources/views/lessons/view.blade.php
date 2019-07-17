@@ -4,7 +4,7 @@
 
 <div class="container page-normal lesson-page">
 
-	<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="/{{$prefix}}/">@LANG('content.Back to Lessons')<span class="glyphicon glyphicon-button-back-to"></span></a></span>
+	<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="/courses/view/{{$record->parent_id}}">@LANG('content.Back to')&nbsp;{{$record->course->title}}<span class="glyphicon glyphicon-button-back-to"></span></a></span>
 	<div class="page-nav-buttons">
 		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}">
 			<span class="glyphicon glyphicon-button-prev"></span>
@@ -17,7 +17,7 @@
 	</div>
 
     <div style="font-size:.8em;">
-		@LANG('content.Lesson')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}
+		{{$record->course->title}},&nbsp;@LANG('content.Lesson')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}
 		@if ($isAdmin)
 			&nbsp;<a href="/{{$prefix}}/admin"><span class="glyphCustom-sm glyphicon glyphicon-admin"></span></a>
 			&nbsp;<a href="/{{$prefix}}/edit/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a>

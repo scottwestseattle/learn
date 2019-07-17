@@ -32,8 +32,10 @@ class LessonController extends Controller
 		parent::__construct();
 	}
 	
-    public function index(Request $request)
-    {	
+    public function index(Request $request, $parent_id)
+    {
+		$parent_id = intval($parent_id);
+		
 		$records = []; // make this countable so view will always work
 		
 		try
@@ -41,8 +43,8 @@ class LessonController extends Controller
 			if (Tools::isAdmin())
 			{
 				$records = Lesson::select()
-	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
+					->where('parent_id', $parent_id)
 					->orderBy('lesson_number')
 					->orderBy('section_number')
 					->get();
@@ -50,8 +52,8 @@ class LessonController extends Controller
 			else
 			{
 				$records = Lesson::select()
-	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
+					->where('parent_id', $parent_id)
 					->where('published_flag', 1)
 					->where('approved_flag', 1)
 					->orderBy('lesson_number')
@@ -62,7 +64,7 @@ class LessonController extends Controller
 		catch (\Exception $e) 
 		{			
 			$msg = 'Error getting ' . $this->title . ' list';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg . ' for parent ' . $parent_id, $parent_id, $e->getMessage());
 			Tools::flash('danger', $msg);			
 		}	
 			
@@ -214,7 +216,7 @@ class LessonController extends Controller
 		
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
-		
+
 		//if (!isset($next))
 		//{
 		//	dump($next);
