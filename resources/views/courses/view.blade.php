@@ -23,27 +23,16 @@
 	@endif	
 	</h1>
 	
-	<div class="row" style="margin-bottom:10px;">		
-		@foreach($records as $record)			
-		<div style="xmax-width: 400px; padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
-
-			<div class="drop-box" style="height:200px;  background-color: #4993FD; color:white;" ><!-- inner col div -->
-	
-				@if ( ($status=$record->getStatus())['done'] || !$isAdmin )
-					<a style="background-color: #4993FD; height:100%; width:100%;" class="btn btn-primary btn-lg" role="button" href="/lessons/view/{{$record->id}}">
-						{{$record->lesson_number}}.{{$record->section_number}}&nbsp;{{$record->title}}<br/>{{ $record->description}}
-					</a>
-				@else
-					<a style="height:100%; width:100%;" class="btn {{$status['btn']}} btn-lg" role="button" href="/lessons/view/{{$record->id}}">
-						{{$record->title}}<br/>{{ $record->description}}
-					</a>
-				@endif
-					
-			</div><!-- inner col div -->			
-			
-		</div><!-- outer col div -->
-		@endforeach		
-	</div><!-- row -->														
+	<table class="table xtable-bordered table-responsive">
+		@foreach($records as $record)
+			<tr>
+				<th>{{$record->lesson_number}}.{{$record->section_number}}</th>
+				<td><a href="/lessons/view/{{$record->id}}">{{$record->title}}</a></td>
+				<td>{{$record->description}}</td>				
+			</tr>
+		@endforeach
+		</tbody>
+	</table>														
 	
 
 </div>

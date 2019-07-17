@@ -14,6 +14,11 @@ Super Light Green: #eff7f0
 	margin-top: 20px;
 }
 
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: wrap;
+}
 
 .btn-group-xs>.btn,
 .btn-xs {
@@ -344,13 +349,11 @@ body {
 .lesson-note {
     padding: 20px;
     margin: 20px 0;
-    border: 1px solid #5cb85c; /* original greenish */
-	border: 1px solid LightGray;
-    xborder-left-width: 5px;
-    border-radius: 5px;
-    xborder-left-color: #5cb85c;
-	background-color:#eff7f0;
-	background-color:#fffff6;
+    border: 0px solid #5cb85c; /* original greenish */
+    border-left-width: 5px;
+    xborder-radius: 5px;
+    border-left-color: #FFEB3B;
+	background-color:#FFFFCC;
 	width:100%;
 	max-width:600px;
 }
@@ -366,7 +369,8 @@ body {
 .lesson-examples {
     padding: 10px 15px;
     margin: 20px 0;
-	border-left: 5px solid #FF6900;
+	border-left: 5px solid #FF6900; /* orange */
+	border-left: 5px solid #218838;
 }
 
 .lesson-examples p:last-child {
