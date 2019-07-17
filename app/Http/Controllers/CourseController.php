@@ -59,12 +59,7 @@ class CourseController extends Controller
 		
 		try
 		{
-			$records = Course::select()
-//				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-//				->where('published_flag', 1)
-//				->where('approved_flag', 1)
-				->get();
+			$records = Course::getIndex();
 		}
 		catch (\Exception $e) 
 		{
@@ -123,8 +118,7 @@ class CourseController extends Controller
 			$record = Course::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
-				->where('published_flag', 1)
-				->where('approved_flag', 1)
+				->where('release_flag', '>=', RELEASE_PUBLISHED)
 				->where('permalink', $permalink)
 				->first();
 		}
@@ -195,7 +189,7 @@ class CourseController extends Controller
 	public function edit(Course $course)
     {		 
 		$record = $course;
-
+		
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
 			]));
@@ -210,6 +204,7 @@ class CourseController extends Controller
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
+		$record->display_order = Tools::copyDirty($record->display_order, $request->display_order, $isDirty, $changes);
 								
 		if ($isDirty)
 		{						
@@ -294,27 +289,30 @@ class CourseController extends Controller
 	
 		return view(PREFIX . '.publish', $this->getViewData([
 			'record' => $record,
+			'release_flags' => Course::getReleaseFlags(),
+			'wip_flags' => Course::getWipFlags(),
 		]));
     }
 	
     public function publishupdate(Request $request, Course $course)
     {	
 		$record = $course; 
-		
-		$record->published_flag = isset($request->published_flag) ? 1 : 0;
-		$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
-		$record->finished_flag = isset($request->finished_flag) ? 1 : 0;		
+
+		$record->release_flag = $request->release_flag;
+		$record->wip_flag = $request->wip_flag;
 		
 		try
 		{
 			$record->save();
-			Event::logEdit(LOG_MODEL, $record->title, $record->id, 'published/approved/finished status updated');			
+			
+			Event::logEdit(LOG_MODEL, $record->title, $record->id, 'Release/work status updated');			
 			Tools::flash('success', $this->title . ' status has been updated');
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $e->getMessage());
-			Tools::flash('danger', $e->getMessage());
+			$msg = 'Error updating ' . TITLE_LC . ' status';
+			Event::logException(LOG_MODEL, LOG_ACTION_PUBLISH, $record->title, null, $e->getMessage());
+			Tools::flash('danger', $msg);
 		}				
 		
 		return redirect(REDIRECT_ADMIN);

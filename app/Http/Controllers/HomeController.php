@@ -7,6 +7,7 @@ use App\Tools;
 use App\Event;
 use App\Visitor;
 use App\User;
+use App\Course;
 
 class HomeController extends Controller
 {
@@ -53,6 +54,11 @@ class HomeController extends Controller
 
     public function admin()
     {
+		//
+		// courses that aren't finished
+		//
+		$courses = Course::getIndex(['unfinished' => true]);
+		
 		//
 		// get Sites
 		//
@@ -107,6 +113,7 @@ class HomeController extends Controller
 			'users' => $users,
 			'visitors' => $visitors,
 			'comments' => $comments,
+			'courses' => $courses,
 			'ip' => $ip,
 			'new_visitor' => Visitor::isNew($ip),
 		]));

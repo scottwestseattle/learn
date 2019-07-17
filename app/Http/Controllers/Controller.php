@@ -57,6 +57,7 @@ define('LOG_ACTION_OTHER', 'other');
 define('LOG_ACTION_INDEX', 'index');
 define('LOG_ACTION_PERMALINK', 'permalink');
 define('LOG_ACTION_UNDELETE', 'undelete');
+define('LOG_ACTION_PUBLISH', 'publish');
 
 define('LOG_PAGE_INDEX', 'index');
 define('LOG_PAGE_VIEW', 'view');

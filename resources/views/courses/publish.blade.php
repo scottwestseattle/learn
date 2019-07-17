@@ -13,18 +13,21 @@
 		<h3 name="title" class="">{{$record->title }}</h3>
 
 		<div class="form-group">
-			<input type="checkbox" name="finished_flag" id="finished_flag" class="form-control-inline" value="{{$record->finished_flag }}" {{ ($record->finished_flag) ? 'checked' : '' }} />
-			<label for="finished_flag" class="checkbox-label">Finished</label>
+			<label for="wip_flag" class="control-label">@LANG('content.Work Status'):</label>
+			<select name="wip_flag" class="form-control">
+				@foreach ($wip_flags as $key => $value)
+					<option value="{{$key}}" {{ $key == $record->wip_flag ? 'selected' : ''}}>{{$value}}</option>
+				@endforeach
+			</select>
 		</div>
 		
 		<div class="form-group">
-			<input type="checkbox" name="approved_flag" id="approved_flag" class="form-control-inline" value="{{$record->approved_flag }}" {{ ($record->approved_flag) ? 'checked' : '' }} />
-			<label for="approved_flag" class="checkbox-label">Approved</label>
-		</div>
-
-		<div class="form-group">
-			<input type="checkbox" name="published_flag" id="published_flag" class="form-control-inline" value="{{$record->published_flag }}" {{ ($record->published_flag) ? 'checked' : '' }} />
-			<label for="published_flag" class="checkbox-label">Published</label>
+			<label for="release_flag" class="control-label">@LANG('content.Release Status'):</label>
+			<select name="release_flag" class="form-control">
+				@foreach ($release_flags as $key => $value)
+					<option value="{{$key}}" {{ $key == $record->release_flag ? 'selected' : ''}}>{{$value}}</option>
+				@endforeach
+			</select>
 		</div>
 		
 		<div class="submit-button">

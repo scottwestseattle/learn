@@ -12,4 +12,5 @@ return [
 'Course has been updated' => 'Course has been updated',
 'Course status has been updated' => 'Course status has been updated',
 'New course has been added' => 'New course has been added',
+'Error updating course status' => 'Error updating course status',
 ];

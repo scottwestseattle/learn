@@ -29,27 +29,20 @@
 	@foreach($records as $record)
 	<a href="/lessons/view/{{$record->id}}">
 		<button style="" type="button" class="btn btn-outline-info btn-lesson-index link-dark">
-			<span style="font-size:.8em;">{{$record->lesson_number}}.{{$record->section_number}}</span>&nbsp;
-			{{$record->title}}<br/>
-			<span style="font-size:.9em">{{$record->description}}</span>	
+			<table>
+				<tr>
+					<td style="">
+						<span style="font-size:1.5em; color:purple; padding-right:10px;">{{$record->section_number}}</span>&nbsp;
+					</td>
+					<td>
+						{{$record->title}}<br/><span style="font-size:.9em">{{$record->description}}</span>	
+					</td>
+				</tr>
+			</table>
 		</button>
 	</a>
 	@endforeach
-	
-@if (false)
-	<table class="table xtable-bordered table-responsive">
-		@foreach($records as $record)
-			<tr class="table-info">
-				<td>
-					<span style="font-size:.8em;">{{$record->lesson_number}}.{{$record->section_number}}</span>&nbsp;
-					<a href="/lessons/view/{{$record->id}}">{{$record->title}}</a><br/>
-					<span style="font-size:.9em">{{$record->description}}</span>
-				</td>
-			</tr>
-		@endforeach
-		</tbody>
-	</table>														
-@endif
+
 
 </div>
 @endsection

@@ -19,15 +19,15 @@
 		</ul>
 	</div>
 	
-	@if (isset($sites))
+	@if (isset($courses))
 	<div style="margin-bottom:30px;">	
-		<h3>Sites ({{count($sites)}})</h3>
+		<h3>@LANG('content.Unfinished Courses') ({{count($courses)}})</h3>
 		<div class="table-responsive">
 		<table class="table table-striped">
 			<tbody>
-				@foreach($sites as $record)
+				@foreach($courses as $record)
 					<tr>
-						<td><a target="_blank" href="http://{{$record}}">{{$record}}</a></td>
+						<td><a target="_blank" href="/courses/view/{{$record->id}}">{{$record->title}}</a></td>
 					</tr>
 				@endforeach
 			</tbody>
@@ -38,8 +38,7 @@
 
 	@if (isset($site_admins))
 	<hr />
-	@endif
-	
+	@endif	
 	
 	@if (isset($comments))
 	<div>	
@@ -138,6 +137,23 @@
 		<a href="/events">Show All Events</a>
 	</div>
 	<hr />
+	
+	@if (isset($sites))
+	<div style="margin-bottom:30px;">	
+		<h3>Sites ({{count($sites)}})</h3>
+		<div class="table-responsive">
+		<table class="table table-striped">
+			<tbody>
+				@foreach($sites as $record)
+					<tr>
+						<td><a target="_blank" href="http://{{$record}}">{{$record}}</a></td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
+		</div>
+	</div>
+	@endif	
 	
 </div>
 @endsection

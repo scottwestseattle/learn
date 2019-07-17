@@ -47,4 +47,5 @@ return [
 'Back to Course List' => 'Volver a la lista de Cursos',
 'Back to' => 'Volver a',
 'Publish' => 'Publicar',
+'Unfinished Courses' => 'Cursos sin terminar',
 ];

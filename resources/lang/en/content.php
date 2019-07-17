@@ -47,4 +47,5 @@ return [
 'Back to Course List' => 'Back to Course List',
 'Back to' => 'Back to',
 'Publish' => 'Publish',
+'Unfinished Courses' => 'Unfinished Courses',
 ];

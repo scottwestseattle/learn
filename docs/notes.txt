@@ -11,6 +11,18 @@ Kattie has a wide variety of influences and considers herself to be an eclectic 
 
 Latest DB Changes:
 
+7/17/2019
+ALTER TABLE `courses` ADD `course_number` VARCHAR(20) NULL AFTER `title`;
+ALTER TABLE `courses` ADD `display_order` SMALLINT NOT NULL DEFAULT '0' AFTER `display_date`;
+//ALTER TABLE `courses` CHANGE `display_order` `display_order` SMALLINT(6) NOT NULL DEFAULT '0';
+ALTER TABLE `courses` ADD `subtitle` VARCHAR(100) NULL COMMENT 'Tag line, Highlights, etc ' AFTER `description`;
+ALTER TABLE `courses` CHANGE `published_flag` `release_flag` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '0=not set, 1=draft, 2=approved, 10=published, 99=other ';
+ALTER TABLE `courses` DROP `approved_flag`;
+ALTER TABLE `courses` CHANGE `finished_flag` `wip_flag` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '0=not set, 1=not finished, 9=backburner, 10=finished, 99=other ';
+
+
+
+
 7/16/2019
 ALTER TABLE `events` CHANGE `title` `title` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
 

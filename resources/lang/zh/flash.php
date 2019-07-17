@@ -12,4 +12,5 @@ return [
 'Course has been updated' => '课程已更新',
 'Course status has been updated' => '课程状态已更新',
 'New course has been added' => '新课程已添加',
+'Error updating course status' => '更新课程状态时出错',
 ];
