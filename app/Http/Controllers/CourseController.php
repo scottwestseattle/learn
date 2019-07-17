@@ -180,9 +180,15 @@ class CourseController extends Controller
 			Tools::flash('danger', $msg);			
 		}
 		
+		// put some view helpers together
+		$disabled = (count($records) > 0) ? '' : 'disabled';
+		$firstId = (count($records) > 0) ? $records[0]->id : 0;
+		
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
 			'records' => $records,
+			'disabled' => $disabled,
+			'firstId' => $firstId,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 	
