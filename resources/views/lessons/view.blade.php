@@ -17,7 +17,7 @@
 	</div>
 
     <div style="font-size:.8em;">
-		{{$record->course->title}},&nbsp;@LANG('content.Lesson')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}
+		{{$record->course->title}},&nbsp;@LANG('content.Lesson')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
 		@if ($isAdmin)
 			&nbsp;<a href="/{{$prefix}}/admin"><span class="glyphCustom-sm glyphicon glyphicon-admin"></span></a>
 			&nbsp;<a href="/{{$prefix}}/edit/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a>

@@ -7,6 +7,15 @@ use App\User;
 
 class Tools
 {
+    static public function cleanHtml($text)
+	{
+		$v = preg_replace('#style="(.*?)"#is', "", $text); // remove styles
+		$v = preg_replace('#<p >#is', "<p>", $v); // fix <p>
+		//dd($v);
+		
+		return $v;
+	}
+	
     static public function getHash($text)
 	{
 		$s = sha1(trim($text));

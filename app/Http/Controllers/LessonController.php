@@ -217,20 +217,20 @@ class LessonController extends Controller
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
 
-		//if (!isset($next))
-		//{
-		//	dump($next);
-		//}
+		// count the paragraphs as sentences
+		preg_match_all('#<p>(.*?)</p>#is', $lesson->text, $matches, PREG_SET_ORDER);
+		preg_match_all('#<p>#is', $lesson->text, $matches, PREG_SET_ORDER);
 		
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $lesson,
 			'prev' => $prev,
 			'next' => $next,
+			'sentenceCount' => count($matches),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 	
 	public function edit(Lesson $lesson)
-    {		
+    {
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $lesson,
 			'courses' => LessonController::getCourses(LOG_ACTION_EDIT), // for the course dropdown
@@ -246,7 +246,7 @@ class LessonController extends Controller
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml($request->text), $isDirty, $changes);
+		$record->text = Tools::copyDirty($record->text, Tools::cleanHtml($request->text), $isDirty, $changes);
 		$record->parent_id = Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
 	
 		// autoformat is currently just a checkbox but the db value is a flag
@@ -309,7 +309,7 @@ class LessonController extends Controller
 		$isDirty = false;
 		$changes = '';
 
-		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml($request->text), $isDirty, $changes);
+		$record->text = Tools::copyDirty($record->text, Tools::cleanHtml($request->text), $isDirty, $changes);
 	
 		if ($isDirty)
 		{						
