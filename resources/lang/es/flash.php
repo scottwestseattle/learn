@@ -13,4 +13,6 @@ return [
 'Course status has been updated' => 'El estado del curso ha sido actualizado',
 'New course has been added' => 'Se ha añadido nuevo curso',
 'Error updating course status' => 'Error al actualizar el estado del curso',
+'Error adding new lesson' => 'Error al agregar nueva lección',
+'New lesson has been added' => 'Se ha añadido nueva lección',
 ];

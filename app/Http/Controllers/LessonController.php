@@ -131,8 +131,8 @@ class LessonController extends Controller
     {					
 		$record = new Lesson();
 		
-		$record->parent_id 		= 0; //todo: set real Course id
 		$record->user_id 		= Auth::id();				
+		$record->parent_id 		= $request->parent_id;
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
 		$record->text			= Tools::convertFromHtml($request->text);
@@ -144,13 +144,15 @@ class LessonController extends Controller
 		{
 			$record->save();
 			
-			Event::logAdd(LOG_MODEL, $record->title, $record->site_url, $record->id);			
-			Tools::flash('success', $this->title . ' has been added');
+			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);			
+			Tools::flash('success', 'New ' . TITLE_LC . ' has been added');
 		}
 		catch (\Exception $e) 
-		{
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $record->title, null, $e->getMessage());
-			Tools::flash('danger', $e->getMessage());
+		{			
+			$msg = 'Error adding new ' . TITLE_LC;
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+			
 
 			return back(); 
 		}	
@@ -246,7 +248,7 @@ class LessonController extends Controller
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-		$record->text = Tools::copyDirty($record->text, Tools::cleanHtml($request->text), $isDirty, $changes);
+		$record->text = Tools::copyDirty($record->text, Lesson::convertCodes(Tools::cleanHtml($request->text)), $isDirty, $changes);
 		$record->parent_id = Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
 	
 		// autoformat is currently just a checkbox but the db value is a flag
@@ -289,7 +291,7 @@ class LessonController extends Controller
 		}
 		else
 		{
-			Tools::flash('success', 'No changes made to ' . TITLE);
+			Tools::flash('success', 'No changes made to ' . TITLE_LC);
 		}
 
 		return redirect('/' . PREFIX . '/view/' . $record->id);

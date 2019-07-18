@@ -48,4 +48,5 @@ return [
 'Back to' => 'Volver a',
 'Publish' => 'Publicar',
 'Unfinished Courses' => 'Cursos sin terminar',
+'Chapter' => 'Capítulo',
 ];

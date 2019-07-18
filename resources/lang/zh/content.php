@@ -48,4 +48,5 @@ return [
 'Back to' => '回到',
 'Publish' => '发布',
 'Unfinished Courses' => '未完成的课程',
+'Chapter' => '章节',
 ];

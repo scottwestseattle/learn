@@ -21,6 +21,24 @@ class Lesson extends Base
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
 	
+    static public function convertCodes($text)
+	{
+		$v = $text;
+		$v = preg_replace('#___#is', "<input />", $v); // convert text input
+		
+		/*
+		<div class="table-borderless">
+		<table class="table lesson-table-sm">
+		*/
+
+		
+		$v = preg_replace('#(<table.*</table>)#is', "<div class=\"table-borderless\">$1</div>", $v); // wrap table in a div
+		$v = preg_replace('#border=\".*\"#is', "class=\"table lesson-table-sm\"", $v); // wrap table in a div
+		//dd($v);
+		
+		return $v;
+	}
+	
     public function isUnfinished()
     {
     	return (!$this->finished_flag || !$this->approved_flag || !$this->published_flag);
@@ -60,6 +78,7 @@ class Lesson extends Base
     {
 		$renumbered = false;
 		
+		// The format is Lesson.Section or Chapter.Section
 		if ($renumberAll)
 		{
 			// renumber all records

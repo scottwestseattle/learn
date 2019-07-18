@@ -10,7 +10,6 @@
 
 	<form method="POST" id="form-edit" action="/{{$prefix}}/update/{{$record->id}}">
 
-	
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('gen.Title'):</label>
 			<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
@@ -25,23 +24,15 @@
 			</select>
 		</div>
 	
-		<div style="margin-top: 20px;" class="form-group">
-		
-			<label for="lesson_number" class="control-label">@LANG('content.Lesson'):</label>
-			<select name="lesson_number" id="lesson_number" class="">
-				@foreach ($record->getLessonNumbers() as $key => $value)
-					<option value="{{$key}}" {{ $key == $record->lesson_number ? 'selected' : ''}}>{{$value}}</option>
-				@endforeach
-			</select>			
-			&nbsp;
+		<div class="form-group">
+			<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
+			<input type="number"  min="1" max="1000" step="1" name="lesson_number" class="form-control form-control-100" value="{{$record->lesson_number}}" />
+		</div>	
+
+		<div class="form-group">		
 			<label for="section_number" class="control-label">@LANG('content.Section'):</label>
-			<select name="section_number" id="section_number" class="">
-				@foreach ($record->getSectionNumbers() as $key => $value)
-					<option value="{{$key}}" {{ $key == $record->section_number ? 'selected' : ''}}>{{$value}}</option>
-				@endforeach
-			</select>			
-			
-		</div>
+			<input type="number"  min="1" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$record->section_number}}" />
+		</div>	
 
 		<div class="form-group">
 			<input type="checkbox" name="renumber_flag" id="renumber_flag" class="" />
