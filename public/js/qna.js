@@ -161,7 +161,7 @@ function quiz() {
 
 			$("#question-right").hide();
 			$("#question-wrong").hide();
-			$("#question-prompt").show();
+			//sbw $("#question-prompt").show();
 		}
 		else if (state == RUNSTATE_CHECKING)
 		{
@@ -218,13 +218,13 @@ function quiz() {
 		
 		// show question
 		var q = getQuestion(true);
-		$("#prompt").text(q);
+		$("#prompt").html(q);
 		
 		// show answer
 		if ($("#checkbox-type-answers").prop('checked'))
 		{
 			var a = getQuestion(false);
-			$("#answer-show").text(a);
+			$("#answer-show").html(a);
 			$("#answer-show").val(a);
 		}
 
@@ -301,26 +301,26 @@ function quiz() {
 		}
 			
 		$("#answer-show").val(answer);
-		$("#answer-show").text(answer);	
+		$("#answer-show").html(answer);	
 	}
 	
 	this.showList = function() {
-		if ($("#showAllLink").text() == "Show All Questions")
+		if ($("#showAllLink").html() == "Show All Questions")
 		{
-			$("#showAllLink").text("Show Quiz");
+			$("#showAllLink").html("Show Quiz");
 			$(".quizSection").hide();
 			$("#sectionReview").show();	
 		}
 		else
 		{
-			$("#showAllLink").text("Show All Questions");
+			$("#showAllLink").html("Show All Questions");
 			$(".quizSection").show();
 			$("#sectionReview").hide();	
 		}
 	}
 	
 	this.setAlertPrompt = function(text, color) {
-		$("#alertPrompt").text(text);
+		$("#alertPrompt").html(text);
 		$("#alertPrompt").css('color', color);
 		$("#alertPrompt").css('font-weight', 'bold');
 	}
@@ -700,7 +700,7 @@ function checkAnswer(checkOptions)
 	}
 	else
 	{
-		$("#answer-show-div").text(answerMsg);	
+		$("#answer-show-div").html(answerMsg);	
 		$("#answer-show-div").css('color', answerColor);				
 	}
 	
@@ -776,10 +776,10 @@ function override()
 	quiz.setAlertPrompt('Score changed', color);	
 
 	answer = result + answer;
-	$("#answer-show").text(answer);
+	$("#answer-show").html(answer);
 	$("#answer-show").val(answer);
 	$("#answer-show").css("color", color);
-	$("#answer-show-div").text(answer);
+	$("#answer-show-div").html(answer);
 	$("#answer-show-div").val(answer);
 	$("#answer-show-div").css("color", color);
 	updateScore();

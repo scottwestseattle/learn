@@ -451,9 +451,10 @@ class LessonController extends Controller
 			'prev' => $prev,
 			'next' => $next,
 			'sentenceCount' => count($quiz),
-			'quiz' => $quiz,	
-			'questionPrompt' => 'What is the answer?',
+			'records' => $quiz,	
+			'questionPrompt' => '',
 			'questionPromptReverse' => 'What is the question?',
+			'canEdit' => true,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }	
 }
