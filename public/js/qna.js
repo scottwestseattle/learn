@@ -52,12 +52,12 @@ $(document).keydown(function(event) {
 $( document ).ready(function() {
 	
 	//sbw $("#checkbox-type-answers").prop('checked', !isMobile.any());
-	//sbw quiz.setButtonStates(RUNSTATE_START);
-	//sbw quiz.setControlStates();
+	quiz.setButtonStates(RUNSTATE_START);
+	quiz.setControlStates();
 	loadData();
 	loadOrder();	
-	//sbw quiz.showAnswersClick();
-	//sbw quiz.typeAnswersClick();
+	//quiz.showAnswersClick();
+	quiz.typeAnswersClick();
 	
 	//sbw $('li:first').remove();
 	//sbw $('li:first').append($('<li>new</li>'));
@@ -636,7 +636,7 @@ function checkAnswer(checkOptions)
 		
 	if (checkOptions == CHECKANSWER_KNOW)
 	{
-		answerColor = 'blue';
+		answerColor = 'black';
 		result = "Right, the answer is: ";
 		quiz.qna[quiz.qna[curr].order].correct = true;
 		$("#button-next-attempt").focus();

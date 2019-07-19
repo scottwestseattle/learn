@@ -106,4 +106,7 @@ return [
 'Back to Top' => 'Volver Arriba',
 'Learn More' => 'Más Información',
 'Undelete' => 'Recuperar',
+'First' => 'Primero',
+'Last' => 'Último',
+'Clear' => 'Limpiar',
 ];

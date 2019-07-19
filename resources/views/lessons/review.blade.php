@@ -31,7 +31,7 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 			<a class="btn {{($status=$record->getStatus())['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$status['text']}}</a>
 		@endif
 	</div>
-	<div style="margin: 50px 0">
+	<div style="margin: 10px 0 20px 0">
 	<!---------------------------------------------------------------------------------------------------------------->
 	<!---------------------------------------------------------------------------------------------------------------->
 	<!---------------------------------------------------------------------------------------------------------------->
@@ -69,7 +69,7 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	<!-- QUESTION -->
 	<!-------------------------------------------------------->
 	
-	<span id="question-graphics" style="background: white; font-size: 200%;">
+	<span id="question-graphics" style="background: white; font-size: 150%;">
 		<img id="question-prompt" src="/img/question-prompt.jpg" height="30" />
 		<img id="question-right" src="/img/question-right.jpg" height="30" />
 		<img id="question-wrong" src="/img/question-wrong.jpg" height="30" />
@@ -81,22 +81,25 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	<!-------------------------------------------------------->	
 	
 	<div class="kbase form">
-		<form method="POST" id="form-edit" action="/{{$prefix}}/updateXX/{{$record->id}}">
+		<form method="POST" id="form-edit" action="/{{$prefix}}/updatesbw/{{$record->id}}">
 		<!-- ?= $this->Form->create($kbase) ? -->
 		<fieldset id="runtimeFields">
+@if (false)
 		<h4 id="alertPrompt" style='margin: 0; margin-top: 10px; font-weight: normal;'>Type Answer:</h4>
+@endif
 		<div id="typeAnswers">
 			
 			<!-------------------------------------------------------->
 			<!-- TEXTBOX TO ENTER ANSWER -->
 			<!-------------------------------------------------------->
-			<?php //echo $this->Form->input('answer', ['onkeypress' => 'onKeypress(event)', 'id' => 'attempt', 'label' => '', 'style' => 'padding: 10px; border: 1px gray solid; font-size: 200%; width:100%;']); ?>
+@if (false)
 			<input type="text" name="answer" id="attempt" onkeypress="onKeypress(event)" >
+@endif
 		</div>
 			<!-------------------------------------------------------->
 			<!-- SPACE TO SHOW SCORED ANSWER -->			
 			<!-------------------------------------------------------->
-			<div style="padding: 10px; font-size: 200%; min-height: 70px; xbackground: #efefef; xborder: 1px gray solid; margin-top: 2px;" id="answer-show-div"></div>
+			<div style="padding: 10px; font-size: 100%; min-height: 70px; sbwbackground: #efefef; sbwborder: 1px gray solid; margin-top: 2px;" id="answer-show-div"></div>
 
 		</fieldset>
 
@@ -105,38 +108,41 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	<!----------------------------------------------------------------------------->
 		
 		<!-- BUTTONS ROW 1 -->
-		
-		<input class="btn btn-default" type="button" value="Next Question" onclick="nextAttempt()" id="button-next-attempt">
-		<input class="btn btn-default" type="button" value="Check Typed Answer" onclick="checkAnswer(1)" id="button-check-answer">
-		<button class="btn btn-info" onclick="event.preventDefault(); quiz.start()" id="button-start">Start Quiz</button>
-		<input class="btn btn-default" type="button" value="I KNOW IT (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
-		<input class="btn btn-default" type="button" value="I DON'T KNOW (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
-		<button class="btn btn-warning" onclick="event.preventDefault(); resetQuiz()" id="button-stop">STOP QUIZ</button>
-		<input class="btn btn-default" type="button" value="Change to Wrong (Alt+c)" onclick="override()" id="button-override" style="display: none;">
-		<br/>
+		<input class="btn btn-default btn-quiz" type="button" value="Next Question" onclick="nextAttempt()" id="button-next-attempt">
+		<input class="btn btn-default btn-quiz" type="button" value="Check Typed Answer" onclick="checkAnswer(1)" id="button-check-answer">
+		<button class="btn btn-info btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">Start Quiz</button>
+		<input class="btn btn-default btn-quiz" type="button" value="I KNOW IT (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
+		<input class="btn btn-default btn-quiz" type="button" value="I DON'T KNOW (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
+		<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); resetQuiz()" id="button-stop">STOP QUIZ</button>
+		<input class="btn btn-default btn-quiz" type="button" value="Change to Wrong (Alt+c)" onclick="override()" id="button-override" style="display: none;">
 		
 		<!-- BUTTONS ROW 2 -->
 		
-		<div style="margin:20px;" class="control-group" id="buttonRowReview">
+		<div style="margin-top: 20px;" class="control-group" id="buttonRowReview">
+			<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="#" onclick="event.preventDefault(); first()">@LANG('ui.First')<span class="glyphicon glyphicon-button-first"></span></a></span>
+			<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="#" onclick="event.preventDefault(); prev()"><span class="glyphicon glyphicon-button-prev"></span>@LANG('ui.Prev')</a></span>
+			<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="#" onclick="event.preventDefault(); next()">@LANG('ui.Next')<span class="glyphicon glyphicon-button-next"></span></a></span>
+			<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="#" onclick="event.preventDefault(); last()">@LANG('ui.Last')<span class="glyphicon glyphicon-button-last"></span></a></span>
+@if (false) //sbw not working
+			<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="#" onclick="event.preventDefault(); clear2()">@LANG('ui.Clear')</a></span>
+@endif
+@if (false)		
 			<button class="btn btn-success" onclick="event.preventDefault(); first()"><< First</button>
 			<button class="btn btn-success" onclick="event.preventDefault(); prev()">< Prev</button>
 			<button class="btn btn-success" onclick="event.preventDefault(); next()" id="button-next">Next ></button>
 			<button class="btn btn-success" onclick="event.preventDefault(); last()">Last >></button>
 			<button class="btn btn-success" onclick="event.preventDefault(); clear2()">Clear</button>
+@endif
 		</div>
 						
 		<!-- CHECKBOX ROW -->
 		
 		<div class="form-group">
-@if (false)
-			<?= $this->Form->checkbox('type-answers', ['id' => 'checkbox-type-answers', 'checked' => true, 'onclick' => 'quiz.typeAnswersClick()']) ?><span style='font-size: 100%; margin: 0 5px'>Type Answers</span>
-			<?= $this->Form->checkbox('flip',         ['id' => 'checkbox-flip',         'checked' => false, 'onclick' => 'quiz.flip()']) ?><span style='margin: 0 5px'>Flip QnA</span>
-@endif		
-			<input type="checkbox" name="checkbox-type-answers" id="checkbox-type-answers" class="form-control" />
-			<label for="checkbox-type-answers" class="checkbox-big-label">@LANG('content.Type Answers')</label>
+			<input type="checkbox" name="checkbox-type-answers" id="checkbox-type-answers" class="" onclick="quiz.typeAnswersClick()" />
+			<label for="checkbox-type-answers" class="checkbox-big-label" onclick="quiz.typeAnswersClick()">@LANG('content.Type Answers')</label>
 			&nbsp;
-			<input type="checkbox" name="checkbox-flip" id="checkbox-flip" class="form-control" />
-			<label for="checkbox-type-answers" class="checkbox-big-label">@LANG('content.Flip QnA')</label>
+			<input type="checkbox" name="checkbox-flip" id="checkbox-flip" class="" />
+			<label for="checkbox-type-answers" class="checkbox-big-label">@LANG('content.Flip Question/Answer')</label>
 		</div>
 		
 		{{ csrf_field() }}
@@ -147,53 +153,9 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	
 </section>
 
-<!----------------------------------------------------------------------------->
-<!-- Show All Questions Section -->
-<!----------------------------------------------------------------------------->
-
-@if (false)
-<section id="sectionReview" style='display: none; border: 0;'>
-
-<?php if (isset($questionPrompt) && strlen($questionPrompt) > 0) : ?>
-<div style="font-size: 150%;"><?= $questionPrompt ?></div>
-<?php endif; ?>
-
-<?php $cnt = 0; foreach($records as $rec) : ?>
-	<div style="margin: 10px 0; background-color: <?php echo (($cnt % 2 == 0) ? '#FEFEE3' : 'white'); ?>; border: lightGray solid 1px">
-		<div style="border-bottom: lightGray dashed 1px; padding: 5px; font-size: 130%; min-width: 200px; margin: 20px; padding-bottom: 20px;">
-			<?= ++$cnt . '. &nbsp;' . $rec['q'] ?>
-			<?php if ($canEdit) : ?>
-				<span style='font-size: 70%; float: right;'>
-					<a href=<?= '/kbase/edit/' . $rec['id'] ?> >Edit</a>
-					&nbsp;&nbsp;
-					<?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $rec['id']], ['confirm' => __('Are you sure you want to delete: {0}?', $rec['q'])]) ?>
-				</span>
-			<?php endif; ?>			
-		</div>
-		<div style="padding: 5px; font-size: 120%; min-width: 200px; margin: 20px; xmargin-right: 20px;">
-			<?= $rec['a'] ?>
-		</div>
-	</div>
-<?php endforeach; ?>
-
-<!-- table>
-	<?php $cnt = 0; foreach($records as $rec) : ?>
-		<tr>
-			<td style='width: 30px;'><?= ++$cnt ?>)&nbsp;</td><td style="width: 30%;"><?= $rec['q'] ?></td><td><?= $rec['a'] ?></td>
-		</tr>
-	<?php endforeach; ?>
-</table -->
-
-</section>
-@endif;
-
 @endif
 
 
-
-
-
-	
 
 		
 		

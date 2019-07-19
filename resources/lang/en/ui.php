@@ -106,4 +106,7 @@ return [
 'Back to Top' => 'Back to Top',
 'Learn More' => 'Learn More',
 'Undelete' => 'Undelete',
+'First' => 'First',
+'Last' => 'Last',
+'Clear' => 'Clear',
 ];

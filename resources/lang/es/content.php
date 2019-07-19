@@ -49,4 +49,6 @@ return [
 'Publish' => 'Publicar',
 'Unfinished Courses' => 'Cursos sin terminar',
 'Chapter' => 'Capítulo',
+'Type Answers' => 'Escriba la Respuesta',
+'Flip Question/Answer' => 'Invertir Pregunta/Respuesta',
 ];

@@ -49,4 +49,6 @@ return [
 'Publish' => 'Publish',
 'Unfinished Courses' => 'Unfinished Courses',
 'Chapter' => 'Chapter',
+'Type Answers' => 'Type Answers',
+'Flip Question/Answer' => 'Flip Question/Answer',
 ];

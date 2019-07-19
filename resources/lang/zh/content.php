@@ -49,4 +49,6 @@ return [
 'Publish' => '发布',
 'Unfinished Courses' => '未完成的课程',
 'Chapter' => '章节',
+'Type Answers' => '键入答案',
+'Flip Question/Answer' => '反转问题/答案',
 ];

@@ -106,4 +106,7 @@ return [
 'Back to Top' => '回到顶部',
 'Learn More' => '更多信息',
 'Undelete' => '取消删除',
+'First' => '第一',
+'Last' => '持续',
+'Clear' => '重启',
 ];
