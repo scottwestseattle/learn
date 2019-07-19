@@ -63,8 +63,9 @@ Route::group(['prefix' => 'courses'], function () {
 
 // Lessons
 Route::group(['prefix' => 'lessons'], function () {
-	Route::get('/admin', 'LessonController@admin');
+	Route::get('/admin/{course_id?}', 'LessonController@admin');
 	Route::get('/view/{lesson}','LessonController@view');
+	Route::get('/review/{lesson}','LessonController@review');
 
 	// add/create
 	Route::get('/add','LessonController@add');

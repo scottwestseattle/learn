@@ -23,6 +23,18 @@ class Course extends Base
     	return $this->belongsTo(User::class);
     }
 
+    static public function get($id)
+    {
+		$id = intval($id);
+		
+		$record = Course::select()
+			->where('deleted_flag', 0)
+			->where('id', $id)
+			->first();
+			
+		return $record;
+	}
+	
     static public function getReleaseFlags()
     {
 		$v = [

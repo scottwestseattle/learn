@@ -143,29 +143,8 @@ class CourseController extends Controller
 		
 		$records = []; // make this countable so view will always work
 		try
-		{			
-			if (Tools::isAdmin())
-			{
-				$records = Lesson::select()
-	//				->where('site_id', SITE_ID)
-					->where('parent_id', $record->id)
-					->where('deleted_flag', 0)
-					->orderBy('lesson_number')
-					->orderBy('section_number')
-					->get();
-			}
-			else
-			{
-				$records = Lesson::select()
-	//				->where('site_id', SITE_ID)
-					->where('parent_id', $record->id)
-					->where('deleted_flag', 0)
-					->where('published_flag', 1)
-					->where('approved_flag', 1)
-					->orderBy('lesson_number')
-					->orderBy('section_number')
-					->get();
-			}
+		{
+			$records = Lesson::getIndex($course->id);
 		}
 		catch (\Exception $e) 
 		{			

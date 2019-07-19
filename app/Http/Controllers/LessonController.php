@@ -40,26 +40,7 @@ class LessonController extends Controller
 		
 		try
 		{			
-			if (Tools::isAdmin())
-			{
-				$records = Lesson::select()
-					->where('deleted_flag', 0)
-					->where('parent_id', $parent_id)
-					->orderBy('lesson_number')
-					->orderBy('section_number')
-					->get();
-			}
-			else
-			{
-				$records = Lesson::select()
-					->where('deleted_flag', 0)
-					->where('parent_id', $parent_id)
-					->where('published_flag', 1)
-					->where('approved_flag', 1)
-					->orderBy('lesson_number')
-					->orderBy('section_number')
-					->get();
-			}
+			$records = Lesson::getIndex($parent_id);
 		}
 		catch (\Exception $e) 
 		{			
@@ -73,21 +54,27 @@ class LessonController extends Controller
 		]));
     }	
 
-    public function admin(Request $request)
+    public function admin(Request $request, $parent_id = null)
     {
+		$parent_id = intval($parent_id);
+		
 		$records = []; // make this countable so view will always work
+		$course = null;
 		
 		try
 		{			
-			$records = Lesson::select()
-//				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-//				->where('published_flag', 1)
-//				->where('approved_flag', 1)
-				->orderBy('parent_id')
-				->orderBy('lesson_number')
-				->orderBy('section_number')
-				->get();
+			$course = Course::get($parent_id);
+		}
+		catch (\Exception $e) 
+		{
+			$msg = 'Error getting course';
+			Event::logException(LOG_MODEL_COURSES, LOG_ACTION_SELECT, $msg, $parent_id, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}	
+		
+		try
+		{			
+			$records = Lesson::getIndex($parent_id);
 		}
 		catch (\Exception $e) 
 		{
@@ -98,6 +85,7 @@ class LessonController extends Controller
 			
 		return view(PREFIX . '.admin', $this->getViewData([
 			'records' => $records,
+			'course' => $course,
 		]));
     }	
 
@@ -208,7 +196,7 @@ class LessonController extends Controller
 	}
 	
 	public function view(Lesson $lesson)
-    {	
+    {
 		$lesson->text = Tools::convertToHtml($lesson->text);
 		
 		if ($lesson->format_flag == LESSON_FORMAT_AUTO)
@@ -415,5 +403,57 @@ class LessonController extends Controller
 		}				
 		
 		return redirect(REDIRECT_ADMIN);
+    }	
+
+	public function makeQuiz($text)
+    {
+		$records = [];
+	
+		// count the paragraphs as sentences
+		preg_match_all('#<p>(.*?)</p>#is', $text, $records, PREG_SET_ORDER);
+		
+		$qna = [];
+		$cnt = 0;
+		foreach($records as $record)
+		{
+			$parts = explode('-', $record[1]);
+//dump($parts);
+			if (count($parts) > 0)
+			{
+				$records[$cnt]['q'] = $parts[0];
+				$records[$cnt]['a'] = array_key_exists(1, $parts) ? $parts[1] : '';
+				$records[$cnt]['id'] = $cnt;
+			}
+			//dd($qna);
+			
+			$cnt++;
+		}
+		
+		//dd($records);
+		
+		return $records;
+	}
+	
+	public function review(Lesson $lesson)
+    {
+		if ($lesson->format_flag == LESSON_FORMAT_AUTO)
+		{
+			$lesson->text = LessonController::autoFormat($lesson->text);
+		}
+		
+		$prev = Lesson::getPrev($lesson);
+		$next = Lesson::getNext($lesson);
+		
+		$quiz = LessonController::makeQuiz($lesson->text);
+
+		return view(PREFIX . '.review', $this->getViewData([
+			'record' => $lesson,
+			'prev' => $prev,
+			'next' => $next,
+			'sentenceCount' => count($quiz),
+			'quiz' => $quiz,	
+			'questionPrompt' => 'What is the answer?',
+			'questionPromptReverse' => 'What is the question?',
+			], LOG_MODEL, LOG_PAGE_VIEW));
     }	
 }

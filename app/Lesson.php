@@ -21,6 +21,27 @@ class Lesson extends Base
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
 	
+    static public function getIndex($parent_id)
+	{
+		$parent_id = intval($parent_id);
+		$parent_id = $parent_id > 0 ? $parent_id : '%';
+		$released = Tools::isAdmin() ? '%' : '1';
+		
+		$records = [];
+		
+		$records = Lesson::select()
+			->where('deleted_flag', 0)
+			->where('parent_id', 'like', $parent_id)
+			->where('published_flag', 'like', $released)
+			->where('approved_flag', 'like', $released)
+			->orderBy('parent_id')
+			->orderBy('lesson_number')
+			->orderBy('section_number')
+			->get();
+		
+		return $records;
+	}
+	
     static public function convertCodes($text)
 	{
 		$v = $text;

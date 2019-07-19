@@ -6,7 +6,11 @@
 	
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
-	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})</h1>
+	@if (isset($course))
+		<h1>{{$course->title}} ({{count($records)}})</h1>
+	@else
+		<h1>@LANG('content.Lessons') ({{count($records)}})</h1>
+	@endif
 
 	<table class="table table-responsive">
 		<thead>

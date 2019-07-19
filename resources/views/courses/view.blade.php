@@ -22,7 +22,7 @@
 	
 	<h1>@LANG('content.Lessons') ({{count($records)}})
 	@if ($isAdmin)
-		<span><a href="/lessons/admin"><span class="glyphCustom glyphicon glyphicon-admin"></span></a></span>
+		<span><a href="/lessons/admin/{{$record->id}}"><span class="glyphCustom glyphicon glyphicon-admin"></span></a></span>
 		<span><a href="/lessons/add"><span class="glyphCustom glyphicon glyphicon-add"></span></a></span>
 	@endif	
 	</h1>
@@ -33,7 +33,7 @@
 			<table>
 				<tr>
 					<td style="">
-						<span style="font-size:1.5em; color:purple; padding-right:10px;">{{$record->section_number}}</span>&nbsp;
+						<span style="font-size:1.3em; color:purple; padding-right:5px;">{{$record->getDisplayNumber()}}</span>&nbsp;
 					</td>
 					<td>
 						{{$record->title}}<br/><span style="font-size:.9em">{{$record->description}}</span>	
