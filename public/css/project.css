@@ -24,21 +24,21 @@ Super Light Green: #eff7f0
 
 .link-dark a {
 	color:black;
-	text-decoration:none;	
+	text-decoration:none;
 }
 
 .card-course, .card-course a {
-	height:200px; 
-	background-color: #f5746f; 
+	height:200px;
+	background-color: #f5746f;
 	background-color: #74c174;
 	background-color: #3dbcb1;
-	color:white;	
+	color:white;
 	text-decoration:none;
 }
 
 .card-course .card-header {
-	background-color: #f4645f; 	
-	background-color: #5CB85C; 	
+	background-color: #f4645f;
+	background-color: #5CB85C;
 	background-color: #27b4a8;
 	font-size:1.1em;
 }
@@ -52,10 +52,10 @@ Super Light Green: #eff7f0
 }
 
 .btn-lesson-index {
-	color: black; 
-	text-align:left; 
-	margin-bottom:10px; 
-	width:100%; 
+	color: black;
+	text-align:left;
+	margin-bottom:10px;
+	width:100%;
 	max-width:600px;
 }
 
@@ -101,11 +101,11 @@ Super Light Green: #eff7f0
 	margin: 10px 0;
 }
 
-.page-nav-buttons .glyphicon-button-prev {
+.page-nav-buttons .glyphicon-button-prev, .page-nav-buttons .glyphicon-circle-arrow-up {
 	margin-right: 5px;
 }
 
-.page-nav-buttons .glyphicon-button-next, .page-nav-buttons .glyphicon-button-back-to {
+.page-nav-buttons .glyphicon-button-next, .page-nav-buttons .glyphicon-button-back-to, .page-nav-buttons .glyphicon-circle-arrow-down {
 	margin-left: 5px;
 }
 

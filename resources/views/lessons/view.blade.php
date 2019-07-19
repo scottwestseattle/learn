@@ -20,6 +20,7 @@
 
     <div style="font-size:.8em;">
 		{{$record->course->title}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
+		&nbsp;<a href="/{{$prefix}}/review/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-check"></span></a>
 		@if ($isAdmin)
 			&nbsp;<a href="/{{$prefix}}/edit2/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
 			<a class="btn {{($status=$record->getStatus())['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$status['text']}}</a>

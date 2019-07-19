@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// THE QNA JS APPLICATION 
+// THE QNA JS APPLICATION
 //-----------------------------------------------------------------------------
 
 //
@@ -26,39 +26,39 @@ $(document).keydown(function(event) {
 
 	if (event.altKey )
 	{
-		
+
 		if (event.which == 75 || event.which == 107) // alt-k
 		{
 			$("#button-know").click()
 			event.preventDefault();
-			event.stopPropagation();		
+			event.stopPropagation();
 		}
 		else if (event.which == 68 || event.which == 100) // alt-d
 		{
 			$("#button-dont-know").click()
 			event.preventDefault();
-			event.stopPropagation();		
+			event.stopPropagation();
 		}
 		else if (event.which == 99 || event.which == 67) // alt-c
 		{
 			$("#button-override").click();
 			event.preventDefault();
-			event.stopPropagation();		
-		}		
+			event.stopPropagation();
+		}
 	}
-	
+
 });
-	  
+
 $( document ).ready(function() {
-	
+
 	//sbw $("#checkbox-type-answers").prop('checked', !isMobile.any());
 	quiz.setButtonStates(RUNSTATE_START);
 	quiz.setControlStates();
 	loadData();
-	loadOrder();	
+	loadOrder();
 	//quiz.showAnswersClick();
 	quiz.typeAnswersClick();
-	
+
 	//sbw $('li:first').remove();
 	//sbw $('li:first').append($('<li>new</li>'));
 });
@@ -90,7 +90,7 @@ var isMobile = {
 function quiz() {
 
 	this.qna = [];
-	
+
 	// options
 	this._flip = false;
 	this.promptQuestionNormal = ''; // loaded after ready
@@ -102,21 +102,21 @@ function quiz() {
 	this.getQuestionId = function(index) {
 		return this.qna[this.qna[index].order].id;
 	}
-	
+
 	this.question = function(index) {
 		return this.qna[this.qna[index].order];
 	}
-	
+
 	this.setControlStates = function() {
-		$("#button-start").focus();			
+		$("#button-start").focus();
 	}
 
 	this.setButtonStates = function(state) {
 
 		var typeAnswers = $("#checkbox-type-answers").prop('checked');
-		
+
 		this.runState = state;
-		
+
 		if (state == RUNSTATE_START)
 		{
 			//
@@ -153,7 +153,7 @@ function quiz() {
 				$("#button-dont-know").show();
 				$("#button-check-answer").hide();
 			}
-			
+
 			quiz.showOverrideButton(false, null);
 			$("#button-next-attempt").hide();
 			$("#button-start").hide();
@@ -166,7 +166,7 @@ function quiz() {
 		else if (state == RUNSTATE_CHECKING)
 		{
 			$("#question-prompt").hide();
-			
+
 			//
 			// checking the answer
 			//
@@ -182,7 +182,7 @@ function quiz() {
 				$("#button-know").hide();
 				$("#button-dont-know").hide();
 			}
-			
+
 			quiz.showOverrideButton(true, null);
 			$("#button-next-attempt").show();
 			$("#button-start").hide();
@@ -192,34 +192,34 @@ function quiz() {
 		{
 			alert("setButtonStates - bad value");
 		}
-	}	
-	
+	}
+
 	this.flipped = function() {
 		return this._flip;
 	}
-	
+
 	this.flip = function() {
 		this._flip = !this._flip;
 		this.promptQuestion = (this._flip ? this.promptQuestionReverse : this.promptQuestionNormal);
-		this.showQuestion();	
+		this.showQuestion();
 	}
-	
+
 	this.start = function() {
 		resetQuiz();
 		this.showQuestion();
 		nbr = 1;
 		updateScore();
-		
-		this.setButtonStates(RUNSTATE_ASKING);				
+
+		this.setButtonStates(RUNSTATE_ASKING);
 	}
-	
-	this.showQuestion = function() {	
+
+	this.showQuestion = function() {
 		clear();
-		
+
 		// show question
 		var q = getQuestion(true);
 		$("#prompt").html(q);
-		
+
 		// show answer
 		if ($("#checkbox-type-answers").prop('checked'))
 		{
@@ -230,17 +230,17 @@ function quiz() {
 
 		// show prompt
 		$("#promptQuestion").text(quiz.promptQuestion + " ");
-		
+
 		var typeAnswers = $("#checkbox-type-answers").prop('checked');
 		if (typeAnswers)
 		{
-			$("#attempt").focus();	
+			$("#attempt").focus();
 		}
 		else
 		{
-			$("#button-know").focus();	
+			$("#button-know").focus();
 		}
-		
+
 		// update the edit link for the question, if it doesn't exist then the user can't edit
 		if ($("#quizEditLinkSpan").length)
 		{
@@ -252,10 +252,10 @@ function quiz() {
 	this.showOverrideButton = function(show, label)
 	{
 		$("#button-override").prop('disabled', !show);
-		
+
 		if (label != null)
 			$("#button-override").val(label);
-		
+
 		if (!show)
 		{
 			$("#button-override").hide();
@@ -271,7 +271,7 @@ function quiz() {
 	this.typeAnswersClick = function()
 	{
 		this.setButtonStates(this.runState);
-		
+
 		var typeAnswers = $("#checkbox-type-answers").prop('checked');
 
 		if (typeAnswers)
@@ -282,10 +282,10 @@ function quiz() {
 		{
 			$("#typeAnswers").css('display', 'none');
 		}
-		
-		quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : 'Select Response:', 'black');			
-	}	
-	
+
+		quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : 'Select Response:', 'black');
+	}
+
 	this.showAnswersClick = function() {
 
 		var showAnswers = $("#checkbox-show").prop('checked');
@@ -297,28 +297,28 @@ function quiz() {
 		}
 		else
 		{
-			$("#buttonRowReview").css('display', 'none');		
+			$("#buttonRowReview").css('display', 'none');
 		}
-			
+
 		$("#answer-show").val(answer);
-		$("#answer-show").html(answer);	
+		$("#answer-show").html(answer);
 	}
-	
+
 	this.showList = function() {
 		if ($("#showAllLink").html() == "Show All Questions")
 		{
 			$("#showAllLink").html("Show Quiz");
 			$(".quizSection").hide();
-			$("#sectionReview").show();	
+			$("#sectionReview").show();
 		}
 		else
 		{
 			$("#showAllLink").html("Show All Questions");
 			$(".quizSection").show();
-			$("#sectionReview").hide();	
+			$("#sectionReview").hide();
 		}
 	}
-	
+
 	this.setAlertPrompt = function(text, color) {
 		$("#alertPrompt").html(text);
 		$("#alertPrompt").css('color', color);
@@ -356,15 +356,15 @@ function loadData()
 		var question = container.data('question');
 		var answer = container.data('answer');
 		var id = container.data('id');
-		
+
 		// add the record
-		quiz.qna[i] = {q:question.toString(), a:answer.toString(), id:id.toString(), order:0, correct:false}; 
-		
+		quiz.qna[i] = {q:question.toString(), a:answer.toString(), id:id.toString(), order:0, correct:false};
+
 		//if (i == 0) alert(quiz.qna[i].q);
-			
-		i++;		
+
+		i++;
     });
-	
+
 	//
 	// load misc variables
 	//
@@ -375,18 +375,18 @@ function loadData()
 		quiz.promptQuestionNormal = container.data('prompt');
 		quiz.promptQuestionReverse = container.data('prompt-reverse');
 		quiz.promptQuestion = quiz.promptQuestionNormal;
-		
+
 		if (i == 0)
 			alert(quiz.qna[i].q);
-			
-		i++;		
+
+		i++;
     });
-	
+
 	statsMax = max;
 	//alert("max=" + max + ", prompt=" + quiz.promptQuestion);
 }
 
-function loadOrder() 
+function loadOrder()
 {
 	//
 	// load random map in a work array
@@ -394,7 +394,7 @@ function loadOrder()
 	var order = [];
 	for (var i = 0; i < max; i++)
 		order[i] = i;
-		
+
 	//sbw order = shuffle(order); // mix it up
 
 	//
@@ -402,21 +402,21 @@ function loadOrder()
 	//
 	for (var i = 0; i < max; i++)
 		quiz.qna[i].order = order[i];
-	
+
 	/*
 	var s = "";
 	for (var i = 0; i < max; i++)
 		s += quiz.qna[i].order + ",";
-	alert(s);	
+	alert(s);
 	*/
 }
 
-function shuffle(array) 
+function shuffle(array)
 {
 	var currentIndex = array.length, temporaryValue, randomIndex ;
 
 	// While there are elements to shuffle...
-	while (0 !== currentIndex) 
+	while (0 !== currentIndex)
 	{
 		// Pick a remaining element...
 		randomIndex = Math.floor(Math.random() * currentIndex);
@@ -439,7 +439,7 @@ function first()
 
 function last()
 {
-	curr = max - 1;	
+	curr = max - 1;
 	loadQuestion();
 }
 
@@ -451,41 +451,41 @@ function next()
 		curr = 0;
 		nbr = 0;
 	}
-	
+
 	loadQuestion();
 }
 
 function nextAttempt()
 {
 	quiz.setButtonStates(RUNSTATE_ASKING);
-	
+
 	var done = false;
 	var count = 0;
 	while(!done)
 	{
 		curr++;
-		
+
 		// check if at the end of round
 		if (curr >= max)
 		{
 			curr = 0;
 			nbr = 0;
 			score = (right / (right+wrong)) * 100;
-			alert('End of Round ' + round + ': ' + score.toFixed(2) + '% (' + right + ' of ' + (right+wrong) + ')');		
+			alert('End of Round ' + round + ': ' + score.toFixed(2) + '% (' + right + ' of ' + (right+wrong) + ')');
 			round++;
 			statsMax = wrong;
 			right = 0;
 			wrong = 0;
 		}
-		
+
 		// if question not answered correctly yet
 		if (!quiz.qna[quiz.qna[curr].order].correct)
 		{
 			loadQuestion();
 			done = true;
-		}	
+		}
 		else if (count++ >= max)
-		{					
+		{
 			// no wrong answers left
 			alert('Done, all answered correctly!!');
 			resetQuiz();
@@ -497,7 +497,7 @@ function nextAttempt()
 			// break out just in care we're looping
 			break;
 		}
-	}	
+	}
 }
 
 function prev()
@@ -505,7 +505,7 @@ function prev()
 	curr--;
 	if (curr < 0)
 		curr = max - 1;
-	
+
 	loadQuestion();
 }
 
@@ -523,14 +523,14 @@ function resetQuiz()
 	round = 1;
 	statsMax = max;
 	nbr = 0;
-	
+
 	loadOrder();
-	
+
 	// turn off the edit question link
 	if ($("#quizEditLinkSpan").length) // only exists for the owner
 	{
 		$("#quizEditLinkSpan").hide();
-		$("#quizEditLink").attr("href", '/');	
+		$("#quizEditLink").attr("href", '/');
 	}
 }
 
@@ -543,23 +543,23 @@ function clear()
 {
 	$("#attempt").val('');
 	$("#attempt").text('');
-	
+
 	$("#answer-show").val('');
 	$("#answer-show").text('');
-	
+
 	$("#answer-show-div").text('');
 }
 
 function getAnswer()
-{	
+{
 	return getQuestion(false);
 }
 
 function getQuestion(question)
-{	
+{
 	var q = null;
 	var flip = (question) ? quiz.flipped() : !quiz.flipped(); // flip the flip for getting answers!!
-	
+
 	if (flip)
 		q = quiz.qna[quiz.qna[curr].order].a;
 	else
@@ -569,11 +569,11 @@ function getQuestion(question)
 }
 
 function loadQuestion()
-{	
+{
 	quiz.showQuestion();
 	nbr++;
 	//sbw updateScore();
-	
+
 	//sbw var typeAnswers = $("#checkbox-type-answers").prop('checked');
 	//sbw quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : 'Select Response:', 'black');
 }
@@ -581,12 +581,12 @@ function loadQuestion()
 function toStringBoolArray(a)
 {
 	var s = '';
-	
+
 	for (var i = 0; i < a.length; i++)
 	{
 		s += (a[i] ? "1" : "0");
 	}
-	
+
 	return s;
 }
 
@@ -609,15 +609,15 @@ function onKeypress(e)
 function cleanUpSpecialChars(str)
 {
 	var start = str;
-	
-    str = str.replace(/[èéêë]/g,"e");
-    str = str.replace(/[ÀÁÂÃÄÅ]/g,"A");
-    str = str.replace(/[àáâãäå]/g,"a");
-    str = str.replace(/[ÈÉÊË]/g,"E");
+
+    str = str.replace(/[ï¿½ï¿½ï¿½ï¿½]/g,"e");
+    str = str.replace(/[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]/g,"A");
+    str = str.replace(/[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]/g,"a");
+    str = str.replace(/[ï¿½ï¿½ï¿½ï¿½]/g,"E");
 	//str = str.replace(/[^a-z0-9]/gi,''); // final clean up
 	//alert(str);
-	
-	//if (str == 'Noumea' || str == 'Nouméa' || start != str)
+
+	//if (str == 'Noumea' || str == 'Noumï¿½a' || start != str)
 	//alert('start: ' + start + ", str: " + str);
 
     return str;
@@ -628,12 +628,12 @@ function checkAnswer(checkOptions)
 	quiz.setButtonStates(RUNSTATE_CHECKING);
 	$("#question-prompt").hide();
 
-	var answerRaw = getAnswer();	
+	var answerRaw = getAnswer();
 	var answer = cleanUpSpecialChars(answerRaw);
 	var attempt = $("#attempt").val();
 	var result = '';
 	var answerColor = 'black';
-		
+
 	if (checkOptions == CHECKANSWER_KNOW)
 	{
 		answerColor = 'black';
@@ -642,9 +642,9 @@ function checkAnswer(checkOptions)
 		$("#button-next-attempt").focus();
 		quiz.showOverrideButton(true, OVERRIDE_WRONG);
 		quiz.lastScore = SCORE_CORRECT;
-		$("#question-right").show();
-		
-		right++;		
+		//sbw $("#question-right").show();
+
+		right++;
 	}
 	else if (checkOptions == CHECKANSWER_DONTKNOW)
 	{
@@ -653,8 +653,8 @@ function checkAnswer(checkOptions)
 		$("#button-next-attempt").focus();
 		quiz.showOverrideButton(true, OVERRIDE_RIGHT);
 		quiz.lastScore = SCORE_WRONG;
-		$("#question-wrong").show();
-		
+		//sbw $("#question-wrong").show();
+
 		wrong++;
 	}
 	else
@@ -670,8 +670,8 @@ function checkAnswer(checkOptions)
 			$("#button-next-attempt").focus();
 			quiz.showOverrideButton(false, OVERRIDE_WRONG);
 			quiz.lastScore = SCORE_WRONG;
-			$("#question-right").show();
-			right++;		
+			//sbw $("#question-right").show();
+			right++;
 		}
 		else
 		{
@@ -680,17 +680,17 @@ function checkAnswer(checkOptions)
 			$("#button-next-attempt").focus();
 			quiz.showOverrideButton(true, OVERRIDE_RIGHT);
 			quiz.lastScore = SCORE_WRONG;
-			$("#question-wrong").show();
+			//sbw $("#question-wrong").show();
 			wrong++;
 		}
-	}	
+	}
 
 	quiz.setAlertPrompt(result, answerColor);
-	
+
 	var answerMsg = answer;
 	if (answer != answerRaw)
 		answerMsg += " (" + answerRaw + ")";
-		
+
 	//alert(answer);
 
 	if (false)
@@ -700,10 +700,10 @@ function checkAnswer(checkOptions)
 	}
 	else
 	{
-		$("#answer-show-div").html(answerMsg);	
-		$("#answer-show-div").css('color', answerColor);				
+		$("#answer-show-div").html(answerMsg);
+		$("#answer-show-div").css('color', answerColor);
 	}
-	
+
 	updateScore();
 }
 
@@ -711,15 +711,15 @@ function updateScore()
 {
 	$("#statsScore").html("<span class='quizStats'>Correct: " + right + " of " + (right+wrong) + "</span>");
 	$("#statsCount").html("<span class='quizStats'>Round " + round + ": " + nbr + "/" + statsMax + "</span>");
-	$("#statsDebug").html("<span class='quizStats'>" 
-		+ "round=" + round 
+	$("#statsDebug").html("<span class='quizStats'>"
+		+ "round=" + round
 		+ ", right=" + right
 		+ ", wrong=" + wrong
 		+ ", curr=" + curr
 		+ ", order=" + quiz.qna[curr].order
-		+ ", nbr=" + nbr 
+		+ ", nbr=" + nbr
 		+ ", max=" + max
-		+ ", statsMax=" + statsMax 
+		+ ", statsMax=" + statsMax
 		+ "<br/>"
 		//+ "order=" + quiz.order.toString()
 		//+ ", correct=" + toStringBoolArray(quiz.correct)
@@ -749,13 +749,13 @@ function override()
 		// it was wrong, make it right
 		//
 		quiz.qna[quiz.qna[curr].order].correct = true;
-		$("#question-right").show();
+		//sbw $("#question-right").show();
 		$("#question-wrong").hide();
 		$("#question-prompt").hide();
 		result = "Correct: ";
 		color = "darkBlue";
 		right++;
-		wrong--;	
+		wrong--;
 	}
 	else if (quiz.lastScore == SCORE_CORRECT)
 	{
@@ -763,17 +763,17 @@ function override()
 		// it was right, make it wrong
 		//
 		$("#question-right").hide();
-		$("#question-wrong").show();
+		//sbw $("#question-wrong").show();
 		$("#question-prompt").hide();
 		quiz.qna[quiz.qna[curr].order].correct = false;
 		result = "Wrong: ";
 		color = "red";
-		
-		right--;	
+
+		right--;
 		wrong++;
 	}
-	
-	quiz.setAlertPrompt('Score changed', color);	
+
+	quiz.setAlertPrompt('Score changed', color);
 
 	answer = result + answer;
 	$("#answer-show").html(answer);

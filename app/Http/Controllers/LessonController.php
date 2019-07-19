@@ -20,106 +20,106 @@ define('REDIRECT', '/lessons');
 define('REDIRECT_ADMIN', '/lessons/admin');
 
 class LessonController extends Controller
-{	
+{
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'permalink']);
-		
+        $this->middleware('is_admin')->except(['index', 'review', 'view', 'permalink']);
+
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
 		$this->titlePlural = TITLE_PLURAL;
-		
+
 		parent::__construct();
 	}
-	
+
     public function index(Request $request, $parent_id)
     {
 		$parent_id = intval($parent_id);
-		
+
 		$records = []; // make this countable so view will always work
-		
+
 		try
-		{			
+		{
 			$records = Lesson::getIndex($parent_id);
 		}
-		catch (\Exception $e) 
-		{			
+		catch (\Exception $e)
+		{
 			$msg = 'Error getting ' . $this->title . ' list';
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg . ' for parent ' . $parent_id, $parent_id, $e->getMessage());
-			Tools::flash('danger', $msg);			
-		}	
-			
+			Tools::flash('danger', $msg);
+		}
+
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records,
 		]));
-    }	
+    }
 
     public function admin(Request $request, $parent_id = null)
     {
 		$parent_id = intval($parent_id);
-		
+
 		$records = []; // make this countable so view will always work
 		$course = null;
-		
+
 		try
-		{			
+		{
 			$course = Course::get($parent_id);
 		}
-		catch (\Exception $e) 
+		catch (\Exception $e)
 		{
 			$msg = 'Error getting course';
 			Event::logException(LOG_MODEL_COURSES, LOG_ACTION_SELECT, $msg, $parent_id, $e->getMessage());
 			Tools::flash('danger', $msg);
-		}	
-		
+		}
+
 		try
-		{			
+		{
 			$records = Lesson::getIndex($parent_id);
 		}
-		catch (\Exception $e) 
+		catch (\Exception $e)
 		{
 			$msg = 'Error getting ' . strtolower($this->title) . ' list';
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 			Tools::flash('danger', $msg);
-		}	
-			
+		}
+
 		return view(PREFIX . '.admin', $this->getViewData([
 			'records' => $records,
 			'course' => $course,
 		]));
-    }	
+    }
 
     static public function getCourses($source)
-    {		 
+    {
 		$records = []; // make this countable so view will always work
 		try
 		{
 			$records = Course::getIndex();
 		}
-		catch (\Exception $e) 
+		catch (\Exception $e)
 		{
 			$msg = 'Lesson: Error getting course list';
 			Event::logException(LOG_MODEL_COURSES, LOG_ACTION_SELECT, $msg . ' (' . $source . ')', null, $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
-		
+
 		return $records;
 	}
-	
+
     public function add()
-    {		 
+    {
 		return view(PREFIX . '.add', $this->getViewData([
 			'lessonNumbers' => Lesson::getLessonNumbers(),
 			'sectionNumbers' => Lesson::getSectionNumbers(),
-			'courses' => LessonController::getCourses(LOG_ACTION_ADD), // for the course dropdown			
+			'courses' => LessonController::getCourses(LOG_ACTION_ADD), // for the course dropdown
 			]));
 	}
-		
+
     public function create(Request $request)
-    {					
+    {
 		$record = new Lesson();
-		
-		$record->user_id 		= Auth::id();				
+
+		$record->user_id 		= Auth::id();
 		$record->parent_id 		= $request->parent_id;
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
@@ -131,29 +131,29 @@ class LessonController extends Controller
 		try
 		{
 			$record->save();
-			
-			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);			
+
+			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
 			Tools::flash('success', 'New ' . TITLE_LC . ' has been added');
 		}
-		catch (\Exception $e) 
-		{			
+		catch (\Exception $e)
+		{
 			$msg = 'Error adding new ' . TITLE_LC;
 			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
-			
 
-			return back(); 
-		}	
-			
+
+			return back();
+		}
+
 		return redirect(REDIRECT_ADMIN);
     }
 
     public function permalink(Request $request, $permalink)
     {
 		$permalink = trim($permalink);
-		
+
 		$record = null;
-			
+
 		try
 		{
 			$record = Lesson::select()
@@ -164,53 +164,53 @@ class LessonController extends Controller
 				->where('permalink', $permalink)
 				->first();
 		}
-		catch (\Exception $e) 
+		catch (\Exception $e)
 		{
 			$msg = 'Entry Not Found: ' . $permalink;
-			
-			Tools::flash('danger', $msg);			
+
+			Tools::flash('danger', $msg);
 			Event::logError(LOG_MODEL, LOG_ACTION_PERMALINK, /* title = */ $msg);
-			
-			return back();					
-		}	
+
+			return back();
+		}
 
 		return view(PREFIX . '.view', $this->getViewData([
-			'record' => $record, 
+			'record' => $record,
 			], LOG_MODEL, LOG_PAGE_PERMALINK));
 	}
 
 	private static function autoFormat($text)
     {
 		$t = $text;
-		
+
 		$posEx = strpos($t, 'For example:');
 		$posH3 = strpos($t, '<h3>');
-		
+
 		if ($posEx && $posH3 && $posEx < $posH3)
 		{
 			$t = str_replace('For example:', 'For example:<div class="lesson-examples">', $t);
 			$t = str_replace('<h3>', '</div><h3>', $t);
 		}
-		
+
 		return $t;
 	}
-	
+
 	public function view(Lesson $lesson)
     {
 		$lesson->text = Tools::convertToHtml($lesson->text);
-		
+
 		if ($lesson->format_flag == LESSON_FORMAT_AUTO)
 		{
 			$lesson->text = LessonController::autoFormat($lesson->text);
 		}
-		
+
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
 
 		// count the paragraphs as sentences
 		preg_match_all('#<p>(.*?)</p>#is', $lesson->text, $matches, PREG_SET_ORDER);
 		preg_match_all('#<p>#is', $lesson->text, $matches, PREG_SET_ORDER);
-		
+
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $lesson,
 			'prev' => $prev,
@@ -218,7 +218,7 @@ class LessonController extends Controller
 			'sentenceCount' => count($matches),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
-	
+
 	public function edit(Lesson $lesson)
     {
 		return view(PREFIX . '.edit', $this->getViewData([
@@ -226,11 +226,11 @@ class LessonController extends Controller
 			'courses' => LessonController::getCourses(LOG_ACTION_EDIT), // for the course dropdown
 			]));
     }
-	
+
     public function update(Request $request, Lesson $lesson)
     {
 		$record = $lesson;
-		 
+
 		$isDirty = false;
 		$changes = '';
 
@@ -238,44 +238,44 @@ class LessonController extends Controller
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->text = Tools::copyDirty($record->text, Lesson::convertCodes(Tools::cleanHtml($request->text)), $isDirty, $changes);
 		$record->parent_id = Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
-	
+
 		// autoformat is currently just a checkbox but the db value is a flag
 		$format_flag = isset($request->autoformat) ? LESSON_FORMAT_AUTO : LESSON_FORMAT_DEFAULT;
 		$record->format_flag = Tools::copyDirty($record->format_flag, $format_flag, $isDirty, $changes);
-		
+
 		// renumber action
 		$renumberAll = isset($request->renumber_flag) ? true : false;
-		
+
 		$numbersChanged = $renumberAll; // if the numbering changes, then we need to check if an auto-renumber is needed
 		$record->lesson_number = Tools::copyDirty($record->lesson_number, $request->lesson_number, $numbersChanged, $changes);
 		$record->section_number = Tools::copyDirty($record->section_number, $request->section_number, $numbersChanged, $changes);
 		if ($numbersChanged)
 			$isDirty = true;
-				
+
 		if ($isDirty)
-		{						
+		{
 			try
 			{
 				$record->save();
 
-				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);			
+				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
 				Tools::flash('success', $this->title . ' has been updated');
-				
+
 				if ($numbersChanged)
 				{
 					if ($record->renumber($renumberAll)) // check for renumbering
 					{
 						$msg = TITLE_PLURAL . ' have been renumbered';
-						Event::logEdit(LOG_MODEL, $msg, $record->id, 'renumbering');			
+						Event::logEdit(LOG_MODEL, $msg, $record->id, 'renumbering');
 						Tools::flash('success', $msg);
 					}
 				}
 			}
-			catch (\Exception $e) 
+			catch (\Exception $e)
 			{
 				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'title = ' . $record->title, null, $e->getMessage());
 				Tools::flash('danger', $e->getMessage());
-			}				
+			}
 		}
 		else
 		{
@@ -284,37 +284,37 @@ class LessonController extends Controller
 
 		return redirect('/' . PREFIX . '/view/' . $record->id);
 	}
-		
+
 	public function edit2(Lesson $lesson)
-    {		 
+    {
 		return view(PREFIX . '.edit2', $this->getViewData([
 			'record' => $lesson,
 			]));
     }
-		
+
     public function update2(Request $request, Lesson $lesson)
     {
 		$record = $lesson;
-		 
+
 		$isDirty = false;
 		$changes = '';
 
 		$record->text = Tools::copyDirty($record->text, Tools::cleanHtml($request->text), $isDirty, $changes);
-	
+
 		if ($isDirty)
-		{						
+		{
 			try
 			{
 				$record->save();
 
-				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);			
+				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
 				Tools::flash('success', $this->title . ' has been updated');
 			}
-			catch (\Exception $e) 
+			catch (\Exception $e)
 			{
 				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'title = ' . $record->title, null, $e->getMessage());
 				Tools::flash('danger', $e->getMessage());
-			}				
+			}
 		}
 		else
 		{
@@ -323,39 +323,39 @@ class LessonController extends Controller
 
 		return redirect('/' . PREFIX . '/view/' . $record->id);
 	}
-	
+
     public function confirmdelete(Lesson $lesson)
-    {	
+    {
 		$vdata = $this->getViewData([
 			'record' => $lesson,
-		]);				
-		 
+		]);
+
 		return view(PREFIX . '.confirmdelete', $vdata);
     }
-	
+
     public function delete(Request $request, Lesson $lesson)
-    {	
+    {
 		$record = $lesson;
-				
-		try 
+
+		try
 		{
 			$record->deleteSafe();
-			Event::logDelete(LOG_MODEL, $record->title, $record->id);					
+			Event::logDelete(LOG_MODEL, $record->title, $record->id);
 			Tools::flash('success', $this->title . ' has been deleted');
 		}
-		catch (\Exception $e) 
+		catch (\Exception $e)
 		{
 			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $record->title, $record->id, $e->getMessage());
-			Tools::flash('danger', $e->getMessage());			
-		}	
-			
+			Tools::flash('danger', $e->getMessage());
+		}
+
 		return redirect(REDIRECT_ADMIN);
-    }	
-	
+    }
+
     public function undelete()
-    {	
+    {
 		$records = []; // make this countable so view will always work
-		
+
 		try
 		{
 			$records = Lesson::select()
@@ -363,55 +363,55 @@ class LessonController extends Controller
 				->where('deleted_flag', 1)
 				->get();
 		}
-		catch (\Exception $e) 
+		catch (\Exception $e)
 		{
 			$msg = 'Error getting ' . TITLE_LC . ' list';
 			Event::logException(LOG_MODEL, LOG_ACTION_UNDELETE, $msg, null, $e->getMessage());
 			Tools::flash('danger', $msg);
-		}	
-			
+		}
+
 		return view(PREFIX . '.undelete', $this->getViewData([
 			'records' => $records,
-		]));	
-	}	
+		]));
+	}
 
     public function publish(Request $request, Lesson $lesson)
-    {			
+    {
 		return view(PREFIX . '.publish', $this->getViewData([
 			'record' => $lesson,
 		]));
     }
-	
+
     public function publishupdate(Request $request, Lesson $lesson)
-    {	
-		$record = $lesson; 
-		
+    {
+		$record = $lesson;
+
 		$record->published_flag = isset($request->published_flag) ? 1 : 0;
 		$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
-		$record->finished_flag = isset($request->finished_flag) ? 1 : 0;		
-		
+		$record->finished_flag = isset($request->finished_flag) ? 1 : 0;
+
 		try
 		{
 			$record->save();
-			Event::logEdit(LOG_MODEL, $record->title, $record->id, 'published/approved/finished status updated');			
+			Event::logEdit(LOG_MODEL, $record->title, $record->id, 'published/approved/finished status updated');
 			Tools::flash('success', $this->title . ' status has been updated');
 		}
-		catch (\Exception $e) 
+		catch (\Exception $e)
 		{
 			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $record->title, null, $e->getMessage());
 			Tools::flash('danger', $e->getMessage());
-		}				
-		
+		}
+
 		return redirect(REDIRECT_ADMIN);
-    }	
+    }
 
 	public function makeQuiz($text)
     {
 		$records = [];
-	
+
 		// count the paragraphs as sentences
 		preg_match_all('#<p>(.*?)</p>#is', $text, $records, PREG_SET_ORDER);
-		
+
 		$qna = [];
 		$cnt = 0;
 		foreach($records as $record)
@@ -425,25 +425,25 @@ class LessonController extends Controller
 				$records[$cnt]['id'] = $cnt;
 			}
 			//dd($qna);
-			
+
 			$cnt++;
 		}
-		
+
 		//dd($records);
-		
+
 		return $records;
 	}
-	
+
 	public function review(Lesson $lesson)
     {
 		if ($lesson->format_flag == LESSON_FORMAT_AUTO)
 		{
 			$lesson->text = LessonController::autoFormat($lesson->text);
 		}
-		
+
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
-		
+
 		$quiz = LessonController::makeQuiz($lesson->text);
 
 		return view(PREFIX . '.review', $this->getViewData([
@@ -451,10 +451,10 @@ class LessonController extends Controller
 			'prev' => $prev,
 			'next' => $next,
 			'sentenceCount' => count($quiz),
-			'records' => $quiz,	
+			'records' => $quiz,
 			'questionPrompt' => '',
 			'questionPromptReverse' => 'What is the question?',
 			'canEdit' => true,
 			], LOG_MODEL, LOG_PAGE_VIEW));
-    }	
+    }
 }

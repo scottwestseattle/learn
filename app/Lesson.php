@@ -20,15 +20,15 @@ class Lesson extends Base
     {
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
-	
+
     static public function getIndex($parent_id)
 	{
 		$parent_id = intval($parent_id);
 		$parent_id = $parent_id > 0 ? $parent_id : '%';
 		$released = Tools::isAdmin() ? '%' : '1';
-		
+
 		$records = [];
-		
+
 		$records = Lesson::select()
 			->where('deleted_flag', 0)
 			->where('parent_id', 'like', $parent_id)
@@ -38,28 +38,28 @@ class Lesson extends Base
 			->orderBy('lesson_number')
 			->orderBy('section_number')
 			->get();
-		
+
 		return $records;
 	}
-	
+
     static public function convertCodes($text)
 	{
 		$v = $text;
 		$v = preg_replace('#___#is', "<input />", $v); // convert text input
-		
+
 		/*
 		<div class="table-borderless">
 		<table class="table lesson-table-sm">
 		*/
 
-		
 		$v = preg_replace('#(<table.*</table>)#is', "<div class=\"table-borderless\">$1</div>", $v); // wrap table in a div
 		$v = preg_replace('#border=\".*\"#is', "class=\"table lesson-table-sm\"", $v); // wrap table in a div
+
 		//dd($v);
-		
+
 		return $v;
 	}
-	
+
     public function isUnfinished()
     {
     	return (!$this->finished_flag || !$this->approved_flag || !$this->published_flag);
@@ -71,7 +71,7 @@ class Lesson extends Base
 		$color = '';
 		$done = true;
 		$btn = '';
-		
+
 		if (!$this->approved_flag)
 		{
 			$text = 'Approve';
@@ -86,10 +86,10 @@ class Lesson extends Base
 			$btn = 'btn-success';
 			$done = false;
 		}
-		
+
     	return ['text' => $text, 'color' => $color, 'btn' => $btn, 'done' => $done];
     }
-	
+
     public function getDisplayNumber()
     {
     	return $this->lesson_number . '.' . $this->section_number;
@@ -98,7 +98,7 @@ class Lesson extends Base
     public function renumber($renumberAll)
     {
 		$renumbered = false;
-		
+
 		// The format is Lesson.Section or Chapter.Section
 		if ($renumberAll)
 		{
@@ -116,10 +116,10 @@ class Lesson extends Base
 				$record->section_number = $next++;
 				$record->save();
 				$renumbered = true;
-			}			
+			}
 		}
 		else
-		{		
+		{
 			// check if record with this section_number already exists
 			$c = Lesson::select()
 				->where('id', '<>', $this->id)
@@ -170,7 +170,7 @@ class Lesson extends Base
 	static protected function getNextPrev($curr, $next = false)
 	{
 		if (Tools::isAdmin())
-		{		
+		{
 			$r = Lesson::select()
 				->where('deleted_flag', 0)
 				->where('parent_id', $curr->parent_id)
