@@ -8,11 +8,11 @@
 
 		@if (isset($record))
 			<td><a href='/{{$prefix}}/admin/{{$record->parent_id}}'><span class="glyphCustom glyphicon glyphicon-admin"></span></a></td>
+			<td><a href='/{{$prefix}}/add/{{$record->parent_id}}'><span class="glyphCustom glyphicon glyphicon-add"></span></a></td>
 		@else
 			<td><a href='/{{$prefix}}/admin'><span class="glyphCustom glyphicon glyphicon-admin"></span></a></td>
 		@endif
-		<td><a href='/{{$prefix}}/add/'><span class="glyphCustom glyphicon glyphicon-add"></span></a></td>
-		@if (isset($record->id))
+		@if (isset($record))
 			<td><a href='/{{$prefix}}/view/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-view"></span></a></td>
 			<td><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 			<td><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-delete"></span></a></td>

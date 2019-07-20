@@ -108,9 +108,28 @@ class LessonController extends Controller
 
     public function add(Course $course)
     {
+		$lessons = null;
+		$chapter = 1;
+		$lesson = 1;
+		
+		if (isset($course->id))
+		{
+			$record = Lesson::getLast($course->id);
+			if (isset($course->id) && isset($record)) // if a lesson already exists, get the next increment
+			{
+				$chapter = $record->lesson_number;		// use the current chapter
+				$section = $record->section_number + 1;	// use the next section number
+			}
+			
+			$lessons = Lesson::getIndex($course->id);
+		}
+		
 		return view(PREFIX . '.add', $this->getViewData([
-			'course' => $course,
-			'courses' => LessonController::getCourses(LOG_ACTION_ADD), // for the course dropdown
+			'course' => $course,										// parent
+			'courses' => LessonController::getCourses(LOG_ACTION_ADD),	// for the course dropdown
+			'chapter' => $chapter,
+			'section' => $section,
+			'lessons' => $lessons,
 			]));
 	}
 
@@ -207,6 +226,7 @@ class LessonController extends Controller
 
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
+		$nextChapter = $lesson->getNextChapter();
 
 		// count the paragraphs as sentences
 		preg_match_all('#<p>(.*?)</p>#is', $lesson->text, $matches, PREG_SET_ORDER);
@@ -218,6 +238,7 @@ class LessonController extends Controller
 			'next' => $next,
 			'sentenceCount' => count($matches),
 			'courseTitle' => isset($lesson->course) ? $lesson->course->title : '',
+			'nextChapter' => $nextChapter,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

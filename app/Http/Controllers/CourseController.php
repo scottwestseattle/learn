@@ -170,7 +170,7 @@ class CourseController extends Controller
 	public function edit(Course $course)
     {
 		$record = $course;
-
+		
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
 			]));
@@ -186,6 +186,7 @@ class CourseController extends Controller
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->display_order = Tools::copyDirty($record->display_order, $request->display_order, $isDirty, $changes);
+		$record->type_flag = Tools::copyDirty($record->type_flag, $request->type_flag, $isDirty, $changes);
 
 		if ($isDirty)
 		{
@@ -217,7 +218,7 @@ class CourseController extends Controller
 
 		$vdata = $this->getViewData([
 			'record' => $record,
-			'children' => $record->lessons,
+			'children' => Lesson::getIndex($record->id),
 		]);
 
 		return view(PREFIX . '.confirmdelete', $vdata);

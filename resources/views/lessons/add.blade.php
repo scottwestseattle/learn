@@ -27,12 +27,12 @@
 
 		<div class="form-group">
 			<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
-			<input type="number"  min="1" max="1000" step="1" name="lesson_number" class="form-control form-control-100" value="1" />
+			<input type="number"  min="1" max="1000" step="1" name="lesson_number" class="form-control form-control-100" value="{{$chapter}}" />
 		</div>	
 
 		<div class="form-group">		
 			<label for="section_number" class="control-label">@LANG('content.Section'):</label>
-			<input type="number"  min="1" max="1000" step="1" name="section_number" class="form-control form-control-100" value="1" />
+			<input type="number"  min="1" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$section}}" />
 		</div>	
 		
 		<div class="form-group">
@@ -50,6 +50,8 @@
 
 	</form>
 
+	@component('lessons.comp-lesson-list', ['records' => $lessons])@endcomponent	
+	
 </div>
 
 @endsection

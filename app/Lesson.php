@@ -20,7 +20,7 @@ class Lesson extends Base
     {
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
-
+	
     static public function getIndex($parent_id)
 	{
 		$parent_id = intval($parent_id);
@@ -162,6 +162,42 @@ class Lesson extends Base
 		return $renumbered;
     }
 
+	public function getPrevChapter()
+	{
+		return $this->getNextPrevChapter();
+	}
+
+	public function getNextChapter()
+	{
+		return $this->getPrevNextChapter(/* next = */ true);
+	}
+	
+	// default is prev
+    public function getPrevNextChapter($next = false)
+    {
+		$r = Lesson::select()
+			->where('deleted_flag', 0)
+			->where('parent_id', $this->parent_id)
+			->where('published_flag', 'like', Tools::isAdmin() ? '%' : 1)
+			->where('approved_flag', 'like', Tools::isAdmin() ? '%' : 1)
+			->where('lesson_number', $next ? '>' : '<', $this->lesson_number)
+			->orderByRaw('lesson_number ASC, section_number ' . ($next ? 'ASC' : 'DESC '))
+			->first();
+
+		return $r ? $r->id : null;			
+    }	
+	
+    static public function getLast($parentId)
+    {
+		$r = Lesson::select()
+			->where('deleted_flag', 0)
+			->where('parent_id', $parentId)
+			->orderByRaw('lesson_number DESC, section_number DESC')
+			->first();
+
+		return $r;			
+    }	
+	
 	static public function getPrev($curr)
 	{
 		return Lesson::getNextPrev($curr);
@@ -171,7 +207,7 @@ class Lesson extends Base
 	{
 		return Lesson::getNextPrev($curr, /* next = */ true);
 	}
-
+	
 	// default is prev
 	static protected function getNextPrev($curr, $next = false)
 	{

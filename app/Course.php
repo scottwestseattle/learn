@@ -40,6 +40,41 @@ class Course extends Base
     	return $this->hasMany('App\Lesson', 'parent_id', 'id');
     }	
 
+    public function getCardColor()
+    {
+		$cardClass = 'card-course-type0';
+		
+		if (isset($this->type_flag))
+		{
+			switch ($this->type_flag)
+			{
+				case 1:
+					$cardClass = 'card-course-type1';
+					break;
+				case 2:
+					$cardClass = 'card-course-type2';
+					break;
+				default:
+					break;
+			}
+		}
+		
+		return $cardClass;
+	}	
+	
+    static public function getTypes()
+    {
+		$types = [
+			'Not Set',
+			'English',
+			'Spanish',
+			'Tech',
+			'Other',
+		];
+		
+		return $types;
+	}
+		
     static public function get($id)
     {
 		$id = intval($id);

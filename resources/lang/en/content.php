@@ -55,4 +55,5 @@ return [
 'Release Status' => 'Release Status',
 'Back to Lesson' => 'Back to Lesson',
 'Select Course' => 'Select Course',
+'Display Order' => 'Display Order',
 ];

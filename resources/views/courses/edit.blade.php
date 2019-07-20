@@ -20,6 +20,19 @@
 			<input type="number"  min="1" max="1000" step="1" name="display_order" class="form-control form-control-100" value="{{$record->display_order}}"></input>	
 		</div>
 		
+		<div class="form-group">
+		@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix, 
+			'isAdmin' => $isAdmin, 
+			'prompt' => 'Course Type: ',
+			'empty' => 'Select Course Type',
+			'options' => App\Course::getTypes(),
+			'selected_option' => $record->type_flag,
+			'field_name' => 'type_flag',
+			'prompt_div' => true,
+			'select_class' => 'form-control form-control-sm',
+		])@endcomponent
+		</div>
+		
 		<label for="description" class="control-label">@LANG('gen.Description'):</label>
 		<textarea name="description" class="form-control">{{$record->description}}</textarea>
 

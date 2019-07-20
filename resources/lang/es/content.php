@@ -55,4 +55,5 @@ return [
 'Release Status' => 'Estado de lanzamiento',
 'Back to Lesson' => 'Volver a la Lección',
 'Select Course' => 'Seleccionar Curso',
+'Display Order' => 'Orden de Visualización',
 ];

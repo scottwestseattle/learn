@@ -10,10 +10,6 @@ Glyph Icon Blue: #286090
 Super Light Green: #eff7f0
 ************************************************************/
 
-/***********************************************************
-	Custom cards for the Course list
-************************************************************/
-
 .btn-quiz {
 	margin-top:10px;
 }
@@ -22,18 +18,42 @@ Super Light Green: #eff7f0
 	width:100px;
 }
 
+.form-control-sm {
+	width:200px;
+}
+.form-control-md {
+	width:400px;
+}
+.form-control-lg {
+	width:600px;
+}
+
+
 .link-dark a {
 	color:black;
 	text-decoration:none;
 }
 
+/***********************************************************
+	Custom cards for the Course list
+************************************************************/
+
 .card-course, .card-course a {
 	height:200px;
-	background-color: #f5746f; /* reddish */
-	background-color: #3dbcb1; /* greenish */
-	sbwbackground-color: #4993FD; /* header blue */
+	xbackground-color: #f5746f; /* reddish */
+	xbackground-color: #3dbcb1; /* greenish */
 	color:white;
 	text-decoration:none;
+}
+
+.card-course-type0 {
+	background-color: #3dbcb1; /* greenish */
+}
+.card-course-type1 {
+	background-color: #f5746f; /* reddish */
+}
+.card-course-type2 {
+	background-color: #4993FD; /* header blue */
 }
 
 .card-course .card-header {

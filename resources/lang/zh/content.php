@@ -55,4 +55,5 @@ return [
 'Release Status' => '发布状态',
 'Back to Lesson' => '回到课程',
 'Select Course' => '选择课程',
+'Display Order' => '显示顺序',
 ];
