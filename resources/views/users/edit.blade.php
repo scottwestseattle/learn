@@ -35,7 +35,7 @@
 		</div>
 
 		<div class="form-group">
-			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
+			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
 		</div>
 	{{ csrf_field() }}
 	</form>

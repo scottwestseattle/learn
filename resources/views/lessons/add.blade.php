@@ -13,8 +13,9 @@
 		<div class="form-group">
 			<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
 			<select name="parent_id" class="form-control">
-				@foreach ($courses as $course)
-					<option value="{{$course->id}}" {{ isset($record) && $course->id == $record->parent_id ? 'selected' : ''}}>{{$course->title}}</option>
+				<option value="0">(@LANG('content.Select Course'))</option>
+				@foreach ($courses as $record)
+					<option value="{{$record->id}}" {{ isset($course->id) && $record->id == $course->id ? 'selected' : ''}}>{{$record->title}}</option>
 				@endforeach
 			</select>
 		</div>

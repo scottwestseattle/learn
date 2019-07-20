@@ -24,7 +24,7 @@
 		<textarea name="description" class="form-control">{{$record->description}}</textarea>
 
 		<div class="submit-button">
-			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
+			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
 		</div>
 
 		{{ csrf_field() }}

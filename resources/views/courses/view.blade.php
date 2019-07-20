@@ -23,7 +23,7 @@
 	<h1>@LANG('content.Lessons') ({{count($records)}})
 	@if ($isAdmin)
 		<span><a href="/lessons/admin/{{$record->id}}"><span class="glyphCustom glyphicon glyphicon-admin"></span></a></span>
-		<span><a href="/lessons/add"><span class="glyphCustom glyphicon glyphicon-add"></span></a></span>
+		<span><a href="/lessons/add/{{$record->id}}"><span class="glyphCustom glyphicon glyphicon-add"></span></a></span>
 	@endif	
 	</h1>
 	

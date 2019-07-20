@@ -6,7 +6,7 @@
 
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
-	<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="/courses/view/{{$record->parent_id}}">@LANG('content.Back to')&nbsp;{{$record->course->title}}<span class="glyphicon glyphicon-button-back-to"></span></a></span>
+	<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="/courses/view/{{$record->parent_id}}">@LANG('content.Back to')&nbsp;{{$courseTitle}}<span class="glyphicon glyphicon-button-back-to"></span></a></span>
 	<div class="page-nav-buttons">
 		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}">
 			<span class="glyphicon glyphicon-button-prev"></span>
@@ -19,7 +19,7 @@
 	</div>
 
     <div style="font-size:.8em;">
-		{{$record->course->title}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
+		{{$courseTitle}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
 		&nbsp;<a href="/{{$prefix}}/review/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-check"></span></a>
 		@if ($isAdmin)
 			&nbsp;<a href="/{{$prefix}}/edit2/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>

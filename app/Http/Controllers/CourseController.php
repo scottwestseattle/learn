@@ -87,6 +87,8 @@ class CourseController extends Controller
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
 		$record->permalink		= Tools::createPermalink($request->title);
+		$record->release_flag	= RELEASE_DEFAULT;
+		$record->wip_flag		= WIP_DEFAULT;
 
 		try
 		{
@@ -215,6 +217,7 @@ class CourseController extends Controller
 
 		$vdata = $this->getViewData([
 			'record' => $record,
+			'children' => $record->lessons,
 		]);
 
 		return view(PREFIX . '.confirmdelete', $vdata);

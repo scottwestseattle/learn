@@ -109,4 +109,5 @@ return [
 'First' => 'First',
 'Last' => 'Last',
 'Clear' => 'Clear',
+'Save' => 'Save',
 ];

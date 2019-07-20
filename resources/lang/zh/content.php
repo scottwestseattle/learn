@@ -54,4 +54,5 @@ return [
 'Work Status' => '完成状态',
 'Release Status' => '发布状态',
 'Back to Lesson' => '回到课程',
+'Select Course' => '选择课程',
 ];

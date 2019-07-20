@@ -18,7 +18,7 @@
 				<a id="nav-link-title" class="nav-link" href="#" onclick="setTab(event, 2);">@LANG('ui.Title')</a>
 			</li>
 			<li class="nav-item">
-				<button type="submit" name="update" style="margin-top:5px; margin-left:5px;" class="btn btn-sm btn-primary">@LANG('ui.Update')</button>
+				<button type="submit" name="update" style="margin-top:5px; margin-left:5px;" class="btn btn-sm btn-primary">@LANG('ui.Save')</button>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href='/{{$prefix}}/edit2/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-pencil"></span></a>
@@ -35,6 +35,7 @@
 			<div class="form-group">
 				<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
 				<select name="parent_id" class="form-control">
+					<option value="0">(@LANG('content.Select Course'))</option>
 					@foreach ($courses as $course)
 						<option value="{{$course->id}}" {{ $course->id == $record->parent_id ? 'selected' : ''}}>{{$course->title}}</option>
 					@endforeach
@@ -77,7 +78,7 @@
 			<button onclick="event.preventDefault(); saveAndStay();" name="update" class="btn btn-success">Save and Stay</button>
 		@endif				
 		<div class="submit-button">
-			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
+			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
 		</div>
 
 		{{ csrf_field() }}

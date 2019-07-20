@@ -4,11 +4,9 @@
 
 <div class="container page-normal">
 
-	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})
-	@if ($isAdmin)
-		<span style="font-size:.6em;"><a href="/{{$prefix}}/admin"><span class="glyphCustom glyphicon glyphicon-admin"></span></a></span>
-	@endif	
-	</h1>
+	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
+
+	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})</h1>
 	
 	<div class="row row-course">
 		@foreach($records as $record)			

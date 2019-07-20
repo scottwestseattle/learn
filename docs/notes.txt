@@ -11,6 +11,9 @@ Kattie has a wide variety of influences and considers herself to be an eclectic 
 
 Latest DB Changes:
 
+ALTER TABLE lessons ADD FOREIGN KEY (parent_id) REFERENCES courses(id)
+
+
 7/17/2019
 ALTER TABLE `courses` ADD `course_number` VARCHAR(20) NULL AFTER `title`;
 ALTER TABLE `courses` ADD `display_order` SMALLINT NOT NULL DEFAULT '0' AFTER `display_date`;

@@ -45,15 +45,21 @@ class Lesson extends Base
     static public function convertCodes($text)
 	{
 		$v = $text;
-		$v = preg_replace('#___#is', "<input />", $v); // convert text input
+		
+		// replace underscores with input controls
+		//$v = preg_replace('#___#is', "<input />", $v); //todo: do this at view time, don't permanently convert
 
+		//
+		// format tables
+		//
+		
 		/*
 		<div class="table-borderless">
 		<table class="table lesson-table-sm">
 		*/
-
-		$v = preg_replace('#(<table.*</table>)#is', "<div class=\"table-borderless\">$1</div>", $v); // wrap table in a div
-		$v = preg_replace('#border=\".*\"#is', "class=\"table lesson-table-sm\"", $v); // wrap table in a div
+		
+		$v = preg_replace('#(<table.*</table>)#is', "<div class=\"table-borderless\">$1</div>", $v); // wrap in div
+		$v = preg_replace('#border=\".*\"#is', "class=\"table lesson-table-sm\"", $v); // add table classes
 
 		//dd($v);
 

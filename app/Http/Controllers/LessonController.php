@@ -106,11 +106,10 @@ class LessonController extends Controller
 		return $records;
 	}
 
-    public function add()
+    public function add(Course $course)
     {
 		return view(PREFIX . '.add', $this->getViewData([
-			'lessonNumbers' => Lesson::getLessonNumbers(),
-			'sectionNumbers' => Lesson::getSectionNumbers(),
+			'course' => $course,
 			'courses' => LessonController::getCourses(LOG_ACTION_ADD), // for the course dropdown
 			]));
 	}
@@ -141,11 +140,13 @@ class LessonController extends Controller
 			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 
-
 			return back();
 		}
 
-		return redirect(REDIRECT_ADMIN);
+		if (isset($record->id))
+			return redirect('/lessons/edit/' . $record->id);
+		else
+			return redirect('/lessons/admin/' . $record->parent_id);
     }
 
     public function permalink(Request $request, $permalink)
@@ -216,6 +217,7 @@ class LessonController extends Controller
 			'prev' => $prev,
 			'next' => $next,
 			'sentenceCount' => count($matches),
+			'courseTitle' => isset($lesson->course) ? $lesson->course->title : '',
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

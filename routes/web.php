@@ -69,6 +69,7 @@ Route::group(['prefix' => 'lessons'], function () {
 
 	// add/create
 	Route::get('/add','LessonController@add');
+	Route::get('/add/{course}','LessonController@add');
 	Route::post('/create','LessonController@create');
 
 	// edit/update
