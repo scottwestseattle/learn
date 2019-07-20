@@ -51,4 +51,6 @@ return [
 'Chapter' => '章节',
 'Type Answers' => '键入答案',
 'Flip Question/Answer' => '反转问题/答案',
+'Work Status' => '完成状态',
+'Release Status' => '发布状态',
 ];

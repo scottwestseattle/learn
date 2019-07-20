@@ -5,7 +5,7 @@
 <div class="container page-normal">
 	<h2 style="">{{$isSuperAdmin ? 'Super ' : ''}}Admin Dashboard</h2>
 
-	<div style="margin-bottom:40px;">
+	<div class="form-group">	
 		<ul style="font-size: 1.1em; list-style-type: none; padding-left: 0px;">
 			<li>Time: {{date("Y-m-d H:i:s")}}</li>
 			@if (false)
@@ -20,8 +20,8 @@
 	</div>
 	
 	@if (isset($courses))
-	<div style="margin-bottom:30px;">	
-		<h3>@LANG('content.Unfinished Courses') ({{count($courses)}})</h3>
+	<div class="form-group">	
+		<h3>@LANG('content.Unfinished Courses') ({{count($courses)}})&nbsp;<a href="/courses/admin"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
 		<div class="table-responsive">
 		<table class="table table-striped">
 			<tbody>
@@ -33,6 +33,7 @@
 			</tbody>
 		</table>
 		</div>
+		
 	</div>
 	@endif
 
@@ -65,15 +66,15 @@
 	@endif
 	
 	@if (isset($visitors))			
-	<div style="margin-bottom:50px;">
-		<h3 style="">Today's Visitors: {{count($visitors)}}</h3>
-		<p><a href="/visitors">Show All Visitors</a></p>
+	<div class="form-group">
+		<h3 style="">Today's Visitors: {{count($visitors)}}&nbsp;<a href="/visitors"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
 	</div>
+	<p>&nbsp;</p>
 	@endif
 	
 	@if (count($users) > 0)
-	<div>	
-		<h3 style="">Last New User ({{count($users)}} Total)</h3>
+	<div class="form-group">	
+		<h3 style="">Last New User ({{count($users)}} Total)&nbsp;<a href="/users/index"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
 		<div class="table-responsive">
 		<table class="table table-striped">
 			<tbody>
@@ -91,13 +92,12 @@
 			</tbody>
 		</table>
 		</div>
-		<a href="/users/index">Show All Users</a>
 	</div>
 	<hr />
 	@endif
 		
 	<div>
-		<h3 style="">Latest Events ({{count($events)}})</h3>
+		<h3 style="">Latest Events ({{count($events)}})&nbsp;<a href="/events"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
 @if (false)		
 		@component('events.menu-submenu-events-filter')@endcomponent	
 @endif
@@ -134,7 +134,6 @@
 			</tbody>
 		</table>
 		</div>
-		<a href="/events">Show All Events</a>
 	</div>
 	<hr />
 	

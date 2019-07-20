@@ -9,77 +9,89 @@
 	<h1>@LANG('ui.Edit') @LANG('content.' . $title)</h1>
 
 	<form method="POST" id="form-edit" action="/{{$prefix}}/update/{{$record->id}}">
-
-		<div class="form-group">
-			<label for="title" class="control-label">@LANG('gen.Title'):</label>
-			<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
-		</div>
-
-		<div class="form-group">
-			<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
-			<select name="parent_id" class="form-control">
-				@foreach ($courses as $course)
-					<option value="{{$course->id}}" {{ $course->id == $record->parent_id ? 'selected' : ''}}>{{$course->title}}</option>
-				@endforeach
-			</select>
-		</div>
 	
-		<div class="form-group">
-			<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
-			<input type="number"  min="1" max="1000" step="1" name="lesson_number" class="form-control form-control-100" value="{{$record->lesson_number}}" />
-		</div>	
-
-		<div class="form-group">		
-			<label for="section_number" class="control-label">@LANG('content.Section'):</label>
-			<input type="number"  min="1" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$record->section_number}}" />
-		</div>	
-
-		<div class="form-group">
-			<input type="checkbox" name="renumber_flag" id="renumber_flag" class="" />
-			<label for="renumber_flag" class="checkbox-big-label">@LANG('content.Renumber All')</label>
-			&nbsp;
-			<input type="hidden" name="format_flag" value="{{$record->format_flag}}" />
-			<input type="checkbox" name="autoformat" id="autoformat" {{$record->format_flag == LESSON_FORMAT_AUTO ? 'checked' : ''}} />
-			<label for="autoformat" class="checkbox-big-label">@LANG('content.Auto-format')</label>
-		</div>
+		<ul class="nav nav-tabs">
+			<li class="nav-item">
+				<a id="nav-link-text" class="nav-link active" href="#" onclick="setTab(event, 1);">@LANG('gen.Text')</a>
+			</li>
+			<li class="nav-item">
+				<a id="nav-link-title" class="nav-link" href="#" onclick="setTab(event, 2);">@LANG('ui.Title')</a>
+			</li>
+			<li class="nav-item">
+				<button type="submit" name="update" style="margin-top:5px; margin-left:5px;" class="btn btn-sm btn-primary">@LANG('ui.Update')</button>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href='/{{$prefix}}/edit2/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-pencil"></span></a>
+			</li>
+		</ul>	
+	
+		<div style="display:none;" id="tab-title">
 		
-		<label for="description" class="control-label">@LANG('gen.Description'):</label>
-		<textarea name="description" class="form-control">{{$record->description}}</textarea>
-
-		<div style="margin-bottom: 20px;" class="submit-button">
-@if (false)		
-			<button onclick="event.preventDefault(); saveAndStay();" name="update" class="btn btn-success">Save and Stay</button>
-@endif
-			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
-			
-			<div style="float:left;margin: 5px 15px 0 0;">
-				<a href='/{{$prefix}}/edit2/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-pencil"></span></a>
+			<div class="form-group">
+				<label for="title" class="control-label">@LANG('gen.Title'):</label>
+				<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
 			</div>
-		</div>
 
-@if (false)		
-		<label for="text" class="control-label">@LANG('gen.Text'):</label>
+			<div class="form-group">
+				<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
+				<select name="parent_id" class="form-control">
+					@foreach ($courses as $course)
+						<option value="{{$course->id}}" {{ $course->id == $record->parent_id ? 'selected' : ''}}>{{$course->title}}</option>
+					@endforeach
+				</select>
+			</div>
+		
+			<div class="form-group">
+				<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
+				<input type="number"  min="1" max="1000" step="1" name="lesson_number" class="form-control form-control-100" value="{{$record->lesson_number}}" />
+			</div>	
 
-		<a href='#' onclick="event.preventDefault(); tinymce.init({selector:'#text'}); "><span class="glyphCustom glyphicon glyphicon-zoom-out"></span></a>
-		<a href='#' onclick='event.preventDefault(); tinymce.remove(); '><span class="glyphCustom glyphicon glyphicon-zoom-in"></span></a>
-		<a href='#' onclick='event.preventDefault(); refreshView();'><span class="glyphCustom glyphicon glyphicon-refresh"></span></a>
-@endif
-		
-		<div id ="rich" style="clear:both;display:default;">
-			<textarea style="height:500px" name="text" id="text" class="form-control big-text">{{$record->text}}</textarea>
+			<div class="form-group">		
+				<label for="section_number" class="control-label">@LANG('content.Section'):</label>
+				<input type="number"  min="1" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$record->section_number}}" />
+			</div>	
+
+			<div class="form-group">
+				<input type="checkbox" name="renumber_flag" id="renumber_flag" class="" />
+				<label for="renumber_flag" class="checkbox-big-label">@LANG('content.Renumber All')</label>
+				&nbsp;
+				<input type="hidden" name="format_flag" value="{{$record->format_flag}}" />
+				<input type="checkbox" name="autoformat" id="autoformat" {{$record->format_flag == LESSON_FORMAT_AUTO ? 'checked' : ''}} />
+				<label for="autoformat" class="checkbox-big-label">@LANG('content.Auto-format')</label>
+			</div>
+			
+			<label for="description" class="control-label">@LANG('gen.Description'):</label>
+			<textarea name="description" class="form-control">{{$record->description}}</textarea>
+
+			@if (false)		
+			<label for="text" class="control-label">@LANG('gen.Text'):</label>
+
+			<a href='#' onclick="event.preventDefault(); tinymce.init({selector:'#text'}); "><span class="glyphCustom glyphicon glyphicon-zoom-out"></span></a>
+			<a href='#' onclick='event.preventDefault(); tinymce.remove(); '><span class="glyphCustom glyphicon glyphicon-zoom-in"></span></a>
+			<a href='#' onclick='event.preventDefault(); refreshView();'><span class="glyphCustom glyphicon glyphicon-refresh"></span></a>
+			@endif
+
 		</div>
 		
-		<div id ="preview" style="display:none;">
-		</div>
+		<div id="tab-text">
 		
-		<div class="submit-button">
-@if (false)		
+			<div id ="rich" style="clear:both;display:default;">
+				<textarea style="height:500px" name="text" id="text" class="form-control big-text">{{$record->text}}</textarea>
+			</div>
+		
+		</div>
+				
+		@if (false)		
 			<button onclick="event.preventDefault(); saveAndStay();" name="update" class="btn btn-success">Save and Stay</button>
-@endif
+		@endif				
+		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
 		</div>
 
 		{{ csrf_field() }}
+
+		<div id ="preview" style="display:none;">
+		</div>
 		
 	</form>
 	
@@ -91,7 +103,28 @@
 
 <script>
 
-//tinymce.init({selector:'#text'});
+function setTab(event, tab)
+{
+	event.preventDefault();
+	
+	if (tab == 1)
+	{
+		$('#tab-text').show(); 
+		$('#tab-title').hide();
+		
+		$('#nav-link-text').addClass('active'); 
+		$('#nav-link-title').removeClass('active');
+	}
+	else
+	{
+		$('#tab-text').hide(); 
+		$('#tab-title').show();
+		
+		$('#nav-link-text').removeClass('active'); 
+		$('#nav-link-title').addClass('active');
+	}
+	
+}
 
 tinymce.init({
 	selector:'#text',

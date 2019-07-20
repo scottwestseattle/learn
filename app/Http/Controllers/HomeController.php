@@ -57,7 +57,7 @@ class HomeController extends Controller
 		//
 		// courses that aren't finished
 		//
-		$courses = Course::getIndex(['unfinished' => true]);
+		$courses = Course::getIndex(['unfinished']);
 		
 		//
 		// get Sites

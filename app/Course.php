@@ -12,7 +12,7 @@ define('RELEASE_APPROVED', 90);
 define('RELEASE_PUBLISHED', 100);
 
 define('WIP_NOTSET', 0);
-define('WIP_ONHOLD', 10);
+define('WIP_INACTIVE', 10);
 define('WIP_DEV', 20);
 define('WIP_TEST', 30);
 define('WIP_FINISHED', 100);
@@ -54,7 +54,7 @@ class Course extends Base
     {
 		$v = [
 			WIP_NOTSET => 'Not Set',
-			WIP_ONHOLD => 'On Hold',
+			WIP_INACTIVE => 'Inactive',
 			WIP_DEV => 'Development',
 			WIP_TEST => 'Test',
 			WIP_FINISHED => 'Finished',
@@ -66,11 +66,10 @@ class Course extends Base
     static public function getIndex($parms = [])
     {
 		$records = []; // make this countable so view will always work
-        $p = count($parms) > 0 ? $parms[0] : '';
-//dd($parms);
+		
 		if (Tools::isAdmin())
 		{
-			if ($p == 'all')
+			if (array_search('all', $parms) !== false)
 			{
 				$records = Course::select()
 	//				->where('site_id', SITE_ID)
@@ -78,12 +77,12 @@ class Course extends Base
 					->orderBy('display_order')
 					->get();
 			}
-			else if (array_key_exists('unfinished', $parms))
+			else if (array_search('unfinished', $parms) !== false)
 			{
 				$records = Course::select()
 	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
-					->where('wip_flag', '<', WIP_FINISHED)
+					->where('wip_flag', '!=', WIP_INACTIVE)
 					->orderBy('display_order')
 					->get();
 			}
@@ -92,7 +91,7 @@ class Course extends Base
 				$records = Course::select()
 	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
-					->where('wip_flag', '>', WIP_ONHOLD)
+					->where('wip_flag', '>', WIP_INACTIVE)
 					->orderBy('display_order')
 					->get();
 			}

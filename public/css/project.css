@@ -29,17 +29,14 @@ Super Light Green: #eff7f0
 
 .card-course, .card-course a {
 	height:200px;
-	background-color: #f5746f;
-	background-color: #74c174;
-	background-color: #3dbcb1;
+	background-color: #f5746f; /* reddish */
+	background-color: #3dbcb1; /* greenish */
+	sbwbackground-color: #4993FD; /* header blue */
 	color:white;
 	text-decoration:none;
 }
 
 .card-course .card-header {
-	background-color: #f4645f;
-	background-color: #5CB85C;
-	background-color: #27b4a8;
 	font-size:1.1em;
 }
 

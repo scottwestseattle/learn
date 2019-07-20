@@ -51,4 +51,6 @@ return [
 'Chapter' => 'Chapter',
 'Type Answers' => 'Type Answers',
 'Flip Question/Answer' => 'Flip Question/Answer',
+'Work Status' => 'Work Status',
+'Release Status' => 'Release Status',
 ];

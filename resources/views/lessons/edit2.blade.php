@@ -12,8 +12,10 @@
 
 		<h3>{{$record->title}}</h3>
 		
-		<div class="submit-button">
-			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
+		<div class="form-group">
+			<div class="submit-button">
+				<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Update')</button>
+			</div>
 		</div>
 		
 		<textarea style="height:500px" name="text" id="text" class="form-control big-text">{{$record->text}}</textarea>
