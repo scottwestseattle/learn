@@ -58,8 +58,9 @@ class Lesson extends Base
 		<table class="table lesson-table-sm">
 		*/
 		
-		$v = preg_replace('#(<table.*</table>)#is', "<div class=\"table-borderless\">$1</div>", $v); // wrap in div
-		$v = preg_replace('#border=\".*\"#is', "class=\"table lesson-table-sm\"", $v); // add table classes
+		// this will wipe out any first table if more than 1 tables
+		//$v = preg_replace('#(<table.*</table>)#is', "<div class=\"table-borderless\">$1</div>", $v); // wrap in div
+		//$v = preg_replace('#border=\".*\"#is', "class=\"table lesson-table-sm\"", $v); // add table classes
 
 		//dd($v);
 

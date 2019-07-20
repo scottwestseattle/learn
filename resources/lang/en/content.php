@@ -56,4 +56,5 @@ return [
 'Back to Lesson' => 'Back to Lesson',
 'Select Course' => 'Select Course',
 'Display Order' => 'Display Order',
+'Next Chapter' => 'Next Chapter',
 ];

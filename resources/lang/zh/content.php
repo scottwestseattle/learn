@@ -56,4 +56,5 @@ return [
 'Back to Lesson' => '回到课程',
 'Select Course' => '选择课程',
 'Display Order' => '显示顺序',
+'Next Chapter' => '下一章',
 ];

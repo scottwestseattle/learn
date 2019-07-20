@@ -56,4 +56,5 @@ return [
 'Back to Lesson' => 'Volver a la Lección',
 'Select Course' => 'Seleccionar Curso',
 'Display Order' => 'Orden de Visualización',
+'Next Chapter' => 'Siguiente Capítulo',
 ];
