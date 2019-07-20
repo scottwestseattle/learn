@@ -436,12 +436,12 @@ body {
 .lesson-table,
 .lesson-table td,
 .lesson-table th {
-    border: 1px solid #dee2e6
+    xborder: 1px solid #dee2e6
 }
 
 .lesson-table thead td,
 .lesson-table thead th {
-    border-bottom-width: 2px;
+    xborder-bottom-width: 2px;
     background-color: #eff7f0;
 }
 /**************************************************************/

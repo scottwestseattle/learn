@@ -22,7 +22,7 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
-	<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="/courses/view/{{$record->parent_id}}">@LANG('content.Back to')&nbsp;{{$record->course->title}}<span class="glyphicon glyphicon-button-back-to"></span></a></span>
+	<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="/lessons/view/{{$record->id}}">@LANG('content.Back to Lesson')<span class="glyphicon glyphicon-button-back-to"></span></a></span>
 
     <div style="font-size:.8em;">
 		{{$record->course->title}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})

@@ -63,14 +63,6 @@
 			<label for="description" class="control-label">@LANG('gen.Description'):</label>
 			<textarea name="description" class="form-control">{{$record->description}}</textarea>
 
-			@if (false)		
-			<label for="text" class="control-label">@LANG('gen.Text'):</label>
-
-			<a href='#' onclick="event.preventDefault(); tinymce.init({selector:'#text'}); "><span class="glyphCustom glyphicon glyphicon-zoom-out"></span></a>
-			<a href='#' onclick='event.preventDefault(); tinymce.remove(); '><span class="glyphCustom glyphicon glyphicon-zoom-in"></span></a>
-			<a href='#' onclick='event.preventDefault(); refreshView();'><span class="glyphCustom glyphicon glyphicon-refresh"></span></a>
-			@endif
-
 		</div>
 		
 		<div id="tab-text">

@@ -53,4 +53,5 @@ return [
 'Flip Question/Answer' => '反转问题/答案',
 'Work Status' => '完成状态',
 'Release Status' => '发布状态',
+'Back to Lesson' => '回到课程',
 ];

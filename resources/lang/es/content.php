@@ -53,4 +53,5 @@ return [
 'Flip Question/Answer' => 'Invertir Pregunta/Respuesta',
 'Work Status' => 'Estado de finalización',
 'Release Status' => 'Estado de lanzamiento',
+'Back to Lesson' => 'Volver a la Lección',
 ];

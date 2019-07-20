@@ -53,4 +53,5 @@ return [
 'Flip Question/Answer' => 'Flip Question/Answer',
 'Work Status' => 'Work Status',
 'Release Status' => 'Release Status',
+'Back to Lesson' => 'Back to Lesson',
 ];
