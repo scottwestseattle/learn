@@ -28,15 +28,13 @@
 	</h1>
 	
 	@foreach($records as $record)
-	<a href="/lessons/view/{{$record->id}}">
+	<a href="/lessons/view/{{$record[0]->id}}">
 		<button style="" type="button" class="btn btn-outline-info btn-lesson-index link-dark">
 			<table>
 				<tr>
-					<td style="">
-						<span style="font-size:1.3em; color:purple; padding-right:5px;">{{$record->getDisplayNumber()}}</span>&nbsp;
-					</td>
 					<td>
-						{{$record->title}}<br/><span style="font-size:.9em">{{$record->description}}</span>	
+						<div style="font-size:1.3em; color:purple; padding-right:5px;">Chapter {{$record[0]->lesson_number}}:&nbsp;{{$record[0]->title}}</div>
+						<span style="font-size:.9em">{{$record[0]->description}}</span>	
 					</td>
 				</tr>
 			</table>

@@ -146,7 +146,7 @@ class CourseController extends Controller
 		$records = []; // make this countable so view will always work
 		try
 		{
-			$records = Lesson::getIndex($course->id);
+			$records = Lesson::getChapters($course->id);
 		}
 		catch (\Exception $e)
 		{
@@ -157,7 +157,14 @@ class CourseController extends Controller
 
 		// put some view helpers together
 		$disabled = (count($records) > 0) ? '' : 'disabled';
-		$firstId = (count($records) > 0) ? $records[0]->id : 0;
+	
+		//$firstId = (count($records) > 0) ? $records[0]->id : 0;
+		$firstId = (count($records) > 0) ? $records[1][0]->id : 0;
+//foreach($records as $record)
+{
+	//dd($record[0]->title);
+}
+//dd($records);
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,

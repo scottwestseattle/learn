@@ -110,7 +110,7 @@ class LessonController extends Controller
     {
 		$lessons = null;
 		$chapter = 1;
-		$lesson = 1;
+		$section = 1;
 		
 		if (isset($course->id))
 		{
@@ -239,6 +239,7 @@ class LessonController extends Controller
 			'sentenceCount' => count($matches),
 			'courseTitle' => isset($lesson->course) ? $lesson->course->title : '',
 			'nextChapter' => $nextChapter,
+			'lessons' => Lesson::getIndex($lesson->parent_id),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

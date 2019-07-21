@@ -21,6 +21,13 @@ class Lesson extends Base
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
 	
+    static public function getChapters($parentId)
+	{
+		$records = Lesson::getIndex($parentId);
+
+		return $records->groupBy('lesson_number');
+	}
+	
     static public function getIndex($parent_id)
 	{
 		$parent_id = intval($parent_id);

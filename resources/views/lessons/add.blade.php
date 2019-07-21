@@ -32,7 +32,7 @@
 
 		<div class="form-group">		
 			<label for="section_number" class="control-label">@LANG('content.Section'):</label>
-			<input type="number"  min="1" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$section}}" />
+			<input type="number"  min="0" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$section}}" />
 		</div>	
 		
 		<div class="form-group">
