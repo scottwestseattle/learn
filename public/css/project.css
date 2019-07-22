@@ -36,7 +36,14 @@ Super Light Green: #eff7f0
 
 /***********************************************************
 	Custom cards for the Course list
+	
+	Unused colors:
+	
+	background-color: #3dbcb1; * info *
+	
 ************************************************************/
+
+
 
 .card-course, .card-course a {
 	height:200px;
@@ -47,7 +54,7 @@ Super Light Green: #eff7f0
 }
 
 .card-course-type0 { /* not set */
-	background-color: #3dbcb1; /* info blue */
+	background-color: #9568ad; /* plumb */
 }
 
 .card-course-type1 { /* English */
@@ -59,7 +66,7 @@ Super Light Green: #eff7f0
 }
 
 .card-course-type3 { /* Tech */	
-	background-color: #eaac10; /* darker amber */
+	background-color: #eaac10; /* darker amber */	
 }
 
 .card-course-type4 { /* Other */

@@ -440,7 +440,7 @@ class LessonController extends Controller
 		$cnt = 0;
 		foreach($records as $record)
 		{
-			$parts = explode('-', $record[1]);
+			$parts = explode(' - ', $record[1]);
 //dump($parts);
 			if (count($parts) > 0)
 			{
