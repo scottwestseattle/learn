@@ -12,7 +12,16 @@
 		</a>
 	</div>
 	
-	<h3 name="title" class="">{{$record->title }}</h3>
+	<h3 name="title" class="">{{$record->title }}
+		@if ($isAdmin)
+			@if (!$record->isFinished())
+				<a class="btn {{($wip=$record->getWipStatus())['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$wip['text']}}</a>
+			@endif
+			@if (!$record->isPublished())
+				<a class="btn {{($release=$record->getReleaseStatus())['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$release['text']}}</a>
+			@endif
+		@endif
+	</h3>
 
 	<p>{{$record->description }}</p>
 	

@@ -59,7 +59,7 @@ class CourseController extends Controller
 
 		try
 		{
-			$records = Course::getIndex(['all']);
+			$records = Course::getIndex(['unfinished']);
 		}
 		catch (\Exception $e)
 		{
@@ -158,13 +158,7 @@ class CourseController extends Controller
 		// put some view helpers together
 		$disabled = (count($records) > 0) ? '' : 'disabled';
 	
-		//$firstId = (count($records) > 0) ? $records[0]->id : 0;
-		$firstId = (count($records) > 0) ? $records[1][0]->id : 0;
-//foreach($records as $record)
-{
-	//dd($record[0]->title);
-}
-//dd($records);
+		$firstId = (count($records) > 0) ? $records[1][0]->id : 0; // collection index starts at 1
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,

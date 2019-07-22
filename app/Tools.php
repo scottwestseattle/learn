@@ -7,6 +7,18 @@ use App\User;
 
 class Tools
 {
+    static public function safeArrayGetString($array, $key, $default)
+    {
+        $v = $default;
+
+        if (isset($array) && is_array($array) && array_key_exists($key, $array))
+        {
+            $v = $array[$key];
+        }
+
+        return $v;
+    }
+	
     static public function cleanHtml($text)
 	{
 		$v = preg_replace('#style="(.*?)"#is', "", $text); // remove styles
