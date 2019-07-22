@@ -2,6 +2,7 @@
 Use your dictionary to find the meaning of the new vocabulary words needed for this exercise before you begin.  Write the words in your language in the space provided.
 
 →
+<table  class="table table-borderless">
 
 
 Kattie is a graphic designer, visual artist, and traveler.  Born in Costa Rica, she has traveled to more than 34 countries and counting. She has lived in Barcelona, Panama, Kuala Lumpur, Malaysia and Shanghai, China.  She currently resides in Rotterdam, Holland.

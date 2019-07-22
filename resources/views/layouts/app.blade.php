@@ -154,7 +154,7 @@ $domainName = isset($domainName) ? $domainName : '';
 	<!-- FOOTER -->
 	<footer class="footer backin-black">
 		<div class="container marketing text-center" style="padding:50px;">
-			<a href="/"><img src="/img/logo.png" height="60" /></a>
+			<a href="#"><img src="/img/logo.png" height="60" /></a>
 			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
 			<p style="font-size:1.2em;" class="">@LANG('content.Site Title')</p>
 			<p>&copy; 2019 {{$domainName}} - @LANG('ui.All Rights Reserved')</p>

@@ -239,7 +239,7 @@ class LessonController extends Controller
 			'sentenceCount' => count($matches),
 			'courseTitle' => isset($lesson->course) ? $lesson->course->title : '',
 			'nextChapter' => $nextChapter,
-			'lessons' => Lesson::getIndex($lesson->parent_id),
+			'lessons' => $lesson->getChapterIndex(),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

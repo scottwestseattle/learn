@@ -20,6 +20,13 @@ class Lesson extends Base
     {
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
+
+    public function getChapterIndex()
+	{
+		$records = Lesson::getIndex($this->parent_id, $this->lesson_number);
+
+		return $records;
+	}
 	
     static public function getChapters($parentId)
 	{
@@ -28,7 +35,7 @@ class Lesson extends Base
 		return $records->groupBy('lesson_number');
 	}
 	
-    static public function getIndex($parent_id)
+    static public function getIndex($parent_id, $chapter = '%')
 	{
 		$parent_id = intval($parent_id);
 		$parent_id = $parent_id > 0 ? $parent_id : '%';
@@ -41,6 +48,7 @@ class Lesson extends Base
 			->where('parent_id', 'like', $parent_id)
 			->where('published_flag', 'like', $released)
 			->where('approved_flag', 'like', $released)
+			->where('lesson_number', 'like', $chapter)
 			->orderBy('parent_id')
 			->orderBy('lesson_number')
 			->orderBy('section_number')
