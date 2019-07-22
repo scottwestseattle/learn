@@ -59,7 +59,7 @@ class CourseController extends Controller
 
 		try
 		{
-			$records = Course::getIndex(['unfinished']);
+			$records = Course::getIndex(['all']);
 		}
 		catch (\Exception $e)
 		{

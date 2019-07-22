@@ -20,9 +20,14 @@
 				<td><a href="/{{$prefix}}/edit/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
 				<td><a href="/{{$prefix}}/publish/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-publish"></span></a></td>
 				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->title}}</a>
-				@if (!$record->isPublished())
-					<br/><a href="/{{$prefix}}/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getStatus()['btn']}}">{{$record->getStatus()['text']}}</button></a>
-				@endif
+				<div>
+					@if (!$record->isFinished())
+						<a href="/{{$prefix}}/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getWipStatus()['btn']}}">{{$record->getWipStatus()['text']}}</button></a>
+					@endif
+					@if (!$record->isPublished())
+						<a href="/{{$prefix}}/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getStatus()['btn']}}">{{$record->getStatus()['text']}}</button></a>
+					@endif
+				</div>
 				</td>
 				<td>{{substr($record->description, 0, 200)}}</td>				
 				<td><a href="/{{$prefix}}/edit/{{$record->id}}">{{$record->display_order}}</a></td>

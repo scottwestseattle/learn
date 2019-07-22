@@ -46,14 +46,24 @@ Super Light Green: #eff7f0
 	text-decoration:none;
 }
 
-.card-course-type0 {
-	background-color: #3dbcb1; /* greenish */
+.card-course-type0 { /* not set */
+	background-color: #3dbcb1; /* info blue */
 }
-.card-course-type1 {
-	background-color: #f5746f; /* reddish */
-}
-.card-course-type2 {
+
+.card-course-type1 { /* English */
 	background-color: #4993FD; /* header blue */
+}
+
+.card-course-type2 { /* Spanish */
+	background-color: #2AB455; /* green */
+}
+
+.card-course-type3 { /* Tech */	
+	background-color: #eaac10; /* darker amber */
+}
+
+.card-course-type4 { /* Other */
+	background-color: #f5746f; /* reddish */
 }
 
 .card-course .card-header {

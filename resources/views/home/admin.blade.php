@@ -27,7 +27,11 @@
 			<tbody>
 				@foreach($courses as $record)
 					<tr>
-						<td><a target="_blank" href="/courses/view/{{$record->id}}">{{$record->title}}</a></td>
+						<td>
+							<a href="/courses/view/{{$record->id}}">{{$record->title}}</a>&nbsp;
+							<a href="/courses/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getWipStatus()['btn']}}">{{$record->getWipStatus()['text']}}</button></a>
+							<a href="/courses/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getStatus()['btn']}}">{{$record->getStatus()['text']}}</button></a>
+						</td>						
 					</tr>
 				@endforeach
 			</tbody>

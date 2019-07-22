@@ -163,6 +163,12 @@ class Course extends Base
 				case 2:
 					$cardClass = 'card-course-type2';
 					break;
+				case 3:
+					$cardClass = 'card-course-type3';
+					break;
+				case 4: // other
+					$cardClass = 'card-course-type4';
+					break;
 				default:
 					break;
 			}
