@@ -26,7 +26,7 @@
 	<p>{{$record->description }}</p>
 	
 	<a href="/lessons/view/{{$firstId}}">
-		<button type="button" style="text-align:center; font-size: 1.3em; color:white;" class="btn btn-info btn-lesson-index" {{$disabled}}>Start at the beginning</button>	
+		<button type="button" style="text-align:center; font-size: 1.3em; color:white;" class="btn btn-info btn-lesson-index" {{$disabled}}>@LANG('content.Start at the beginning')</button>	
 	</a>
 	
 	<h1>@LANG('content.Lessons') ({{count($records)}})

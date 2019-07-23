@@ -57,4 +57,5 @@ return [
 'Select Course' => '选择课程',
 'Display Order' => '显示顺序',
 'Next Chapter' => '下一章',
+'Start at the beginning' => '从头开始',
 ];

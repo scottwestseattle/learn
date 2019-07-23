@@ -143,6 +143,25 @@ Super Light Green: #eff7f0
 	margin-left: 5px;
 }
 
+/* small screen only */
+@media (max-width:576px) {
+
+.page-nav-buttons {
+	margin: 5px 0;
+}
+
+.btn-nav-lesson {
+	width:49%;
+ }
+
+.btn-nav-lesson-sm {
+	margin-bottom:5px;
+ }
+ 
+}
+
+
+
 .lesson {
 	font-size: 1.2em;
 }
@@ -510,16 +529,6 @@ body {
 .lesson-table-lg {
 	max-width:800px;
 }
-
-/* small screen only */
-@media (max-width:576px) {
-
-.btn-nav-lesson {
-	width:49%;
- }
-
-}
-
 
 .bs-callout-no-border {
     padding: 10px 15px;

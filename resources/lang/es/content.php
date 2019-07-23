@@ -57,4 +57,5 @@ return [
 'Select Course' => 'Seleccionar Curso',
 'Display Order' => 'Orden de Visualización',
 'Next Chapter' => 'Siguiente Capítulo',
+'Start at the beginning' => 'Empezar por el principio',
 ];
