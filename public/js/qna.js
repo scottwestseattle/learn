@@ -51,16 +51,16 @@ $(document).keydown(function(event) {
 
 $( document ).ready(function() {
 
-	//sbw $("#checkbox-type-answers").prop('checked', !isMobile.any());
+	$("#checkbox-type-answers").prop('checked', !isMobile.any());
 	quiz.setButtonStates(RUNSTATE_START);
 	quiz.setControlStates();
 	loadData();
 	loadOrder();
-	//quiz.showAnswersClick();
+	quiz.showAnswersClick();
 	quiz.typeAnswersClick();
 
-	//sbw $('li:first').remove();
-	//sbw $('li:first').append($('<li>new</li>'));
+//sbw	$('li:first').remove();
+//sbw	$('li:first').append($('<li>new</li>'));
 });
 
 var isMobile = {
@@ -134,6 +134,9 @@ function quiz() {
 			$("#question-right").hide();
 			$("#question-wrong").hide();
 			$("#question-prompt").hide();
+	
+			$("#attempt").hide();		
+			quiz.setAlertPrompt('', 'black');
 		}
 		else if (state == RUNSTATE_ASKING)
 		{
@@ -161,7 +164,7 @@ function quiz() {
 
 			$("#question-right").hide();
 			$("#question-wrong").hide();
-			//sbw $("#question-prompt").show();
+			$("#question-prompt").show();
 		}
 		else if (state == RUNSTATE_CHECKING)
 		{
@@ -205,6 +208,7 @@ function quiz() {
 	}
 
 	this.start = function() {
+		$("#rounds").text('');
 		resetQuiz();
 		this.showQuestion();
 		nbr = 1;
@@ -225,7 +229,7 @@ function quiz() {
 		{
 			var a = getQuestion(false);
 			$("#answer-show").html(a);
-			$("#answer-show").val(a);
+			$("#answer-show").val(a);			
 		}
 
 		// show prompt
@@ -234,19 +238,18 @@ function quiz() {
 		var typeAnswers = $("#checkbox-type-answers").prop('checked');
 		if (typeAnswers)
 		{
+			$("#attempt").show();
 			$("#attempt").focus();
 		}
 		else
 		{
+			$("#attempt").hide();
 			$("#button-know").focus();
 		}
-
-		// update the edit link for the question, if it doesn't exist then the user can't edit
-		if ($("#quizEditLinkSpan").length)
-		{
-			$("#quizEditLinkSpan").show();
-			$("#quizEditLink").attr("href", '/kbase/edit/' + quiz.getQuestionId(curr));
-		}
+		
+		quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : 'Select Response:', 'black');					
+		
+		$("#stats").show();
 	}
 
 	this.showOverrideButton = function(show, label)
@@ -283,7 +286,8 @@ function quiz() {
 			$("#typeAnswers").css('display', 'none');
 		}
 
-		quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : 'Select Response:', 'black');
+		if (this.runState == RUNSTATE_ASKING)
+			quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : 'Select Response:', 'black');
 	}
 
 	this.showAnswersClick = function() {
@@ -395,7 +399,7 @@ function loadOrder()
 	for (var i = 0; i < max; i++)
 		order[i] = i;
 
-	//sbw order = shuffle(order); // mix it up
+	order = shuffle(order); // mix it up
 
 	//
 	// now copy it to the real place
@@ -471,7 +475,20 @@ function nextAttempt()
 			curr = 0;
 			nbr = 0;
 			score = (right / (right+wrong)) * 100;
-			alert('End of Round ' + round + ': ' + score.toFixed(2) + '% (' + right + ' of ' + (right+wrong) + ')');
+			total = right + wrong;
+			if (total > 0)
+			{
+				results = '<p>Round ' + round + ': ' + score.toFixed(2) + '% (' + right + ' of ' + total + ')</p>';
+				$("#rounds").append(results);
+				alert('End of Round, Starting next round');
+			}
+			else
+			{
+				alert('End of Round???');
+			}
+			
+			//alert('End of Round ' + round + ': ' + score.toFixed(2) + '% (' + right + ' of ' + (right+wrong) + ')');
+			
 			round++;
 			statsMax = wrong;
 			right = 0;
@@ -525,13 +542,8 @@ function resetQuiz()
 	nbr = 0;
 
 	loadOrder();
-
-	// turn off the edit question link
-	if ($("#quizEditLinkSpan").length) // only exists for the owner
-	{
-		$("#quizEditLinkSpan").hide();
-		$("#quizEditLink").attr("href", '/');
-	}
+	
+	$("#stats").hide();	
 }
 
 function clear2()
@@ -541,6 +553,11 @@ function clear2()
 
 function clear()
 {
+	$("#promptQuestion").val('');
+	$("#promptQuestion").text('');
+	$("#prompt").val('');
+	$("#prompt").text('');
+	
 	$("#attempt").val('');
 	$("#attempt").text('');
 
@@ -572,10 +589,10 @@ function loadQuestion()
 {
 	quiz.showQuestion();
 	nbr++;
-	//sbw updateScore();
+	updateScore();
 
-	//sbw var typeAnswers = $("#checkbox-type-answers").prop('checked');
-	//sbw quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : 'Select Response:', 'black');
+	var typeAnswers = $("#checkbox-type-answers").prop('checked');
+	quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : 'Select Response:', 'black');
 }
 
 function toStringBoolArray(a)
@@ -642,7 +659,7 @@ function checkAnswer(checkOptions)
 		$("#button-next-attempt").focus();
 		quiz.showOverrideButton(true, OVERRIDE_WRONG);
 		quiz.lastScore = SCORE_CORRECT;
-		//sbw $("#question-right").show();
+		$("#question-right").show();
 
 		right++;
 	}
@@ -653,7 +670,7 @@ function checkAnswer(checkOptions)
 		$("#button-next-attempt").focus();
 		quiz.showOverrideButton(true, OVERRIDE_RIGHT);
 		quiz.lastScore = SCORE_WRONG;
-		//sbw $("#question-wrong").show();
+		$("#question-wrong").show();
 
 		wrong++;
 	}
@@ -670,7 +687,7 @@ function checkAnswer(checkOptions)
 			$("#button-next-attempt").focus();
 			quiz.showOverrideButton(false, OVERRIDE_WRONG);
 			quiz.lastScore = SCORE_WRONG;
-			//sbw $("#question-right").show();
+			$("#question-right").show();
 			right++;
 		}
 		else
@@ -680,7 +697,7 @@ function checkAnswer(checkOptions)
 			$("#button-next-attempt").focus();
 			quiz.showOverrideButton(true, OVERRIDE_RIGHT);
 			quiz.lastScore = SCORE_WRONG;
-			//sbw $("#question-wrong").show();
+			$("#question-wrong").show();
 			wrong++;
 		}
 	}
@@ -749,7 +766,7 @@ function override()
 		// it was wrong, make it right
 		//
 		quiz.qna[quiz.qna[curr].order].correct = true;
-		//sbw $("#question-right").show();
+		$("#question-right").show();
 		$("#question-wrong").hide();
 		$("#question-prompt").hide();
 		result = "Correct: ";
@@ -763,7 +780,7 @@ function override()
 		// it was right, make it wrong
 		//
 		$("#question-right").hide();
-		//sbw $("#question-wrong").show();
+		$("#question-wrong").show();
 		$("#question-prompt").hide();
 		quiz.qna[quiz.qna[curr].order].correct = false;
 		result = "Wrong: ";
