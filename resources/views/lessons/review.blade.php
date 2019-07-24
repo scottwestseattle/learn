@@ -12,6 +12,8 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	data-max="{{$sentenceCount}}"
 	data-prompt="{{$questionPrompt}}"
 	data-prompt-reverse="{{$questionPromptReverse}}"
+	data-quizTextRound="{{$quizText['Round']}}"
+	data-quizTextCorrect="{{$quizText['Correct']}}"
 ></div>
 
 @foreach($records as $rec)
@@ -69,14 +71,9 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	<!-- QUESTION -->
 	<!-------------------------------------------------------->
 
-	<span id="question-graphics" style="background: white; font-size: 150%;">
-	@if (false)
-		<img id="question-prompt" src="/img/question-prompt.jpg" height="30" />
-		<img id="question-right" src="/img/question-right.jpg" height="30" />
-		<img id="question-wrong" src="/img/question-wrong.jpg" height="30" />
-	@endif
-		<span id="promptQuestion"></span><span id="prompt"><a></a></span>
-	</span>
+	<div id="question-graphics" style="font-size: 150%;">
+		<span id="promptQuestion"></span><span id="prompt"></span>
+	</div>
 
 	<!-------------------------------------------------------->
 	<!-- ANSWER -->
@@ -112,7 +109,7 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 		<div class="form-group">
 			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); nextAttempt()" id="button-next-attempt">Next Question</button>
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">Check Typed Answer</button>
-			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">Start Quiz</button>
+			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Quiz')</button>
 			<input class="btn btn-default btn-quiz" type="button" value="I KNOW IT (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
 			<input class="btn btn-default btn-quiz" type="button" value="I DON'T KNOW (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
 			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); resetQuiz()" id="button-stop">STOP QUIZ</button>

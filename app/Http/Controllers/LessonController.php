@@ -119,9 +119,9 @@ class LessonController extends Controller
 			{
 				$chapter = $record->lesson_number;		// use the current chapter
 				$section = $record->section_number + 1;	// use the next section number
-			}
-			
-			$lessons = Lesson::getIndex($course->id);
+				
+				$lessons = $record->getChapterIndex(); // get lessons to show in a list
+			}			
 		}
 		
 		return view(PREFIX . '.add', $this->getViewData([
@@ -214,7 +214,7 @@ class LessonController extends Controller
 
 		return $t;
 	}
-
+	
 	public function view(Lesson $lesson)
     {
 		$lesson->text = Tools::convertToHtml($lesson->text);
@@ -461,16 +461,20 @@ class LessonController extends Controller
 
 	public function review(Lesson $lesson)
     {
-		if ($lesson->format_flag == LESSON_FORMAT_AUTO)
-		{
-			$lesson->text = LessonController::autoFormat($lesson->text);
-		}
-
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
 
 		$quiz = LessonController::makeQuiz($lesson->text);
+		$quiz = $lesson->formatByType($quiz);
 
+		//todo: not working yet
+		$quizText = [
+			'Round' => 'Round',
+			'Correct' => 'Correct',
+			'TypeAnswers' => 'Type the Answer',
+			'Wrong' => 'Wrong',
+		];
+		
 		return view(PREFIX . '.review', $this->getViewData([
 			'record' => $lesson,
 			'prev' => $prev,
@@ -480,6 +484,7 @@ class LessonController extends Controller
 			'questionPrompt' => '', //'What is the answer?',
 			'questionPromptReverse' => '', // 'What is the question?',
 			'canEdit' => true,
+			'quizText' => $quizText,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 }

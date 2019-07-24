@@ -207,6 +207,7 @@ class Course extends Base
 	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
 					->where('wip_flag', '!=', WIP_INACTIVE)
+					->orderBy('type_flag')
 					->orderBy('display_order')
 					->get();
 			}
@@ -217,6 +218,7 @@ class Course extends Base
 					->where('deleted_flag', 0)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->where('wip_flag', '!=', WIP_FINISHED)
+					->orderBy('type_flag')
 					->orderBy('display_order')
 					->get();
 			}
@@ -226,6 +228,7 @@ class Course extends Base
 	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
 					->where('wip_flag', '!=', WIP_INACTIVE)
+					->orderBy('type_flag')
 					->orderBy('display_order')
 					->get();
 			}

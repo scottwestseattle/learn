@@ -38,6 +38,44 @@ class Lesson extends Base
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
 
+	public function formatByType($quiz)
+    {
+		if ($this->type_flag == LESSONTYPE_QUIZ_MC)
+		{
+			/*
+			I (am, is, are) hungry. - am
+			<button class="btn btn-primary" type="button">am</button>
+			<button class="btn btn-primary" type="button">is</button>
+			<button class="btn btn-primary" type="button">are</button>
+			*/
+
+			$i = 0;
+			//dump($quiz);
+			foreach($quiz as $record)
+			{
+				$a = $record['a'];
+				$q = $record['q'];
+
+				preg_match_all('#\((.*)\)#is', $q, $answers, PREG_SET_ORDER);				
+				$answers = (count($answers) > 0 && count($answers[0]) > 1) ? $answers[0][1] : [];
+				$answers = explode(',', $answers);
+				$buttons = '';
+				foreach($answers as $m)
+				{
+					$m = trim($m);
+					$buttons .= '<button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc1" type="button">' . $m . '</button>';
+				}
+				//dd($buttons);
+				$q = preg_replace("/\(.*\)/is", $buttons, $q);				
+				$quiz[$i++]['q'] = $q;
+				//dd($quiz);
+			}
+			//dump($quiz);
+		}
+		
+		return $quiz;
+	}
+	
     public function isQuiz()
 	{
 		$v = false;

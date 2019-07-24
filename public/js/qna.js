@@ -12,6 +12,7 @@ const RUNSTATE_CHECKING = 3;
 const CHECKANSWER_NORMAL = 1;
 const CHECKANSWER_KNOW = 2;
 const CHECKANSWER_DONTKNOW = 3;
+const CHECKANSWER_MC1 = 4;
 
 const SCORE_NOTSET = 0;
 const SCORE_CORRECT = 1;
@@ -51,8 +52,7 @@ $(document).keydown(function(event) {
 
 $( document ).ready(function() {
 
-	//sbw $("#checkbox-type-answers").prop('checked', !isMobile.any());
-	$("#checkbox-type-answers").prop('checked', true);
+	$("#checkbox-type-answers").prop('checked', !isMobile.any());
 	
 	quiz.setButtonStates(RUNSTATE_START);
 	quiz.setControlStates();
@@ -60,9 +60,6 @@ $( document ).ready(function() {
 	loadOrder();
 	quiz.showAnswersClick();
 	quiz.typeAnswersClick();
-
-//sbw	$('li:first').remove();
-//sbw	$('li:first').append($('<li>new</li>'));
 });
 
 var isMobile = {
@@ -100,6 +97,18 @@ function quiz() {
 	this.promptQuestion = ''; // set to appropriate prompt: normal or reverse
 	this.lastScore = SCORE_NOTSET;
 	this.runState = RUNSTATE_START;
+
+	//sbw
+	/* JS doesn't have assoc arrays
+	this.quizText = [
+		'Round' => 'Round',
+		'Correct' => 'Correct',
+		'TypeAnswers' => 'Type the Answer',
+		'Wrong' => 'Wrong'	
+	];
+	alert(this.quizText['Round'];
+	*/
+	
 
 	this.getQuestionId = function(index) {
 		return this.qna[this.qna[index].order].id;
@@ -385,6 +394,7 @@ function loadData()
 		max = container.data('max');
 		quiz.promptQuestionNormal = container.data('prompt');
 		quiz.promptQuestionReverse = container.data('prompt-reverse');
+		//todo: not working quiz.quizTextRound = container.data('quizTextRound');
 		quiz.promptQuestion = quiz.promptQuestionNormal;
 
 		if (i == 0)
@@ -491,7 +501,7 @@ function nextAttempt()
 			}
 			else
 			{
-				alert('End of Round???');
+				//alert('End of Round???');
 			}
 			
 			//alert('End of Round ' + round + ': ' + score.toFixed(2) + '% (' + right + ' of ' + (right+wrong) + ')');
@@ -647,7 +657,13 @@ function cleanUpSpecialChars(str)
     return str;
 }
 
-function checkAnswer(checkOptions)
+function checkAnswerMc1(answer)
+{
+	//alert(answer);
+	checkAnswer(CHECKANSWER_MC1, answer);
+}
+
+function checkAnswer(checkOptions, attemptMc = null)
 {
 	quiz.setButtonStates(RUNSTATE_CHECKING);
 	$("#question-prompt").hide();
@@ -655,6 +671,13 @@ function checkAnswer(checkOptions)
 	var answerRaw = getAnswer();
 	var answer = cleanUpSpecialChars(answerRaw);
 	var attempt = $("#attempt").val();
+	
+	if (checkOptions == CHECKANSWER_MC1)
+	{
+		// multiple choice 1, attempt comes from the MC button
+		attempt = attemptMc;
+	}
+		
 	var result = '';
 	var answerColor = 'black';
 
