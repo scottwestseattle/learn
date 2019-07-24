@@ -23,6 +23,18 @@ class Tools
 	{
 		$v = preg_replace('#style="(.*?)"#is', "", $text); // remove styles
 		$v = preg_replace('#<p >#is', "<p>", $v); // fix <p>
+		//one time fix: $v = self::convertParens($v);
+		//dd($v);
+		
+		return $v;
+	}
+
+    static public function convertParens($text)
+	{
+		$v = $text;
+		
+		$v = preg_replace('/\(/is', "[", $v);	// change ( to [
+		$v = preg_replace('/\)/is', "]", $v);	// change ) to ]
 		//dd($v);
 		
 		return $v;

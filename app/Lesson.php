@@ -13,7 +13,8 @@ define('LESSONTYPE_NOTSET', 0);
 define('LESSONTYPE_TEXT', 1);
 define('LESSONTYPE_VOCAB', 2);
 define('LESSONTYPE_QUIZ_FIB', 3);
-define('LESSONTYPE_QUIZ_MC', 4);
+define('LESSONTYPE_QUIZ_MC1', 4);
+define('LESSONTYPE_QUIZ_MC2', 5);
 define('LESSONTYPE_OTHER', 99);
 define('LESSONTYPE_DEFAULT', LESSONTYPE_TEXT);
 
@@ -24,7 +25,8 @@ class Lesson extends Base
 		LESSONTYPE_TEXT => 'Text',
 		LESSONTYPE_VOCAB => 'Vocabulary List',
 		LESSONTYPE_QUIZ_FIB => 'Quiz: Fill in the Blank',
-		LESSONTYPE_QUIZ_MC => 'Quiz: Multiple Choice',
+		LESSONTYPE_QUIZ_MC1 => 'Quiz: Multiple Choice - Set Options (MC1)',
+		LESSONTYPE_QUIZ_MC2 => 'Quiz: Multiple Choice - Random Options (MC2)',
 		LESSONTYPE_OTHER => 'Other',
     ];
 	
@@ -40,53 +42,141 @@ class Lesson extends Base
 
 	public function formatByType($quiz)
     {
-		if ($this->type_flag == LESSONTYPE_QUIZ_MC)
+		switch($this->type_flag)
 		{
-			/*
-			I (am, is, are) hungry. - am
-			<button class="btn btn-primary" type="button">am</button>
-			<button class="btn btn-primary" type="button">is</button>
-			<button class="btn btn-primary" type="button">are</button>
-			*/
-
-			$i = 0;
-			//dump($quiz);
-			$quizNew = [];
-			foreach($quiz as $record)
-			{
-				$a = trim($record['a']);
-				$q = trim($record['q']);
-
-				if (strlen($a) > 0)
-				{
-					preg_match_all('#\((.*)\)#is', $q, $answers, PREG_SET_ORDER);				
-					$answers = (count($answers) > 0 && count($answers[0]) > 1) ? $answers[0][1] : '';
-					
-					if (strlen($answers) > 0)
-					{
-						$answers = explode(',', $answers);
-						$buttons = '';
-						foreach($answers as $m)
-						{
-							$m = trim($m);
-							$buttons .= '<button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc1" type="button">' . $m . '</button>';
-						}
-						//dd($buttons);
-						$q = preg_replace("/\(.*\)/is", $buttons, $q);
-						
-						$quizNew[] = [
-							'q' => $q,
-							'a' => $a,
-							'id' => $record['id'],
-						];
-					}
-				}
-
-				//dd($quiz);
-			}
-			//dd($quizNew);
+			case LESSONTYPE_QUIZ_MC1:
+				$quiz = $this->formatMc1($quiz);
+				break;
+				
+			case LESSONTYPE_QUIZ_MC2:
+				$quiz = $this->formatMc2($quiz);
+				break;
+				
+			default:
+				break;
 		}
 		
+		return $quiz;
+	}
+
+	private function formatMc2($quiz)
+    {
+		$quizNew = [];
+		
+		$answers = [];
+		//dd($quiz);
+		$max = count($quiz) - 1;
+		$randomOptions = 3;
+		$cnt = 0;
+		foreach($quiz as $record)
+		{
+			//
+			// get random answers from other questions
+			//
+			$options = [];
+			if ($max > 0)
+			{
+				// using 100 just so it's not infinite, only goes until three unique options are picked
+				$pos = rand(0, $randomOptions - 1); // position of the correct answer
+				for ($i = 0; $i < 100 && count($options) < $randomOptions; $i++)
+				{
+					// pick three random options
+					$rnd = rand(0, $max);	// answer from other random question
+					$option = $quiz[$rnd];
+					//dd($option['a']);
+					
+					// not the current question AND has answer text AND answer not used yet
+					if ($option['id'] != $record['id'] && strlen($option['a']) > 0 && !array_key_exists($option['a'], $options))
+					{
+						if ($pos == count($options))
+						{
+							// add in the real answer randomly
+							$options[$record['a']] = $record['a'];
+						}
+							
+						$options[$option['a']] = $option['a'];
+						
+						if ($pos == count($options))
+						{
+							// add in the real answer randomly
+							$options[$record['a']] = $record['a'];
+						}
+					}
+					else
+					{
+						//dump('duplicate: ' . $option);
+					}
+				}
+				
+				//dump($options);
+				
+				$q = $record['q'] . ' [';
+				foreach($options as $option)
+				{
+					// put the question back in the quz
+					$q .= $option . ', ';
+				}
+				$q .= ']';
+				$q = str_replace(', ]', ']', $q);
+				
+				$quizNew[$cnt]['q'] = $q;
+				$quizNew[$cnt]['a'] = $record['a'];
+				$quizNew[$cnt]['id'] = $record['id'];
+				//dd($quiz[$i]);				
+				
+				$cnt++;
+			}
+		}
+		
+		//dd($quizNew);
+		return $this->formatMc1($quizNew);		
+	}
+	
+	private function formatMc1($quiz)
+    {
+		/*
+		I (am, is, are) hungry. - am
+		<button class="btn btn-primary" type="button">am</button>
+		<button class="btn btn-primary" type="button">is</button>
+		<button class="btn btn-primary" type="button">are</button>
+		*/
+
+		$quizNew = [];
+		$i = 0;
+		//dump($quiz);
+		foreach($quiz as $record)
+		{
+			$a = trim($record['a']);
+			$q = trim($record['q']);
+
+			if (strlen($a) > 0)
+			{
+				preg_match_all('#\[(.*)\]#is', $q, $answers, PREG_SET_ORDER);				
+				$answers = (count($answers) > 0 && count($answers[0]) > 1) ? $answers[0][1] : '';
+				
+				if (strlen($answers) > 0)
+				{
+					$answers = explode(',', $answers);
+					$buttons = '';
+					foreach($answers as $m)
+					{
+						$m = str_replace("'", "&apos;", trim($m));
+						$buttons .= '<button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc1" type="button">' . $m . '</button>';
+					}
+					//dd($buttons);
+					$q = preg_replace("/\[.*\]/is", $buttons, $q);
+					
+					$quizNew[] = [
+						'q' => $q,
+						'a' => $a,
+						'id' => $record['id'],
+					];
+				}
+			}
+
+		}
+		
+		//dd($quizNew);
 		return $quizNew;
 	}
 	
@@ -97,7 +187,8 @@ class Lesson extends Base
 		switch($this->type_flag)
 		{
 			case LESSONTYPE_QUIZ_FIB:
-			case LESSONTYPE_QUIZ_MC:
+			case LESSONTYPE_QUIZ_MC1:
+			case LESSONTYPE_QUIZ_MC2:
 				$v = true;
 				break;
 			default:

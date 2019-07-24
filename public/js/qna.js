@@ -658,7 +658,7 @@ function cleanUpSpecialChars(str)
 }
 
 function checkAnswerMc1(answer)
-{
+{	
 	if (quiz.runState == RUNSTATE_ASKING)
 	{
 		//alert(answer);
@@ -667,7 +667,7 @@ function checkAnswerMc1(answer)
 	else if (quiz.runState == RUNSTATE_CHECKING)
 	{
 		nextAttempt();
-	}	
+	}
 }
 
 function checkAnswer(checkOptions, attemptMc = null)
@@ -716,7 +716,13 @@ function checkAnswer(checkOptions, attemptMc = null)
 		//
 		// typing the answers so check the entry
 		//
-		if ((answer != null && attempt != null) && answer.toLowerCase() == attempt.toLowerCase())
+//alert(encodeURI("S&atilde;o Tom&eacute; and Pr&iacute;ncipe") + " | " + unescape(attempt.toLowerCase()));
+//		$("").html('Some text with &lt;div&gt;html&lt;/div&gt;').text()	
+		
+		cleanAnswer = jQuery('<span>').html(answer).text();
+		cleanAttempt = jQuery('<span>').html(attempt).text();
+
+		if ((answer != null && attempt != null) && cleanAnswer.toLowerCase() == cleanAttempt.toLowerCase())
 		{
 			result = "Correcto!";
 			answerColor = 'darkBlue';

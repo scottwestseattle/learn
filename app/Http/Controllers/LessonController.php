@@ -442,7 +442,7 @@ class LessonController extends Controller
 		foreach($records as $record)
 		{
 			$parts = explode(' - ', $record[1]);
-//dump($parts);
+
 			if (count($parts) > 0)
 			{
 				$records[$cnt]['q'] = $parts[0];
