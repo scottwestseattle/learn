@@ -51,7 +51,9 @@ $(document).keydown(function(event) {
 
 $( document ).ready(function() {
 
-	$("#checkbox-type-answers").prop('checked', !isMobile.any());
+	//sbw $("#checkbox-type-answers").prop('checked', !isMobile.any());
+	$("#checkbox-type-answers").prop('checked', true);
+	
 	quiz.setButtonStates(RUNSTATE_START);
 	quiz.setControlStates();
 	loadData();
@@ -277,17 +279,22 @@ function quiz() {
 
 		var typeAnswers = $("#checkbox-type-answers").prop('checked');
 
-		if (typeAnswers)
+		if (this.runState != RUNSTATE_START)
 		{
-			$("#typeAnswers").css('display', 'default');
+			if (typeAnswers)
+			{
+				$("#attempt").show();
+			}
+			else
+			{
+				$("#attempt").hide();
+			}			
 		}
-		else
-		{
-			$("#typeAnswers").css('display', 'none');
-		}
-
+		
 		if (this.runState == RUNSTATE_ASKING)
+		{			
 			quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : 'Select Response:', 'black');
+		}
 	}
 
 	this.showAnswersClick = function() {

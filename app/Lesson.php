@@ -9,8 +9,25 @@ use App\Course;
 define('LESSON_FORMAT_DEFAULT', 0);
 define('LESSON_FORMAT_AUTO', 1);
 
+define('LESSONTYPE_NOTSET', 0);
+define('LESSONTYPE_TEXT', 1);
+define('LESSONTYPE_VOCAB', 2);
+define('LESSONTYPE_QUIZ_FIB', 3);
+define('LESSONTYPE_QUIZ_MC', 4);
+define('LESSONTYPE_OTHER', 99);
+define('LESSONTYPE_DEFAULT', LESSONTYPE_TEXT);
+
 class Lesson extends Base
-{
+{	
+    const _lessonTypeFlags = [
+		LESSONTYPE_NOTSET => 'Not Set',
+		LESSONTYPE_TEXT => 'Text',
+		LESSONTYPE_VOCAB => 'Vocabulary List',
+		LESSONTYPE_QUIZ_FIB => 'Quiz: Fill in the Blank',
+		LESSONTYPE_QUIZ_MC => 'Quiz: Multiple Choice',
+		LESSONTYPE_OTHER => 'Other',
+    ];
+	
     public function user()
     {
     	return $this->belongsTo(User::class);
@@ -21,6 +38,28 @@ class Lesson extends Base
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
 
+    public function isQuiz()
+	{
+		$v = false;
+		
+		switch($this->type_flag)
+		{
+			case LESSONTYPE_QUIZ_FIB:
+			case LESSONTYPE_QUIZ_MC:
+				$v = true;
+				break;
+			default:
+				break;
+		}
+		
+		return $v;
+	}
+	
+    static public function getLessonTypes()
+	{
+		return self::_lessonTypeFlags;
+	}
+	
     public function getChapterIndex()
 	{
 		$records = Lesson::getIndex($this->parent_id, $this->lesson_number);

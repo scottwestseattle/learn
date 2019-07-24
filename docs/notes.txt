@@ -4,15 +4,6 @@ Use your dictionary to find the meaning of the new vocabulary words needed for t
 →
 <table class="table table-borderless">
 
-
-Kattie is a graphic designer, visual artist, and traveler.  Born in Costa Rica, she has traveled to more than 34 countries and counting. She has lived in Barcelona, Panama, Kuala Lumpur, Malaysia and Shanghai, China.  She currently resides in Rotterdam, Holland.
-
-She is always ready to travel and embrace new cultures. She considers herself a travel junkie who is always looking forward to the next adventure where she can find more inspiration for creating her art.  “Sometimes it's good not to be understood and see the world in a different way...it’s what really makes us special.”
-
-She grow up in a creative environment which helped her develop her artistic side.  Her father is a Costa Rican writer and some of her other family members are artists as well.
-
-Kattie has a wide variety of influences and considers herself to be an eclectic artist. For her, creative ideas pop up anytime out of nowhere.  “Creativity is that little big thing that feeds my soul and makes me whole.”
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 Latest DB Changes:
@@ -46,6 +37,13 @@ Code Samples:
 
 Set up view variables for all views:
 C:\wamp3.1.9\www\learn\app\Providers\AppServiceProvider.php
+
+// call model function from view:
+{{App\Lesson::getTypes()}}
+
+// using constants:
+const _lessonTypeFlags = [1, 2];
+return self::_lessonTypeFlags;
 
 @auth
     // The user is authenticated...
@@ -147,3 +145,12 @@ php artisan migrate:rollback --step=1
 php artisan make:model Entry -m -c
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Kattie is a graphic designer, visual artist, and traveler.  Born in Costa Rica, she has traveled to more than 34 countries and counting. She has lived in Barcelona, Panama, Kuala Lumpur, Malaysia and Shanghai, China.  She currently resides in Rotterdam, Holland.
+
+She is always ready to travel and embrace new cultures. She considers herself a travel junkie who is always looking forward to the next adventure where she can find more inspiration for creating her art.  “Sometimes it's good not to be understood and see the world in a different way...it’s what really makes us special.”
+
+She grow up in a creative environment which helped her develop her artistic side.  Her father is a Costa Rican writer and some of her other family members are artists as well.
+
+Kattie has a wide variety of influences and considers herself to be an eclectic artist. For her, creative ideas pop up anytime out of nowhere.  “Creativity is that little big thing that feeds my soul and makes me whole.”

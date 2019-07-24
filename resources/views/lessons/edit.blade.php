@@ -26,11 +26,6 @@
 		</ul>	
 	
 		<div style="display:none;" id="tab-title">
-		
-			<div class="form-group">
-				<label for="title" class="control-label">@LANG('gen.Title'):</label>
-				<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
-			</div>
 
 			<div class="form-group">
 				<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
@@ -40,6 +35,24 @@
 						<option value="{{$course->id}}" {{ $course->id == $record->parent_id ? 'selected' : ''}}>{{$course->title}}</option>
 					@endforeach
 				</select>
+			</div>
+		
+			<div class="form-group">
+				<label for="title" class="control-label">@LANG('gen.Title'):</label>
+				<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
+			</div>
+		
+			<div class="form-group">
+			@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix, 
+				'isAdmin' => $isAdmin, 
+				'prompt' => 'Lesson Type: ',
+				'empty' => 'Select Lesson Type',
+				'options' => App\Lesson::getLessonTypes(),
+				'selected_option' => $record->type_flag,
+				'field_name' => 'type_flag',
+				'prompt_div' => true,
+				'select_class' => 'form-control form-control-sm',
+			])@endcomponent
 			</div>
 		
 			<div class="form-group">

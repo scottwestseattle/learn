@@ -90,16 +90,17 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 		<!-- TEXTBOX TO ENTER ANSWER -->
 		<!-------------------------------------------------------->
 		<p id="alertPrompt" style='margin: 0; margin-top: 10px; font-weight: normal;'></p>
-		<div id="typeAnswers">
+		<div>
 			<!-------------------------------------------------------->
 			<!-- TEXTBOX TO ENTER ANSWER -->
 			<!-------------------------------------------------------->
 			<input type="text" name="answer" id="attempt" onkeypress="onKeypress(event)" >
 		</div>
+
 			<!-------------------------------------------------------->
 			<!-- SPACE TO SHOW SCORED ANSWER -->
 			<!-------------------------------------------------------->
-			<div style="padding: 10px 0; font-size: 100%; min-height: 70px; sbwbackground: #efefef; sbwborder: 1px gray solid; margin-top: 2px;" id="answer-show-div"></div>
+			<div style="padding: 10px 0; font-size: 100%; min-height: 70px; margin-top: 2px;" id="answer-show-div"></div>
 
 		</fieldset>
 
@@ -140,12 +141,12 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 			</div>
 
 			<div class="form-check">
-				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" class="" />
+				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="quiz.flip()" />
 				<label for="checkbox-flip" class="checkbox-big-label">@LANG('content.Flip Question/Answer')</label>
 			</div>
 			
 			<div class="form-check">
-				<input type="checkbox" name="checkbox-show-answers" id="checkbox-show-answers" class="" />
+				<input type="checkbox" name="checkbox-show-answers" id="checkbox-show-answers" onclick="quiz.showAnswersClick()" />
 				<label for="checkbox-show-answers" class="checkbox-big-label">@LANG('content.Show Answers')</label>
 			</div>
 		</div>

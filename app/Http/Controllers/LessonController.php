@@ -262,6 +262,7 @@ class LessonController extends Controller
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->text = Tools::copyDirty($record->text, Lesson::convertCodes(Tools::cleanHtml($request->text)), $isDirty, $changes);
 		$record->parent_id = Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
+		$record->type_flag = Tools::copyDirty($record->type_flag, $request->type_flag, $isDirty, $changes);
 
 		// autoformat is currently just a checkbox but the db value is a flag
 		$format_flag = isset($request->autoformat) ? LESSON_FORMAT_AUTO : LESSON_FORMAT_DEFAULT;
@@ -476,8 +477,8 @@ class LessonController extends Controller
 			'next' => $next,
 			'sentenceCount' => count($quiz),
 			'records' => $quiz,
-			'questionPrompt' => '',
-			'questionPromptReverse' => 'What is the question?',
+			'questionPrompt' => '', //'What is the answer?',
+			'questionPromptReverse' => '', // 'What is the question?',
 			'canEdit' => true,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }

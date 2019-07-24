@@ -58,4 +58,6 @@ return [
 'Display Order' => '显示顺序',
 'Next Chapter' => '下一章',
 'Start at the beginning' => '从头开始',
+'Show Answers' => '显示答案',
+'Start Quiz' => '开始测验',
 ];

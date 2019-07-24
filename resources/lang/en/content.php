@@ -58,4 +58,6 @@ return [
 'Display Order' => 'Display Order',
 'Next Chapter' => 'Next Chapter',
 'Start at the beginning' => 'Start at the beginning',
+'Show Answers' => 'Show Answers',
+'Start Quiz' => 'Start Quiz',
 ];

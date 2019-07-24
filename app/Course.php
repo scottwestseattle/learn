@@ -20,9 +20,7 @@ define('WIP_FINISHED', 100);
 define('WIP_DEFAULT', WIP_DEV);
 
 class Course extends Base
-{
-	private $test = 'test';
-	
+{	
     const _releaseFlags = [
 		RELEASE_NOTSET => 'Not Set',
 		RELEASE_ADMIN => 'Admin Only',
@@ -39,11 +37,6 @@ class Course extends Base
 		WIP_TEST => 'Test',
 		WIP_FINISHED => 'Finished',
 	];	
-	
-	private $_test = [
-		'one',
-		'two',
-	];
 
     public function user()
     {

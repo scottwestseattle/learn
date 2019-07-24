@@ -58,4 +58,6 @@ return [
 'Display Order' => 'Orden de Visualización',
 'Next Chapter' => 'Siguiente Capítulo',
 'Start at the beginning' => 'Empezar por el principio',
+'Show Answers' => 'Mostrar Respuestas',
+'Start Quiz' => 'Empezar Práctica',
 ];
