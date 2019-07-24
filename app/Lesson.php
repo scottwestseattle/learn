@@ -51,29 +51,43 @@ class Lesson extends Base
 
 			$i = 0;
 			//dump($quiz);
+			$quizNew = [];
 			foreach($quiz as $record)
 			{
-				$a = $record['a'];
-				$q = $record['q'];
+				$a = trim($record['a']);
+				$q = trim($record['q']);
 
-				preg_match_all('#\((.*)\)#is', $q, $answers, PREG_SET_ORDER);				
-				$answers = (count($answers) > 0 && count($answers[0]) > 1) ? $answers[0][1] : [];
-				$answers = explode(',', $answers);
-				$buttons = '';
-				foreach($answers as $m)
+				if (strlen($a) > 0)
 				{
-					$m = trim($m);
-					$buttons .= '<button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc1" type="button">' . $m . '</button>';
+					preg_match_all('#\((.*)\)#is', $q, $answers, PREG_SET_ORDER);				
+					$answers = (count($answers) > 0 && count($answers[0]) > 1) ? $answers[0][1] : '';
+					
+					if (strlen($answers) > 0)
+					{
+						$answers = explode(',', $answers);
+						$buttons = '';
+						foreach($answers as $m)
+						{
+							$m = trim($m);
+							$buttons .= '<button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc1" type="button">' . $m . '</button>';
+						}
+						//dd($buttons);
+						$q = preg_replace("/\(.*\)/is", $buttons, $q);
+						
+						$quizNew[] = [
+							'q' => $q,
+							'a' => $a,
+							'id' => $record['id'],
+						];
+					}
 				}
-				//dd($buttons);
-				$q = preg_replace("/\(.*\)/is", $buttons, $q);				
-				$quiz[$i++]['q'] = $q;
+
 				//dd($quiz);
 			}
-			//dump($quiz);
+			//dd($quizNew);
 		}
 		
-		return $quiz;
+		return $quizNew;
 	}
 	
     public function isQuiz()

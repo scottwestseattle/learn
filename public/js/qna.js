@@ -659,8 +659,15 @@ function cleanUpSpecialChars(str)
 
 function checkAnswerMc1(answer)
 {
-	//alert(answer);
-	checkAnswer(CHECKANSWER_MC1, answer);
+	if (quiz.runState == RUNSTATE_ASKING)
+	{
+		//alert(answer);
+		checkAnswer(CHECKANSWER_MC1, answer);
+	}
+	else if (quiz.runState == RUNSTATE_CHECKING)
+	{
+		nextAttempt();
+	}	
 }
 
 function checkAnswer(checkOptions, attemptMc = null)
