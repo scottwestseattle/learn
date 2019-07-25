@@ -24,10 +24,6 @@
     <div style="font-size:.8em;">
 		{{$courseTitle}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
 		
-		@if ($record->isQuiz())
-			&nbsp;<a href="/{{$prefix}}/review/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-check"></span></a>
-		@endif
-		
 		@if ($isAdmin)
 			&nbsp;<a href="/{{$prefix}}/edit2/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
 			<a class="btn {{($status=$record->getStatus())['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$status['text']}}</a>
@@ -39,6 +35,16 @@
 		<p class=""><i>{{$record->description }}</i></p>
 	@endif
 
+	@if ($record->isQuiz())
+		<div>
+			<!-- a href="/{{$prefix}}/review/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-check"></span></a -->
+			<a href="/lessons/review/{{$record->id}}"><button class="btn btn-success">Fib</button></a>
+			<a href="/lessons/review/{{$record->id}}"><button class="btn btn-primary">MC1</button></a>
+			<a href="/lessons/review/{{$record->id}}"><button class="btn btn-info">MC2</button></a>
+		</div>
+	@endif
+	
+	
 	<p>{!! $record->text !!}</p>
 
 	<div class="page-nav-buttons">

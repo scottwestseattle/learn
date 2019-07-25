@@ -66,7 +66,7 @@ class Lesson extends Base
 		$answers = [];
 		//dd($quiz);
 		$max = count($quiz) - 1;
-		$randomOptions = 3;
+		$randomOptions = 5;
 		$cnt = 0;
 		foreach($quiz as $record)
 		{
