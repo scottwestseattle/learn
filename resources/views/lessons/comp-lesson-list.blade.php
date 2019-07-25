@@ -1,6 +1,6 @@
 @if (isset($records))
 <div style="font-size:.9em;">
-	<table class="table-sm table-borderless">
+	<table class="table-sm table-borderless {{isset($tableClass) ? $tableClass : ''}}">
 		<tbody>
 		@foreach($records as $record)
 		<tr>

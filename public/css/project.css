@@ -10,6 +10,35 @@ Glyph Icon Blue: #286090
 Super Light Green: #eff7f0
 ************************************************************/
 
+/***********************************************************
+	Lesson list component
+************************************************************/
+.table-lesson-list {
+	background-color: #dddddd;
+	width:576px;
+	max-width:100%;
+}
+
+.table-lesson-list td {
+	font-size: .7em;
+	padding: 5px;
+}
+
+.table-lesson-list td:first-child {
+	width:10px;
+}
+
+@media (max-width:576px) {
+
+	.table-lesson-list {
+		width: 100%;
+	}
+}
+
+/***********************************************************
+	Quiz Buttons
+************************************************************/
+
 .btn-quiz {
 	margin-top:10px;
 }
@@ -182,7 +211,6 @@ Super Light Green: #eff7f0
 .lesson h2, .lesson h3 {
 	margin-top: 20px;
 }
-
 
 .vocab-list div input {
 	float: left;

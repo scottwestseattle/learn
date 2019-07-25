@@ -51,7 +51,7 @@
 				'selected_option' => $record->type_flag,
 				'field_name' => 'type_flag',
 				'prompt_div' => true,
-				'select_class' => 'form-control form-control-sm',
+				'select_class' => 'form-control',
 			])@endcomponent
 			</div>
 		

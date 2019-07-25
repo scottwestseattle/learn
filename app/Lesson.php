@@ -10,11 +10,11 @@ define('LESSON_FORMAT_DEFAULT', 0);
 define('LESSON_FORMAT_AUTO', 1);
 
 define('LESSONTYPE_NOTSET', 0);
-define('LESSONTYPE_TEXT', 1);
-define('LESSONTYPE_VOCAB', 2);
-define('LESSONTYPE_QUIZ_FIB', 3);
-define('LESSONTYPE_QUIZ_MC1', 4);
-define('LESSONTYPE_QUIZ_MC2', 5);
+define('LESSONTYPE_TEXT', 10);
+define('LESSONTYPE_VOCAB', 20);
+define('LESSONTYPE_QUIZ_FIB', 30);
+define('LESSONTYPE_QUIZ_MC1', 40);
+define('LESSONTYPE_QUIZ_MC2', 41);
 define('LESSONTYPE_OTHER', 99);
 define('LESSONTYPE_DEFAULT', LESSONTYPE_TEXT);
 
@@ -40,9 +40,13 @@ class Lesson extends Base
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
 
-	public function formatByType($quiz)
+	public function formatByType($quiz, $reviewType)
     {
-		switch($this->type_flag)
+		// if not specifed, use the type setting on the lesson
+		if (!isset($reviewType))
+			$reviewType = $this->type_flag;
+			
+		switch($reviewType)
 		{
 			case LESSONTYPE_QUIZ_MC1:
 				$quiz = $this->formatMc1($quiz);

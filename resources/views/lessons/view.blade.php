@@ -38,9 +38,9 @@
 	@if ($record->isQuiz())
 		<div>
 			<!-- a href="/{{$prefix}}/review/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-check"></span></a -->
-			<a href="/lessons/review/{{$record->id}}"><button class="btn btn-success">Fib</button></a>
-			<a href="/lessons/review/{{$record->id}}"><button class="btn btn-primary">MC1</button></a>
-			<a href="/lessons/review/{{$record->id}}"><button class="btn btn-info">MC2</button></a>
+			<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Fill in the Blank</button></a>
+			<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Multiple Choice</button></a>
+			<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Multiple Choice Random</button></a>
 		</div>
 	@endif
 	
@@ -52,7 +52,7 @@
 		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">@LANG('ui.Next')<span class="glyphicon glyphicon-button-next"></span></a>
 	</div>
 
-	@component('lessons.comp-lesson-list', ['records' => $lessons])@endcomponent
+	@component('lessons.comp-lesson-list', ['records' => $lessons, 'tableClass' => 'table-lesson-list'])@endcomponent
 	
 </div>
 @endsection

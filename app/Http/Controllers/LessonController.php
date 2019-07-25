@@ -459,13 +459,13 @@ class LessonController extends Controller
 		return $records;
 	}
 
-	public function review(Lesson $lesson)
+	public function review(Lesson $lesson, $reviewType = null)
     {
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
 
 		$quiz = LessonController::makeQuiz($lesson->text);
-		$quiz = $lesson->formatByType($quiz);
+		$quiz = $lesson->formatByType($quiz, $reviewType);
 
 		//todo: not working yet
 		$quizText = [
