@@ -148,6 +148,9 @@ class Tools
 			//$v = str_replace('<', '[', $v);
 			//$v = str_replace('>', ']', $v);
 		}
+		
+		// replace <table border="1">
+		$v = preg_replace("/\<table( *)border=\"1\"\>/", "<table class=\"table table-borderless\">", $v);
 
 		return $v;
 	}

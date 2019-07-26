@@ -1,5 +1,7 @@
 @if (isset($records))
-<div style="font-size:.9em;">
+<div>
+@if (true)
+	
 	<table class="table-sm table-borderless {{isset($tableClass) ? $tableClass : ''}}">
 		<tbody>
 		@foreach($records as $record)
@@ -9,5 +11,19 @@
 		</tr>
 		@endforeach
 	</table>
+	
+@else
+	
+	@foreach($records as $record)
+	<ul class="nav nav-pills nav-fill">
+		<li class="nav-item">
+			<a class="nav-link active" href="/lessons/view/{{$record->id}}">{{$record->getDisplayNumber()}}&nbsp;{{$record->title}}</a>
+		</li>
+	</ul>	
+	@endforeach		
+
+
+@endif	
+		
 </div>
 @endif

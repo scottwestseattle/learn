@@ -260,7 +260,7 @@ class LessonController extends Controller
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-		$record->text = Tools::copyDirty($record->text, Lesson::convertCodes(Tools::cleanHtml($request->text)), $isDirty, $changes);
+		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml(Tools::cleanHtml($request->text)), $isDirty, $changes);
 		$record->parent_id = Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
 		$record->type_flag = Tools::copyDirty($record->type_flag, $request->type_flag, $isDirty, $changes);
 
@@ -324,7 +324,7 @@ class LessonController extends Controller
 		$isDirty = false;
 		$changes = '';
 
-		$record->text = Tools::copyDirty($record->text, Tools::cleanHtml($request->text), $isDirty, $changes);
+		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml(Tools::cleanHtml($request->text)), $isDirty, $changes);
 
 		if ($isDirty)
 		{
