@@ -17,7 +17,9 @@ $domainName = isset($domainName) ? $domainName : '';
 	<script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 	
     <script src="{{ asset('js/project.js') }}"></script>
+@if (false)
     <script src="{{ asset('js/bootstrap.js') }}"></script>
+@endif
 
 	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet">

@@ -485,6 +485,7 @@ class LessonController extends Controller
 			'questionPromptReverse' => '', // 'What is the question?',
 			'canEdit' => true,
 			'quizText' => $quizText,
+			'isMc' => $lesson->isMc($reviewType),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 }

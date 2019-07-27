@@ -60,4 +60,6 @@ return [
 'Start at the beginning' => '从头开始',
 'Show Answers' => '显示答案',
 'Start Quiz' => '开始测验',
+'Round' => '轮',
+'Correct' => '正确',
 ];

@@ -9,11 +9,13 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 </script>
 
 <div class="data-misc"
-	data-max="{{$sentenceCount}}"
-	data-prompt="{{$questionPrompt}}"
-	data-prompt-reverse="{{$questionPromptReverse}}"
-	data-quizTextRound="{{$quizText['Round']}}"
-	data-quizTextCorrect="{{$quizText['Correct']}}"
+	data-max="{{$sentenceCount}}" 
+	data-prompt="{{$questionPrompt}}" 
+	data-prompt-reverse="{{$questionPromptReverse}}" 
+	data-quiztext-round="@LANG('content.' . $quizText['Round'])" 
+	data-quiztext-correct="@LANG('content.' . $quizText['Correct'])" 
+	data-quiztype="{{$record->type_flag}}"
+	data-ismc="{{$isMc}}"
 ></div>
 
 @foreach($records as $rec)
@@ -112,8 +114,8 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Quiz')</button>
 			<input class="btn btn-default btn-quiz" type="button" value="I KNOW IT (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
 			<input class="btn btn-default btn-quiz" type="button" value="I DON'T KNOW (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
-			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); resetQuiz()" id="button-stop">STOP QUIZ</button>
 			<input class="btn btn-default btn-quiz" type="button" value="Change to Wrong (Alt+c)" onclick="override()" id="button-override" style="display: none;">
+			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); resetQuiz()" id="button-stop">STOP QUIZ</button>
 		</div>
 		
 		<!-- BUTTONS ROW 2 -->
@@ -132,17 +134,19 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 		
 		<!-- CHECKBOX ROW -->
 		<div class="form-group">
-			<div class="form-check">
+			<div class="">
 				<input type="checkbox" name="checkbox-type-answers" id="checkbox-type-answers" class="" onclick="quiz.typeAnswersClick()" />
 				<label for="checkbox-type-answers" class="checkbox-big-label" onclick="quiz.typeAnswersClick()">@LANG('content.Type Answers')</label>
 			</div>
 
-			<div class="form-check">
+			@if (!$isMc)
+			<div class="">
 				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="quiz.flip()" />
 				<label for="checkbox-flip" class="checkbox-big-label">@LANG('content.Flip Question/Answer')</label>
 			</div>
+			@endif
 			
-			<div class="form-check">
+			<div class="">
 				<input type="checkbox" name="checkbox-show-answers" id="checkbox-show-answers" onclick="quiz.showAnswersClick()" />
 				<label for="checkbox-show-answers" class="checkbox-big-label">@LANG('content.Show Answers')</label>
 			</div>

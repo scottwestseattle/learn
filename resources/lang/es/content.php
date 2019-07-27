@@ -60,4 +60,6 @@ return [
 'Start at the beginning' => 'Empezar por el principio',
 'Show Answers' => 'Mostrar Respuestas',
 'Start Quiz' => 'Empezar Práctica',
+'Round' => 'Ronda',
+'Correct' => 'Correcto',
 ];

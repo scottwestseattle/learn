@@ -139,7 +139,7 @@ class Lesson extends Base
 	private function formatMc1($quiz)
     {
 		/*
-		I (am, is, are) hungry. - am
+		I [am, is, are] hungry. - am
 		<button class="btn btn-primary" type="button">am</button>
 		<button class="btn btn-primary" type="button">is</button>
 		<button class="btn btn-primary" type="button">are</button>
@@ -155,21 +155,34 @@ class Lesson extends Base
 
 			if (strlen($a) > 0)
 			{
-				preg_match_all('#\[(.*)\]#is', $q, $answers, PREG_SET_ORDER);				
+				// extract the answers which look like: [am, is, are]
+				preg_match_all('#\[(.*)\]#is', $q, $answers, PREG_SET_ORDER);
+
+				// if answers not found, set it to ''
 				$answers = (count($answers) > 0 && count($answers[0]) > 1) ? $answers[0][1] : '';
 				
 				if (strlen($answers) > 0)
 				{
-					$answers = explode(',', $answers);
+					//
+					// create a button for each answer
+					//
+					$answers = explode(',', $answers); // extract the comma-separated words
 					$buttons = '';
 					foreach($answers as $m)
 					{
-						$m = str_replace("'", "&apos;", trim($m));
-						$buttons .= '<button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc1" type="button">' . $m . '</button>';
+						$m = str_replace("'", "&apos;", trim($m)); // fix single apostrophe, for exmaple D'Jamena
+						
+						// mark the correct button so it can be styled during the quiz
+						$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
+							
+						$buttons .= '<button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc1 ' . $buttonClass . '">' . $m . '</button>';
 					}
 					//dd($buttons);
+					
+					// replace the options with the buttons
 					$q = preg_replace("/\[.*\]/is", $buttons, $q);
 					
+					// put the formatted info back into the quiz
 					$quizNew[] = [
 						'q' => $q,
 						'a' => $a,
@@ -177,11 +190,30 @@ class Lesson extends Base
 					];
 				}
 			}
-
 		}
 		
 		//dd($quizNew);
 		return $quizNew;
+	}
+	
+    public function isMc($reviewType)
+	{
+		$v = false;
+		
+		if (!isset($reviewType))
+			$reviewType = $this->type_flag;
+		
+		switch($reviewType)
+		{
+			case LESSONTYPE_QUIZ_MC1:
+			case LESSONTYPE_QUIZ_MC2:
+				$v = true;
+				break;
+			default:
+				break;
+		}
+		
+		return $v;
 	}
 	
     public function isQuiz()
