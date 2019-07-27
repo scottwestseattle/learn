@@ -201,6 +201,11 @@ class Lesson extends Base
 		
 		return $v;
 	}
+
+    public function getLessonType()
+	{		
+		return $this->type_flag;
+	}
 	
     static public function getLessonTypes()
 	{
