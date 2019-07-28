@@ -62,4 +62,7 @@ return [
 'Start Quiz' => 'Empezar Práctica',
 'Round' => 'Ronda',
 'Correct' => 'Correcto',
+'Exercise' => 'Práctica',
+'Questions' => 'Preguntas',
+'of' => 'de',
 ];

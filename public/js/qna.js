@@ -103,6 +103,7 @@ function quiz() {
 	this.isMc = 0;
 	this.quizTextRound = 'not set';
 	this.quizTextCorrect = 'not set';
+	this.quizTextOf = 'not set';
 
 	//sbw
 	/* JS doesn't have assoc arrays
@@ -419,6 +420,7 @@ function loadData()
 		quiz.isMc = container.data('ismc');
 		quiz.quizTextRound = container.data('quiztext-round');
 		quiz.quizTextCorrect = container.data('quiztext-correct');
+		quiz.quizTextOf = container.data('quiztext-of');
 		
 		if (i == 0)
 			alert(quiz.qna[i].q);
@@ -792,7 +794,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 
 function updateScore()
 {
-	$("#statsScore").html("<span class='quizStats'>" + quiz.quizTextCorrect + ": " + right + " of " + (right+wrong) + "</span>");
+	$("#statsScore").html("<span class='quizStats'>" + quiz.quizTextCorrect + ": " + right + " " + quiz.quizTextOf + " " + (right+wrong) + "</span>");
 	$("#statsCount").html("<span class='quizStats'>" + quiz.quizTextRound + ": " + nbr + "/" + statsMax + "</span>");
 	$("#statsDebug").html("<span class='quizStats'>"
 		+ "round=" + round

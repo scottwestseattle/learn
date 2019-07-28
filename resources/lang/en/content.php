@@ -62,4 +62,7 @@ return [
 'Start Quiz' => 'Start Quiz',
 'Round' => 'Round',
 'Correct' => 'Correct',
+'Exercise' => 'Exercise',
+'Questions' => 'Questions',
+'of' => 'of',
 ];

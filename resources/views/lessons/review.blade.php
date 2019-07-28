@@ -14,8 +14,9 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	data-prompt-reverse="{{$questionPromptReverse}}" 
 	data-quiztext-round="@LANG('content.' . $quizText['Round'])" 
 	data-quiztext-correct="@LANG('content.' . $quizText['Correct'])" 
-	data-quiztype="{{$record->type_flag}}"
-	data-ismc="{{$isMc}}"
+	data-quiztype="{{$record->type_flag}}" 
+	data-ismc="{{$isMc}}" 
+	data-quiztext-of="@LANG('content.' . $quizText['of'])" 
 ></div>
 
 @foreach($records as $rec)
@@ -159,6 +160,14 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	</div>
 
 </section>
+
+@if (false) // debug dump
+	<div>
+	@foreach($records as $rec)
+		<p>{!!$rec['q']!!}</p>
+	@endforeach
+	</div>
+@endif
 
 @endif
 

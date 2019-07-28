@@ -66,64 +66,73 @@ class Lesson extends Base
 	private function formatMc2($quiz)
     {
 		$quizNew = [];
-		
 		$answers = [];
-		//dd($quiz);
-		$max = count($quiz) - 1;
-		$randomOptions = 5;
-		$cnt = 0;
-		foreach($quiz as $record)
+
+		$max = count($quiz) - 1; // max question index
+		if ($max > 0)
 		{
-			//
-			// get random answers from other questions
-			//
-			$options = [];
-			if ($max > 0)
+			$randomOptions = 5;
+			$cnt = 0;
+			foreach($quiz as $record)
 			{
-				// using 100 just so it's not infinite, only goes until three unique options are picked
-				$pos = rand(0, $randomOptions - 1); // position of the correct answer
-				for ($i = 0; $i < 100 && count($options) < $randomOptions; $i++)
+				if (preg_match('#\[(.*)\]#is', $record['q']))
 				{
-					// pick three random options
-					$rnd = rand(0, $max);	// answer from other random question
-					$option = $quiz[$rnd];
-					//dd($option['a']);
-					
-					// not the current question AND has answer text AND answer not used yet
-					if ($option['id'] != $record['id'] && strlen($option['a']) > 0 && !array_key_exists($option['a'], $options))
+					// there is already an answer so it will be handled in formatMc1
+				}
+				else
+				{
+					//
+					// get random answers from other questions
+					//
+					$options = [];
+
+					// using 100 just so it's not infinite, only goes until three unique options are picked
+					$pos = rand(0, $randomOptions - 1); // position of the correct answer
+					for ($i = 0; $i < 100 && count($options) < $randomOptions; $i++)
 					{
-						if ($pos == count($options))
-						{
-							// add in the real answer randomly
-							$options[$record['a']] = $record['a'];
-						}
-							
-						$options[$option['a']] = $option['a'];
+						// pick three random options
+						$rnd = rand(0, $max);	// answer from other random question
+						$option = $quiz[$rnd];
+						//dd($option['a']);
 						
-						if ($pos == count($options))
+						// not the current question AND has answer text AND answer not used yet
+						if ($option['id'] != $record['id'] && strlen($option['a']) > 0 && !array_key_exists($option['a'], $options))
 						{
-							// add in the real answer randomly
-							$options[$record['a']] = $record['a'];
+							if ($pos == count($options))
+							{
+								// add in the real answer randomly
+								$options[$record['a']] = $record['a'];
+							}
+								
+							$options[$option['a']] = $option['a'];
+							
+							if ($pos == count($options))
+							{
+								// add in the real answer randomly
+								$options[$record['a']] = $record['a'];
+							}
+						}
+						else
+						{
+							//dump('duplicate: ' . $option);
 						}
 					}
-					else
+					
+					//dump($options);
+					
+					$q = $record['q'] . ' [';
+					foreach($options as $option)
 					{
-						//dump('duplicate: ' . $option);
+						// put the options at the end of the question like: [one, two, three]
+						$q .= $option . ', ';
 					}
+					$q .= ']';
+					$q = str_replace(', ]', ']', $q);
+					
+					$record['q'] = $q;
 				}
 				
-				//dump($options);
-				
-				$q = $record['q'] . ' [';
-				foreach($options as $option)
-				{
-					// put the question back in the quz
-					$q .= $option . ', ';
-				}
-				$q .= ']';
-				$q = str_replace(', ]', ']', $q);
-				
-				$quizNew[$cnt]['q'] = $q;
+				$quizNew[$cnt]['q'] = $record['q'];
 				$quizNew[$cnt]['a'] = $record['a'];
 				$quizNew[$cnt]['id'] = $record['id'];
 				//dd($quiz[$i]);				
@@ -134,6 +143,24 @@ class Lesson extends Base
 		
 		//dd($quizNew);
 		return $this->formatMc1($quizNew);		
+	}
+
+	static private function getCommaSeparatedWords($text)
+    {
+		$words = null;
+		
+		// pattern looks like: "The words [am, is, are] in the sentence."
+		preg_match_all('#\[(.*)\]#is', $text, $words, PREG_SET_ORDER);
+
+		// if answers not found, set it to ''
+		$words = (count($words) > 0 && count($words[0]) > 1) ? $words[0][1] : '';
+		
+		if (strlen($words) > 0)
+		{
+			$words = explode(',', $words); // extract the comma-separated words		
+		}
+
+		return $words;
 	}
 	
 	private function formatMc1($quiz)
@@ -155,22 +182,17 @@ class Lesson extends Base
 
 			if (strlen($a) > 0)
 			{
-				// extract the answers which look like: [am, is, are]
-				preg_match_all('#\[(.*)\]#is', $q, $answers, PREG_SET_ORDER);
+				$answers = self::getCommaSeparatedWords($q);
 
-				// if answers not found, set it to ''
-				$answers = (count($answers) > 0 && count($answers[0]) > 1) ? $answers[0][1] : '';
-				
-				if (strlen($answers) > 0)
+				if (count($answers) > 0)
 				{
 					//
 					// create a button for each answer
-					//
-					$answers = explode(',', $answers); // extract the comma-separated words
+					//				
 					$buttons = '';
 					foreach($answers as $m)
 					{
-						$m = str_replace("'", "&apos;", trim($m)); // fix single apostrophe, for exmaple D'Jamena
+						$m = str_replace("'", "", trim($m)); // fix single apostrophe, for exmaple D'Jamena
 						
 						// mark the correct button so it can be styled during the quiz
 						$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';

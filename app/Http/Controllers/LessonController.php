@@ -473,6 +473,7 @@ class LessonController extends Controller
 			'Correct' => 'Correct',
 			'TypeAnswers' => 'Type the Answer',
 			'Wrong' => 'Wrong',
+			'of' => 'of',
 		];
 		
 		return view(PREFIX . '.review', $this->getViewData([

@@ -37,44 +37,56 @@
 
 	@if ($record->isQuiz())
 		
-	@if ($isAdmin)
-	<ul class="nav nav-tabs" id="myTab" role="tablist">
-		<li class="nav-item">
-			<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Exercise</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Data</a>
-		</li>
-	</ul>
-	@endif
+		@if ($isAdmin)
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">@LANG('content.Exercise')</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">@LANG('content.Questions')</a>
+			</li>
+		</ul>
+		@endif
 
-	<div class="tab-content" id="myTabContent">
-		<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-			<div style="min-height:300px;">
-				<div style="margin: 20px 0;">
-					<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Fill in the Blank</button></a>
-				</div>
-				
-				@if ($record->getLessonType() == LESSONTYPE_QUIZ_MC1)
-				<div style="margin: 20px 0;">
-					<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Multiple Choice</button></a>
-				</div>
-				@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC2)
-				<div style="margin: 20px 0;">
-					<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Multiple Choice Random</button></a>
-				</div>
-				@else
-					<!-- FIB ONLY -->
-				@endif
-			</div>		
+		<div class="tab-content" id="myTabContent">
+
+			<!------------------------------------------------------------------------------->
+			<!-- The quiz launch tab                                                       -->
+			<!------------------------------------------------------------------------------->
+			
+			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+				<div style="min-height:300px;">
+					<div style="margin: 20px 0;">
+						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Fill in the Blank</button></a>
+					</div>
+					
+					@if ($record->getLessonType() == LESSONTYPE_QUIZ_MC1)
+					<div style="margin: 20px 0;">
+						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Multiple Choice</button></a>
+					</div>
+					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC2)
+					<div style="margin: 20px 0;">
+						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Multiple Choice Random</button></a>
+					</div>
+					@else
+						<!-- FIB ONLY -->
+					@endif
+				</div>		
+			</div>
+			
+			<!------------------------------------------------------------------------------->
+			<!-- The quiz launch tab                                                       -->
+			<!------------------------------------------------------------------------------->
+			<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+				<p>{!! $record->text !!}</p>
+			</div>
+			
 		</div>
-		<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-			<p>{!! $record->text !!}</p>
-		</div>
-	</div>
 		
 	@else
+		
 		<p>{!! $record->text !!}</p>
+		
 	@endif
 	
 	<div class="page-nav-buttons">

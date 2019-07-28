@@ -62,4 +62,7 @@ return [
 'Start Quiz' => '开始测验',
 'Round' => '轮',
 'Correct' => '正确',
+'Exercise' => '练习练习',
+'Questions' => '问题',
+'of' => '的',
 ];
