@@ -15,6 +15,8 @@ define('LESSONTYPE_VOCAB', 20);
 define('LESSONTYPE_QUIZ_FIB', 30);
 define('LESSONTYPE_QUIZ_MC1', 40);
 define('LESSONTYPE_QUIZ_MC2', 41);
+define('LESSONTYPE_QUIZ_MC3', 42);
+define('LESSONTYPE_QUIZ_MC4', 43);
 define('LESSONTYPE_OTHER', 99);
 define('LESSONTYPE_DEFAULT', LESSONTYPE_TEXT);
 
@@ -27,6 +29,8 @@ class Lesson extends Base
 		LESSONTYPE_QUIZ_FIB => 'Quiz: Fill in the Blank',
 		LESSONTYPE_QUIZ_MC1 => 'Quiz: Multiple Choice - Set Options (MC1)',
 		LESSONTYPE_QUIZ_MC2 => 'Quiz: Multiple Choice - Random Options (MC2)',
+		LESSONTYPE_QUIZ_MC3 => 'Multiple Choice - Fixed Options New Layout (MC3)',
+		LESSONTYPE_QUIZ_MC4 => 'Multiple Choice - Random Options New Layout (MC4)',
 		LESSONTYPE_OTHER => 'Other',
     ];
 	
@@ -55,6 +59,14 @@ class Lesson extends Base
 			case LESSONTYPE_QUIZ_MC2:
 				$quiz = $this->formatMc2($quiz);
 				break;
+
+			case LESSONTYPE_QUIZ_MC3:
+				$quiz = $this->formatMc3($quiz);
+				break;
+
+			case LESSONTYPE_QUIZ_MC4:
+				$quiz = $this->formatMc4($quiz);
+				break;
 				
 			default:
 				break;
@@ -63,6 +75,87 @@ class Lesson extends Base
 		return $quiz;
 	}
 
+	// this version puts the answer options into a separate cell
+	private function formatMc3($quiz)
+    {
+		$quizNew = [];
+		$answers = [];
+
+		$max = count($quiz) - 1; // max question index
+		if ($max > 0)
+		{
+			$randomOptions = 5;
+			$cnt = 0;
+			foreach($quiz as $record)
+			{
+				$options = [];
+				
+				if (preg_match('#\[(.*)\]#is', $record['q']))
+				{
+					// there is already an answer so it will be handled in formatMc1
+				}
+				else
+				{
+					//
+					// get random answers from other questions
+					//
+
+					// using 100 just so it's not infinite, only goes until three unique options are picked
+					$pos = rand(0, $randomOptions - 1); // position of the correct answer
+					for ($i = 0; $i < 100 && count($options) < $randomOptions; $i++)
+					{
+						// pick three random options
+						$rnd = rand(0, $max);	// answer from other random question
+						$option = $quiz[$rnd];
+						//dd($option['a']);
+						
+						// not the current question AND has answer text AND answer not used yet
+						if ($option['id'] != $record['id'] && strlen($option['a']) > 0 && !array_key_exists($option['a'], $options))
+						{
+							if ($pos == count($options))
+							{
+								// add in the real answer randomly
+								$options[$record['a']] = $record['a'];
+							}
+								
+							$options[$option['a']] = $option['a'];
+							
+							if ($pos == count($options))
+							{
+								// add in the real answer randomly
+								$options[$record['a']] = $record['a'];
+							}
+						}
+						else
+						{
+							//dump('duplicate: ' . $option);
+						}
+					}
+					
+					//dump($options);
+				}
+				
+				$quizNew[$cnt]['q'] = $record['q'];
+				$quizNew[$cnt]['options'] = $options;
+				$quizNew[$cnt]['a'] = $record['a'];
+				$quizNew[$cnt]['id'] = $record['id'];
+
+				//dd($quizNew[$cnt]);				
+				
+				$cnt++;
+			}
+		}
+		
+		//dd($quizNew);
+		return $this->formatMc1($quizNew);		
+	}
+
+	//todo: not used yet
+	private function formatMc4($quiz)
+    {
+		return $this->formatMc3($quiz);
+	}
+	
 	private function formatMc2($quiz)
     {
 		$quizNew = [];
@@ -147,7 +240,8 @@ class Lesson extends Base
 
 	static private function getCommaSeparatedWords($text)
     {
-		$words = null;
+		$words = '';
+		$array = [];
 		
 		// pattern looks like: "The words [am, is, are] in the sentence."
 		preg_match_all('#\[(.*)\]#is', $text, $words, PREG_SET_ORDER);
@@ -157,12 +251,14 @@ class Lesson extends Base
 		
 		if (strlen($words) > 0)
 		{
-			$words = explode(',', $words); // extract the comma-separated words		
+			$array = explode(',', $words); // extract the comma-separated words		
 		}
 
-		return $words;
+		return $array;
 	}
 	
+	// creates buttons for each answer option
+	// and puts them into the question
 	private function formatMc1($quiz)
     {
 		/*
@@ -182,34 +278,64 @@ class Lesson extends Base
 
 			if (strlen($a) > 0)
 			{
-				$answers = self::getCommaSeparatedWords($q);
-
-				if (count($answers) > 0)
+				if (array_key_exists('options', $record))
 				{
+					// use the options
+					$options = $record['options'];
+					
 					//
-					// create a button for each answer
+					// create a button for each answer option
 					//				
-					$buttons = '';
-					foreach($answers as $m)
+					$buttons = '';					
+					foreach($options as $m)
 					{
-						$m = str_replace("'", "", trim($m)); // fix single apostrophe, for exmaple D'Jamena
-						
 						// mark the correct button so it can be styled during the quiz
 						$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
 							
-						$buttons .= '<button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc1 ' . $buttonClass . '">' . $m . '</button>';
+						$buttons .= '<div><button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc3 ' . $buttonClass . '">' . $m . '</button></div>';
+						
 					}
-					//dd($buttons);
-					
-					// replace the options with the buttons
-					$q = preg_replace("/\[.*\]/is", $buttons, $q);
 					
 					// put the formatted info back into the quiz
 					$quizNew[] = [
 						'q' => $q,
 						'a' => $a,
+						'options' => $buttons,
 						'id' => $record['id'],
-					];
+					];					
+				}
+				else
+				{
+					// get the answer options from the question text
+					$answers = self::getCommaSeparatedWords($q);
+					
+					if (count($answers) > 0)
+					{
+						//
+						// create a button for each answer option
+						//				
+						$buttons = '';
+						foreach($answers as $m)
+						{
+							$m = str_replace("'", "", trim($m)); // fix single apostrophe, for exmaple D'Jamena
+							
+							// mark the correct button so it can be styled during the quiz
+							$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
+								
+							$buttons .= '<button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc1 ' . $buttonClass . '">' . $m . '</button>';
+						}
+						//dd($buttons);
+						
+						// replace the options with the buttons
+						$q = preg_replace("/\[.*\]/is", $buttons, $q);
+						
+						// put the formatted info back into the quiz
+						$quizNew[] = [
+							'q' => $q,
+							'a' => $a,
+							'id' => $record['id'],
+						];
+					}
 				}
 			}
 		}
@@ -229,6 +355,8 @@ class Lesson extends Base
 		{
 			case LESSONTYPE_QUIZ_MC1:
 			case LESSONTYPE_QUIZ_MC2:
+			case LESSONTYPE_QUIZ_MC3:
+			case LESSONTYPE_QUIZ_MC4:
 				$v = true;
 				break;
 			default:
@@ -247,6 +375,8 @@ class Lesson extends Base
 			case LESSONTYPE_QUIZ_FIB:
 			case LESSONTYPE_QUIZ_MC1:
 			case LESSONTYPE_QUIZ_MC2:
+			case LESSONTYPE_QUIZ_MC3:
+			case LESSONTYPE_QUIZ_MC4:
 				$v = true;
 				break;
 			default:

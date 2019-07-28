@@ -441,7 +441,7 @@ class LessonController extends Controller
 		$cnt = 0;
 		foreach($records as $record)
 		{
-			$parts = explode(' - ', $record[1]);
+			$parts = explode(' - ', $record[1]); // split the line into q and a
 
 			if (count($parts) > 0)
 			{
@@ -489,4 +489,35 @@ class LessonController extends Controller
 			'isMc' => $lesson->isMc($reviewType),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
+	
+	public function reviewmc(Lesson $lesson, $reviewType = null)
+    {
+		$prev = Lesson::getPrev($lesson);
+		$next = Lesson::getNext($lesson);
+
+		$quiz = LessonController::makeQuiz($lesson->text); // splits text into questions and answers
+		$quiz = $lesson->formatByType($quiz, $reviewType); // format the answers according to quiz type
+
+		//todo: not working yet
+		$quizText = [
+			'Round' => 'Round',
+			'Correct' => 'Correct',
+			'TypeAnswers' => 'Type the Answer',
+			'Wrong' => 'Wrong',
+			'of' => 'of',
+		];
+		
+		return view(PREFIX . '.reviewmc', $this->getViewData([
+			'record' => $lesson,
+			'prev' => $prev,
+			'next' => $next,
+			'sentenceCount' => count($quiz),
+			'records' => $quiz,
+			'questionPrompt' => '', //'What is the answer?',
+			'questionPromptReverse' => '', // 'What is the question?',
+			'canEdit' => true,
+			'quizText' => $quizText,
+			'isMc' => $lesson->isMc($reviewType),
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }	
 }

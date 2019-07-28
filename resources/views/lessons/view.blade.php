@@ -66,7 +66,15 @@
 					</div>
 					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC2)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Multiple Choice Random</button></a>
+						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Multiple Choice 2</button></a>
+					</div>
+					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC3)
+					<div style="margin: 20px 0;">
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC3}}"><button class="btn btn-info">Multiple Choice 3</button></a>
+					</div>
+					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC4)
+					<div style="margin: 20px 0;">
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC4}}"><button class="btn btn-info">Multiple Choice 4</button></a>
 					</div>
 					@else
 						<!-- FIB ONLY -->

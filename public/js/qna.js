@@ -253,6 +253,11 @@ function quiz() {
 		// show question
 		var q = getQuestion(true);
 		$("#prompt").html(q);
+		
+		// get button optionis
+		o = quiz.qna[quiz.qna[curr].order].options;
+		if (o && o.length > 0)
+			$("#optionButtons").html(o);
 
 		// show answer
 		if ($("#checkbox-type-answers").prop('checked'))
@@ -394,10 +399,11 @@ function loadData()
 
 		var question = container.data('question');
 		var answer = container.data('answer');
+		var options = container.data('options');
 		var id = container.data('id');
 
 		// add the record
-		quiz.qna[i] = {q:question.toString(), a:answer.toString(), id:id.toString(), order:0, correct:false};
+		quiz.qna[i] = {q:question.toString(), a:answer.toString(), id:id.toString(), options:options.toString(), order:0, correct:false};
 
 		//if (i == 0) alert(quiz.qna[i].q);
 
@@ -520,7 +526,7 @@ function nextAttempt()
 			total = right + wrong;
 			if (total > 0)
 			{
-				results = '<p>Round ' + round + ': ' + score.toFixed(2) + '% (' + right + ' of ' + total + ')</p>';
+				results = '<p>' + quiz.quizTextRound + ' ' + round + ': ' + score.toFixed(2) + '% (' + right + ' ' + quiz.quizTextOf + ' ' + total + ')</p>';
 				$("#rounds").append(results);
 				alert('End of Round, Starting next round');
 			}
