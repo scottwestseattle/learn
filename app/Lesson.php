@@ -275,6 +275,7 @@ class Lesson extends Base
 		{
 			$a = trim($record['a']);
 			$q = trim($record['q']);
+			$id = $record['id'];
 
 			if (strlen($a) > 0)
 			{
@@ -292,7 +293,7 @@ class Lesson extends Base
 						// mark the correct button so it can be styled during the quiz
 						$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
 							
-						$buttons .= '<div><button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc3 ' . $buttonClass . '">' . $m . '</button></div>';
+						$buttons .= '<div><button id=' . $id . ' onclick="checkAnswerMc1(' . $id . ', \'' . $m . '\')" class="btn btn-primary btn-quiz-mc3 ' . $buttonClass . '">' . $m . '</button></div>';
 						
 					}
 					

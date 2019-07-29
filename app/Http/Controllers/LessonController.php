@@ -513,7 +513,7 @@ class LessonController extends Controller
 			'next' => $next,
 			'sentenceCount' => count($quiz),
 			'records' => $quiz,
-			'questionPrompt' => '', //'What is the answer?',
+			'questionPrompt' => 'Elige la ciudad capital correcta', //'What is the answer?',
 			'questionPromptReverse' => '', // 'What is the question?',
 			'canEdit' => true,
 			'quizText' => $quizText,

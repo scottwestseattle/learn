@@ -83,16 +83,20 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	<!-- Instructions -->
 	<!-------------------------------------------------------->
 
-	<div class="text-center" id="" style="font-size: 1em; margin-bottom:10px;">
-		<span id="">Elige la ciudad capital correcta</span>
+	<div class="text-center" id="" style="font-size: 1em; margin-bottom:10px;">	
+		<!-------------------------------------------------------->
+		<!-- SHOW Question prompt and results RIGHT/WRONG -->
+		<!-------------------------------------------------------->
+		<span id="alertPrompt"></span>
 	</div>
+	
 
 	<!-------------------------------------------------------->
 	<!-- QUESTION -->
 	<!-------------------------------------------------------->
 
-	<div id="question-graphics" class="text-center" style="font-size: 150%;">
-		<span id="promptQuestion"></span><span id="prompt"></span>
+	<div id="question-graphics" class="text-center" style="font-size: 150%; margin-bottom:20px;">
+		<span id="prompt"></span>
 	</div>
 
 	<!-------------------------------------------------------->
@@ -105,10 +109,6 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 @endif
 		<fieldset id="runtimeFields">
 
-		<!-------------------------------------------------------->
-		<!-- TEXTBOX TO ENTER ANSWER -->
-		<!-------------------------------------------------------->
-		<p id="alertPrompt" style='margin: 0; margin-top: 10px; font-weight: normal;'></p>
 		<div>
 			<!-------------------------------------------------------->
 			<!-- TEXTBOX TO ENTER ANSWER -->
@@ -119,7 +119,7 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 		<!-------------------------------------------------------->
 		<!-- SPACE TO SHOW SCORED ANSWER -->
 		<!-------------------------------------------------------->
-		<div style="padding: 10px 0; font-size: 100%; min-height: 70px; margin-top: 2px;" id="answer-show-div"></div>
+		<div style="display: none; padding: 10px 0; font-size: 100%; min-height: 70px; margin-top: 2px;" id="answer-show-div"></div>
 
 		<!-------------------------------------------------------->
 		<!-- ANSWER OPTION BUTTONS  -->

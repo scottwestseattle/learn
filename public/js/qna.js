@@ -154,7 +154,6 @@ function quiz() {
 			$("#question-prompt").hide();
 	
 			$("#attempt").hide();		
-			quiz.setAlertPrompt('', 'black');
 		}
 		else if (state == RUNSTATE_ASKING)
 		{
@@ -213,7 +212,17 @@ function quiz() {
 			{
 				// change the button colors to show the answer
 				$(".btn-right").show();
-				$(".btn-wrong").hide();				
+				//$(".btn-wrong").hide();
+				$(".btn-right").css('background-color','#5CB85C');
+				$(".btn-wrong").css('background-color','LightGray');
+
+				// check if the chosen button is invisible
+				if ($(".btn-chosen").is(":hidden"))
+				{
+					$(".btn-chosen").css('background-color','red');
+					$(".btn-chosen").show(); // show it
+				}
+				
 				$("#button-next-attempt").show();
 			}
 			else
@@ -282,7 +291,7 @@ function quiz() {
 			$("#button-know").focus();
 		}
 		
-		quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : /*sbw 'Select Response:' */ '', 'black');					
+		quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : quiz.promptQuestion, 'black');		
 		
 		$("#stats").show();
 	}
@@ -326,7 +335,7 @@ function quiz() {
 		
 		if (this.runState == RUNSTATE_ASKING)
 		{			
-			quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : /*sbw 'Select Response:' */ '', 'black');
+			quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : quiz.promptQuestion, 'black');			
 		}
 	}
 
@@ -363,10 +372,11 @@ function quiz() {
 		}
 	}
 
-	this.setAlertPrompt = function(text, color) {
+	this.setAlertPrompt = function(text, color, bold = false) {
+		
 		$("#alertPrompt").html(text);
 		$("#alertPrompt").css('color', color);
-		$("#alertPrompt").css('font-weight', 'bold');
+		$("#alertPrompt").css('font-weight', bold ? 'bold' : 'normal');
 	}
 }
 
@@ -640,7 +650,7 @@ function loadQuestion()
 	updateScore();
 
 	var typeAnswers = $("#checkbox-type-answers").prop('checked');
-	quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : /*sbw 'Select Response:' */ '', 'black');
+	quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : quiz.promptQuestion, 'black');
 }
 
 function toStringBoolArray(a)
@@ -688,10 +698,12 @@ function cleanUpSpecialChars(str)
     return str;
 }
 
-function checkAnswerMc1(answer)
-{	
+function checkAnswerMc1(id, answer)
+{
 	if (quiz.runState == RUNSTATE_ASKING)
 	{
+		$("#" + id).addClass( "btn-chosen" ); // set a class on the chosen button so we don't have to pass the id all the way through
+		
 		//alert(answer);
 		checkAnswer(CHECKANSWER_MC1, answer);
 	}
@@ -776,7 +788,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 		}
 	}
 
-	quiz.setAlertPrompt(result, answerColor);
+	quiz.setAlertPrompt(result, answerColor, /* bold = */ true);
 
 	var answerMsg = answer;
 	if (answer != answerRaw)
@@ -786,11 +798,12 @@ function checkAnswer(checkOptions, attemptMc = null)
 
 	if (quiz.isMc)
 	{
-		// the answer is show in the button
+		// the answer is shown in the button
 		$("#answer-show-div").hide();
 	}
 	else
 	{
+		$("#answer-show-div").show();
 		$("#answer-show-div").html(answerMsg);
 		$("#answer-show-div").css('color', answerColor);
 	}
