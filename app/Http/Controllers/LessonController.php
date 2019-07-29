@@ -448,6 +448,7 @@ class LessonController extends Controller
 				$records[$cnt]['q'] = $parts[0];
 				$records[$cnt]['a'] = array_key_exists(1, $parts) ? $parts[1] : '';
 				$records[$cnt]['id'] = $cnt;
+				$records[$cnt]['options'] = '';
 			}
 			//dd($qna);
 

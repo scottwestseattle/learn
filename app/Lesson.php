@@ -26,11 +26,11 @@ class Lesson extends Base
 		LESSONTYPE_NOTSET => 'Not Set',
 		LESSONTYPE_TEXT => 'Text',
 		LESSONTYPE_VOCAB => 'Vocabulary List',
-		LESSONTYPE_QUIZ_FIB => 'Quiz: Fill in the Blank',
-		LESSONTYPE_QUIZ_MC1 => 'Quiz: Multiple Choice - Set Options (MC1)',
-		LESSONTYPE_QUIZ_MC2 => 'Quiz: Multiple Choice - Random Options (MC2)',
-		LESSONTYPE_QUIZ_MC3 => 'Multiple Choice - Fixed Options New Layout (MC3)',
-		LESSONTYPE_QUIZ_MC4 => 'Multiple Choice - Random Options New Layout (MC4)',
+		LESSONTYPE_QUIZ_FIB => 'Fill in the Blank',
+		LESSONTYPE_QUIZ_MC1 => 'Multiple Choice - Set Options (MC1)',
+		LESSONTYPE_QUIZ_MC2 => 'Multiple Choice - Random Options (MC2)',
+		LESSONTYPE_QUIZ_MC3 => 'Multiple Choice - New Layout (MC3)',
+//todo: not used yet		LESSONTYPE_QUIZ_MC4 => 'Multiple Choice - Random Options New Layout (MC4)',
 		LESSONTYPE_OTHER => 'Other',
     ];
 	
@@ -46,32 +46,40 @@ class Lesson extends Base
 
 	public function formatByType($quiz, $reviewType)
     {
-		// if not specifed, use the type setting on the lesson
+		// if $reviewType not set, it uses the type setting on the lesson
 		if (!isset($reviewType))
 			$reviewType = $this->type_flag;
 			
 		switch($reviewType)
 		{
+			case LESSONTYPE_QUIZ_FIB:
+				// FIB doesn't have buttons with anwers, no formatting
+				break;
+				
 			case LESSONTYPE_QUIZ_MC1:
+				// expects embedded list of answers like [one, two, three] which will be converted to buttons
 				$quiz = $this->formatMc1($quiz);
 				break;
 				
 			case LESSONTYPE_QUIZ_MC2:
+				// creates random answers and puts them in the questions
 				$quiz = $this->formatMc2($quiz);
 				break;
 
 			case LESSONTYPE_QUIZ_MC3:
+				// create random answers with new quiz layout
 				$quiz = $this->formatMc3($quiz);
 				break;
 
 			case LESSONTYPE_QUIZ_MC4:
+				// not used yet, same as LESSONTYPE_QUIZ_MC3
 				$quiz = $this->formatMc4($quiz);
 				break;
 				
 			default:
 				break;
 		}
-		
+
 		return $quiz;
 	}
 
@@ -293,7 +301,7 @@ class Lesson extends Base
 						// mark the correct button so it can be styled during the quiz
 						$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
 							
-						$buttons .= '<div><button id=' . $id . ' onclick="checkAnswerMc1(' . $id . ', \'' . $m . '\')" class="btn btn-primary btn-quiz-mc3 ' . $buttonClass . '">' . $m . '</button></div>';
+						$buttons .= '<div><button id="' . $id . '" onclick="checkAnswerMc1(' . $id . ', \'' . $m . '\')" class="btn btn-primary btn-quiz-mc3 ' . $buttonClass . '">' . $m . '</button></div>';
 						
 					}
 					
@@ -335,6 +343,7 @@ class Lesson extends Base
 							'q' => $q,
 							'a' => $a,
 							'id' => $record['id'],
+							'options' => '',
 						];
 					}
 				}

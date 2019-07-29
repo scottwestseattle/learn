@@ -57,7 +57,7 @@
 			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 				<div style="min-height:300px;">
 					<div style="margin: 20px 0;">
-						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Fill in the Blank</button></a>
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Fill in the Blank</button></a>
 					</div>
 					
 					@if ($record->getLessonType() == LESSONTYPE_QUIZ_MC1)

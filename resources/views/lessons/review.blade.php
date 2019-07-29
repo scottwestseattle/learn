@@ -20,7 +20,7 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 ></div>
 
 @foreach($records as $rec)
-	<div class="data-qna" data-question="{{$rec['q']}}" data-answer="{{$rec['a']}}" data-id="{{$rec['id']}}" ></div>
+	<div class="data-qna" data-question="{{$rec['q']}}" data-answer="{{$rec['a']}}" data-options="{{$rec['options']}}" data-id="{{$rec['id']}}" ></div>
 @endforeach
 
 <div class="container page-normal lesson-page">

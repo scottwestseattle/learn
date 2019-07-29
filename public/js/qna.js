@@ -211,17 +211,17 @@ function quiz() {
 			if (quiz.isMc)
 			{
 				// change the button colors to show the answer
-				$(".btn-right").show();
-				//$(".btn-wrong").hide();
 				$(".btn-right").css('background-color','#5CB85C');
+				$(".btn-right").css('border-color','#5CB85C');
+				
 				$(".btn-wrong").css('background-color','LightGray');
+				$(".btn-wrong").css('border-color','LightGray');
 
 				// check if the chosen button is invisible
-				if ($(".btn-chosen").is(":hidden"))
-				{
-					$(".btn-chosen").css('background-color','red');
-					$(".btn-chosen").show(); // show it
-				}
+				//if ($(".btn-chosen").is(":hidden"))
+				//{
+				//	$(".btn-chosen").css('color','red');
+				//}
 				
 				$("#button-next-attempt").show();
 			}

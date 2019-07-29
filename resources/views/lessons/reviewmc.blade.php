@@ -23,25 +23,11 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 
 <div class="container">
 
-@if (false)
-	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
-	<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="/lessons/view/{{$record->id}}">@LANG('content.Back to Lesson')<span class="glyphicon glyphicon-button-back-to"></span></a></span>
-@endif
-
 	<div style="margin-top: 5px;">
 	
 		<div style="float:left; margin: 0 5px 0 0;">
 			<span class="page-nav-buttons"><a class="" role="" href="/lessons/view/{{$record->id}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
 		</div>
-
-		@if (false)
-		<div style="font-size:.8em;">
-			{{$record->course->title}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
-			@if ($isAdmin)
-				<a class="btn {{($status=$record->getStatus())['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$status['text']}}</a>
-			@endif
-		</div>
-		@endif
 		
 		<!-------------------------------------------------------->
 		<!-- STATS -->
@@ -62,20 +48,6 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 <!----------------------------------------------------------------------------->
 
 @if (count($records) > 0)
-
-<section class="quizSection" id="sectionStats">
-
-	<!-------------------------------------------------------->
-	<!-- DEBUG -->
-	<!-------------------------------------------------------->
-
-@if (isset($showDebug) && $showDebug)
-	<div><span id="statsDebug"></span></div>
-@else
-	<div style="display: none;"><span id="statsDebug"></span></div>
-@endif
-
-</section>
 
 <section class="quizSection" id='sectionQna'>
 
@@ -104,9 +76,6 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	<!-------------------------------------------------------->
 
 	<div class="kbase form">
-@if (false)	
-		<form method="POST" id="form-edit" autocomplete="off" action="/{{$prefix}}/updatesbw/{{$record->id}}">
-@endif
 		<fieldset id="runtimeFields">
 
 		<div>
@@ -176,13 +145,6 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 				<label for="checkbox-show-answers" class="checkbox-big-label">@LANG('content.Show Answers')</label>
 			</div>
 		</div>
-		
-@if (false)
-		{{ csrf_field() }}
-
-		</form>
-@endif
-
 	</div>
 
 </section>
