@@ -141,10 +141,11 @@ class Lesson extends Base
 					}
 					
 					//dump($options);
+					
+					$quizNew[$cnt]['options'] = $options;
 				}
 				
 				$quizNew[$cnt]['q'] = $record['q'];
-				$quizNew[$cnt]['options'] = $options;
 				$quizNew[$cnt]['a'] = $record['a'];
 				$quizNew[$cnt]['id'] = $record['id'];
 
@@ -259,11 +260,26 @@ class Lesson extends Base
 		
 		if (strlen($words) > 0)
 		{
-			$array = explode(',', $words); // extract the comma-separated words		
+			$raw = explode(',', $words); // extract the comma-separated words
+			
+			if (is_array($raw) && count($raw) > 0)
+			{
+				foreach($raw as $word)
+				{
+					$array[] = trim($word);
+				}
+			}
 		}
 
 		return $array;
 	}
+	
+	private function formatButton($text, $id, $class)
+    {					
+		$button = '<div><button id="' . $id . '" onclick="checkAnswerMc1(' . $id . ', \'' . $text . '\')" class="btn btn-primary btn-quiz-mc3 ' . $class . '">' . $text . '</button></div>';
+		
+		return $button;
+	}	
 	
 	// creates buttons for each answer option
 	// and puts them into the question
@@ -300,9 +316,8 @@ class Lesson extends Base
 					{
 						// mark the correct button so it can be styled during the quiz
 						$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
-							
-						$buttons .= '<div><button id="' . $id . '" onclick="checkAnswerMc1(' . $id . ', \'' . $m . '\')" class="btn btn-primary btn-quiz-mc3 ' . $buttonClass . '">' . $m . '</button></div>';
 						
+						$buttons .= self::formatButton($m, $id, $buttonClass);
 					}
 					
 					// put the formatted info back into the quiz
@@ -326,24 +341,25 @@ class Lesson extends Base
 						$buttons = '';
 						foreach($answers as $m)
 						{
-							$m = str_replace("'", "", trim($m)); // fix single apostrophe, for exmaple D'Jamena
+							//todo: doesn't work $m = str_replace("'", "", trim($m)); // fix single apostrophe, for example N'Djamena
 							
 							// mark the correct button so it can be styled during the quiz
 							$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
-								
-							$buttons .= '<button onclick="checkAnswerMc1(\'' . $m . '\')" class="btn btn-primary btn-quiz-mc1 ' . $buttonClass . '">' . $m . '</button>';
+							
+							$buttons .= self::formatButton($m, $id, $buttonClass);
+							
 						}
 						//dd($buttons);
 						
 						// replace the options with the buttons
-						$q = preg_replace("/\[.*\]/is", $buttons, $q);
+						$q = preg_replace("/\[.*\]/is", "", $q);
 						
 						// put the formatted info back into the quiz
 						$quizNew[] = [
 							'q' => $q,
 							'a' => $a,
 							'id' => $record['id'],
-							'options' => '',
+							'options' => $buttons,
 						];
 					}
 				}

@@ -49,7 +49,7 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 
 @if (count($records) > 0)
 
-<section class="quizSection" id='sectionQna'>
+<section xstyle="max-width: 600px;" class="quizSection" id='sectionQna'>
 
 	<!-------------------------------------------------------->
 	<!-- Instructions -->
@@ -75,7 +75,7 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	<!-- ANSWER -->
 	<!-------------------------------------------------------->
 
-	<div class="kbase form">
+	<div class="">
 		<fieldset id="runtimeFields">
 
 		<div>
@@ -93,7 +93,7 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 		<!-------------------------------------------------------->
 		<!-- ANSWER OPTION BUTTONS  -->
 		<!-------------------------------------------------------->		
-		<div style="width:100%; min-height:300px;" id="optionButtons"></div>
+		<div style="xmax-width: 400px; width:100%; min-height:300px;" id="optionButtons"></div>
 			
 		</fieldset>
 
