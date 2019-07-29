@@ -23,7 +23,7 @@ class LessonController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'review', 'view', 'permalink']);
+        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'permalink']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;

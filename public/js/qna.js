@@ -104,6 +104,7 @@ function quiz() {
 	this.quizTextRound = 'not set';
 	this.quizTextCorrect = 'not set';
 	this.quizTextOf = 'not set';
+	this.quizTextQuestion = 'Question';
 
 	//sbw
 	/* JS doesn't have assoc arrays
@@ -536,7 +537,7 @@ function nextAttempt()
 			total = right + wrong;
 			if (total > 0)
 			{
-				results = '<p>' + quiz.quizTextRound + ' ' + round + ': ' + score.toFixed(2) + '% (' + right + ' ' + quiz.quizTextOf + ' ' + total + ')</p>';
+				results = '<p>' + quiz.quizTextRound + ' ' + round + ': ' + score.toFixed(2) + '% (' + right + '/' + total + ')</p>';
 				$("#rounds").append(results);
 				alert('End of Round, Starting next round');
 			}
@@ -813,8 +814,8 @@ function checkAnswer(checkOptions, attemptMc = null)
 
 function updateScore()
 {
-	$("#statsScore").html("<span class='quizStats'>" + quiz.quizTextCorrect + ": " + right + " " + quiz.quizTextOf + " " + (right+wrong) + "</span>");
-	$("#statsCount").html("<span class='quizStats'>" + quiz.quizTextRound + ": " + nbr + "/" + statsMax + "</span>");
+	$("#statsScore").html("<span class='quizStats'>" + quiz.quizTextCorrect + ": " + right + "/" + (right+wrong) + "</span>");
+	$("#statsCount").html("<span class='quizStats'>" + quiz.quizTextQuestion + ": " + nbr + "/" + statsMax + "</span>");
 	$("#statsDebug").html("<span class='quizStats'>"
 		+ "round=" + round
 		+ ", right=" + right
