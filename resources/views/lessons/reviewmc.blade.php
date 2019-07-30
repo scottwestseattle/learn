@@ -8,8 +8,9 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 
 <div class="data-misc"
 	data-max="{{$sentenceCount}}" 
-	data-prompt="{{$questionPrompt}}" 
-	data-prompt-reverse="{{$questionPromptReverse}}" 
+	data-prompt="{{$options['prompt']}}" 
+	data-prompt-reverse="{{$options['prompt-reverse']}}" 
+	data-question-count="{{$options['question-count']}}" 
 	data-quiztext-round="@LANG('content.' . $quizText['Round'])" 
 	data-quiztext-correct="@LANG('content.' . $quizText['Correct'])" 
 	data-quiztype="{{$record->type_flag}}" 
@@ -67,7 +68,7 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 	<!-- QUESTION -->
 	<!-------------------------------------------------------->
 
-	<div id="question-graphics" class="text-center" style="font-size: 150%; margin-bottom:20px;">
+	<div id="question-graphics" class="text-center" style="font-size: {{$options['font-size']}}; margin-bottom:20px;">
 		<span id="prompt"></span>
 	</div>
 

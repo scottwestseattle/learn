@@ -263,6 +263,7 @@ class LessonController extends Controller
 		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml(Tools::cleanHtml($request->text)), $isDirty, $changes);
 		$record->parent_id = Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
 		$record->type_flag = Tools::copyDirty($record->type_flag, $request->type_flag, $isDirty, $changes);
+		$record->options = Tools::copyDirty($record->options, $request->options, $isDirty, $changes);
 
 		// autoformat is currently just a checkbox but the db value is a flag
 		$format_flag = isset($request->autoformat) ? LESSON_FORMAT_AUTO : LESSON_FORMAT_DEFAULT;
@@ -508,14 +509,20 @@ class LessonController extends Controller
 			'of' => 'of',
 		];
 		
+		$options = Tools::getOptionArray($lesson->options);
+		
+		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
+		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
+		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
+		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
+			
 		return view(PREFIX . '.reviewmc', $this->getViewData([
 			'record' => $lesson,
 			'prev' => $prev,
 			'next' => $next,
 			'sentenceCount' => count($quiz),
 			'records' => $quiz,
-			'questionPrompt' => 'Elige la ciudad capital correcta', //'What is the answer?',
-			'questionPromptReverse' => '', // 'What is the question?',
+			'options' => $options,
 			'canEdit' => true,
 			'quizText' => $quizText,
 			'isMc' => $lesson->isMc($reviewType),

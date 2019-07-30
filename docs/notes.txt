@@ -19,6 +19,10 @@ Complete the following sentences in the simple past tense using the irregular pa
 
 Latest DB Changes:
 
+7/30/2019
+ALTER TABLE `lessons` ADD `options` VARCHAR(1000) NULL AFTER `format_flag`;
+
+//didn't work:
 ALTER TABLE lessons ADD FOREIGN KEY (parent_id) REFERENCES courses(id)
 
 7/23/2019

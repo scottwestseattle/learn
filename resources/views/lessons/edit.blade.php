@@ -42,6 +42,10 @@
 				<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
 			</div>
 		
+			<!--------------------------------------------------------------------------->
+			<!-- Lesson Type Dropdown -->
+			<!--------------------------------------------------------------------------->
+			
 			<div class="form-group">
 			@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix, 
 				'isAdmin' => $isAdmin, 
@@ -54,6 +58,10 @@
 				'select_class' => 'form-control',
 			])@endcomponent
 			</div>
+		
+			<!--------------------------------------------------------------------------->
+			<!-- Chapter / Section -->
+			<!--------------------------------------------------------------------------->
 		
 			<div class="form-group">
 				<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
@@ -73,7 +81,16 @@
 				<input type="checkbox" name="autoformat" id="autoformat" {{$record->format_flag == LESSON_FORMAT_AUTO ? 'checked' : ''}} />
 				<label for="autoformat" class="checkbox-big-label">@LANG('content.Auto-format')</label>
 			</div>
+
+			<!--------------------------------------------------------------------------->
+			<!-- Options -->
+			<!--------------------------------------------------------------------------->
+			<label for="options" class="control-label">@LANG('content.Options'):</label>
+			<input type="text" name="options" class="form-control" value="{{$record->options}}" />
 			
+			<!--------------------------------------------------------------------------->
+			<!-- Description -->
+			<!--------------------------------------------------------------------------->
 			<label for="description" class="control-label">@LANG('gen.Description'):</label>
 			<textarea name="description" class="form-control">{{$record->description}}</textarea>
 

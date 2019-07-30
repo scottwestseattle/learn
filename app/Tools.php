@@ -7,6 +7,61 @@ use App\User;
 
 class Tools
 {
+    static public function getOptionArray($options)
+    {
+		$arr = [];
+
+		// prompt="Select the correct capital"; reverse-prompt="Select the country for the capital"; question-count=20; text-size="medium";
+		$key = '/([a-zA-Z\-^=]*)=\"([^\"]*)/i';
+		if (preg_match_all($key, $options, $matches))
+		{
+			if (count($matches) > 2)
+			{
+				foreach($matches[1] as $key => $data)
+				{
+					$arr[$data] = $matches[2][$key];
+				}
+			}
+		}
+
+        return $arr;
+    }
+	
+    static public function getOption($options, $key)
+    {
+		$r = '';
+
+		// prompt="Select the correct capital"; reverse-prompt="Select the country for the capital"; question-count=20; text-size="medium";
+		$key = "/" . $key . '=\"([^\"]*)/';
+		if (preg_match($key, $options, $matches))
+		{
+			//dd($matches);
+			if (count($matches) > 1)
+			{
+				$r = $matches[1];
+			}
+		}
+
+        return $r;
+    }
+
+    static public function getSafeArrayInt($array, $key, $default)
+    {
+		$rc = $default;
+		$s = self::getSafeArrayString($array, $key, null);
+		if (isset($s))
+		{
+			$rc = intval($s);
+		}
+		
+		return $rc;
+	}
+	
+    static public function getSafeArrayString($array, $key, $default)
+    {
+		return self::safeArrayGetString($array, $key, $default);
+	}
+	
     static public function safeArrayGetString($array, $key, $default)
     {
         $v = $default;
