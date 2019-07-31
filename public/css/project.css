@@ -10,6 +10,20 @@ Glyph Icon Blue: #286090
 Super Light Green: #eff7f0
 ************************************************************/
 
+.quiz-panel {
+	clear: both;
+	display: none;
+	margin: 10px 0 20px 0;
+}
+
+.quiz-panel-content {
+	min-height: 400px;
+}
+
+.hidden {
+	display:none;
+}
+
 /***********************************************************
 	Lesson list component
 ************************************************************/
@@ -71,8 +85,6 @@ Super Light Green: #eff7f0
 	background-color: #3dbcb1; * info *
 	
 ************************************************************/
-
-
 
 .card-course, .card-course a {
 	height:200px;

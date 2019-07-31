@@ -8,6 +8,8 @@
 const RUNSTATE_START = 1;
 const RUNSTATE_ASKING = 2;
 const RUNSTATE_CHECKING = 3;
+const RUNSTATE_ENDOFROUND = 4;
+const RUNSTATE_ENDOFQUIZ = 5;
 
 const CHECKANSWER_NORMAL = 1;
 const CHECKANSWER_KNOW = 2;
@@ -20,6 +22,21 @@ const SCORE_WRONG = 2;
 
 const OVERRIDE_RIGHT = "Change to Correct (Alt+c)";
 const OVERRIDE_WRONG = "Change to Wrong (Alt+c)";
+
+//
+// numbers
+//
+var wrong = 0;
+var right = 0;
+var round = 1;
+var curr = 0;
+var nbr = 0;
+
+//
+// max number of qna
+//
+var max = 0;
+var statsMax = 0;
 
 $(document).keydown(function(event) {
 
@@ -51,7 +68,7 @@ $(document).keydown(function(event) {
 });
 
 $( document ).ready(function() {
-	
+
 	quiz.setButtonStates(RUNSTATE_START);
 	quiz.setControlStates();
 	loadData();
@@ -60,6 +77,8 @@ $( document ).ready(function() {
 	quiz.typeAnswersClick();
 	
 	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());	
+	
+	quiz.showPanel();	
 });
 
 var isMobile = {
@@ -130,6 +149,43 @@ function quiz() {
 		$("#button-start").focus();
 	}
 
+	this.showPanel = function(state = null) {
+
+		$(".quiz-panel").hide();
+		
+		if (state == null)
+			state = this.runState;
+
+		switch(state)
+		{
+			case RUNSTATE_ENDOFQUIZ:
+				$("#panel-endofquiz").show();
+				break;
+			
+			case RUNSTATE_ENDOFROUND:
+			{
+				$("#panel-endofround").show();
+
+				roundText = $("#panelResultsRoundBase").text() + ' ' + round;
+				count = right + '/' + total;
+				percent = score.toFixed(2) + '%';
+				
+				$("#panelResultsRound").text(roundText);
+				$("#panelResultsPercent").text(percent);
+				$("#panelResultsCount").text(count);
+				break;
+			}
+			case RUNSTATE_START:
+				$("#panel-start").show();
+				$("#panelStartCount").text(this.qna.length);
+				break;
+			default:
+				$("#panel-quiz").show();
+				break;
+		}
+
+	}
+	
 	this.setButtonStates = function(state) {
 
 		var typeAnswers = $("#checkbox-type-answers").prop('checked');
@@ -147,7 +203,7 @@ function quiz() {
 			$("#button-know").hide();
 			$("#button-dont-know").hide();
 
-			$("#button-start").show();
+			//$("#button-start").show();
 			$("#button-stop").hide();
 
 			$("#question-right").hide();
@@ -187,7 +243,7 @@ function quiz() {
 
 			quiz.showOverrideButton(false, null);
 			$("#button-next-attempt").hide();
-			$("#button-start").hide();
+			//$("#button-start").hide();
 			$("#button-stop").show();
 
 			$("#question-right").hide();
@@ -206,7 +262,7 @@ function quiz() {
 			$("#button-dont-know").hide();
 			
 			quiz.showOverrideButton(true, null);
-			$("#button-start").hide();
+			//$("#button-start").hide();
 			$("#button-stop").show();
 			
 			if (quiz.isMc)
@@ -248,23 +304,26 @@ function quiz() {
 	}
 
 	this.start = function() {
-		$("#rounds").text('');
+		$("#rounds").text($("#roundsStart").text());
 		resetQuiz();
 		this.showQuestion();
 		nbr = 1;
 		updateScore();
 
 		this.setButtonStates(RUNSTATE_ASKING);
+		
+		this.showPanel();
 	}
 
 	this.showQuestion = function() {
+				
 		clear();
 
 		// show question
-		var q = getQuestion(true);
+		var q = getQuestion(true);		
 		$("#prompt").html(q);
 		
-		// get button optionis
+		// get button options
 		o = quiz.qna[quiz.qna[curr].order].options;
 		if (o && o.length > 0)
 			$("#optionButtons").html(o);
@@ -382,21 +441,6 @@ function quiz() {
 }
 
 var quiz = new quiz();
-
-//
-// numbers
-//
-var wrong = 0;
-var right = 0;
-var round = 1;
-var curr = 0;
-var nbr = 0;
-
-//
-// max number of qna
-//
-var max = 0;
-var statsMax = 0;
 
 function loadData()
 {
@@ -538,8 +582,11 @@ function nextAttempt()
 			if (total > 0)
 			{
 				results = '<p>' + quiz.quizTextRound + ' ' + round + ': ' + score.toFixed(2) + '% (' + right + '/' + total + ')</p>';
+				if (round == 1)
+					$("#rounds").text('');
 				$("#rounds").append(results);
-				alert('End of Round, Starting next round');
+				//alert('End of Round, Starting next round');
+				quiz.showPanel(RUNSTATE_ENDOFROUND);
 			}
 			else
 			{
@@ -554,7 +601,7 @@ function nextAttempt()
 			wrong = 0;
 		}
 
-		// if question not answered correctly yet
+		// if this question has not been answered correctly yet
 		if (!quiz.qna[quiz.qna[curr].order].correct)
 		{
 			loadQuestion();
@@ -563,8 +610,10 @@ function nextAttempt()
 		else if (count++ >= max)
 		{
 			// no wrong answers left
-			alert('Done, all answered correctly!!');
-			resetQuiz();
+			//alert('Done, all answered correctly!!');
+			//quiz.showPanel(RUNSTATE_ENDOFQUIZ);
+			//resetQuiz();
+			quiz.runState = RUNSTATE_ENDOFQUIZ;
 			done = true;
 		}
 
@@ -585,10 +634,37 @@ function prev()
 	loadQuestion();
 }
 
+function startQuiz()
+{
+	quiz.setButtonStates(RUNSTATE_START);
+	quiz.setControlStates();
+	loadData();
+	loadOrder();	
+	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());	
+	
+	quiz.showPanel();	
+}
+
+function continueQuiz()
+{
+	// if end of round but not end of quiz, keep asking
+	if (quiz.runState == RUNSTATE_ENDOFROUND)
+		quiz.runState = RUNSTATE_ASKING;
+
+	quiz.showPanel();
+}
+
+function stopQuiz()
+{
+	$("#panelEndofquizFinished").hide();
+	$("#panelEndofquizStopped").show();
+	quiz.runState = RUNSTATE_ENDOFQUIZ;
+	quiz.showPanel();
+}
+
 function resetQuiz()
 {
 	clear();
-	quiz.setButtonStates(RUNSTATE_START);
 
 	for (var i = 0; i < max; i++)
 		quiz.qna[i].correct = false;
@@ -603,6 +679,8 @@ function resetQuiz()
 	loadOrder();
 	
 	$("#stats").hide();	
+	$("#panelEndofquizFinished").show();
+	$("#panelEndofquizStopped").hide();
 }
 
 function clear2()
@@ -635,12 +713,14 @@ function getQuestion(question)
 {
 	var q = null;
 	var flip = (question) ? quiz.flipped() : !quiz.flipped(); // flip the flip for getting answers!!
-
+	
 	if (flip)
 		q = quiz.qna[quiz.qna[curr].order].a;
 	else
 		q = quiz.qna[quiz.qna[curr].order].q;
 
+	//alert(quiz + ': ' + curr);
+	
 	return q;
 }
 

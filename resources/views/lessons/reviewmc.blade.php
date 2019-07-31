@@ -3,7 +3,7 @@
 @section('content')
 
 <script>
-document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
+//document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 </script>
 
 <div class="data-misc"
@@ -24,10 +24,16 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 
 <div class="container">
 
+	<!-------------------------------------------------------->
+	<!-- Header -->
+	<!-------------------------------------------------------->
 	<div style="margin-top: 5px;">
 	
+		<!-------------------------------------------------------->
+		<!-- Top Return Button -->
+		<!-------------------------------------------------------->
 		<div style="float:left; margin: 0 5px 0 0;">
-			<span class="page-nav-buttons"><a class="" role="" href="/lessons/view/{{$record->id}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
+			<span style="font-size:1.3em;" class=""><a class="" role="" href="/lessons/view/{{$record->id}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
 		</div>
 		
 		<!-------------------------------------------------------->
@@ -38,10 +44,11 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 		</div>
 		
 	</div>
+		
+	<div id="panel-quiz" style="" class="quiz-panel">
 	
-	<div style="margin: 10px 0 20px 0">
 	<!---------------------------------------------------------------------------------------------------------------->
-	<!---------------------------------------------------------------------------------------------------------------->
+	<!-- Quiz Panel -->
 	<!---------------------------------------------------------------------------------------------------------------->	
 	
 <!----------------------------------------------------------------------------->
@@ -106,11 +113,10 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 		<div class="form-group">
 			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); nextAttempt()" id="button-next-attempt">Next Question</button>
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">Check Typed Answer</button>
-			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Quiz')</button>
 			<input class="btn btn-default btn-quiz" type="button" value="I KNOW IT (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
 			<input class="btn btn-default btn-quiz" type="button" value="I DON'T KNOW (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
 			<input class="btn btn-default btn-quiz" type="button" value="Change to Wrong (Alt+c)" onclick="override()" id="button-override" style="display: none;">
-			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); resetQuiz()" id="button-stop">STOP QUIZ</button>
+			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">STOP QUIZ</button>
 		</div>
 		
 		<!-- BUTTONS ROW 2 -->
@@ -120,11 +126,6 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 			<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="#" onclick="event.preventDefault(); next()">@LANG('ui.Next')<span class="glyphicon glyphicon-button-next"></span></a></span>
 			<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="#" onclick="event.preventDefault(); last()">@LANG('ui.Last')<span class="glyphicon glyphicon-circle-arrow-down"></span></a></span>
 			<span class="page-nav-buttons"><a class="btn btn-success btn-sm" role="button" href="#" onclick="event.preventDefault(); clear2()">@LANG('ui.Clear')</a></span>
-		</div>
-
-		<!-- SHOW ROUND RESULTS -->
-		<div class="form-group">
-			<span id="rounds"></span>
 		</div>
 		
 		<!-- CHECKBOX ROW -->
@@ -150,6 +151,62 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 
 </section>
 
+	</div><!-- Quiz panel -->
+	
+	<!---------------------------------------------------------------------------------------------------------------->
+	<!-- Start Panel -->
+	<!---------------------------------------------------------------------------------------------------------------->
+	<div id="panel-start" class="quiz-panel text-center">
+	
+		<div class="quiz-panel-content">
+			<h2>{{$record->title}}</h2>
+			<h3>@LANG('content.Number of Questions')</h3>
+			<h1 id="panelStartCount"></h1>
+		</div>
+		
+		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Quiz')</button>
+	
+	</div>
+
+	<!---------------------------------------------------------------------------------------------------------------->
+	<!-- Quiz Results Panel -->
+	<!---------------------------------------------------------------------------------------------------------------->
+	<div id="panel-endofround" class="quiz-panel text-center">
+
+		<div class="quiz-panel-content">
+			<span class="hidden" id="panelResultsRoundBase">@LANG('content.End of Round')</span>
+			<h1 id="panelResultsRound"></h1>
+			<h3>@LANG('content.Correct Answers')</h3>
+			<h1 id="panelResultsCount"></h1>
+			<h3 id="panelResultsPercent"></h3>
+		</div>
+		
+		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); continueQuiz()" id="button-continue">@LANG('content.Continue')</button>
+		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop Quiz')</button>
+	
+	</div>
+
+	<!---------------------------------------------------------------------------------------------------------------->
+	<!-- End of Quiz Panel -->
+	<!---------------------------------------------------------------------------------------------------------------->
+	<div id="panel-endofquiz" class="quiz-panel text-center">
+
+		<div class="quiz-panel-content">
+			<h1 class="" id="">@LANG('content.End of Quiz')</h1>
+			<p id="panelEndofquizFinished">@LANG('content.All questions answered correctly.')</p>
+			<p id="panelEndofquizStopped">@LANG('content.Quiz was stopped.')</p>
+			<h3>@LANG('content.Scores by Round')</h3>
+			<span class="hidden" id="roundsStart">@LANG('content.None Completed')</span>
+			<span id="rounds"></span>
+		</div>
+				
+		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); startQuiz();" id="button-continue2">@LANG('content.Continue')</button>
+		
+	</div>
+
+	<!---------------------------------------------------------------------------------------------------------------->
+	<!-- Debug Info -->
+	<!---------------------------------------------------------------------------------------------------------------->
 @if (false) // debug dump
 	<div>
 	@foreach($records as $rec)
@@ -160,13 +217,6 @@ document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
 
 @endif
 
+</div><!-- container -->
 
-
-
-
-	<!---------------------------------------------------------------------------------------------------------------->
-	<!---------------------------------------------------------------------------------------------------------------->
-	<!---------------------------------------------------------------------------------------------------------------->
-	</div>
-</div>
 @endsection
