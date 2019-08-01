@@ -20,9 +20,6 @@ const SCORE_NOTSET = 0;
 const SCORE_CORRECT = 1;
 const SCORE_WRONG = 2;
 
-const OVERRIDE_RIGHT = "Change to Correct (Alt+c)";
-const OVERRIDE_WRONG = "Change to Wrong (Alt+c)";
-
 //
 // numbers
 //
@@ -123,19 +120,12 @@ function quiz() {
 	this.quizTextRound = 'not set';
 	this.quizTextCorrect = 'not set';
 	this.quizTextOf = 'not set';
-	this.quizTextQuestion = 'Question';
-
-	//sbw
-	/* JS doesn't have assoc arrays
-	this.quizText = [
-		'Round' => 'Round',
-		'Correct' => 'Correct',
-		'TypeAnswers' => 'Type the Answer',
-		'Wrong' => 'Wrong'	
-	];
-	alert(this.quizText['Round'];
-	*/
-	
+	this.quizTextQuestion = 'not set';
+	this.quizTextCorrectAnswer = 'not set'; // Correct! <- separate for the exclamations in Spanish
+	this.quizTextWrongAnswer = 'not set';	// Wrong!
+	this.quizTextOverrideCorrect = 'not set';
+	this.quizTextOverrideWrong = 'not set';
+	this.quizTextScoreChanged = 'not set';	
 
 	this.getQuestionId = function(index) {
 		return this.qna[this.qna[index].order].id;
@@ -482,6 +472,12 @@ function loadData()
 		quiz.quizTextRound = container.data('quiztext-round');
 		quiz.quizTextCorrect = container.data('quiztext-correct');
 		quiz.quizTextOf = container.data('quiztext-of');
+		quiz.quizTextQuestion = container.data('quiztext-question');
+		quiz.quizTextCorrectAnswer = container.data('quiztext-correct-answer');
+		quiz.quizTextWrongAnswer = container.data('quiztext-wrong-answer');
+		quiz.quizTextOverrideCorrect = container.data('quiztext-override-correct') + " (Alt+c)";
+		quiz.quizTextOverrideWrong = container.data('quiztext-override-wrong') + " (Alt+c)";
+		quiz.quizTextScoreChanged = container.data('quiztext-score-changed');	
 		
 		if (i == 0)
 			alert(quiz.qna[i].q);
@@ -818,7 +814,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 		result = "Right, the answer is: ";
 		quiz.qna[quiz.qna[curr].order].correct = true;
 		$("#button-next-attempt").focus();
-		quiz.showOverrideButton(true, OVERRIDE_WRONG);
+		quiz.showOverrideButton(true, quiz.quizTextOverrideWrong);
 		quiz.lastScore = SCORE_CORRECT;
 		$("#question-right").show();
 
@@ -829,7 +825,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 		result = "Wrong, the answer is: ";
 		answerColor = 'red';
 		$("#button-next-attempt").focus();
-		quiz.showOverrideButton(true, OVERRIDE_RIGHT);
+		quiz.showOverrideButton(true, quiz.quizTextOverrideCorrect);
 		quiz.lastScore = SCORE_WRONG;
 		$("#question-wrong").show();
 
@@ -848,21 +844,21 @@ function checkAnswer(checkOptions, attemptMc = null)
 
 		if ((answer != null && attempt != null) && cleanAnswer.toLowerCase() == cleanAttempt.toLowerCase())
 		{
-			result = "Correcto!";
+			result = quiz.quizTextCorrectAnswer;
 			answerColor = 'darkBlue';
 			quiz.qna[quiz.qna[curr].order].correct = true;
 			$("#button-next-attempt").focus();
-			quiz.showOverrideButton(false, OVERRIDE_WRONG);
+			quiz.showOverrideButton(false, quiz.quizTextOverrideWrong);
 			quiz.lastScore = SCORE_WRONG;
 			$("#question-right").show();
 			right++;
 		}
 		else
 		{
-			result = "Wrong!";
+			result = quiz.quizTextWrongAnswer;
 			answerColor = 'red';
 			$("#button-next-attempt").focus();
-			quiz.showOverrideButton(true, OVERRIDE_RIGHT);
+			quiz.showOverrideButton(true, quiz.quizTextOverrideCorrect);
 			quiz.lastScore = SCORE_WRONG;
 			$("#question-wrong").show();
 			wrong++;
@@ -958,7 +954,7 @@ function override()
 		wrong++;
 	}
 
-	quiz.setAlertPrompt('Score changed', color);
+	quiz.setAlertPrompt(quiz.quizTextScoreChanged, color);
 
 	answer = result + answer;
 	$("#answer-show").html(answer);

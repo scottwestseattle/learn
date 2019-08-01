@@ -36,7 +36,46 @@
 	@endif	
 	</h1>
 	
-	@foreach($records as $record)
+	
+<div class="accordion" id="accordionExample">
+
+@foreach($records as $record)
+
+  <div class="card">
+    <div style=""  class="card-header" id="headingOne">
+      <h3 style=""  class="mb-0">
+        <button style="text-decoration:none; text-align:left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{$record[0]->id}}" aria-expanded="true" aria-controls="collapseOne">
+			@LANG('content.Lesson')&nbsp;{{$record[0]->lesson_number}}:&nbsp;{{$record[0]->title}}
+		</button>
+      </h3>
+    </div>
+
+    <div id="collapse{{$record[0]->id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div style="" class="card-body">
+	  @foreach($record as $rec)
+	<a href="/lessons/view/{{$rec->id}}">
+		<button style="" type="button" class="btn btn-outline-info btn-lesson-index link-dark">
+			<table>
+				<tr>
+					<td>
+						<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->section_number}}.&nbsp;{{$rec->title}}</div>
+						<span style="font-size:.9em">{{$rec->description}}</span>	
+					</td>
+				</tr>
+			</table>
+		</button>
+	</a>
+	  @endforeach
+      </div>
+    </div>
+  </div>
+ 
+	
+@endforeach
+
+</div>
+	
+@if (false)
 	<a href="/lessons/view/{{$record[0]->id}}">
 		<button style="" type="button" class="btn btn-outline-info btn-lesson-index link-dark">
 			<table>
@@ -49,8 +88,7 @@
 			</table>
 		</button>
 	</a>
-	@endforeach
-
+@endif
 
 </div>
 @endsection

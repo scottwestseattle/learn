@@ -102,7 +102,7 @@
 		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">@LANG('ui.Next')<span class="glyphicon glyphicon-button-next"></span></a>
 	</div>
 
-	@component('lessons.comp-lesson-list', ['records' => $lessons, 'tableClass' => 'table-lesson-list'])@endcomponent
+	@component('lessons.comp-lesson-list', ['records' => $lessons, 'tableClass' => 'table-lesson-list', 'selectedId' => $record->id])@endcomponent
 	
 </div>
 @endsection

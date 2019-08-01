@@ -8,14 +8,22 @@
 
 <div class="data-misc"
 	data-max="{{$sentenceCount}}" 
-	data-prompt="{{$options['prompt']}}" 
-	data-prompt-reverse="{{$options['prompt-reverse']}}" 
+	data-prompt="@LANG('content.' . $options['prompt'])" 
+	data-prompt-reverse="@LANG('content.' . $options['prompt-reverse'])" 
 	data-question-count="{{$options['question-count']}}" 
-	data-quiztext-round="@LANG('content.' . $quizText['Round'])" 
-	data-quiztext-correct="@LANG('content.' . $quizText['Correct'])" 
+	data-quiztext-round="@LANG('content.Round')" 
+	data-quiztext-correct="@LANG('content.Correct')" 
+	data-quiztext-question="@LANG('content.Question')" 
+	data-quiztext-correct-answer="@LANG('content.Correct!')" 
+	data-quiztext-wrong-answer="@LANG('content.Wrong!')" 
 	data-quiztype="{{$record->type_flag}}" 
 	data-ismc="{{$isMc}}" 
 	data-quiztext-of="@LANG('content.' . $quizText['of'])" 
+	data-quiztext-correct-answer="@LANG('content.Correct!')" 
+	data-quiztext-wrong-answer="@LANG('content.Wrong!')" 
+	data-quiztext-override-correct="@LANG('content.Change to Correct')" 
+	data-quiztext-override-wrong="@LANG('content.Change to Wrong')" 
+	data-quiztext-score-changed="@LANG('content.Score Changed')" 
 ></div>
 
 @foreach($records as $rec)
@@ -111,12 +119,12 @@
 
 		<!-- BUTTONS ROW 1 -->
 		<div class="form-group">
-			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); nextAttempt()" id="button-next-attempt">Next Question</button>
-			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">Check Typed Answer</button>
-			<input class="btn btn-default btn-quiz" type="button" value="I KNOW IT (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
-			<input class="btn btn-default btn-quiz" type="button" value="I DON'T KNOW (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
-			<input class="btn btn-default btn-quiz" type="button" value="Change to Wrong (Alt+c)" onclick="override()" id="button-override" style="display: none;">
-			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">STOP QUIZ</button>
+			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); nextAttempt()" id="button-next-attempt">@LANG('content.Next Question')</button>
+			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">@LANG('content.Check Typed Answer')</button>
+			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.I KNOW IT') (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
+			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.I DON\'T KNOW') (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
+			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.Change to Wrong') (Alt+c)" onclick="override()" id="button-override" style="display: none;">
+			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop Quiz')</button>
 		</div>
 		
 		<!-- BUTTONS ROW 2 -->
@@ -159,12 +167,15 @@
 	<div id="panel-start" class="quiz-panel text-center">
 	
 		<div class="quiz-panel-content">
+			
 			<h2>{{$record->title}}</h2>
+			<span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-star-empty bright-blue-fg"></span>
 			<h3>@LANG('content.Number of Questions')</h3>
 			<h1 id="panelStartCount"></h1>
 		</div>
 		
 		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Quiz')</button>
+		<a class="" role="" href="/lessons/view/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>	
 	
 	</div>
 
@@ -176,13 +187,14 @@
 		<div class="quiz-panel-content">
 			<span class="hidden" id="panelResultsRoundBase">@LANG('content.End of Round')</span>
 			<h1 id="panelResultsRound"></h1>
+			<span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-stats bright-blue-fg"></span>
 			<h3>@LANG('content.Correct Answers')</h3>
 			<h1 id="panelResultsCount"></h1>
 			<h3 id="panelResultsPercent"></h3>
 		</div>
 		
 		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); continueQuiz()" id="button-continue">@LANG('content.Continue')</button>
-		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop Quiz')</button>
+		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('ui.Quit')</button>
 	
 	</div>
 
@@ -195,12 +207,14 @@
 			<h1 class="" id="">@LANG('content.End of Quiz')</h1>
 			<p id="panelEndofquizFinished">@LANG('content.All questions answered correctly.')</p>
 			<p id="panelEndofquizStopped">@LANG('content.Quiz was stopped.')</p>
+			<span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-thumbs-up bright-blue-fg"></span>
 			<h3>@LANG('content.Scores by Round')</h3>
 			<span class="hidden" id="roundsStart">@LANG('content.None Completed')</span>
 			<span id="rounds"></span>
 		</div>
 				
 		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); startQuiz();" id="button-continue2">@LANG('content.Continue')</button>
+		<a class="" role="" href="/lessons/view/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>	
 		
 	</div>
 

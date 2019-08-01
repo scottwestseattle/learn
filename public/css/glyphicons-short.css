@@ -286,6 +286,10 @@
     content: "\E007"
 }
 
+.glyphicon-stats:before {
+    content: "\E185"
+}
+
 .glyphicon-sunglasses:before {
     content: "\E240"
 }
@@ -300,6 +304,10 @@
 
 .glyphicon-th:before {
     content: "\E011"
+}
+
+.glyphicon-thumbs-up:before {
+    content: "\E125"
 }
 
 .glyphicon-transfer:before {

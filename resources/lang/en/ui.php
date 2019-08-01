@@ -110,4 +110,5 @@ return [
 'Last' => 'Last',
 'Clear' => 'Clear',
 'Save' => 'Save',
+'Quit' => 'Quit',
 ];
