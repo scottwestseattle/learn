@@ -83,7 +83,7 @@
 			</div>
 			
 			<!------------------------------------------------------------------------------->
-			<!-- The quiz launch tab                                                       -->
+			<!-- The quiz launch tab raw view                                              -->
 			<!------------------------------------------------------------------------------->
 			<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 				<p>{!! $record->text !!}</p>
@@ -91,8 +91,47 @@
 			
 		</div>
 		
-	@else
+	@elseif ($record->isVocab())
+			
+		<!------------------------------------------------------------------------------->
+		<!-- The quiz launch tab raw view                                              -->
+		<!------------------------------------------------------------------------------->
 		
+		@if (isset($vocab) && count($vocab) > 0)
+		<div class="row">
+
+			<!-- repeat this block for each column -->
+			<div class="col-sm"><!-- need to split word list into multiple columns here -->
+				<div class="table">
+					<table class="table-responsive table-borderless lesson-table">
+						<tbody>
+							@foreach($vocab as $word)
+							<tr>
+								<form id="form{{$word->id}}" method="POST" action="">
+									<td>{{$word->title}}</td>
+									<td style="min-width:100px;"><input name="description" onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" class="form-control" type="text" value="{{$word->description}}" /></td>
+									<td style="max-width:50px; font-size:.7em;";><span id="result{{$word->id}}"></span></td>
+								</form>
+							</tr>
+							@endforeach
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- end of repeat block -->
+
+		</div>
+		@else
+			<p>No Vocab List</p>
+		@endif
+	
+		<p>{!! $record->text !!}</p>
+	
+	@else
+
+		<!------------------------------------------------------------------------------->
+		<!-- The lesson text view -->
+		<!------------------------------------------------------------------------------->
 		<p>{!! $record->text !!}</p>
 		
 	@endif
@@ -106,3 +145,4 @@
 	
 </div>
 @endsection
+

@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `words`;
 CREATE TABLE IF NOT EXISTS `words` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` int(10) UNSIGNED NOT NULL,
-  `parent_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'only used for subcategories',
+  `parent_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'optional: lesson is parent',
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `photo` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,

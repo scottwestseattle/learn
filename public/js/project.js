@@ -631,3 +631,23 @@ function ajaxexec(url)
 	xhttp.open("GET", url, true);
 	xhttp.send();
 }
+
+function ajaxPost(url, formId, resultId)
+{
+	result = "#" + resultId;	// where to show the results
+	form = "#" + formId;		// the form to serialize the data fields
+
+	$.ajaxSetup({
+		// use the token set in the layout header: csrf-token
+		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+	});
+
+	$.post( url, $(form).serialize() )
+		.done(function(data) {
+			$(result).text(data);	// show the text returned by the controller update method
+		})
+		.fail(function(xhr, status, error) {
+			$(result).text(url + ": error: " + xhr.responseText);
+		})
+		;
+}

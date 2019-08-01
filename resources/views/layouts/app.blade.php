@@ -9,17 +9,18 @@ $domainName = isset($domainName) ? $domainName : '';
 	<meta name="description" content="">
 	<meta name="author" content="Learn Systems">
 	<meta name="generator" content="Jekyll v3.8.5">
+	<meta name="csrf-token" content="{{ csrf_token() }}" />	
 	<title>Learn - Remote Virtual Training</title>
 
     <!-- Scripts -->
+@if (false)	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+@endif
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 	<script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 	
     <script src="{{ asset('js/project.js') }}"></script>
-@if (false)
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-@endif
 
 	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet">

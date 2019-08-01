@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use App\Course;
+use App\Word;
 
 define('LESSON_FORMAT_DEFAULT', 0);
 define('LESSON_FORMAT_AUTO', 1);
@@ -383,6 +384,87 @@ class Lesson extends Base
 			case LESSONTYPE_QUIZ_MC2:
 			case LESSONTYPE_QUIZ_MC3:
 			case LESSONTYPE_QUIZ_MC4:
+				$v = true;
+				break;
+			default:
+				break;
+		}
+		
+		return $v;
+	}
+
+	public function getLines($text)
+    {
+		$raw = [];
+		$records = [];
+		
+		$text = str_replace('&nbsp;', '', $text);
+
+		// first, try to split based on <br />
+		if (preg_match('/<br[ ]*\/>/is', $text))
+		{
+			$text = str_replace('<p>', '', $text);
+			$text = str_replace('</p>', '', $text);
+			$raw = explode('<br />', $text);
+			//dd($raw);
+			
+			foreach($raw as $record)
+			{
+				$records[] = trim($record);
+			}
+		}
+		else
+		{
+			// try to split on <p>'s, each paragraph is one line
+			preg_match_all('#<p>(.*?)</p>#is', $text, $raw, PREG_SET_ORDER);
+			//dd($raw);
+			
+			foreach($raw as $record)
+			{
+				if (count($record) > 1)
+					$records[] = trim($record[1]);
+			}
+		}		
+		
+		//dd($records);
+
+		return $records;
+	}
+	
+    public function updateVocab()
+	{
+		$rc = [];
+	
+		if ($this->type_flag == LESSONTYPE_VOCAB)
+		{
+			$words = self::getLines($this->text);
+			//dd($words);
+			
+			$rc = Word::addList($this->id, $words);
+		}
+		
+		return $rc;
+	}
+	
+    public function getVocab()
+	{
+		$records = null;
+		
+		if ($this->type_flag == LESSONTYPE_VOCAB)
+		{
+			$records = Word::getByParent($this->id);
+		}
+		
+		return $records;
+	}
+	
+    public function isVocab()
+	{
+		$v = false;
+		
+		switch($this->type_flag)
+		{
+			case LESSONTYPE_VOCAB:
 				$v = true;
 				break;
 			default:

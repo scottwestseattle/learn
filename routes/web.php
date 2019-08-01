@@ -37,6 +37,30 @@ Route::get('/home', 'HomeController@index')->name('home');
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
 
+// Words
+Route::group(['prefix' => 'words'], function () {
+	Route::get('/', 'WordController@index');
+	Route::get('/admin', 'WordController@admin');
+	Route::get('/view/{word}','WordController@view');
+
+	// add/create
+	Route::get('/add','WordController@add');
+	Route::post('/create','WordController@create');
+
+	// edit/update
+	Route::get('/edit/{word}','WordController@edit');
+	Route::post('/update/{word}','WordController@update');
+	
+	Route::post('/updateajax/{word}','WordController@updateajax');
+	Route::get('/updateajax/{word}','WordController@updateajax');
+
+	// delete
+	Route::get('/confirmdelete/{word}','WordController@confirmdelete');
+	Route::post('/delete/{word}','WordController@delete');
+	Route::get('/undelete', 'WordController@undelete');
+
+});
+
 // Courses
 Route::group(['prefix' => 'courses'], function () {
 	Route::get('/', 'CourseController@index');

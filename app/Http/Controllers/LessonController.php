@@ -229,8 +229,10 @@ class LessonController extends Controller
 		$nextChapter = $lesson->getNextChapter();
 
 		// count the paragraphs as sentences
-		preg_match_all('#<p>(.*?)</p>#is', $lesson->text, $matches, PREG_SET_ORDER);
+		//preg_match_all('#<p>(.*?)</p>#is', $lesson->text, $matches, PREG_SET_ORDER);
 		preg_match_all('#<p>#is', $lesson->text, $matches, PREG_SET_ORDER);
+
+		$vocab = $lesson->getVocab();
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $lesson,
@@ -240,6 +242,7 @@ class LessonController extends Controller
 			'courseTitle' => isset($lesson->course) ? $lesson->course->title : '',
 			'nextChapter' => $nextChapter,
 			'lessons' => $lesson->getChapterIndex(),
+			'vocab' => $vocab,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
@@ -255,6 +258,12 @@ class LessonController extends Controller
     {
 		$record = $lesson;
 
+		$rc = $record->updateVocab(); // if it's vocab, it will save the word list
+		if (!$rc['error']) 
+		{
+			$request->text = null;	// words moved to vocab list so remove the raw list
+		}
+		
 		$isDirty = false;
 		$changes = '';
 
