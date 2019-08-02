@@ -15,4 +15,5 @@ return [
 'Error updating course status' => '更新课程状态时出错',
 'Error adding new lesson' => '添加新课程时出错',
 'New lesson has been added' => '新课程已添加',
+'Error getting vocabulary list' => '获取词汇表错误',
 ];

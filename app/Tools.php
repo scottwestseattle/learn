@@ -61,6 +61,18 @@ class Tools
     {
 		return self::safeArrayGetString($array, $key, $default);
 	}
+
+    static public function getSafeArrayBool($array, $key, $default)
+    {
+		$rc = $default;
+		$s = self::getSafeArrayString($array, $key, null);
+		if (isset($s))
+		{
+			$rc = $s;
+		}
+		
+		return $rc;
+	}
 	
     static public function safeArrayGetString($array, $key, $default)
     {

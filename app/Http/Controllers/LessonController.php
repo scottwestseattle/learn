@@ -259,9 +259,9 @@ class LessonController extends Controller
 		$record = $lesson;
 
 		$rc = $record->updateVocab(); // if it's vocab, it will save the word list
-		if (!$rc['error']) 
+		if (!Tools::getSafeArrayBool($rc, 'error', false))
 		{
-			$request->text = null;	// words moved to vocab list so remove the raw list
+			// don't do anything destructive
 		}
 		
 		$isDirty = false;

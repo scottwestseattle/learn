@@ -434,7 +434,7 @@ class Lesson extends Base
     public function updateVocab()
 	{
 		$rc = [];
-	
+		
 		if ($this->type_flag == LESSONTYPE_VOCAB)
 		{
 			$words = self::getLines($this->text);

@@ -48,6 +48,7 @@ class Word extends Base
 					else
 					{
 						$rc['error'] = true;
+						$cnt = 0;	// show 0 so it won't save
 						break;	// break on any error
 					}
 				}
@@ -61,12 +62,23 @@ class Word extends Base
 
     static public function exists($parent_id, $word)
     {
-		$count = Word::select()
-			->where('deleted_flag', 0)
-			->where('parent_id', $parent_id)
-			->where('title', $word)
-			->count();
-
+		$count = 0;
+		
+		try
+		{
+			$count = Word::select()
+				->where('deleted_flag', 0)
+				->where('parent_id', $parent_id)
+				->where('title', $word)
+				->count();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting count';
+			Event::logException('word', LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
 		return($count > 0);
 	}
 	
@@ -104,12 +116,21 @@ class Word extends Base
 		$parent_id = $parent_id > 0 ? $parent_id : '%';
 
 		$records = [];
-
-		$records = Word::select()
-			->where('deleted_flag', 0)
-			->where('parent_id', 'like', $parent_id)
-			->orderBy('id')
-			->get();
+			
+		try
+		{
+			$records = Word::select()
+				->where('deleted_flag', 0)
+				->where('parent_id', 'like', $parent_id)
+				->orderBy('id')
+				->get();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting vocabulary list';
+			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}			
 
 		return $records;		
     }

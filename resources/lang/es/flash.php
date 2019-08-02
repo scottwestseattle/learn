@@ -15,4 +15,5 @@ return [
 'Error updating course status' => 'Error al actualizar el estado del curso',
 'Error adding new lesson' => 'Error al agregar nueva lección',
 'New lesson has been added' => 'Se ha añadido nueva lección',
+'Error getting vocabulary list' => 'Error al obtener la lista de vocabulario',
 ];
