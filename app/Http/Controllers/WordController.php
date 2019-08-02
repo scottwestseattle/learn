@@ -22,7 +22,7 @@ class WordController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'review', 'view', 'permalink']);
+        $this->middleware('is_admin')->except(['index', 'review', 'view', 'permalink', 'updateajax']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -53,6 +53,28 @@ class WordController extends Controller
 		]));
     }
 
+    public function indexowner(Request $request, $parent_id)
+    {
+		$parent_id = intval($parent_id);
+
+		$records = []; // make this countable so view will always work
+
+		try
+		{
+			$records = Word::getIndex($parent_id);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting ' . $this->title . ' list';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg . ' for parent ' . $parent_id, $parent_id, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return view(PREFIX . '.indexowner', $this->getViewData([
+			'records' => $records,
+		]));
+    }
+	
     public function admin(Request $request, $parent_id = null)
     {
 		$parent_id = intval($parent_id);
@@ -203,6 +225,12 @@ class WordController extends Controller
 		$record = $word;
 		$rc = ''; // no change		
 
+		if (!Auth::check())
+		{
+			$rc = 'not saved';
+			return $rc;
+		}				
+				
 		$isDirty = false;
 		$changes = '';
 

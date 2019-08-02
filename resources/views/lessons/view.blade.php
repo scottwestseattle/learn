@@ -98,7 +98,7 @@
 	@elseif ($record->isVocab())
 			
 		<!------------------------------------------------------------------------------->
-		<!-- The quiz launch tab raw view                                              -->
+		<!-- The vocab view                                              -->
 		<!------------------------------------------------------------------------------->
 
 		@if (isset($vocab) && count($vocab) > 0)
@@ -107,14 +107,20 @@
 			<!-- repeat this block for each column -->
 			<div class="col-sm"><!-- need to split word list into multiple columns here -->
 				<div class="table">
-					<table class="table-responsive table-borderless xlesson-table">
+					<table class="table-responsive table-borderless">
 						<tbody>
 							@foreach($vocab as $word)
 							<tr>
-								<td style="width:100px;">{{$word->title}}</td>
-								<td style="width:200px;">
+								<td style="min-width:100px;">{{$word->title}}</td>
+								<td style="min-width:200px;">
 									<form id="form{{$word->id}}" method="POST" action="">
-										<input name="description" id="text{{$word->id}}" onfocus="setFloat($(this), 'float{{$word->id}}');" onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" class="form-control" type="text" value="{{$word->description}}" />
+										<input name="description" id="text{{$word->id}}" class="form-control" type="text" 
+											onfocus="setFloat($(this), 'float{{$word->id}}');" 
+											onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
+											@if (Auth::check())
+												value="{{$word->description}}" 
+											@endif
+										/>
 									</form>									
 								</td>
 								<td style="font-size:.7em;";>
@@ -122,7 +128,7 @@
 								</td>
 								<td style="font-size:.7em;";>
 									<div id="result{{$word->id}}"></div>
-								</td>													
+								</td>											
 							</tr>
 							@endforeach
 						</tbody>
