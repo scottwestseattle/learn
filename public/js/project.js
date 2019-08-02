@@ -651,3 +651,48 @@ function ajaxPost(url, formId, resultId)
 		})
 		;
 }
+
+prevFocus = 'undefined';
+function setFloat(obj, id)
+{
+	prevFocus = obj;
+	$("#accent-chars-esp").show();
+	$("#accent-chars-esp").appendTo("#" + id);
+}
+
+
+function insertChar(char)
+{	
+	if (typeof(prevFocus) == 'undefined')
+		return;
+	
+	id = prevFocus.attr('id');
+	txtarea = document.getElementById(id);
+
+    var scrollPos = txtarea.scrollTop;
+    var caretPos = txtarea.selectionStart;
+
+    var front = (txtarea.value).substring(0, caretPos);
+    var back = (txtarea.value).substring(txtarea.selectionEnd, txtarea.value.length);
+    txtarea.value = front + char + back;
+    caretPos = caretPos + char.length;
+    txtarea.selectionStart = caretPos;
+    txtarea.selectionEnd = caretPos;
+    txtarea.focus();
+    txtarea.scrollTop = scrollPos;
+}
+
+function insertAtCaret(txtarea, text) 
+{
+    var scrollPos = txtarea.scrollTop;
+    var caretPos = txtarea.selectionStart;
+
+    var front = (txtarea.value).substring(0, caretPos);
+    var back = (txtarea.value).substring(txtarea.selectionEnd, txtarea.value.length);
+    txtarea.value = front + text + back;
+    caretPos = caretPos + text.length;
+    txtarea.selectionStart = caretPos;
+    txtarea.selectionEnd = caretPos;
+    txtarea.focus();
+    txtarea.scrollTop = scrollPos;
+}

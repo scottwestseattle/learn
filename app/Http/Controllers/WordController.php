@@ -200,14 +200,15 @@ class WordController extends Controller
 
     public function updateajax(Request $request, Word $word)
     {
-		$rc = ''; // no change
-		
-		Event::logEdit(LOG_MODEL, "called", "Word: " . $word->title, "ajax updated");
 		$record = $word;
+		$rc = ''; // no change		
 
 		$isDirty = false;
 		$changes = '';
 
+		if (isset($request->fieldCnt) && intval($request->fieldCnt) == 2)
+			$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);			
+		
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 
 		if ($isDirty)
@@ -260,6 +261,24 @@ class WordController extends Controller
 		return redirect(REDIRECT_ADMIN);
     }
 
+    public function fastdelete(Word $word)
+    {
+		$record = $word;
+
+		try
+		{
+			$record->deleteSafe();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'error during fast delete';
+			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $msg . ': ' . $record->title, $record->id, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return redirect('/words/' . $record->parent_id);
+    }
+	
     public function undelete()
     {
 		$records = []; // make this countable so view will always work

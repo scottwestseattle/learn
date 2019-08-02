@@ -110,6 +110,16 @@ class Word extends Base
 		return $rc;
     }	
 	
+    static public function getIndex($parent_id, $chapter = '%')
+	{
+		$parent_id = intval($parent_id);
+		$parent_id = $parent_id > 0 ? $parent_id : '%';
+
+		$records = self::getByParent($parent_id);
+
+		return $records;
+	}	
+	
     static public function getByParent($parent_id)
     {
 		$parent_id = intval($parent_id);

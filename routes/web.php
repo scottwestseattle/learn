@@ -39,7 +39,7 @@ Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admi
 
 // Words
 Route::group(['prefix' => 'words'], function () {
-	Route::get('/', 'WordController@index');
+	Route::get('/{parent_id}', 'WordController@index');
 	Route::get('/admin', 'WordController@admin');
 	Route::get('/view/{word}','WordController@view');
 
@@ -58,7 +58,7 @@ Route::group(['prefix' => 'words'], function () {
 	Route::get('/confirmdelete/{word}','WordController@confirmdelete');
 	Route::post('/delete/{word}','WordController@delete');
 	Route::get('/undelete', 'WordController@undelete');
-
+	Route::get('/fastdelete/{word}','WordController@fastdelete');
 });
 
 // Courses
