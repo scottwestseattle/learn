@@ -647,7 +647,8 @@ function ajaxPost(url, formId, resultId)
 			$(result).text(data);	// show the text returned by the controller update method
 		})
 		.fail(function(xhr, status, error) {
-			$(result).text(url + ": error: " + xhr.responseText);
+			if (xhr && xhr.responseText) // responseText not defined if a different is loading
+				$(result).text(url + ": error: " + xhr.responseText);
 		})
 		;
 }
