@@ -96,22 +96,39 @@
 		<!------------------------------------------------------------------------------->
 		<!-- The quiz launch tab raw view                                              -->
 		<!------------------------------------------------------------------------------->
-		
+
 		@if (isset($vocab) && count($vocab) > 0)
 		<div class="row">
 
 			<!-- repeat this block for each column -->
 			<div class="col-sm"><!-- need to split word list into multiple columns here -->
 				<div class="table">
-					<table class="table-responsive table-borderless lesson-table">
+					<table class="table-responsive table-borderless xlesson-table">
 						<tbody>
 							@foreach($vocab as $word)
 							<tr>
-								<form id="form{{$word->id}}" method="POST" action="">
-									<td>{{$word->title}}</td>
-									<td style="min-width:100px;"><input name="description" onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" class="form-control" type="text" value="{{$word->description}}" /></td>
-									<td style="max-width:50px; font-size:.7em;";><span id="result{{$word->id}}"></span></td>
-								</form>
+								<td style="width:100px;">{{$word->title}}</td>
+								<td style="width:200px;">
+									<form id="form{{$word->id}}" method="POST" action="">
+										<input name="description" id="text{{$word->id}}" onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" class="form-control" type="text" value="{{$word->description}}" />
+									</form>									
+								</td>
+								<td style="max-width:50px; font-size:.7em;";>
+									<span id="result{{$word->id}}"></span>
+									<div class="dropdown">
+										<span class="glyphicon glyphicon-publish"></span>
+										<div class="dropdown-content">
+											<button onclick="setChar('á', 'text{{$word->id}}')">á</button>
+											<button onclick="setChar('é', 'text{{$word->id}}')">é</button>
+											<button onclick="setChar('í', 'text{{$word->id}}')">í</button>
+											<button onclick="setChar('ñ', 'text{{$word->id}}')">ñ</button>
+											<button onclick="setChar('ó', 'text{{$word->id}}')">ó</button>
+											<button onclick="setChar('ú', 'text{{$word->id}}')">ú</button>
+											<button onclick="setChar('ü', 'text{{$word->id}}')">ü</button>
+										</div>
+									</div>									
+									
+								</td>													
 							</tr>
 							@endforeach
 						</tbody>
@@ -146,3 +163,37 @@
 </div>
 @endsection
 
+<script>
+
+function setChar(char, text)
+{
+	//text = "#" + text;	
+	//$(text).val($(text).val() + char);
+	
+	insertAtCaret(text, char);
+}
+
+function insertAtCaret(areaId, text) 
+{
+    var txtarea = document.getElementById(areaId);
+    var scrollPos = txtarea.scrollTop;
+    var caretPos = txtarea.selectionStart;
+
+    var front = (txtarea.value).substring(0, caretPos);
+    var back = (txtarea.value).substring(txtarea.selectionEnd, txtarea.value.length);
+    txtarea.value = front + text + back;
+    caretPos = caretPos + text.length;
+    txtarea.selectionStart = caretPos;
+    txtarea.selectionEnd = caretPos;
+    txtarea.focus();
+    txtarea.scrollTop = scrollPos;
+}
+
+function hideSpecialCharMenu(chars)
+{
+	chars = "#" + chars;
+	
+	$(chars).text("");
+}
+
+</script>
