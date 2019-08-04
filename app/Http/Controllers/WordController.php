@@ -99,29 +99,33 @@ class WordController extends Controller
 		]));
     }
 
-    public function add()
+    public function add($parent_id = null)
     {
 		return view(PREFIX . '.add', $this->getViewData([
+			'parent_id' => $parent_id,
 			]));
 	}
 
     public function create(Request $request)
     {
 		$record = new Word();
+		
+		$parent_id = isset($request->parent_id) ? $request->parent_id : null;
 
 		$record->user_id 		= Auth::id();
-		$record->parent_id 		= $request->parent_id;
+		$record->parent_id 		= $parent_id;
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
-		$record->text			= $request->text;
 		$record->permalink		= Tools::createPermalink($request->title);
 
+		$duplicate = Word::exists($record->title) ? 'Duplicate: ' : '';
+		
 		try
 		{
 			$record->save();
 
 			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
-			Tools::flash('success', 'New ' . TITLE_LC . ' has been added');
+			Tools::flash('success', $duplicate . 'New vocabulary has been added');
 		}
 		catch (\Exception $e)
 		{
@@ -132,10 +136,7 @@ class WordController extends Controller
 			return back();
 		}
 
-		if (isset($record->id))
-			return redirect('/words/edit/' . $record->id);
-		else
-			return redirect('/words/admin/' . $record->parent_id);
+		return redirect('/words/indexowner/' . $parent_id);
     }
 
     public function permalink(Request $request, $permalink)
@@ -236,8 +237,9 @@ class WordController extends Controller
 		$isDirty = false;
 		$changes = '';
 
+		// this is called from one view where only the description is being updated and another view where both are being updated.
 		if (isset($request->fieldCnt) && intval($request->fieldCnt) == 2)
-			$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);			
+			$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);	// checked so we don't wipe it out where its not being used
 		
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 
@@ -245,8 +247,9 @@ class WordController extends Controller
 		{
 			try
 			{
+				$rc = (Word::exists($request->title)) ? 'duplicate saved' : 'saved';
+				
 				$record->save();
-				$rc = 'saved';
 
 				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
 			}

@@ -35,7 +35,7 @@ class Word extends Base
 		{
 			foreach($words as $word)
 			{
-				if (self::exists($parent_id, $word))
+				if (self::exists($word, $parent_id))
 				{
 					// skip: already added
 				}
@@ -60,17 +60,27 @@ class Word extends Base
 		return $rc;
     }
 
-    static public function exists($parent_id, $word)
+    static public function exists($word, $parent_id = null)
     {
 		$count = 0;
-		
+				
 		try
 		{
-			$count = Word::select()
-				->where('deleted_flag', 0)
-				->where('parent_id', $parent_id)
-				->where('title', $word)
-				->count();
+			if (isset($parent_id))
+			{
+				$count = Word::select()
+					->where('deleted_flag', 0)
+					->where('parent_id', 'like', $parent_id)
+					->where('title', $word)
+					->count();
+			}
+			else
+			{
+				$count = Word::select()
+					->where('deleted_flag', 0)
+					->where('title', $word)
+					->count();
+			}
 		}
 		catch (\Exception $e)
 		{
@@ -78,7 +88,7 @@ class Word extends Base
 			Event::logException('word', LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
-		
+	
 		return($count > 0);
 	}
 	

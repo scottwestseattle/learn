@@ -39,13 +39,12 @@ Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admi
 
 // Words
 Route::group(['prefix' => 'words'], function () {
-	Route::get('/{parent_id}', 'WordController@index');
 	Route::get('/indexowner/{parent_id}', 'WordController@indexowner');
 	Route::get('/admin', 'WordController@admin');
 	Route::get('/view/{word}','WordController@view');
 
 	// add/create
-	Route::get('/add','WordController@add');
+	Route::get('/add/{parent_id?}','WordController@add');
 	Route::post('/create','WordController@create');
 
 	// edit/update
@@ -60,6 +59,9 @@ Route::group(['prefix' => 'words'], function () {
 	Route::post('/delete/{word}','WordController@delete');
 	Route::get('/undelete', 'WordController@undelete');
 	Route::get('/fastdelete/{word}','WordController@fastdelete');
+	
+	// index
+	Route::get('/{parent_id}', 'WordController@index');	
 });
 
 // Courses

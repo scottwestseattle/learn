@@ -9,12 +9,16 @@
 	<h1>@LANG('ui.Add') @LANG('content.' . $title)</h1>
                
 	<form method="POST" action="/{{$prefix}}/create">
-							
-		<label for="title" class="control-label">@LANG('gen.Title'):</label>
+	
+		@if (isset($parent_id))
+		<input type="hidden" name="parent_id" value={{$parent_id}} />
+		@endif
+		
+		<label for="title" class="control-label">@LANG('content.Word or Phrase'):</label>
 		<input type="text" name="title" class="form-control" />
 		
 		<div class="form-group">
-			<label for="description" class="control-label">@LANG('gen.Description'):</label>
+			<label for="description" class="control-label">@LANG('content.Translation'):</label>
 			<textarea name="description" class="form-control"></textarea>
 		<div>
 		
