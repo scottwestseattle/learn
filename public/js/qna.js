@@ -136,7 +136,10 @@ function quiz() {
 	}
 
 	this.setControlStates = function() {
-		$("#button-start").focus();
+		if (this.isTypeAnswers())
+			$("#attemptInput").focus();		
+		else
+			$("#button-start").focus();
 	}
 
 	this.showPanel = function(state = null) {
@@ -171,17 +174,33 @@ function quiz() {
 				break;
 			default:
 				$("#panel-quiz").show();
+				this.setFocus();
 				break;
 		}
 
 	}
+
+	//todo: only implemented for setFocus()
+	this.isTypeAnswers = function() {
+		return $("#checkbox-type-answers").prop('checked');
+	}
+
+	this.setFocus = function() {
+		
+		//todo: only done for start quiz
+		if (this.isTypeAnswers())
+			$("#attemptInput").focus();
+	}	
 	
 	this.setButtonStates = function(state) {
 
-		var typeAnswers = $("#checkbox-type-answers").prop('checked');
-
 		this.runState = state;
 
+		if (this.isMc)
+		{
+			$(".hide-for-mc").hide();
+		}
+		
 		if (state == RUNSTATE_START)
 		{
 			//
@@ -216,7 +235,7 @@ function quiz() {
 			}
 			else
 			{
-				if (typeAnswers)
+				if (this.isTypeAnswers())
 				{
 					$("#button-check-answer").show();
 					$("#button-dont-know").hide();
@@ -238,7 +257,7 @@ function quiz() {
 
 			$("#question-right").hide();
 			$("#question-wrong").hide();
-			$("#question-prompt").show();
+			$("#question-prompt").show();			
 		}
 		else if (state == RUNSTATE_CHECKING)
 		{
@@ -316,10 +335,10 @@ function quiz() {
 		// get button options
 		o = quiz.qna[quiz.qna[curr].order].options;
 		if (o && o.length > 0)
-			$("#optionButtons").html(o);
+			$("#optionButtons").html(o);	// show the option buttons
 
 		// show answer
-		if ($("#checkbox-type-answers").prop('checked'))
+		if ($("#checkbox-show").prop('checked'))
 		{
 			var a = getQuestion(false);
 			$("#answer-show").html(a);
@@ -329,7 +348,7 @@ function quiz() {
 		// show prompt
 		$("#promptQuestion").text(quiz.promptQuestion + " ");
 
-		var typeAnswers = $("#checkbox-type-answers").prop('checked');
+		var typeAnswers = !this.isMc && this.isTypeAnswers();
 		if (typeAnswers)
 		{
 			$("#attemptInput").show();
@@ -376,6 +395,7 @@ function quiz() {
 			if (typeAnswers)
 			{
 				$("#attemptInput").show();
+				$("#attemptInput").focus();				
 			}
 			else
 			{
@@ -444,7 +464,7 @@ function loadData()
 
 		var question = container.data('question');
 		var answer = container.data('answer');
-		var options = container.data('options');
+		var options = container.data('options'); // mc options
 		var id = container.data('id');
 
 		// add the record
@@ -726,8 +746,7 @@ function loadQuestion()
 	nbr++;
 	updateScore();
 
-	var typeAnswers = $("#checkbox-type-answers").prop('checked');
-	quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : quiz.promptQuestion, 'black');
+	quiz.setAlertPrompt(quiz.isTypeAnswers() ? 'Type the Answer:' : quiz.promptQuestion, 'black');
 }
 
 function toStringBoolArray(a)
@@ -810,7 +829,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 
 	if (checkOptions == CHECKANSWER_KNOW)
 	{
-		answerColor = 'black';
+		answerColor = "#4993FD";
 		result = quiz.quizTextCorrectAnswer;
 		quiz.qna[quiz.qna[curr].order].correct = true;
 		$("#button-next-attempt").focus();

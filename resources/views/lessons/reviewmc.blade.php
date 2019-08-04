@@ -96,17 +96,18 @@
 	<div class="">
 		<fieldset id="runtimeFields">
 
-		<div>
+		<div class="text-center">
 			<!-------------------------------------------------------->
 			<!-- TEXTBOX TO ENTER ANSWER -->
 			<!-------------------------------------------------------->
-			<input type="text" name="answer" id="attemptInput" onkeypress="onKeypress(event)" >
-		</div>
+			<input class="form-control" autocomplete="off" type="text" name="answer" id="attemptInput" onkeypress="onKeypress(event)" />
 
-		<!-------------------------------------------------------->
-		<!-- SPACE TO SHOW SCORED ANSWER -->
-		<!-------------------------------------------------------->
-		<div class="text-center" style="display: none; padding: 10px 0; font-size: 2em; min-height: 70px; margin-top: 2px;" id="answer-show-div"></div>
+			<!-------------------------------------------------------->
+			<!-- SPACE TO SHOW SCORED ANSWER -->
+			<!-------------------------------------------------------->
+			<div style="display: none; padding: 10px 0; font-size: 2em; min-height: 70px; margin-top: 2px;" id="answer-show-div"></div>
+			
+		</div>
 
 		<!-------------------------------------------------------->
 		<!-- ANSWER OPTION BUTTONS  -->
@@ -139,20 +140,18 @@
 		</div>
 		
 		<!-- CHECKBOX ROW -->
-		<div class="form-group">
-			<div class="">
+		<div class="form-group hide-for-mc">
+			<div>
 				<input type="checkbox" name="checkbox-type-answers" id="checkbox-type-answers" class="" onclick="quiz.typeAnswersClick()" />
 				<label for="checkbox-type-answers" class="checkbox-big-label" onclick="quiz.typeAnswersClick()">@LANG('content.Type Answers')</label>
 			</div>
 
-			@if (!$isMc)
-			<div class="">
+			<div>
 				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="quiz.flip()" />
 				<label for="checkbox-flip" class="checkbox-big-label">@LANG('content.Flip Question/Answer')</label>
 			</div>
-			@endif
 			
-			<div class="">
+			<div>
 				<input type="checkbox" name="checkbox-show-answers" id="checkbox-show-answers" onclick="quiz.showAnswersClick()" />
 				<label for="checkbox-show-answers" class="checkbox-big-label">@LANG('content.Show Answers')</label>
 			</div>
