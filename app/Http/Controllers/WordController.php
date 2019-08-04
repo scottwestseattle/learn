@@ -50,6 +50,7 @@ class WordController extends Controller
 
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records,
+			'parent_id' => $parent_id,
 		]));
     }
 
@@ -72,6 +73,7 @@ class WordController extends Controller
 
 		return view(PREFIX . '.indexowner', $this->getViewData([
 			'records' => $records,
+			'parent_id' => $parent_id,
 		]));
     }
 	
@@ -299,12 +301,13 @@ class WordController extends Controller
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'error during fast delete';
+			$msg = 'Error during fast delete';
 			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $msg . ': ' . $record->title, $record->id, $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
 
-		return redirect('/words/' . $record->parent_id);
+		//return redirect('/words/indexowner/' . $record->parent_id);
+		return back();
     }
 	
     public function undelete()

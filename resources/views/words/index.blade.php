@@ -4,7 +4,7 @@
 
 <div class="container page-normal">
 
-	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
+	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'parent_id' => $parent_id, 'isAdmin' => $isAdmin])@endcomponent
 
 	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})</h1>
 	
