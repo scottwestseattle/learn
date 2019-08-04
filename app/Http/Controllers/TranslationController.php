@@ -138,15 +138,18 @@ class TranslationController extends Controller
 
 		App::setLocale($locale);
 
-		foreach($records['en'] as $key => $value)
+		if (array_key_exists('en', $records))
 		{
-			if (!array_key_exists($key, $records['es']))
+			foreach($records['en'] as $key => $value)
 			{
-				$records['es'][$key] = null;
-			}
-			if (!array_key_exists($key, $records['zh']))
-			{
-				$records['zh'][$key] = null;
+				if (!array_key_exists($key, $records['es']))
+				{
+					$records['es'][$key] = null;
+				}
+				if (!array_key_exists($key, $records['zh']))
+				{
+					$records['zh'][$key] = null;
+				}
 			}
 		}
 

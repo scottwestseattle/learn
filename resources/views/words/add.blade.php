@@ -6,7 +6,7 @@
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
-	<h1>@LANG('ui.Add') @LANG('content.' . $title)</h1>
+	<h1>@LANG('ui.Add') @LANG('content.Vocabulary')</h1>
                
 	<form method="POST" action="/{{$prefix}}/create">
 	
@@ -18,7 +18,7 @@
 		<input type="text" name="title" class="form-control" />
 		
 		<div class="form-group">
-			<label for="description" class="control-label">@LANG('content.Translation'):</label>
+			<label for="description" class="control-label">@LANG('content.Translation, Definition, or Hint'):</label>
 			<textarea name="description" class="form-control"></textarea>
 		<div>
 		

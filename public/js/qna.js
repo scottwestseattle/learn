@@ -200,7 +200,7 @@ function quiz() {
 			$("#question-wrong").hide();
 			$("#question-prompt").hide();
 	
-			$("#attempt").hide();		
+			$("#attemptInput").hide();		
 		}
 		else if (state == RUNSTATE_ASKING)
 		{
@@ -332,12 +332,12 @@ function quiz() {
 		var typeAnswers = $("#checkbox-type-answers").prop('checked');
 		if (typeAnswers)
 		{
-			$("#attempt").show();
-			$("#attempt").focus();
+			$("#attemptInput").show();
+			$("#attemptInput").focus();
 		}
 		else
 		{
-			$("#attempt").hide();
+			$("#attemptInput").hide();
 			$("#button-know").focus();
 		}
 		
@@ -375,11 +375,11 @@ function quiz() {
 		{
 			if (typeAnswers)
 			{
-				$("#attempt").show();
+				$("#attemptInput").show();
 			}
 			else
 			{
-				$("#attempt").hide();
+				$("#attemptInput").hide();
 			}			
 		}
 		
@@ -691,8 +691,8 @@ function clear()
 	$("#prompt").val('');
 	$("#prompt").text('');
 	
-	$("#attempt").val('');
-	$("#attempt").text('');
+	$("#attemptInput").val('');
+	$("#attemptInput").text('');
 
 	$("#answer-show").val('');
 	$("#answer-show").text('');
@@ -797,7 +797,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 
 	var answerRaw = getAnswer();
 	var answer = cleanUpSpecialChars(answerRaw);
-	var attempt = $("#attempt").val();
+	var attempt = $("#attemptInput").val();
 	
 	if (checkOptions == CHECKANSWER_MC1)
 	{
@@ -811,7 +811,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 	if (checkOptions == CHECKANSWER_KNOW)
 	{
 		answerColor = 'black';
-		result = "Right, the answer is: ";
+		result = quiz.quizTextCorrectAnswer;
 		quiz.qna[quiz.qna[curr].order].correct = true;
 		$("#button-next-attempt").focus();
 		quiz.showOverrideButton(true, quiz.quizTextOverrideWrong);
@@ -822,7 +822,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 	}
 	else if (checkOptions == CHECKANSWER_DONTKNOW)
 	{
-		result = "Wrong, the answer is: ";
+		result = quiz.quizTextWrongAnswer;
 		answerColor = 'red';
 		$("#button-next-attempt").focus();
 		quiz.showOverrideButton(true, quiz.quizTextOverrideCorrect);

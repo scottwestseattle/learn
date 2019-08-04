@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Lang;
 use Auth;
 use App\User;
 use App\Event;
@@ -226,11 +227,12 @@ class WordController extends Controller
     public function updateajax(Request $request, Word $word)
     {
 		$record = $word;
-		$rc = ''; // no change		
+		$rc = ''; // no change	
+		$duplicate = false;
 
 		if (!Auth::check())
 		{
-			$rc = 'not saved';
+			$rc = Lang::get('content.not saved');
 			return $rc;
 		}				
 				
@@ -239,17 +241,23 @@ class WordController extends Controller
 
 		// this is called from one view where only the description is being updated and another view where both are being updated.
 		if (isset($request->fieldCnt) && intval($request->fieldCnt) == 2)
+		{
 			$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);	// checked so we don't wipe it out where its not being used
+
+			if ($isDirty && Word::exists($request->title)) // title changing, check for dupes
+				$duplicate = true;
+		}
 		
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 
 		if ($isDirty)
 		{
 			try
-			{
-				$rc = (Word::exists($request->title)) ? 'duplicate saved' : 'saved';
-				
+			{			
 				$record->save();
+				$rc = $duplicate 
+					? Lang::get('content.duplicate saved')
+					: Lang::get('content.saved');
 
 				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
 			}
@@ -257,10 +265,10 @@ class WordController extends Controller
 			{
 				$msg = "Error updating record";
 				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg . ': title = ' . $record->title, null, $e->getMessage());
-				$rc = 'error';
+				$rc = Lang::get('content.error');
 			}
 		}
-		
+
 		return $rc;
 	}
 	

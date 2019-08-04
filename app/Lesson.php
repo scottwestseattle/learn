@@ -54,7 +54,8 @@ class Lesson extends Base
 		switch($reviewType)
 		{
 			case LESSONTYPE_QUIZ_FIB:
-				// FIB doesn't have buttons with anwers, no formatting
+				// FIB doesn't use answer options, so if any, remove them
+				$quiz = self::removeEmbeddedAnswers($quiz);
 				break;
 				
 			case LESSONTYPE_QUIZ_MC1:
@@ -370,6 +371,40 @@ class Lesson extends Base
 		//dd($quizNew);
 		return $quizNew;
 	}
+	
+    public function removeEmbeddedAnswers($quiz)
+	{
+		$quizNew = [];
+		$i = 0;
+		//dump($quiz);
+		
+		foreach($quiz as $record)
+		{
+			$a = trim($record['a']);
+			$q = trim($record['q']);
+			$id = $record['id'];
+		
+			// get the answer options from the question text, like: Algeria [Rabat, Jerusalem, Algiers]
+			$answers = self::getCommaSeparatedWords($q);
+			
+			if (count($answers) > 0) // if there are embedded answers
+			{
+				// remove them
+				$q = preg_replace("/\[.*\]/is", "", $q);
+				
+			}
+
+			// put the formatted info back into the quiz
+			$quizNew[] = [
+				'q' => $q,
+				'a' => $a,
+				'id' => $record['id'],
+				'options' => null,
+			];
+		}
+		
+		return $quizNew;
+	}					
 	
     public function isMc($reviewType)
 	{

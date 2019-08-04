@@ -2,14 +2,13 @@
 
 @section('content')
 
-<script>
-//document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
-</script>
-
+<!-------------------------------------------------------->
+<!-- Add misc data needed by the JS during runtime -->
+<!-------------------------------------------------------->
 <div class="data-misc"
 	data-max="{{$sentenceCount}}" 
-	data-prompt="@LANG('content.' . $options['prompt'])" 
-	data-prompt-reverse="@LANG('content.' . $options['prompt-reverse'])" 
+	data-prompt="@LANG('lesson.' . $options['prompt'])" 
+	data-prompt-reverse="@LANG('lesson.' . $options['prompt-reverse'])" 
 	data-question-count="{{$options['question-count']}}" 
 	data-quiztext-round="@LANG('content.Round')" 
 	data-quiztext-correct="@LANG('content.Correct')" 
@@ -26,6 +25,9 @@
 	data-quiztext-score-changed="@LANG('content.Score Changed')" 
 ></div>
 
+	<!-------------------------------------------------------->
+	<!-- Add the q and a records -->
+	<!-------------------------------------------------------->
 @foreach($records as $rec)
 	<div class="data-qna" data-question="{{$rec['q']}}" data-answer="{{$rec['a']}}" data-options="{{$rec['options']}}" data-id="{{$rec['id']}}" ></div>
 @endforeach
@@ -45,7 +47,7 @@
 		</div>
 		
 		<!-------------------------------------------------------->
-		<!-- STATS -->
+		<!-- Run-time Stats -->
 		<!-------------------------------------------------------->
 		<div id="stats">
 			<span id="statsCount"></span>&nbsp;&nbsp;&nbsp;<span id="statsScore"></span>&nbsp;&nbsp;<span id="statsAlert"></span>
@@ -98,18 +100,18 @@
 			<!-------------------------------------------------------->
 			<!-- TEXTBOX TO ENTER ANSWER -->
 			<!-------------------------------------------------------->
-			<input type="text" name="answer" id="attempt" onkeypress="onKeypress(event)" >
+			<input type="text" name="answer" id="attemptInput" onkeypress="onKeypress(event)" >
 		</div>
 
 		<!-------------------------------------------------------->
 		<!-- SPACE TO SHOW SCORED ANSWER -->
 		<!-------------------------------------------------------->
-		<div style="display: none; padding: 10px 0; font-size: 100%; min-height: 70px; margin-top: 2px;" id="answer-show-div"></div>
+		<div class="text-center" style="display: none; padding: 10px 0; font-size: 2em; min-height: 70px; margin-top: 2px;" id="answer-show-div"></div>
 
 		<!-------------------------------------------------------->
 		<!-- ANSWER OPTION BUTTONS  -->
 		<!-------------------------------------------------------->		
-		<div style="xmax-width: 400px; width:100%; min-height:300px;" id="optionButtons"></div>
+		<div style="width:100%; min-height:300px;" id="optionButtons"></div>
 			
 		</fieldset>
 
@@ -122,7 +124,7 @@
 			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); nextAttempt()" id="button-next-attempt">@LANG('content.Next Question')</button>
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">@LANG('content.Check Typed Answer')</button>
 			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.I KNOW IT') (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
-			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.I DON\'T KNOW') (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
+			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.I DONT KNOW') (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
 			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.Change to Wrong') (Alt+c)" onclick="override()" id="button-override" style="display: none;">
 			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop Quiz')</button>
 		</div>

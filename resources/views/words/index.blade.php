@@ -6,7 +6,7 @@
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'parent_id' => $parent_id, 'isAdmin' => $isAdmin])@endcomponent
 
-	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})</h1>
+	<h1>@LANG('content.Vocabulary') ({{count($records)}})</h1>
 	
 	<div class="row">
 
