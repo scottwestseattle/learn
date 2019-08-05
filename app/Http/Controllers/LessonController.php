@@ -232,6 +232,7 @@ class LessonController extends Controller
 		//preg_match_all('#<p>(.*?)</p>#is', $lesson->text, $matches, PREG_SET_ORDER);
 		preg_match_all('#<p>#is', $lesson->text, $matches, PREG_SET_ORDER);
 
+		// only vocab pages may have vocab
 		$vocab = $lesson->getVocab();
 
 		return view(PREFIX . '.view', $this->getViewData([
@@ -242,7 +243,8 @@ class LessonController extends Controller
 			'courseTitle' => isset($lesson->course) ? $lesson->course->title : '',
 			'nextChapter' => $nextChapter,
 			'lessons' => $lesson->getChapterIndex(),
-			'vocab' => $vocab,
+			'vocab' => $vocab['records'],
+			'addVocab' => !$vocab['hasDefinitions'],
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

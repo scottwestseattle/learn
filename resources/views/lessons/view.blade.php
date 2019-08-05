@@ -112,23 +112,27 @@
 							@foreach($vocab as $word)
 							<tr>
 								<td style="min-width:100px;">{{$word->title}}</td>
-								<td style="min-width:200px;">
-									<form id="form{{$word->id}}" method="POST" action="">
-										<input name="description" id="text{{$word->id}}" class="form-control" type="text" 
-											onfocus="setFloat($(this), 'float{{$word->id}}');" 
-											onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
-											@if (Auth::check())
-												value="{{$word->description}}" 
-											@endif
-										/>
-									</form>									
-								</td>
-								<td style="font-size:.7em;";>
-									<div id="float{{$word->id}}"></div>
-								</td>
-								<td style="font-size:.7em;";>
-									<div id="result{{$word->id}}"></div>
-								</td>											
+								@if ($addVocab)
+									<td style="min-width:200px;">
+										<form id="form{{$word->id}}" method="POST" action="">
+											<input name="description" id="text{{$word->id}}" class="form-control" type="text" 
+												onfocus="setFloat($(this), 'float{{$word->id}}');" 
+												onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
+												@if (false && Auth::check())
+													value="{{$word->description}}" 
+												@endif
+											/>
+										</form>	
+									</td>
+									<td style="font-size:.7em;";>
+										<div id="float{{$word->id}}"></div>
+									</td>
+									<td style="font-size:.7em;";>
+										<div id="result{{$word->id}}"></div>
+									</td>											
+								@else
+									<td>{{$word->description}}</td>
+								@endif
 							</tr>
 							@endforeach
 						</tbody>
@@ -141,11 +145,12 @@
 			
 		</div>
 		@else
-			<p>No Vocab List</p>
+			<!-- p>No Vocab List</p -->
 		@endif
 	
-		<p>{!! $record->text !!}</p>
-	
+		@if (false)
+			<p>{!! $record->text !!}</p>
+		@endif
 	@else
 
 		<!------------------------------------------------------------------------------->

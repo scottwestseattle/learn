@@ -483,14 +483,24 @@ class Lesson extends Base
 	
     public function getVocab()
 	{
-		$records = null;
+		$rc['records'] = null;
+		$rc['hasDefinitions'] = false;
 		
 		if ($this->type_flag == LESSONTYPE_VOCAB)
 		{
-			$records = Word::getByParent($this->id);
+			$rc['records'] = Word::getUserWords($this->id);
+			
+			foreach($rc['records'] as $record)
+			{
+				if (strlen($record->description) > 0)
+				{
+					$rc['hasDefinitions'] = true;
+					break;
+				}
+			}
 		}
 		
-		return $records;
+		return $rc;
 	}
 	
     public function isVocab()

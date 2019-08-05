@@ -123,7 +123,33 @@ class Word extends Base
     static public function getIndex($parent_id)
 	{
 		return self::getByParent($parent_id);
-	}	
+	}
+	
+    static public function getUserWords($parent_id)
+    {
+		$parent_id = intval($parent_id);
+		$parent_id = $parent_id > 0 ? $parent_id : '%';
+
+		$records = [];
+			
+		try
+		{
+			$records = Word::select()
+				->where('deleted_flag', 0)
+				->where('parent_id', 'like', $parent_id)
+				->where('user_id', Auth::id())
+				->orderBy('id')
+				->get();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting vocabulary list';
+			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}			
+
+		return $records;		
+    }
 	
     static public function getByParent($parent_id)
     {
