@@ -93,4 +93,5 @@ return [
 'saved' => '保存',
 'duplicate saved' => '重复保存',
 'not saved' => '没有保存',
+'Options' => '选项',
 ];

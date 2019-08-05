@@ -20,6 +20,8 @@ const SCORE_NOTSET = 0;
 const SCORE_CORRECT = 1;
 const SCORE_WRONG = 2;
 
+const COLOR_QUESTION_PROMPT = 'black';
+
 //
 // numbers
 //
@@ -360,7 +362,7 @@ function quiz() {
 			$("#button-know").focus();
 		}
 		
-		quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : quiz.promptQuestion, 'black');		
+		quiz.setAlertPrompt(quiz.promptQuestion, COLOR_QUESTION_PROMPT);
 		
 		$("#stats").show();
 	}
@@ -405,7 +407,7 @@ function quiz() {
 		
 		if (this.runState == RUNSTATE_ASKING)
 		{			
-			quiz.setAlertPrompt(typeAnswers ? 'Type the Answer:' : quiz.promptQuestion, 'black');			
+			quiz.setAlertPrompt(quiz.promptQuestion, COLOR_QUESTION_PROMPT);
 		}
 	}
 
@@ -746,7 +748,7 @@ function loadQuestion()
 	nbr++;
 	updateScore();
 
-	quiz.setAlertPrompt(quiz.isTypeAnswers() ? 'Type the Answer:' : quiz.promptQuestion, 'black');
+	quiz.setAlertPrompt(quiz.promptQuestion, COLOR_QUESTION_PROMPT);
 }
 
 function toStringBoolArray(a)

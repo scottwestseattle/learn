@@ -93,4 +93,5 @@ return [
 'saved' => 'saved',
 'duplicate saved' => 'duplicate saved',
 'not saved' => 'not saved',
+'Options' => 'Options',
 ];
