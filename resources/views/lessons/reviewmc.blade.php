@@ -105,8 +105,7 @@
 			<!-------------------------------------------------------->
 			<!-- SPACE TO SHOW SCORED ANSWER -->
 			<!-------------------------------------------------------->
-			<div style="display: none; padding: 10px 0; font-size: 2em; min-height: 70px; margin-top: 2px;" id="answer-show-div"></div>
-			
+			<div style="display: none; padding: 10px 0; font-size: {{$options['font-size']}}; min-height: 70px; margin-top: 20px;" id="answer-show-div"></div>
 		</div>
 
 		<!-------------------------------------------------------->
@@ -170,7 +169,8 @@
 		<div class="quiz-panel-content">
 			
 			<h2>{{$record->title}}</h2>
-			<span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-star-empty bright-blue-fg"></span>
+			<!-- span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-star-empty bright-blue-fg"></span -->
+			<img style="margin:20px;" height="100" src="/img/quiz-start.jpg" />
 			<h3>@LANG('content.Number of Questions')</h3>
 			<h1 id="panelStartCount"></h1>
 		</div>
@@ -188,7 +188,8 @@
 		<div class="quiz-panel-content">
 			<span class="hidden" id="panelResultsRoundBase">@LANG('content.End of Round')</span>
 			<h1 id="panelResultsRound"></h1>
-			<span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-stats bright-blue-fg"></span>
+			<!-- span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-stats bright-blue-fg"></span -->
+			<img style="margin:20px;" height="100" src="/img/quiz-endofround.png" />
 			<h3>@LANG('content.Correct Answers')</h3>
 			<h1 id="panelResultsCount"></h1>
 			<h3 id="panelResultsPercent"></h3>
@@ -208,7 +209,8 @@
 			<h1 class="" id="">@LANG('content.End of Quiz')</h1>
 			<p id="panelEndofquizFinished">@LANG('content.All questions answered correctly.')</p>
 			<p id="panelEndofquizStopped">@LANG('content.Quiz was stopped.')</p>
-			<span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-thumbs-up bright-blue-fg"></span>
+			<!-- span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-thumbs-up bright-blue-fg"></span -->
+			<img style="margin-bottom:20px;" width="100" src="/img/quiz-end.jpg" />
 			<h3>@LANG('content.Scores by Round')</h3>
 			<span class="hidden" id="roundsStart">@LANG('content.None Completed')</span>
 			<span id="rounds"></span>

@@ -61,24 +61,24 @@
 			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 				<div style="min-height:300px;">
 					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Fill in the Blank</button></a>
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Start Review Questions</button></a>
 					</div>
 					
 					@if ($record->getLessonType() == LESSONTYPE_QUIZ_MC1)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Multiple Choice</button></a>
+						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Start Review - Multiple Choice</button></a>
 					</div>
 					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC2)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Multiple Choice 2</button></a>
+						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Start Review - Multiple Choice</button></a>
 					</div>
 					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC3)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC3}}"><button class="btn btn-info">Multiple Choice 3</button></a>
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC3}}"><button class="btn btn-info">Start Review - Multiple Choice</button></a>
 					</div>
 					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC4)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC4}}"><button class="btn btn-info">Multiple Choice 4</button></a>
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC4}}"><button class="btn btn-info">Start Review - Multiple Choice</button></a>
 					</div>
 					@else
 						<!-- FIB ONLY -->
