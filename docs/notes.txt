@@ -1,16 +1,3 @@
-Noun
-Subject
-Pronoun
-Verb
-Adjective
-
-I, you, he, she, it, we, they
-A
-An
-The
-Those
-These
-This
 
 →
 <table class="table table-borderless">
@@ -19,14 +6,15 @@ This
 
 Latest DB Changes:
 
+8/5/2019
+ALTER TABLE `words` CHANGE `type_flag` `type_flag` TINYINT(4) NULL DEFAULT '0' COMMENT '0=not set, 1=lesson list - no definition, 2=lesson list - users copy with definition, 3=no lesson parent - users private list, 99=other';
+ALTER TABLE `lessons` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '0=not set, 1=text, 2=vocab list, 3=fib, 4=multiple choice, 99=other';
+
 7/30/2019
 ALTER TABLE `lessons` ADD `options` VARCHAR(1000) NULL AFTER `format_flag`;
 
 //didn't work:
 ALTER TABLE lessons ADD FOREIGN KEY (parent_id) REFERENCES courses(id)
-
-7/23/2019
-ALTER TABLE `lessons` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '0=not set, 1=text, 2=vocab list, 3=fib, 4=multiple choice, 99=other';
 
 7/17/2019
 ALTER TABLE `courses` ADD `course_number` VARCHAR(20) NULL AFTER `title`;
