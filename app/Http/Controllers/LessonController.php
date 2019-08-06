@@ -111,7 +111,7 @@ class LessonController extends Controller
 		$lessons = null;
 		$chapter = 1;
 		$section = 1;
-		
+
 		if (isset($course->id))
 		{
 			$record = Lesson::getLast($course->id);
@@ -119,11 +119,11 @@ class LessonController extends Controller
 			{
 				$chapter = $record->lesson_number;		// use the current chapter
 				$section = $record->section_number + 1;	// use the next section number
-				
+
 				$lessons = $record->getChapterIndex(); // get lessons to show in a list
-			}			
+			}
 		}
-		
+
 		return view(PREFIX . '.add', $this->getViewData([
 			'course' => $course,										// parent
 			'courses' => LessonController::getCourses(LOG_ACTION_ADD),	// for the course dropdown
@@ -214,7 +214,7 @@ class LessonController extends Controller
 
 		return $t;
 	}
-	
+
 	public function view(Lesson $lesson)
     {
 		$lesson->text = Tools::convertToHtml($lesson->text);
@@ -265,7 +265,7 @@ class LessonController extends Controller
 		{
 			// don't do anything destructive
 		}
-		
+
 		$isDirty = false;
 		$changes = '';
 
@@ -310,8 +310,9 @@ class LessonController extends Controller
 			}
 			catch (\Exception $e)
 			{
+			    $msg = "Error updating record";
 				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'title = ' . $record->title, null, $e->getMessage());
-				Tools::flash('danger', $e->getMessage());
+				Tools::flash('danger', $msg);
 			}
 		}
 		else
@@ -488,7 +489,7 @@ class LessonController extends Controller
 			'Wrong' => 'Wrong',
 			'of' => 'of',
 		];
-		
+
 		return view(PREFIX . '.review', $this->getViewData([
 			'record' => $lesson,
 			'prev' => $prev,
@@ -502,7 +503,7 @@ class LessonController extends Controller
 			'isMc' => $lesson->isMc($reviewType),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
-	
+
 	public function reviewmc(Lesson $lesson, $reviewType = null)
     {
 		$prev = Lesson::getPrev($lesson);
@@ -519,14 +520,14 @@ class LessonController extends Controller
 			'Wrong' => 'Wrong',
 			'of' => 'of',
 		];
-		
+
 		$options = Tools::getOptionArray($lesson->options);
-		
+
 		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
 		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
 		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
 		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
-			
+
 		return view(PREFIX . '.reviewmc', $this->getViewData([
 			'record' => $lesson,
 			'prev' => $prev,
@@ -538,5 +539,5 @@ class LessonController extends Controller
 			'quizText' => $quizText,
 			'isMc' => $lesson->isMc($reviewType),
 			], LOG_MODEL, LOG_PAGE_VIEW));
-    }	
+    }
 }

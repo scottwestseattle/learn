@@ -16,4 +16,5 @@ return [
 'Error adding new lesson' => 'Error adding new lesson',
 'New lesson has been added' => 'New lesson has been added',
 'Error getting vocabulary list' => 'Error getting vocabulary list',
+'Error updating record' => 'Error updating record',
 ];

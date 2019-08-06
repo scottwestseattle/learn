@@ -16,4 +16,5 @@ return [
 'Error adding new lesson' => 'Error al agregar nueva lección',
 'New lesson has been added' => 'Se ha añadido nueva lección',
 'Error getting vocabulary list' => 'Error al obtener la lista de vocabulario',
+'Error updating record' => 'Error al actualizar el registro',
 ];
