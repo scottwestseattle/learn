@@ -256,8 +256,8 @@ class WordController extends Controller
 		{
 			$rc = Lang::get('content.not logged in');
 			return $rc;
-		}				
-				
+		}
+
 		$isDirty = false;
 		$changes = '';
 		$fieldCnt = isset($request->fieldCnt) ? intval($request->fieldCnt) : 0;
@@ -269,33 +269,68 @@ class WordController extends Controller
 
 			if ($isDirty && Word::exists($request->title)) // title changing, check for dupes
 				$duplicate = true;
+				
+			$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
+
+			if ($isDirty)
+			{
+				try
+				{			
+					$record->save();
+					$rc = $duplicate 
+						? Lang::get('content.duplicate saved')
+						: Lang::get('content.saved');
+
+					Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
+				}
+				catch (\Exception $e)
+				{
+					$msg = "Error updating record";
+					Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg . ': title = ' . $record->title, null, $e->getMessage());
+					$rc = Lang::get('content.error');
+				}
+			}				
 		}
 		else
 		{
-			$record->type_flag = WORDTYPE_LESSONLIST_USERCOPY;
+			// user is adding a definition, need to make a copy for this user
+			if ($request->type_flag == WORDTYPE_LESSONLIST_USERCOPY)
+				$rc = $this->createAjax($request);
+		}
+
+		return $rc;
+	}
+	
+    public function createAjax(Request $request)
+    {
+		$rc = '';
+		
+		$record = new Word();
+		
+		$parent_id = isset($request->parent_id) ? $request->parent_id : null;
+
+		$record->user_id 		= Auth::id();
+		$record->parent_id 		= $parent_id;
+		$record->type_flag 		= $request->type_flag;
+		$record->title 			= $request->title;
+		$record->description	= $request->description;
+		$record->permalink		= Tools::createPermalink($request->title);
+
+		$duplicate = Word::exists($record->title) ? 'Duplicate: ' : '';
+		
+		try
+		{
+			$record->save();
+			$rc = 'user definition saved';
+			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error adding new lesson user word';
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
+			$rc = $msg;
 		}
 		
-		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-
-		if ($isDirty)
-		{
-			try
-			{			
-				$record->save();
-				$rc = $duplicate 
-					? Lang::get('content.duplicate saved')
-					: Lang::get('content.saved');
-
-				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
-			}
-			catch (\Exception $e)
-			{
-				$msg = "Error updating record";
-				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg . ': title = ' . $record->title, null, $e->getMessage());
-				$rc = Lang::get('content.error');
-			}
-		}
-
 		return $rc;
 	}
 	

@@ -120,12 +120,16 @@
 	<!----------------------------------------------------------------------------->
 
 		<!-- BUTTONS ROW 1 -->
-		<div class="form-group">
-			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); nextAttempt()" id="button-next-attempt">@LANG('content.Next Question')</button>
-			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">@LANG('content.Check Typed Answer')</button>
-			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.I KNOW IT') (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
+		
+		<div class="btn-panel-bottom">
+			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); nextAttempt()" id="button-next-attempt">@LANG('Next')</button>
+			<input class="btn btn-default btn-quiz " type="button" value="@LANG('content.I KNOW IT') (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
 			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.I DONT KNOW') (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
 			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.Change to Wrong') (Alt+c)" onclick="override()" id="button-override" style="display: none;">
+		</div>
+		
+		<div class="form-group">
+			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">@LANG('content.Check Typed Answer')</button>
 			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop Quiz')</button>
 		</div>
 		
@@ -175,9 +179,11 @@
 			<h1 id="panelStartCount"></h1>
 		</div>
 		
-		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Quiz')</button>
-		<a class="" role="" href="/lessons/view/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>	
-	
+		<div class="btn-panel-bottom">			
+			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Quiz')</button>
+			<a class="" role="" href="/lessons/view/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>	
+		</div>
+		
 	</div>
 
 	<!---------------------------------------------------------------------------------------------------------------->
@@ -195,9 +201,11 @@
 			<h3 id="panelResultsPercent"></h3>
 		</div>
 		
-		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); continueQuiz()" id="button-continue">@LANG('content.Continue')</button>
-		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('ui.Quit')</button>
-	
+		<div class="btn-panel-bottom">			
+			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); continueQuiz()" id="button-continue">@LANG('content.Continue')</button>
+			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('ui.Quit')</button>
+		</div>
+		
 	</div>
 
 	<!---------------------------------------------------------------------------------------------------------------->
@@ -216,8 +224,10 @@
 			<span id="rounds"></span>
 		</div>
 				
-		<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); startQuiz();" id="button-continue2">@LANG('content.Continue')</button>
-		<a class="" role="" href="/lessons/view/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>	
+		<div class="btn-panel-bottom">			
+			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); startQuiz();" id="button-continue2">@LANG('content.Continue')</button>
+			<a class="" role="" href="/lessons/view/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>	
+		</div>
 		
 	</div>
 

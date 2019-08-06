@@ -115,12 +115,12 @@
 								@if ($addVocab)
 									<td style="min-width:200px;">
 										<form id="form{{$word->id}}" method="POST" action="">
+											<input type="hidden" name="title" value="{{$word->title}}" />
+											<input type="hidden" name="type_flag" value="{{WORDTYPE_LESSONLIST_USERCOPY}}" />
+											<input type="hidden" name="parent_id" value="{{$record->id}}" />
 											<input name="description" id="text{{$word->id}}" class="form-control" type="text" 
 												onfocus="setFloat($(this), 'float{{$word->id}}');" 
 												onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
-												@if (false && Auth::check())
-													value="{{$word->description}}" 
-												@endif
 											/>
 										</form>	
 									</td>
