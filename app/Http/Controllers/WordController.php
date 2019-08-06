@@ -104,9 +104,18 @@ class WordController extends Controller
     {
 		return view(PREFIX . '.add', $this->getViewData([
 			'parent_id' => $parent_id,
+			'type_flag' => WORDTYPE_LESSONLIST,
 			]));
 	}
 
+    public function addUserWords($parent_id = false)
+    {
+		return view(PREFIX . '.add-user-words', $this->getViewData([
+			'parent_id' => $parent_id,
+			'type_flag' => $parent_id ? WORDTYPE_LESSONLIST_USER : WORDTYPE_USERLIST,
+			]));
+	}
+	
     public function create(Request $request)
     {
 		$record = new Word();
@@ -115,6 +124,7 @@ class WordController extends Controller
 
 		$record->user_id 		= Auth::id();
 		$record->parent_id 		= $parent_id;
+		$record->type_flag 		= $request->type_flag;
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
 		$record->permalink		= Tools::createPermalink($request->title);
@@ -126,7 +136,16 @@ class WordController extends Controller
 			$record->save();
 
 			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
-			Tools::flash('success', $duplicate . 'New vocabulary has been added');
+			
+			$msg = 'New vocabulary has been added';
+			if ($request->type_flag == WORDTYPE_LESSONLIST)
+				$msg = 'New lesson vocabulary has been added';
+			else if ($request->type_flag == WORDTYPE_LESSONLIST_USERCOPY)
+				$msg = 'New lesson user vocabulary has been added';
+			else if ($request->type_flag == WORDTYPE_USERLIST)
+				$msg = 'New user vocabulary has been added';
+				
+			Tools::flash('success', $duplicate . $msg);
 		}
 		catch (\Exception $e)
 		{
@@ -137,9 +156,12 @@ class WordController extends Controller
 			return back();
 		}
 
-		return redirect('/words/indexowner/' . $parent_id);
+		if ($request->type_flag == WORDTYPE_LESSONLIST)
+			return redirect('/words/add/' . $parent_id);
+		else
+			return redirect('/words/indexowner/' . $parent_id);
     }
-
+	
     public function permalink(Request $request, $permalink)
     {
 		$permalink = trim($permalink);
@@ -232,20 +254,25 @@ class WordController extends Controller
 
 		if (!Auth::check())
 		{
-			$rc = Lang::get('content.not saved');
+			$rc = Lang::get('content.not logged in');
 			return $rc;
 		}				
 				
 		$isDirty = false;
 		$changes = '';
+		$fieldCnt = isset($request->fieldCnt) ? intval($request->fieldCnt) : 0;
 
 		// this is called from one view where only the description is being updated and another view where both are being updated.
-		if (isset($request->fieldCnt) && intval($request->fieldCnt) == 2)
+		if ($fieldCnt == 2)
 		{
 			$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);	// checked so we don't wipe it out where its not being used
 
 			if ($isDirty && Word::exists($request->title)) // title changing, check for dupes
 				$duplicate = true;
+		}
+		else
+		{
+			$record->type_flag = WORDTYPE_LESSONLIST_USERCOPY;
 		}
 		
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);

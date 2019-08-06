@@ -45,7 +45,9 @@ Route::group(['prefix' => 'words'], function () {
 
 	// add/create
 	Route::get('/add/{parent_id?}','WordController@add');
+	Route::get('/add-user-words/{parent_id?}','WordController@addUserWords');
 	Route::post('/create','WordController@create');
+
 
 	// edit/update
 	Route::get('/edit/{word}','WordController@edit');

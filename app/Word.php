@@ -125,7 +125,7 @@ class Word extends Base
 		return self::getByParent($parent_id);
 	}
 	
-    static public function getUserWords($parent_id)
+    static public function getLessonUserWords($parent_id)
     {
 		$parent_id = intval($parent_id);
 		$parent_id = $parent_id > 0 ? $parent_id : '%';
@@ -138,18 +138,45 @@ class Word extends Base
 				->where('deleted_flag', 0)
 				->where('parent_id', 'like', $parent_id)
 				->where('user_id', Auth::id())
+				->where('type_flag', WORDTYPE_LESSONLIST_USERCOPY)
 				->orderBy('id')
 				->get();
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Error getting vocabulary list';
+			$msg = 'Error getting user vocabulary list';
 			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 		}			
 
 		return $records;		
     }
+	
+    static public function getByType($parent_id, $type_flag)
+    {
+		$type_flag = intval($type_flag);
+		$parent_id = intval($parent_id);
+
+		$records = [];
+			
+		try
+		{
+			$records = Word::select()
+				->where('deleted_flag', 0)
+				->where('parent_id', $parent_id)
+				->where('type_flag', $type_flag)
+				->orderBy('id')
+				->get();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting vocabulary list by type';
+			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}			
+
+		return $records;		
+    }	
 	
     static public function getByParent($parent_id)
     {

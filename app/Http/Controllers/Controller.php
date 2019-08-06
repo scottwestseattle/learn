@@ -66,6 +66,11 @@ define('LOG_PAGE_PERMALINK', 'permalink');
 // translations
 define('TRANSLATIONS_FOLDER', '../resources/lang/');
 
+// word types
+define('WORDTYPE_LESSONLIST', 1);
+define('WORDTYPE_LESSONLIST_USERCOPY', 2);
+define('WORDTYPE_USERLIST', 3);
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

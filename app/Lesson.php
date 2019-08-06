@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Auth;
 use App\Course;
 use App\Word;
 
@@ -484,19 +485,20 @@ class Lesson extends Base
     public function getVocab()
 	{
 		$rc['records'] = null;
-		$rc['hasDefinitions'] = false;
+		$rc['isUserList'] = false;
 		
 		if ($this->type_flag == LESSONTYPE_VOCAB)
 		{
-			$rc['records'] = Word::getUserWords($this->id);
-			
-			foreach($rc['records'] as $record)
+			if (Auth::check())
 			{
-				if (strlen($record->description) > 0)
-				{
-					$rc['hasDefinitions'] = true;
-					break;
-				}
+				// get users copy of the vocab for this lesson with definitions
+				$rc['records'] = Word::getLessonUserWords($this->id);
+				$rc['isUserList'] = (count($rc['records']) > 0);
+			}
+			
+			if (!$rc['isUserList']) // none found so get the lesson list
+			{
+				$rc['records'] = Word::getByType($this->id, WORDTYPE_LESSONLIST);
 			}
 		}
 		

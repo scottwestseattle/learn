@@ -244,7 +244,7 @@ class LessonController extends Controller
 			'nextChapter' => $nextChapter,
 			'lessons' => $lesson->getChapterIndex(),
 			'vocab' => $vocab['records'],
-			'addVocab' => !$vocab['hasDefinitions'],
+			'addVocab' => !$vocab['isUserList'], // if the user hasn't already added definitions
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
