@@ -106,38 +106,71 @@
 
 			<!-- repeat this block for each column -->
 			<div class="col-sm"><!-- need to split word list into multiple columns here -->
-				<div class="table">
-					<table class="table-responsive table-borderless">
-						<tbody>
-							@foreach($vocab as $word)
-							<tr>
-								<td style="min-width:100px;">{{$word->title}}</td>
-								@if ($addVocab)
-									<td style="min-width:200px;">
-										<form id="form{{$word->id}}" method="POST" action="">
-											<input type="hidden" name="title" value="{{$word->title}}" />
-											<input type="hidden" name="type_flag" value="{{WORDTYPE_LESSONLIST_USERCOPY}}" />
-											<input type="hidden" name="parent_id" value="{{$record->id}}" />
-											<input name="description" id="text{{$word->id}}" class="form-control" type="text" 
-												onfocus="setFloat($(this), 'float{{$word->id}}');" 
-												onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
-											/>
-										</form>	
-									</td>
-									<td style="font-size:.7em;";>
-										<div id="float{{$word->id}}"></div>
-									</td>
-									<td style="font-size:.7em;";>
-										<div id="result{{$word->id}}"></div>
-									</td>											
-								@else
+			
+				<ul class="nav nav-tabs" id="vocabTab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link {{$hasDefinitions ? 'active' : ''}}" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="true">@LANG('View')</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link {{!$hasDefinitions ? 'active' : ''}}" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="false">@LANG('Edit')</a>
+					</li>
+				</ul>
+			
+				<div class="tab-content" id="vocabTabContent">
+			
+				<div class="tab-pane fade {{$hasDefinitions ? 'show active' : ''}}" id="view" role="tabpanel" aria-labelledby="view-tab">
+					<div class="table">
+						<table class="table-responsive table-borderless">
+							<tbody>
+								@foreach($vocab as $word)
+								<tr>
+									<td>{{$word->title}}</td>
 									<td>{{$word->description}}</td>
-								@endif
-							</tr>
-							@endforeach
-						</tbody>
-					</table>
+								</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
 				</div>
+			
+				<div class="tab-pane fade {{!$hasDefinitions ? 'show active' : ''}}" id="edit" role="tabpanel" aria-labelledby="edit-tab">
+					<div class="table">
+						<table class="table-responsive table-borderless">
+							<tbody>
+								@foreach($vocab as $word)
+								<tr>
+									<td style="min-width:100px;">{{$word->title}}</td>
+									@if ($addVocab)
+										<td style="min-width:200px;">
+											<form id="form{{$word->id}}" method="POST" action="">
+												<input type="hidden" name="title" value="{{$word->title}}" />
+												<input type="hidden" name="type_flag" value="{{WORDTYPE_LESSONLIST_USERCOPY}}" />
+												<input type="hidden" name="parent_id" value="{{$record->id}}" />
+												<input name="description" id="text{{$word->id}}" class="form-control" type="text" 
+													onfocus="setFloat($(this), 'float{{$word->id}}');" 
+													onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
+													value="{{$word->description}}"
+												/>
+												<div style="font-size:.7em;" id="result{{$word->id}}"></div>
+											</form>	
+										</td>
+										<td style="font-size:.7em;";>
+											<div id="float{{$word->id}}"></div>
+										</td>
+										<td>
+										</td>											
+									@else
+										<td>{{$word->description}}</td>
+									@endif
+								</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
+				</div>
+				
+				</div>
+								
 			</div>
 			<!-- end of repeat block -->
 

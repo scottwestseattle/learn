@@ -295,18 +295,27 @@ class WordController extends Controller
 		{
 			// user is adding a definition, need to make a copy for this user
 			if ($request->type_flag == WORDTYPE_LESSONLIST_USERCOPY)
-				$rc = $this->createAjax($request);
+			{
+				// user is add a definition to a vocab word
+				$word = Word::getLessonUserWord($request->parent_id, Auth::id(), $request->title);
+				$rc = $this->saveAjax($request, isset($word) ? $word : new Word());
+			}
 		}
 
 		return $rc;
 	}
 	
-    public function createAjax(Request $request)
+    public function saveAjax(Request $request, Word $record)
     {
 		$rc = '';
+		$isAdd = false;
 		
-		$record = new Word();
-		
+		// if he doesn't already have a copy, make one for him
+		if (isset($record->id))
+		{
+			$isAdd = true;
+		}
+
 		$parent_id = isset($request->parent_id) ? $request->parent_id : null;
 
 		$record->user_id 		= Auth::id();
@@ -326,7 +335,7 @@ class WordController extends Controller
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Error adding new lesson user word';
+			$msg = 'Error ' . ($isAdd ? 'adding new' : 'updating') . ' lesson user word';
 			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
 			$rc = $msg;
 		}

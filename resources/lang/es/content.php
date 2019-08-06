@@ -94,4 +94,5 @@ return [
 'duplicate saved' => 'guardado como duplicado',
 'not saved' => 'no guardado',
 'Options' => 'Opciones',
+'not logged in' => 'sin iniciar sesión',
 ];

@@ -94,4 +94,5 @@ return [
 'duplicate saved' => '重复保存',
 'not saved' => '没有保存',
 'Options' => '选项',
+'not logged in' => '未登录',
 ];

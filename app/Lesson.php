@@ -486,20 +486,36 @@ class Lesson extends Base
 	{
 		$rc['records'] = null;
 		$rc['isUserList'] = false;
+		$rc['hasDefinitions'] = false;
 		
 		if ($this->type_flag == LESSONTYPE_VOCAB)
 		{
-			if (Auth::check())
-			{
-				// get users copy of the vocab for this lesson with definitions
-				$rc['records'] = Word::getLessonUserWords($this->id);
-				$rc['isUserList'] = (count($rc['records']) > 0);
-			}
+			// if user logged in, get his copy of the vocab for this lesson with definitions 
+			$rc['recordsUser'] = Auth::check() ? Word::getLessonUserWords($this->id) : [];
+		
+			// get the officila lesson copy which never has definitions
+			$rc['records'] = Word::getByType($this->id, WORDTYPE_LESSONLIST);
 			
-			if (!$rc['isUserList']) // none found so get the lesson list
+			// put the lists together
+			$recordsNew = [];
+			$cnt = 0;
+			foreach($rc['records'] as $record)
 			{
-				$rc['records'] = Word::getByType($this->id, WORDTYPE_LESSONLIST);
-			}
+				// check for users definition
+				foreach($rc['recordsUser'] as $recordUser)
+				{
+					if ($recordUser->title == $record->title)
+					{
+						$rc['records'][$cnt]->description = $recordUser->description;
+						$rc['hasDefinitions'] = true;
+						break;
+					}
+				}	
+
+				$cnt++;
+			}				
+			
+			//dd($rc);
 		}
 		
 		return $rc;

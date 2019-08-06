@@ -125,6 +125,30 @@ class Word extends Base
 		return self::getByParent($parent_id);
 	}
 	
+    static public function getLessonUserWord($parent_id, $user_id, $title)
+    {
+		$parent_id = intval($parent_id);
+		$user_id = intval($user_id);
+			
+		try
+		{
+			$record = Word::select()
+				->where('deleted_flag', 0)
+				->where('parent_id', $parent_id)
+				->where('user_id', $user_id)
+				->where('type_flag', WORDTYPE_LESSONLIST_USERCOPY)
+				->where('title', $title)
+				->first();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting user lesson word';
+			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id . ', user: ' . $user_id . ', title=' . $title, null, $msg . ': ' . $e->getMessage());
+		}			
+
+		return $record;		
+    }
+	
     static public function getLessonUserWords($parent_id)
     {
 		$parent_id = intval($parent_id);

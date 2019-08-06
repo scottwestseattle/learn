@@ -94,4 +94,5 @@ return [
 'duplicate saved' => 'duplicate saved',
 'not saved' => 'not saved',
 'Options' => 'Options',
+'not logged in' => 'not logged in',
 ];
