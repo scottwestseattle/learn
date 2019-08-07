@@ -199,12 +199,13 @@ class Course extends Base
     {
 		$records = []; // make this countable so view will always work
 		
-		if (Tools::isAdmin())
+		$public = array_search('public', $parms) !== false;
+		
+		if (!$public && Tools::isAdmin())
 		{
 			if (array_search('all', $parms) !== false)
 			{
 				$records = Course::select()
-	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->orderBy('type_flag')
@@ -214,7 +215,6 @@ class Course extends Base
 			else if (array_search('unfinished', $parms) !== false)
 			{
 				$records = Course::select()
-	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->where('wip_flag', '!=', WIP_FINISHED)
@@ -222,10 +222,19 @@ class Course extends Base
 					->orderBy('display_order')
 					->get();
 			}
+			else if (array_search('private', $parms) !== false)
+			{
+				$records = Course::select()
+					->where('deleted_flag', 0)
+					->where('wip_flag', '!=', WIP_INACTIVE)
+					->where('release_flag', '!=', RELEASE_PUBLISHED)
+					->orderBy('type_flag')
+					->orderBy('display_order')
+					->get();
+			}
 			else
 			{
 				$records = Course::select()
-	//				->where('site_id', SITE_ID)
 					->where('deleted_flag', 0)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->orderBy('type_flag')

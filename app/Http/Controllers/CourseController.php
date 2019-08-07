@@ -35,11 +35,13 @@ class CourseController extends Controller
 
     public function index(Request $request)
     {
-		$records = []; // make this countable so view will always work
+		$public = []; // make this countable so view will always work
+		$private = []; // make this countable so view will always work
 
 		try
 		{
-			$records = Course::getIndex();
+			$public = Course::getIndex(['public']);
+			$private = Course::getIndex(['private']);
 		}
 		catch (\Exception $e)
 		{
@@ -49,7 +51,8 @@ class CourseController extends Controller
 		}
 
 		return view(PREFIX . '.index', $this->getViewData([
-			'records' => $records,
+			'public' => $public,
+			'private' => $private,
 		]));
     }
 

@@ -47,7 +47,7 @@
 				<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">@LANG('content.Exercise')</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">@LANG('content.Questions')</a>
+				<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">@LANG('content.Questions')&nbsp;({{$sentenceCount}})</a>
 			</li>
 		</ul>
 		@endif
@@ -101,6 +101,20 @@
 		<!-- The vocab view                                              -->
 		<!------------------------------------------------------------------------------->
 
+		<!-- the default text at the top of the vocab list -->
+		@if (strlen($record->text) > 0)
+			<p>{!! $record->text !!}</p>
+		@elseif (strlen($record->description) > 0)
+			<p>{!! $record->description !!}</p>
+		@else
+			<p>To begin, please look up the following words in your native language and add them to your vocabulary list.</p>
+			@if (!Auth::check())
+				<p>An account is required to save vocabulary definitions.</p>
+				<p>If you already have an account, please <a href="/login">click here to login</a>, otherwise please <a href="/register">click here to register a new account</a>.</p>
+			@endif
+		@endif
+		
+		
 		@if (isset($vocab) && count($vocab) > 0)
 		<div class="xrow">
 
@@ -109,10 +123,10 @@
 			
 				<ul class="nav nav-tabs" id="vocabTab" role="tablist">
 					<li class="nav-item">
-						<a class="nav-link {{$hasDefinitions ? 'active' : ''}}" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="true">@LANG('View')</a>
+						<a class="nav-link {{$hasDefinitions ? 'active' : ''}}" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="true">@LANG('View')&nbsp;({{count($vocab)}})</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link {{!$hasDefinitions ? 'active' : ''}}" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="false">@LANG('Edit')</a>
+						<a class="nav-link {{!$hasDefinitions ? 'active' : ''}}" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="false">@LANG('Edit')&nbsp;({{count($vocab)}})</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/lessons/view/{{$record->id}}" ><span style="font-size:.7em;" class="glyphicon glyphicon-refresh"></span></a>
@@ -173,13 +187,8 @@
 			@component('components.control-accent-chars-esp')@endcomponent																		
 			
 		</div>
-		@else
-			<!-- p>No Vocab List</p -->
 		@endif
 	
-		@if (false)
-			<p>{!! $record->text !!}</p>
-		@endif
 	@else
 
 		<!------------------------------------------------------------------------------->

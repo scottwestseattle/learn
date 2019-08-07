@@ -98,4 +98,5 @@ return [
 'Please confirm delete' => '请确认删除',
 'Word' => '字',
 'Lesson Vocabulary' => '课程词汇',
+'Courses Under Development' => '正在开发的课程',
 ];

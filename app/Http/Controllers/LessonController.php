@@ -441,7 +441,7 @@ class LessonController extends Controller
 			Tools::flash('danger', $e->getMessage());
 		}
 
-		return redirect(REDIRECT_ADMIN);
+		return redirect('/lessons/view/' . $lesson->id);
     }
 
 	public function makeQuiz($text)

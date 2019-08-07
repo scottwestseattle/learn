@@ -98,4 +98,5 @@ return [
 'Please confirm delete' => 'Por favor confirmar eliminación',
 'Word' => 'Palabra',
 'Lesson Vocabulary' => 'Vocabulario de Lección',
+'Courses Under Development' => 'Cursos en desarrollo',
 ];
