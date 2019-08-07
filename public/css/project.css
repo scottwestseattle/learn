@@ -10,6 +10,26 @@ Glyph Icon Blue: #286090
 Super Light Green: #eff7f0
 ************************************************************/
 
+.vocab-accent-popup {
+	font-size:.7em; 
+	width:10px;
+	margin-bottom: 2px;
+}
+
+.vocab-save-results {
+	font-size:.7em; 
+}
+
+.vocab-title {
+	float:left; 
+	width:100%;
+}
+
+.vocab-description {
+	float:left; 
+	width:100%; 
+}
+
 .btn-fixed {
   position: fixed;
   bottom: 10px;

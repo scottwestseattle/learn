@@ -102,10 +102,10 @@
 		<!------------------------------------------------------------------------------->
 
 		@if (isset($vocab) && count($vocab) > 0)
-		<div class="row">
+		<div class="xrow">
 
 			<!-- repeat this block for each column -->
-			<div class="col-sm"><!-- need to split word list into multiple columns here -->
+			<div class="xcol-sm"><!-- need to split word list into multiple columns here -->
 			
 				<ul class="nav nav-tabs" id="vocabTab" role="tablist">
 					<li class="nav-item">
@@ -137,25 +137,26 @@
 				</div>
 			
 				<div class="tab-pane fade {{!$hasDefinitions ? 'show active' : ''}}" id="edit" role="tabpanel" aria-labelledby="edit-tab">
-					<div class="table">
-						<table class="table-responsive table-borderless">
+					<div class="">
+						<table class="table table-borderless">
 							<tbody>
 								@foreach($vocab as $word)
 								<tr>
-									<td style="min-width:100px;">{{$word->title}}</td>
-									<td style="min-width:200px;">
-										<form id="form{{$word->id}}" method="GET" action="/lessons/view/{{$record->id}}">
-											<input type="hidden" name="type_flag" value="{{WORDTYPE_LESSONLIST_USERCOPY}}" />
-											<input name="description" id="text{{$word->id}}" class="form-control" type="text"
-												onfocus="setFloat($(this), 'float{{$word->id}}');" 
-												onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
-												value="{{$word->description}}"
-											/>
-											<div style="font-size:.7em;" id="result{{$word->id}}"></div>
-										</form>	
-									</td>
-									<td style="font-size:.7em;";>
-										<div id="float{{$word->id}}"></div>
+									<td>
+										<div class="vocab-title">{{$word->title}}</div>
+										<div class="vocab-accent-popup" id="float{{$word->id}}"><!-- this is where the accent pop-up will be shown --></div>
+										<div class="vocab-description">
+											<form id="form{{$word->id}}" method="POST" action="/lessons/view/{{$record->id}}">
+												<input type="hidden" name="type_flag" value="{{WORDTYPE_LESSONLIST_USERCOPY}}" />
+												<input name="description" id="text{{$word->id}}" class="form-control" type="text"
+													onfocus="setFloat($(this), 'float{{$word->id}}');" 
+													onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
+													value="{{$word->description}}"
+												/>
+												<div class="vocab-save-results" id="result{{$word->id}}"></div>
+												{{csrf_field()}}
+											</form>
+										</div>
 									</td>
 								</tr>
 								@endforeach

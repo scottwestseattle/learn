@@ -94,6 +94,7 @@ Route::group(['prefix' => 'courses'], function () {
 Route::group(['prefix' => 'lessons'], function () {
 	Route::get('/admin/{course_id?}', 'LessonController@admin');
 	Route::get('/view/{lesson}','LessonController@view');
+	Route::post('/view/{lesson}','LessonController@view'); // just in case they hit enter on the ajax form
 	Route::get('/review/{lesson}/{reviewType?}','LessonController@review');
 	Route::get('/reviewmc/{lesson}/{reviewType?}','LessonController@reviewmc');
 

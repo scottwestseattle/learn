@@ -55,6 +55,12 @@
 
 	</form>
 
+	<div>
+	@foreach($records as $record)
+		<span style="font-weight: normal; font-size: 1.2em; margin-bottom:5px;" class="badge badge-info">{{$record->title}}</span>
+	@endforeach
+	</div>
+	
 </div>
 
 @endsection

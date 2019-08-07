@@ -1,4 +1,4 @@
-<div class="hidden">
+<div class="{{isset($visible) && $visible ? '' : 'hidden'}}">
 	<div id="accent-chars-esp" class="dropdown">
 		<span class="dropdown-trigger">Ñ</span>
 		<div class="dropdown-content">

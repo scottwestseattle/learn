@@ -102,9 +102,12 @@ class WordController extends Controller
 
     public function add($parent_id = null)
     {
+		$words = Word::getIndex($parent_id);
+		
 		return view(PREFIX . '.add', $this->getViewData([
 			'parent_id' => $parent_id,
 			'type_flag' => WORDTYPE_LESSONLIST,
+			'records' => $words,
 			]));
 	}
 

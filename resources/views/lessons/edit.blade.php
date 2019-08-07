@@ -23,6 +23,9 @@
 			<li class="nav-item">
 				<a class="nav-link" href='/{{$prefix}}/edit2/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-pencil"></span></a>
 			</li>
+			<li class="nav-item">
+				@component('components.control-accent-chars-esp', ['visible' => true])@endcomponent																		
+			</li>
 		</ul>	
 	
 		<div style="display:none;" id="tab-title">

@@ -128,8 +128,6 @@ class Word extends Base
     static public function getByParent($parent_id, $type_flag)
     {
 		$parent_id = intval($parent_id);
-		$parent_id = $parent_id > 0 ? $parent_id : '%';
-		//$userId = Tools::isAdmin() ? '%' : Auth::id();
 
 		$records = [];
 			
