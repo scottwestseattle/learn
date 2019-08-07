@@ -95,4 +95,7 @@ return [
 'not saved' => '没有保存',
 'Options' => '选项',
 'not logged in' => '未登录',
+'Please confirm delete' => '请确认删除',
+'Word' => '字',
+'Lesson Vocabulary' => '课程词汇',
 ];

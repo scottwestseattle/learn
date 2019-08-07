@@ -95,4 +95,7 @@ return [
 'not saved' => 'no guardado',
 'Options' => 'Opciones',
 'not logged in' => 'sin iniciar sesión',
+'Please confirm delete' => 'Por favor confirmar eliminación',
+'Word' => 'Palabra',
+'Lesson Vocabulary' => 'Vocabulario de Lección',
 ];

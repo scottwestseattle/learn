@@ -6,6 +6,10 @@
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'parent_id' => $parent_id, 'isAdmin' => $isAdmin])@endcomponent
 
+	<div class="form-group">
+		<a href="/lessons/view/{{$parent_id}}"><button class="btn btn-success">Back to Lesson</button></a>
+	</div>
+	
 	<h1>@LANG('content.Vocabulary') ({{count($records)}})</h1>
 	
 	<div class="row">
@@ -17,8 +21,10 @@
 					<tbody>
 						@foreach($records as $word)
 						<tr>
+							<td><a href='/{{$prefix}}/edit/{{$word->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 							<td>{{$word->title}}</td>
 							<td>{{$word->description}}</td>
+							<td><a href='/{{$prefix}}/confirmdelete/{{$word->id}}'><span class="glyphCustom glyphicon glyphicon-delete"></span></a></td>
 						</tr>
 						@endforeach
 					</tbody>

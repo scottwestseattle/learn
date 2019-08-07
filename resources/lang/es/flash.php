@@ -17,4 +17,7 @@ return [
 'New lesson has been added' => 'Se ha añadido nueva lección',
 'Error getting vocabulary list' => 'Error al obtener la lista de vocabulario',
 'Error updating record' => 'Error al actualizar el registro',
+'Word has been deleted' => 'La palabra ha sido eliminado',
+'Error adding new word' => 'Error al agregar nueva palabra',
+'New lesson vocabulary has been added' => 'Se agregó nuevo vocabulario de lecciones',
 ];

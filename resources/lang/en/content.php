@@ -95,4 +95,7 @@ return [
 'not saved' => 'not saved',
 'Options' => 'Options',
 'not logged in' => 'not logged in',
+'Please confirm delete' => 'Please confirm delete',
+'Word' => 'Word',
+'Lesson Vocabulary' => 'Lesson Vocabulary',
 ];

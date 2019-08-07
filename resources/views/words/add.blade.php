@@ -8,6 +8,10 @@
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin, 'parent_id' => $parent_id])@endcomponent
 
+	<div class="form-group">
+		<a href="/lessons/view/{{$parent_id}}"><button class="btn btn-success">Back to Lesson</button></a>
+	</div>
+	
 	@if (isset($parent_id))
 		@if ($type_flag == WORDTYPE_LESSONLIST)
 			<h1>@LANG('ui.Add') @LANG('content.Lesson Vocabulary')</h1>

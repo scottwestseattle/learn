@@ -122,10 +122,37 @@ class Word extends Base
 	
     static public function getIndex($parent_id)
 	{
-		return self::getByParent($parent_id);
+		return self::getByParent($parent_id, WORDTYPE_LESSONLIST);
 	}
 	
-    static public function getLessonUserWord($parent_id, $user_id, $title)
+    static public function getByParent($parent_id, $type_flag)
+    {
+		$parent_id = intval($parent_id);
+		$parent_id = $parent_id > 0 ? $parent_id : '%';
+		//$userId = Tools::isAdmin() ? '%' : Auth::id();
+
+		$records = [];
+			
+		try
+		{
+			$records = Word::select()
+				->where('deleted_flag', 0)
+				->where('parent_id', $parent_id)
+				->where('type_flag', $type_flag)
+				->orderBy('id')
+				->get();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting vocabulary list';
+			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}			
+
+		return $records;		
+    }	
+	
+    static public function getLessonUserWord($parent_id, $user_id, $vocab_id)
     {
 		$parent_id = intval($parent_id);
 		$user_id = intval($user_id);
@@ -137,7 +164,7 @@ class Word extends Base
 				->where('parent_id', $parent_id)
 				->where('user_id', $user_id)
 				->where('type_flag', WORDTYPE_LESSONLIST_USERCOPY)
-				->where('title', $title)
+				->where('vocab_id', $vocab_id)
 				->first();
 		}
 		catch (\Exception $e)
@@ -201,31 +228,5 @@ class Word extends Base
 
 		return $records;		
     }	
-	
-    static public function getByParent($parent_id)
-    {
-		$parent_id = intval($parent_id);
-		$parent_id = $parent_id > 0 ? $parent_id : '%';
-		//$userId = Tools::isAdmin() ? '%' : Auth::id();
-
-		$records = [];
-			
-		try
-		{
-			$records = Word::select()
-				->where('deleted_flag', 0)
-				->where('parent_id', 'like', $parent_id)
-				->orderBy('id')
-				->get();
-		}
-		catch (\Exception $e)
-		{
-			$msg = 'Error getting vocabulary list';
-			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
-			Tools::flash('danger', $msg);
-		}			
-
-		return $records;		
-    }
 	
 }

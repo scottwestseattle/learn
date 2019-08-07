@@ -26,7 +26,7 @@
 		
 		@if ($isAdmin)
 			@if ($record->isVocab())
-				&nbsp;<a href="/words/indexowner/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
+				&nbsp;<a href="/words/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
 			@else
 				&nbsp;<a href="/{{$prefix}}/edit2/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
 			@endif
@@ -114,6 +114,9 @@
 					<li class="nav-item">
 						<a class="nav-link {{!$hasDefinitions ? 'active' : ''}}" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="false">@LANG('Edit')</a>
 					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/lessons/view/{{$record->id}}" ><span style="font-size:.7em;" class="glyphicon glyphicon-refresh"></span></a>
+					</li>
 				</ul>
 			
 				<div class="tab-content" id="vocabTabContent">
@@ -140,28 +143,20 @@
 								@foreach($vocab as $word)
 								<tr>
 									<td style="min-width:100px;">{{$word->title}}</td>
-									@if ($addVocab)
-										<td style="min-width:200px;">
-											<form id="form{{$word->id}}" method="POST" action="">
-												<input type="hidden" name="title" value="{{$word->title}}" />
-												<input type="hidden" name="type_flag" value="{{WORDTYPE_LESSONLIST_USERCOPY}}" />
-												<input type="hidden" name="parent_id" value="{{$record->id}}" />
-												<input name="description" id="text{{$word->id}}" class="form-control" type="text" 
-													onfocus="setFloat($(this), 'float{{$word->id}}');" 
-													onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
-													value="{{$word->description}}"
-												/>
-												<div style="font-size:.7em;" id="result{{$word->id}}"></div>
-											</form>	
-										</td>
-										<td style="font-size:.7em;";>
-											<div id="float{{$word->id}}"></div>
-										</td>
-										<td>
-										</td>											
-									@else
-										<td>{{$word->description}}</td>
-									@endif
+									<td style="min-width:200px;">
+										<form id="form{{$word->id}}" method="GET" action="/lessons/view/{{$record->id}}">
+											<input type="hidden" name="type_flag" value="{{WORDTYPE_LESSONLIST_USERCOPY}}" />
+											<input name="description" id="text{{$word->id}}" class="form-control" type="text"
+												onfocus="setFloat($(this), 'float{{$word->id}}');" 
+												onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
+												value="{{$word->description}}"
+											/>
+											<div style="font-size:.7em;" id="result{{$word->id}}"></div>
+										</form>	
+									</td>
+									<td style="font-size:.7em;";>
+										<div id="float{{$word->id}}"></div>
+									</td>
 								</tr>
 								@endforeach
 							</tbody>

@@ -6,6 +6,9 @@
 
 Latest DB Changes:
 
+8/6/2019
+ALTER TABLE `words` ADD `vocab_id` INT NULL COMMENT 'vocab word that this word refers to' AFTER `parent_id`;
+
 8/5/2019
 ALTER TABLE `words` CHANGE `type_flag` `type_flag` TINYINT(4) NULL DEFAULT '0' COMMENT '0=not set, 1=lesson list - no definition, 2=lesson list - users copy with definition, 3=no lesson parent - users private list, 99=other';
 ALTER TABLE `lessons` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '0=not set, 1=text, 2=vocab list, 3=fib, 4=multiple choice, 99=other';

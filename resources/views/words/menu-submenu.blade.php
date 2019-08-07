@@ -5,7 +5,7 @@
 		@if (isset($parent_id))
 			<td><a href='/{{$prefix}}/{{$parent_id}}'><span class="glyphCustom glyphicon glyphicon-index"></span></a></td>
 			<td><a href='/{{$prefix}}/add/{{$parent_id}}'><span class="glyphCustom glyphicon glyphicon-add"></span></a></td>
-			<td><a href='/{{$prefix}}/indexowner/{{$parent_id}}'><span class="glyphCustom glyphicon glyphicon-index"></span></a></td>
+			<!-- td><a href='/{{$prefix}}/indexowner/{{$parent_id}}'><span class="glyphCustom glyphicon glyphicon-index"></span></a></td -->
 		@else
 			<td><a href='/{{$prefix}}/add'><span class="glyphCustom glyphicon glyphicon-add"></span></a></td>
 		@endif

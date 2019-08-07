@@ -504,7 +504,7 @@ class Lesson extends Base
 				// check for users definition
 				foreach($rc['recordsUser'] as $recordUser)
 				{
-					if ($recordUser->title == $record->title)
+					if ($recordUser->vocab_id == $record->id)
 					{
 						$rc['records'][$cnt]->description = $recordUser->description;
 						$rc['hasDefinitions'] = true;

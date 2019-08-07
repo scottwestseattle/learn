@@ -145,7 +145,7 @@ class WordController extends Controller
 			else if ($request->type_flag == WORDTYPE_USERLIST)
 				$msg = 'New user vocabulary has been added';
 				
-			Tools::flash('success', $duplicate . $msg);
+			Tools::flash('success', /* $duplicate . */$msg);
 		}
 		catch (\Exception $e)
 		{
@@ -221,7 +221,7 @@ class WordController extends Controller
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-
+		
 		if ($isDirty)
 		{
 			try
@@ -243,7 +243,7 @@ class WordController extends Controller
 			Tools::flash('success', 'No changes made to ' . TITLE_LC);
 		}
 
-		return redirect('/' . PREFIX . '/view/' . $record->id);
+		return redirect('/words/' . $record->parent_id);
 	}
 
     public function updateajax(Request $request, Word $word)
@@ -296,9 +296,30 @@ class WordController extends Controller
 			// user is adding a definition, need to make a copy for this user
 			if ($request->type_flag == WORDTYPE_LESSONLIST_USERCOPY)
 			{
-				// user is add a definition to a vocab word
-				$word = Word::getLessonUserWord($request->parent_id, Auth::id(), $request->title);
-				$rc = $this->saveAjax($request, isset($word) ? $word : new Word());
+				// user is adding a definition to a vocab word
+				$word = Word::getLessonUserWord($record->parent_id, Auth::id(), $record->id);
+				if (isset($word))
+				{
+					// updating existing lesson user word
+					$rc = $this->saveAjax($request, $word);
+				}
+				else
+				{
+					if (strlen($request->description) > 0) // don't copy empties
+					{
+						// adding new lesson user word
+						$word = new Word();
+
+						$word->user_id 		= Auth::id();
+						$word->parent_id 	= $record->parent_id;
+						$word->vocab_id 	= $record->id;
+						$word->type_flag 	= WORDTYPE_LESSONLIST_USERCOPY;
+						$word->title 		= $record->title;
+						$word->permalink	= $record->permalink;
+						
+						$rc = $this->saveAjax($request, $word);
+					}
+				}				
 			}
 		}
 
@@ -308,36 +329,29 @@ class WordController extends Controller
     public function saveAjax(Request $request, Word $record)
     {
 		$rc = '';
-		$isAdd = false;
 		
 		// if he doesn't already have a copy, make one for him
-		if (isset($record->id))
-		{
-			$isAdd = true;
-		}
+		$isAdd = (!isset($record->id));
+		$isDirty = $isAdd;
 
-		$parent_id = isset($request->parent_id) ? $request->parent_id : null;
+		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 
-		$record->user_id 		= Auth::id();
-		$record->parent_id 		= $parent_id;
-		$record->type_flag 		= $request->type_flag;
-		$record->title 			= $request->title;
-		$record->description	= $request->description;
-		$record->permalink		= Tools::createPermalink($request->title);
-
-		$duplicate = Word::exists($record->title) ? 'Duplicate: ' : '';
+		//$duplicate = Word::exists($record->title) ? 'Duplicate: ' : '';
 		
-		try
+		if ($isDirty)
 		{
-			$record->save();
-			$rc = 'user definition saved';
-			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
-		}
-		catch (\Exception $e)
-		{
-			$msg = 'Error ' . ($isAdd ? 'adding new' : 'updating') . ' lesson user word';
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
-			$rc = $msg;
+			try
+			{
+				$record->save();
+				$rc = $isAdd ? 'user definition added' : 'user definition saved';
+				Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
+			}
+			catch (\Exception $e)
+			{
+				$msg = 'Error ' . ($isAdd ? 'adding new' : 'updating') . ' lesson user word';
+				Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
+				$rc = $msg;
+			}
 		}
 		
 		return $rc;
@@ -370,7 +384,7 @@ class WordController extends Controller
 			Tools::flash('danger', $e->getMessage());
 		}
 
-		return redirect(REDIRECT_ADMIN);
+		return redirect('/words/' . $record->parent_id);
     }
 
     public function fastdelete(Word $word)

@@ -17,4 +17,7 @@ return [
 'New lesson has been added' => 'New lesson has been added',
 'Error getting vocabulary list' => 'Error getting vocabulary list',
 'Error updating record' => 'Error updating record',
+'Word has been deleted' => 'Word has been deleted',
+'Error adding new word' => 'Error adding new word',
+'New lesson vocabulary has been added' => 'New lesson vocabulary has been added',
 ];

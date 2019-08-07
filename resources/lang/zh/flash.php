@@ -17,4 +17,7 @@ return [
 'New lesson has been added' => '新课程已添加',
 'Error getting vocabulary list' => '获取词汇表错误',
 'Error updating record' => '更新记录时出错',
+'Word has been deleted' => '单词已被删除',
+'Error adding new word' => '添加新单词时出错',
+'New lesson vocabulary has been added' => '新增了课程词汇',
 ];
