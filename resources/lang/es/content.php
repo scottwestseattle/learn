@@ -53,7 +53,7 @@ return [
 'Flip Question/Answer' => 'Invertir Pregunta/Respuesta',
 'Work Status' => 'Estado de finalización',
 'Release Status' => 'Estado de lanzamiento',
-'Back to Lesson' => 'Volver a la Lección',
+'Back to Lesson' => 'Volver a la lección',
 'Select Course' => 'Seleccionar Curso',
 'Display Order' => 'Orden de Visualización',
 'Next Chapter' => 'Siguiente Capítulo',
@@ -104,5 +104,5 @@ return [
 'Go to Vocabulary' => 'Ver Listas de Vocabulario',
 'Your Vocabulary Lists' => 'Tus Listas de Vocabulario',
 'Back to Home' => 'Volver a la página principal',
-'Back to Lesson' => 'Volver a la lección',
+'Add Vocabulary' => 'Añadir Vocabulario',
 ];

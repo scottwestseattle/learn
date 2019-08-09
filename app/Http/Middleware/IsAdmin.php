@@ -31,6 +31,6 @@ class IsAdmin
 			}
 		}
 
-        return redirect('home');
+        return redirect('unauthorized');
     }
 }

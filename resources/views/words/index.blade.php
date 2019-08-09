@@ -7,10 +7,11 @@
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'parent_id' => $parent_id, 'isAdmin' => $isAdmin])@endcomponent
 	
 	<div class="form-group">
-	@if (isset($parent_id))
+	@if ($lesson)
 		<a href="/lessons/view/{{$parent_id}}"><button class="btn btn-success">@LANG('content.Back to Lesson')</button></a>
 	@else
 		<a href="/home"><button class="btn btn-success">@LANG('content.Back to Home')</button></a>
+		<a href="/words/add-user"><button class="btn btn-success">@LANG('content.Add Vocabulary')</button></a>
 	@endif
 	</div>
 	
@@ -26,7 +27,7 @@
 					<tbody>
 						@foreach($records as $word)
 						<tr>
-							<td><a href='/{{$prefix}}/edit/{{$word->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+							<td><a href='{{$lesson ? '/words/edit/' : '/words/edit-user/'}}{{$word->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 							<td>{{$word->title}}</td>
 							<td>{{$word->description}}</td>
 							<td><a href='/{{$prefix}}/confirmdelete/{{$word->id}}'><span class="glyphCustom glyphicon glyphicon-delete"></span></a></td>

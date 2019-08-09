@@ -9,15 +9,14 @@
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin, 'parent_id' => $parent_id])@endcomponent
 	
 	<div class="form-group">
-	@if (isset($parent_id))
+	@if ($lesson)
 		<a href="/lessons/view/{{$parent_id}}"><button class="btn btn-success">@LANG('content.Back to Lesson')</button></a>
 	@else
 		<a href="/home"><button class="btn btn-success">@LANG('content.Back to Home')</button></a>
 	@endif
 	</div>
 	
-	
-	@if (isset($parent_id))
+	@if ($lesson)
 		@if ($type_flag == WORDTYPE_LESSONLIST)
 			<h1>@LANG('ui.Add') @LANG('content.Lesson Vocabulary')</h1>
 		@elseif ($type_flag == WORDTYPE_LESSONLIST_USERCOPY)
@@ -35,7 +34,7 @@
 
 	@component('components.control-accent-chars-esp', ['visible' => true, 'target' => 'title'])@endcomponent																		
 	
-	<form method="POST" action="/{{$prefix}}/create">
+	<form method="POST" action="{{isset($parent_id) ? '/words/create' : '/words/create-user' }}">
 	
 		<input type="hidden" name="parent_id" value={{$parent_id}} />
 		<input type="hidden" name="type_flag" value={{$type_flag}} />
@@ -45,7 +44,7 @@
 			<input type="text" id="title" name="title" class="form-control" />
 		<div>
 		
-		@if ($type_flag == WORDTYPE_USERLIST)
+		@if (!$lesson)
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('content.Translation, Definition, or Hint'):</label>
 			<textarea name="description" class="form-control"></textarea>
@@ -62,7 +61,7 @@
 
 	</form>
 
-	@component('components.data-badge-list', ['edit' => '/words/edit/', 'records' => $records])@endcomponent																		
+	@component('components.data-badge-list', ['edit' => $lesson ? '/words/edit/' : '/words/edit-user/', 'records' => $records])@endcomponent																		
 	
 </div>
 

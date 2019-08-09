@@ -6,7 +6,7 @@
 
 	<h3>@LANG('content.Your Vocabulary Lists') ({{count($words)}})</h3>
 	
-	@component('components.data-badge-list', ['records' => $words, 'edit' => '/words/edit/'])@endcomponent																			
+	@component('components.data-badge-list', ['records' => $words, 'edit' => '/words/edit-user/'])@endcomponent																			
 
 	<p><a class="btn btn-primary btn-lg" href="/words" role="button">@LANG('content.Go to Vocabulary') &raquo;</a></p>
 	

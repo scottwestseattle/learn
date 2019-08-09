@@ -23,6 +23,12 @@ class HomeController extends Controller
 
 		parent::__construct();
     }
+	
+    public function unauthorized()
+    {		
+        return view('home.unauthorized', [
+			]);
+    }	
 
     public function hash()
     {

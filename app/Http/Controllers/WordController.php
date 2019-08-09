@@ -23,7 +23,7 @@ class WordController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'review', 'view', 'permalink', 'updateajax']);
+        $this->middleware('is_admin')->except(['index', 'review', 'view', 'permalink', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -50,6 +50,7 @@ class WordController extends Controller
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records,
 			'parent_id' => $parent_id,
+			'lesson' => isset($parent_id),
 		]));
     }
 
@@ -104,17 +105,27 @@ class WordController extends Controller
 		
 		return view(PREFIX . '.add', $this->getViewData([
 			'parent_id' => $parent_id,
-			'type_flag' => isset($parent_id) ? WORDTYPE_LESSONLIST : WORDTYPE_USERLIST,
+			'type_flag' => WORDTYPE_LESSONLIST,
 			'records' => $words,
+			'lesson' => true,
 			]));
 	}
 
-    public function addUserWords($parent_id = false)
+    public function addUser()
     {
-		return view(PREFIX . '.add-user-words', $this->getViewData([
-			'parent_id' => $parent_id,
-			'type_flag' => $parent_id ? WORDTYPE_LESSONLIST_USER : WORDTYPE_USERLIST,
+		$words = Word::getIndex();
+		
+		return view(PREFIX . '.add', $this->getViewData([
+			'parent_id' => null,
+			'type_flag' => WORDTYPE_USERLIST,
+			'records' => $words,
+			'lesson' => false,
 			]));
+	}
+
+    public function createUser(Request $request)
+    {
+		return $this->create($request);
 	}
 	
     public function create(Request $request)
@@ -155,7 +166,7 @@ class WordController extends Controller
 		if (isset($parent_id) && $parent_id > 0)
 			return redirect('/words/add/' . $parent_id);
 		else
-			return redirect('/words/add/');
+			return redirect('/words/add-user/');
     }
 	
     public function permalink(Request $request, $permalink)
@@ -206,9 +217,26 @@ class WordController extends Controller
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
 			'records' => Word::getIndex($word->parent_id),
+			'lesson' => $record->type_flag == WORDTYPE_LESSONLIST,
 			]));
     }
 
+	public function editUser(Word $word)
+    {
+		$record = $word;
+		
+		return view(PREFIX . '.edit', $this->getViewData([
+			'record' => $record,
+			'records' => Word::getIndex(),
+			'lesson' => $record->type_flag == WORDTYPE_LESSONLIST,
+			]));
+    }
+
+    public function updateUser(Request $request, Word $word)
+    {
+		return $this->update($request, $word);
+	}
+	
     public function update(Request $request, Word $word)
     {
 		$record = $word;
@@ -240,7 +268,10 @@ class WordController extends Controller
 			Tools::flash('success', 'No changes were made');
 		}
 
-		return redirect('/words/edit/' . $word->id);
+		if (Tools::isAdmin() || $word->type_flag == WORDTYPE_LESSONLIST)
+			return redirect('/words/edit/' . $word->id);
+		else
+			return redirect('/words/edit-user/' . $word->id);
 	}
 
     public function updateajax(Request $request, Word $word)

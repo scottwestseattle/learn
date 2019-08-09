@@ -53,7 +53,7 @@ return [
 'Flip Question/Answer' => 'Flip Question/Answer',
 'Work Status' => 'Work Status',
 'Release Status' => 'Release Status',
-'Back to Lesson' => 'Back to Lesson',
+'Back to Lesson' => '回到课程',
 'Select Course' => 'Select Course',
 'Display Order' => 'Display Order',
 'Next Chapter' => 'Next Chapter',
@@ -104,5 +104,5 @@ return [
 'Go to Vocabulary' => '请参阅词汇表',
 'Your Vocabulary Lists' => '你的词汇表',
 'Back to Home' => '返回主页',
-'Back to Lesson' => '回到课程',
+'Add Vocabulary' => '添加词汇',
 ];

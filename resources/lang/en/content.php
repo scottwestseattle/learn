@@ -104,5 +104,5 @@ return [
 'Go to Vocabulary' => 'Go to Vocabulary',
 'Your Vocabulary Lists' => 'Your Vocabulary Lists',
 'Back to Home' => 'Back to Home',
-'Back to Lesson' => 'Back to Lesson',
+'Add Vocabulary' => 'Add Vocabulary',
 ];

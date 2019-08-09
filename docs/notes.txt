@@ -134,6 +134,9 @@ cd /wamp3.1.9/www/[project]/
 // create auth
 php artisan make:auth
 
+// create middleware
+php artisan make:middleware isOwner
+
 // drop all tables and migrate all
 php artisan migrate:reset
 

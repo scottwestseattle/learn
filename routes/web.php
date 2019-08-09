@@ -33,6 +33,7 @@ Route::get('/sample/', 'FrontPageController@sample');
 Route::get('/hash', 'HomeController@hash');
 Route::post('/hasher', 'HomeController@hasher');
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/unauthorized', 'HomeController@unauthorized');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
@@ -45,13 +46,17 @@ Route::group(['prefix' => 'words'], function () {
 
 	// add/create
 	Route::get('/add/{parent_id?}','WordController@add');
-	Route::get('/add-user-words/{parent_id?}','WordController@addUserWords');
 	Route::post('/create','WordController@create');
+	Route::get('/add-user', 'WordController@addUser')->middleware('auth');
+	Route::post('/create-user','WordController@createUser')->middleware('auth');
 
 
 	// edit/update
 	Route::get('/edit/{word}','WordController@edit');
 	Route::post('/update/{word}','WordController@update');
+	
+	Route::get('/edit-user/{word}','WordController@editUser')->middleware(['is_owner']);
+	Route::post('/update-user/{word}','WordController@updateUser')->middleware(['is_owner']);
 	
 	Route::post('/updateajax/{word}','WordController@updateajax');
 	Route::get('/updateajax/{word}','WordController@updateajax');
