@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use App\Event;
+use App\Tools;
 
 define('LOG_MODEL', 'frontpage');
 
@@ -28,6 +29,15 @@ class FrontPageController extends Controller
      */
     public function index()
     {
+		if (Tools::isAdmin())
+		{
+			//return redirect('/admin');
+		}
+		else if (Auth::check())
+		{
+			//return redirect('/home');
+		}
+			
 		return view('frontpage.index', $this->getViewData([
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }

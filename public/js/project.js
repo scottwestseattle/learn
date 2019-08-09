@@ -662,13 +662,21 @@ function setFloat(obj, id)
 }
 
 
-function insertChar(char)
+function insertChar(char, id = 0)
 {	
-	if (typeof(prevFocus) == 'undefined')
+	if (id != 0)
+	{
+		txtarea = document.getElementById(id);
+	}
+	else if (prevFocus == 'undefined')
+	{
 		return;
-	
-	id = prevFocus.attr('id');
-	txtarea = document.getElementById(id);
+	}
+	else
+	{
+		id = prevFocus.attr('id');
+		txtarea = document.getElementById(id);
+	}
 
     var scrollPos = txtarea.scrollTop;
     var caretPos = txtarea.selectionStart;

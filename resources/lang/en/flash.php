@@ -8,7 +8,7 @@ return [
 'Error getting course list' => 'Error getting course list',
 'Error getting lesson list' => 'Error getting lesson list',
 'Error adding new course' => 'Error adding new course',
-'No changes made to course' => 'No changes made to course',
+'No changes were made' => 'No changes were made',
 'Course has been updated' => 'Course has been updated',
 'Course status has been updated' => 'Course status has been updated',
 'New course has been added' => 'New course has been added',
@@ -19,5 +19,6 @@ return [
 'Error updating record' => 'Error updating record',
 'Word has been deleted' => 'Word has been deleted',
 'Error adding new word' => 'Error adding new word',
-'New lesson vocabulary has been added' => 'New lesson vocabulary has been added',
+'New record has been added' => 'New record has been added',
+'Record has been updated' => 'Record has been updated',
 ];

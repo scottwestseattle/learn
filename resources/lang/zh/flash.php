@@ -8,7 +8,7 @@ return [
 'Error getting course list' => '获取课程列表时出错',
 'Error getting lesson list' => '获取课程列表时出错',
 'Error adding new course' => '添加新课程时出错',
-'No changes made to course' => '当然没有变化',
+'No changes were made' => '没有做出任何改变',
 'Course has been updated' => '课程已更新',
 'Course status has been updated' => '课程状态已更新',
 'New course has been added' => '新课程已添加',
@@ -19,5 +19,6 @@ return [
 'Error updating record' => '更新记录时出错',
 'Word has been deleted' => '单词已被删除',
 'Error adding new word' => '添加新单词时出错',
-'New lesson vocabulary has been added' => '新增了课程词汇',
+'New record has been added' => '新记录已添加',
+'Record has been updated' => '记录已更新',
 ];

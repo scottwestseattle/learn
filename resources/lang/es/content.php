@@ -99,4 +99,10 @@ return [
 'Word' => 'Palabra',
 'Lesson Vocabulary' => 'Vocabulario de Lección',
 'Courses Under Development' => 'Cursos en desarrollo',
+'Your Courses' => 'Sus Cursos',
+'Go to Courses' => 'Ver Cursos',
+'Go to Vocabulary' => 'Ver Listas de Vocabulario',
+'Your Vocabulary Lists' => 'Tus Listas de Vocabulario',
+'Back to Home' => 'Volver a la página principal',
+'Back to Lesson' => 'Volver a la lección',
 ];

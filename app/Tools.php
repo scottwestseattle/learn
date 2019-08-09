@@ -45,6 +45,15 @@ class Tools
         return $r;
     }
 
+    static public function itos($n)
+    {
+		$rc = '';
+		
+		$rc .= isset($n) ? intval($n) : 'null';
+		
+		return $rc;
+	}
+	
     static public function getSafeArrayInt($array, $key, $default)
     {
 		$rc = $default;

@@ -15,7 +15,12 @@
 			<li>{{substr(base_path(), 0, 28)}}...</li>
 			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}, SITE_ID: {{SITE_ID}}</li>
 			<li>Life:&nbsp;{{env('SESSION_LIFETIME', 0)}}, New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</li>
-			<li><a href="/hash">Hash</a>&nbsp;&bull;&nbsp;<a href="/users">Users</a>&nbsp;&bull;&nbsp;<a href="/courses">Courses</a>&nbsp;&bull;&nbsp;<a href="/eunoticereset">Privacy</a></li>
+			<li>
+				<a href="/home">Home</a>&nbsp;&bull;&nbsp;
+				<a href="/hash">Hash</a>&nbsp;&bull;&nbsp;
+				<a href="/users">Users</a>&nbsp;&bull;&nbsp;
+				<a href="/courses">Courses</a>&nbsp;&bull;&nbsp;
+				<a href="/eunoticereset">Privacy</a></li>
 		</ul>
 	</div>
 	

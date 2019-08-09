@@ -99,4 +99,10 @@ return [
 'Word' => '字',
 'Lesson Vocabulary' => '课程词汇',
 'Courses Under Development' => '正在开发的课程',
+'Your Courses' => '你的课程',
+'Go to Courses' => '参见课程列表',
+'Go to Vocabulary' => '请参阅词汇表',
+'Your Vocabulary Lists' => '你的词汇表',
+'Back to Home' => '返回主页',
+'Back to Lesson' => '回到课程',
 ];

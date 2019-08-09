@@ -63,7 +63,7 @@ Route::group(['prefix' => 'words'], function () {
 	Route::get('/fastdelete/{word}','WordController@fastdelete');
 	
 	// index
-	Route::get('/{parent_id}', 'WordController@index');	
+	Route::get('/{parent_id?}', 'WordController@index');	
 });
 
 // Courses

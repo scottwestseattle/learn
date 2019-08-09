@@ -26,7 +26,7 @@
 		
 		@if ($isAdmin)
 			@if ($record->isVocab())
-				&nbsp;<a href="/words/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
+				&nbsp;<a href="/words/add/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
 			@else
 				&nbsp;<a href="/{{$prefix}}/edit2/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
 			@endif

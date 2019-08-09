@@ -32,10 +32,8 @@ class WordController extends Controller
 		parent::__construct();
 	}
 
-    public function index(Request $request, $parent_id)
+    public function index(Request $request, $parent_id = null)
     {
-		$parent_id = intval($parent_id);
-
 		$records = []; // make this countable so view will always work
 
 		try
@@ -45,7 +43,7 @@ class WordController extends Controller
 		catch (\Exception $e)
 		{
 			$msg = 'Error getting ' . $this->title . ' list';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg . ' for parent ' . $parent_id, $parent_id, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg . ' for parent ' . Tools::itos($parent_id), $parent_id, $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
 
@@ -106,7 +104,7 @@ class WordController extends Controller
 		
 		return view(PREFIX . '.add', $this->getViewData([
 			'parent_id' => $parent_id,
-			'type_flag' => WORDTYPE_LESSONLIST,
+			'type_flag' => isset($parent_id) ? WORDTYPE_LESSONLIST : WORDTYPE_USERLIST,
 			'records' => $words,
 			]));
 	}
@@ -122,11 +120,12 @@ class WordController extends Controller
     public function create(Request $request)
     {
 		$record = new Word();
-		
-		$parent_id = isset($request->parent_id) ? $request->parent_id : null;
+		$parent_id = isset($request->parent_id) ? intval($request->parent_id) : null;
 
+		if ($parent_id > 0)
+			$record->parent_id = $parent_id;
+		
 		$record->user_id 		= Auth::id();
-		$record->parent_id 		= $parent_id;
 		$record->type_flag 		= $request->type_flag;
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
@@ -140,13 +139,7 @@ class WordController extends Controller
 
 			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
 			
-			$msg = 'New vocabulary has been added';
-			if ($request->type_flag == WORDTYPE_LESSONLIST)
-				$msg = 'New lesson vocabulary has been added';
-			else if ($request->type_flag == WORDTYPE_LESSONLIST_USERCOPY)
-				$msg = 'New lesson user vocabulary has been added';
-			else if ($request->type_flag == WORDTYPE_USERLIST)
-				$msg = 'New user vocabulary has been added';
+			$msg = 'New record has been added';
 				
 			Tools::flash('success', /* $duplicate . */$msg);
 		}
@@ -159,10 +152,10 @@ class WordController extends Controller
 			return back();
 		}
 
-		if ($request->type_flag == WORDTYPE_LESSONLIST)
+		if (isset($parent_id) && $parent_id > 0)
 			return redirect('/words/add/' . $parent_id);
 		else
-			return redirect('/words/indexowner/' . $parent_id);
+			return redirect('/words/add/');
     }
 	
     public function permalink(Request $request, $permalink)
@@ -212,6 +205,7 @@ class WordController extends Controller
 		
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
+			'records' => Word::getIndex($word->parent_id),
 			]));
     }
 
@@ -232,7 +226,7 @@ class WordController extends Controller
 				$record->save();
 
 				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
-				Tools::flash('success', $this->title . ' has been updated');
+				Tools::flash('success', 'Record has been updated');
 			}
 			catch (\Exception $e)
 			{
@@ -243,10 +237,10 @@ class WordController extends Controller
 		}
 		else
 		{
-			Tools::flash('success', 'No changes made to ' . TITLE_LC);
+			Tools::flash('success', 'No changes were made');
 		}
 
-		return redirect('/words/' . $record->parent_id);
+		return redirect('/words/edit/' . $word->id);
 	}
 
     public function updateajax(Request $request, Word $word)

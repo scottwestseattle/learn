@@ -8,6 +8,7 @@ use App\Event;
 use App\Visitor;
 use App\User;
 use App\Course;
+use App\Word;
 
 class HomeController extends Controller
 {
@@ -49,7 +50,20 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home.index');
+		//
+		// user's vocab lists
+		//
+		$words = Word::getIndex();
+		
+		//
+		// users's courses that have been started or finished
+		//
+		$courses = Course::getIndex(['public']);
+		
+        return view('home.index', [
+			'courses' => $courses,
+			'words' => $words,
+			]);
     }
 
     public function admin()

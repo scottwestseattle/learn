@@ -210,7 +210,7 @@ class CourseController extends Controller
 		}
 		else
 		{
-			Tools::flash('success', 'No changes made to ' . TITLE_LC);
+			Tools::flash('success', 'No changes were made');
 		}
 
 		return redirect('/' . PREFIX . '/view/' . $record->id);

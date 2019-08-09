@@ -8,7 +8,7 @@ return [
 'Error getting course list' => 'Error al obtener la lista de cursos',
 'Error getting lesson list' => 'Error al obtener la lista de lecciones',
 'Error adding new course' => 'Error al agregar nuevo curso',
-'No changes made to course' => 'No se han realizado cambios en el curso',
+'No changes were made' => 'No se han realizado cambios',
 'Course has been updated' => 'El curso ha sido actualizado',
 'Course status has been updated' => 'El estado del curso ha sido actualizado',
 'New course has been added' => 'Se ha añadido nuevo curso',
@@ -19,5 +19,6 @@ return [
 'Error updating record' => 'Error al actualizar el registro',
 'Word has been deleted' => 'La palabra ha sido eliminado',
 'Error adding new word' => 'Error al agregar nueva palabra',
-'New lesson vocabulary has been added' => 'Se agregó nuevo vocabulario de lecciones',
+'New record has been added' => 'Se agregó nuevo registro',
+'Record has been updated' => 'El registro ha sido actualizado',
 ];

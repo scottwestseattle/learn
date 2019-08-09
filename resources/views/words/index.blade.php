@@ -5,10 +5,15 @@
 <div class="container page-normal">
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'parent_id' => $parent_id, 'isAdmin' => $isAdmin])@endcomponent
-
+	
 	<div class="form-group">
-		<a href="/lessons/view/{{$parent_id}}"><button class="btn btn-success">Back to Lesson</button></a>
+	@if (isset($parent_id))
+		<a href="/lessons/view/{{$parent_id}}"><button class="btn btn-success">@LANG('content.Back to Lesson')</button></a>
+	@else
+		<a href="/home"><button class="btn btn-success">@LANG('content.Back to Home')</button></a>
+	@endif
 	</div>
+	
 	
 	<h1>@LANG('content.Vocabulary') ({{count($records)}})</h1>
 	

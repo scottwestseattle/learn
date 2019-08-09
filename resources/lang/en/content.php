@@ -99,4 +99,10 @@ return [
 'Word' => 'Word',
 'Lesson Vocabulary' => 'Lesson Vocabulary',
 'Courses Under Development' => 'Courses Under Development',
+'Your Courses' => 'Your Courses',
+'Go to Courses' => 'Go to Courses',
+'Go to Vocabulary' => 'Go to Vocabulary',
+'Your Vocabulary Lists' => 'Your Vocabulary Lists',
+'Back to Home' => 'Back to Home',
+'Back to Lesson' => 'Back to Lesson',
 ];

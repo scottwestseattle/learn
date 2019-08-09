@@ -120,30 +120,50 @@ class Word extends Base
 		return $rc;
     }	
 	
-    static public function getIndex($parent_id)
+    static public function getIndex($parent_id = null)
 	{
-		return self::getByParent($parent_id, WORDTYPE_LESSONLIST);
+		$records = [];
+		
+		if (isset($parent_id))
+			$records = self::getByParent($parent_id, WORDTYPE_LESSONLIST);
+		else
+			$records = self::getByParent(null, WORDTYPE_USERLIST);
+			
+		return $records;
 	}
 	
     static public function getByParent($parent_id, $type_flag)
     {
-		$parent_id = intval($parent_id);
-
 		$records = [];
 			
 		try
 		{
-			$records = Word::select()
-				->where('deleted_flag', 0)
-				->where('parent_id', $parent_id)
-				->where('type_flag', $type_flag)
-				->orderBy('id')
-				->get();
+			if (isset($parent_id))
+			{
+				$parent_id = intval($parent_id);
+				
+				$records = Word::select()
+					->where('deleted_flag', 0)
+					->where('parent_id', $parent_id)
+					->where('type_flag', $type_flag)
+					->orderBy('id')
+					->get();
+			}
+			else
+			{
+				$records = Word::select()
+					->where('deleted_flag', 0)
+					->whereNull('parent_id')
+					->where('user_id', Auth::id())
+					->where('type_flag', $type_flag)
+					->orderBy('id')
+					->get();
+			}
 		}
 		catch (\Exception $e)
 		{
 			$msg = 'Error getting vocabulary list';
-			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
+			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . Tools::itos($parent_id), null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 		}			
 
