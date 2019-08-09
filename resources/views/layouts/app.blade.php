@@ -61,7 +61,7 @@ $domainName = isset($domainName) ? $domainName : '';
 			@elseif ($isAdmin)
 				<div style="" class=""><a class="" role="" href="/admin"><span style="color:LightGreen;" class="glyphicon glyphicon-user"></span></a></div>
 			@elseif (Auth::check())
-				<div style="" class=""><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
+				<div style="" class=""><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
 			@endif
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"

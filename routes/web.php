@@ -18,6 +18,7 @@ Auth::routes();
 
 /* public pages */
 Route::get('/', 'FrontPageController@index');
+
 Route::get('/about', 'FrontPageController@about')->name('about');
 Route::get('/contact', 'FrontPageController@contact')->name('contact');
 Route::get('/privacy', 'FrontPageController@privacy')->name('privacy');
@@ -29,14 +30,14 @@ Route::get('/eunoticeaccept/', 'FrontPageController@eunoticeaccept');
 Route::get('/eunoticereset/', 'FrontPageController@eunoticereset');
 Route::get('/sample/', 'FrontPageController@sample');
 
-// protected
-Route::get('/hash', 'HomeController@hash');
-Route::post('/hasher', 'HomeController@hasher');
+// Site Admin Pages
+Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/unauthorized', 'HomeController@unauthorized');
 
-// Site Admin Pages
-Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
+// protected
+Route::get('/hash', 'HomeController@hash');
+Route::post('/hasher', 'HomeController@hasher');
 
 // Words
 Route::group(['prefix' => 'words'], function () {

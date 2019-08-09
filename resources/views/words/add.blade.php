@@ -8,14 +8,6 @@
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin, 'parent_id' => $parent_id])@endcomponent
 	
-	<div class="form-group">
-	@if ($lesson)
-		<a href="/lessons/view/{{$parent_id}}"><button class="btn btn-success">@LANG('content.Back to Lesson')</button></a>
-	@else
-		<a href="/home"><button class="btn btn-success">@LANG('content.Back to Home')</button></a>
-	@endif
-	</div>
-	
 	@if ($lesson)
 		@if ($type_flag == WORDTYPE_LESSONLIST)
 			<h1>@LANG('ui.Add') @LANG('content.Lesson Vocabulary')</h1>
@@ -41,13 +33,13 @@
 		
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('content.Word or Phrase'):</label>
-			<input type="text" id="title" name="title" class="form-control" />
+			<input type="text" id="title" name="title" class="form-control" autocomplete="off" />
 		<div>
 		
 		@if (!$lesson)
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('content.Translation, Definition, or Hint'):</label>
-			<textarea name="description" class="form-control"></textarea>
+			<textarea name="description" class="form-control" autocomplete="off"></textarea>
 		<div>
 		@endif
 		

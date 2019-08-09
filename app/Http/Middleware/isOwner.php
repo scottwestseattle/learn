@@ -19,7 +19,7 @@ class isOwner
 		if (Auth::check())
 		{
 			$p = $request->route()->parameters();
-			if (array_key_exists('word', $p))
+			if (isset($p) && array_key_exists('word', $p))
 			{
 				$record = $p['word'];
 				

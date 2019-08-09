@@ -66,10 +66,10 @@ class HomeController extends Controller
 		//
 		$courses = Course::getIndex(['public']);
 		
-        return view('home.index', [
+        return view('home.index', $this->getViewData([
 			'courses' => $courses,
 			'words' => $words,
-			]);
+			]));
     }
 
     public function admin()

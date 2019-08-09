@@ -23,7 +23,7 @@ class WordController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'review', 'view', 'permalink', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser']);
+        $this->middleware('is_admin')->except(['index', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
