@@ -54,10 +54,9 @@ Route::group(['prefix' => 'words'], function () {
 
 	// edit/update
 	Route::get('/edit/{word}','WordController@edit');
-	Route::post('/update/{word}','WordController@update');
-	
-	Route::get('/edit-user/{word}','WordController@editUser')->middleware(['is_owner']);
-	Route::post('/update-user/{word}','WordController@updateUser')->middleware(['is_owner']);
+	Route::post('/update/{word}','WordController@update');	
+	Route::get('/edit-user/{word}','WordController@editUser')->middleware('is_owner');
+	Route::post('/update-user/{word}','WordController@updateUser')->middleware('is_owner');
 	
 	Route::post('/updateajax/{word}','WordController@updateajax');
 	Route::get('/updateajax/{word}','WordController@updateajax');
@@ -65,6 +64,9 @@ Route::group(['prefix' => 'words'], function () {
 	// delete
 	Route::get('/confirmdelete/{word}','WordController@confirmdelete');
 	Route::post('/delete/{word}','WordController@delete');
+	Route::get('/confirmdelete-user/{word}','WordController@confirmDeleteUser')->middleware('is_owner');
+	Route::post('/delete-user/{word}','WordController@deleteUser')->middleware('is_owner');
+	
 	Route::get('/undelete', 'WordController@undelete');
 	Route::get('/fastdelete/{word}','WordController@fastdelete');
 	

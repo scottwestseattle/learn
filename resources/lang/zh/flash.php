@@ -21,4 +21,5 @@ return [
 'Error adding new word' => '添加新单词时出错',
 'New record has been added' => '新记录已添加',
 'Record has been updated' => '记录已更新',
+'Record has been deleted' => '记录已被删除',
 ];

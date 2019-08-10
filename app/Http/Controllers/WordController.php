@@ -23,7 +23,7 @@ class WordController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser']);
+        $this->middleware('is_admin')->except(['index', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser', 'confirmDeleteUser', 'deleteUser']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -387,15 +387,23 @@ class WordController extends Controller
 	
     public function confirmdelete(Word $word)
     {
-		$record = $word;
-		
-		$vdata = $this->getViewData([
-			'record' => $record,
-		]);
-
-		return view(PREFIX . '.confirmdelete', $vdata);
+		return view(PREFIX . '.confirmdelete', $this->getViewData([
+			'record' => $word,
+		]));
     }
 
+    public function confirmDeleteUser(Word $word)
+    {
+		return view(PREFIX . '.confirmdelete', $this->getViewData([
+			'record' => $word,
+		]));
+    }
+	
+    public function deleteUser(Request $request, Word $word)
+    {
+		return $this->delete($request, $word);
+	}
+	
     public function delete(Request $request, Word $word)
     {
 		$record = $word;
@@ -404,15 +412,19 @@ class WordController extends Controller
 		{
 			$record->deleteSafe();
 			Event::logDelete(LOG_MODEL, $record->title, $record->id);
-			Tools::flash('success', $this->title . ' has been deleted');
+			Tools::flash('success', 'Record has been deleted');
 		}
 		catch (\Exception $e)
 		{
+			$msg = 'Error deleting record';
 			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $record->title, $record->id, $e->getMessage());
-			Tools::flash('danger', $e->getMessage());
+			Tools::flash('danger', $msg);
 		}
 
-		return redirect('/words/' . $record->parent_id);
+		if (Tools::isAdmin() || $word->type_flag == WORDTYPE_LESSONLIST)
+			return redirect('/words/add/' . $word->parent_id);
+		else
+			return redirect('/words/add-user/' . $word->parent_id);		
     }
 
     public function fastdelete(Word $word)

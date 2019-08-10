@@ -4,11 +4,11 @@
 
 <div class="container page-normal">
 
-	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
+	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin, 'parent_id' => $record->parent_id])@endcomponent
 	
 	<h1>@LANG('ui.Delete') @LANG('content.' . $title)</h1>
 
-	<form method="POST" action="/{{$prefix}}/delete/{{ $record->id }}">
+	<form method="POST" action="/words/delete{{$isAdmin ? '' : '-user'}}/{{$record->id}}">
 			   
 		<h3 name="title" class="">@LANG('content.Please confirm delete')</h3>
 	

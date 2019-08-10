@@ -485,7 +485,6 @@ class Lesson extends Base
     public function getVocab()
 	{
 		$rc['records'] = null;
-		$rc['isUserList'] = false;
 		$rc['hasDefinitions'] = false;
 		
 		if ($this->type_flag == LESSONTYPE_VOCAB)
@@ -493,12 +492,13 @@ class Lesson extends Base
 			// if user logged in, get his copy of the vocab for this lesson with definitions 
 			$rc['recordsUser'] = Auth::check() ? Word::getLessonUserWords($this->id) : [];
 		
-			// get the officila lesson copy which never has definitions
+			// get the official lesson copy which never has definitions
 			$rc['records'] = Word::getByType($this->id, WORDTYPE_LESSONLIST);
 			
 			// put the lists together
 			$recordsNew = [];
 			$cnt = 0;
+			$cntDefinitions = 0;
 			foreach($rc['records'] as $record)
 			{
 				// check for users definition
@@ -507,13 +507,15 @@ class Lesson extends Base
 					if ($recordUser->vocab_id == $record->id)
 					{
 						$rc['records'][$cnt]->description = $recordUser->description;
-						$rc['hasDefinitions'] = true;
+						$cntDefinitions++;
 						break;
 					}
 				}	
 
 				$cnt++;
 			}				
+			
+			$rc['hasDefinitions'] = ($cnt == $cntDefinitions);
 			
 			//dd($rc);
 		}

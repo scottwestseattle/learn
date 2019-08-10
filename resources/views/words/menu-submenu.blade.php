@@ -26,6 +26,9 @@
 		@else
 			<td><a href='/home'><span class="glyphCustom glyphicon glyphicon-home"></span></a></td>
 			<td><a href='/words/add-user'><span class="glyphCustom glyphicon glyphicon-add"></span></a></td>
+			@if (isset($record->id))
+				<td><a href='/{{$prefix}}/confirmdelete-user/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-delete"></span></a></td>
+			@endif
 		@endif
 	</tr></table>
 </div>

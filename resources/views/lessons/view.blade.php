@@ -35,7 +35,7 @@
 	</div>
 	<h3 name="title" class="">{{$record->title }}</h3>
 
-	@if (strlen($record->description) > 0)
+	@if (false && strlen($record->description) > 0)
 		<p class=""><i>{{$record->description }}</i></p>
 	@endif
 
