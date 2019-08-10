@@ -8,7 +8,7 @@
 
 	<div class="page-nav-buttons">
 		<a class="btn btn-success btn-sm btn-nav-lesson-sm" role="button" href="/courses/view/{{$record->parent_id}}">@LANG('content.Back to')&nbsp;{{$courseTitle}}<span class="glyphicon glyphicon-button-back-to"></span></a>
-		<a class="btn btn-success btn-sm btn-nav-lesson-sm {{isset($nextChapter) ? '' : 'disabled'}}" role="button" href="/lessons/view/{{$nextChapter}}">@LANG('content.Next Chapter')<span class="glyphicon glyphicon-button-next"></span></a>
+		<a class="btn btn-success btn-sm btn-nav-lesson-sm {{isset($nextChapter) ? '' : 'hidden'}}" role="button" href="/lessons/view/{{$nextChapter}}">@LANG('content.Next Chapter')<span class="glyphicon glyphicon-button-next"></span></a>
 	</div>
 	<div class="page-nav-buttons">
 		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}">
@@ -113,7 +113,6 @@
 				<p>If you already have an account, please <a href="/login">click here to login</a>, otherwise please <a href="/register">click here to register a new account</a>.</p>
 			@endif
 		@endif
-		
 		
 		@if (isset($vocab) && count($vocab) > 0)
 		<div class="xrow">

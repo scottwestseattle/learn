@@ -729,6 +729,20 @@ class Lesson extends Base
 		return $this->getNextPrevChapter();
 	}
 
+    public function getChapterCount()
+    {
+		$r = Lesson::select()
+			->where('deleted_flag', 0)
+			->where('parent_id', $this->parent_id)
+			->where('published_flag', 'like', Tools::isAdmin() ? '%' : 1)
+			->where('approved_flag', 'like', Tools::isAdmin() ? '%' : 1)
+			->where('lesson_number', $next ? '>' : '<', $this->lesson_number)
+			->orderByRaw('lesson_number ASC, section_number ' . ($next ? 'ASC' : 'DESC '))
+			->first();
+
+		return $r ? $r->id : null;			
+    }
+	
 	public function getNextChapter()
 	{
 		return $this->getPrevNextChapter(/* next = */ true);

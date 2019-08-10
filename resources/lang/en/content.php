@@ -105,4 +105,6 @@ return [
 'Your Vocabulary Lists' => 'Your Vocabulary Lists',
 'Back to Home' => 'Back to Home',
 'Add Vocabulary' => 'Add Vocabulary',
+'user definition added' => 'user definition added',
+'user definition saved' => 'user definition saved',
 ];

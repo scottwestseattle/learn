@@ -21,6 +21,7 @@
 		@endforeach
 	</div>
 
+	@if ($isAdmin)
 	<h1>@LANG('content.Courses Under Development') ({{count($private)}})</h1>
 	
 	<div class="row row-course">
@@ -35,7 +36,7 @@
 		</div>
 		@endforeach
 	</div>
-	
+	@endif
 </div>
 
 @endsection

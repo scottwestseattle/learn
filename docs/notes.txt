@@ -44,6 +44,10 @@ Code Samples:
 Set up view variables for all views:
 C:\wamp3.1.9\www\learn\app\Providers\AppServiceProvider.php
 
+// call the translator from the controller:
+use Lang;
+$rc = Lang::get('content.not logged in');
+
 // call model function from view:
 {{App\Lesson::getTypes()}}
 
@@ -59,6 +63,7 @@ return self::_lessonTypeFlags;
     // The user is not authenticated...
 @endguest
 
+// throw exception
 throw new \Exception('here');
 
 

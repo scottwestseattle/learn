@@ -371,12 +371,12 @@ class WordController extends Controller
 			try
 			{
 				$record->save();
-				$rc = $isAdd ? 'user definition added' : 'user definition saved';
+				$rc = Lang::get('content.' . ($isAdd ? 'user definition added' : 'user definition saved'));
 				Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
 			}
 			catch (\Exception $e)
 			{
-				$msg = 'Error ' . ($isAdd ? 'adding new' : 'updating') . ' lesson user word';
+				$msg = 'Error ' . ($isAdd ? 'adding new' : 'updating') . ' record';
 				Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
 				$rc = $msg;
 			}

@@ -105,4 +105,6 @@ return [
 'Your Vocabulary Lists' => '你的词汇表',
 'Back to Home' => '返回主页',
 'Add Vocabulary' => '添加词汇',
+'user definition added' => '定义添加',
+'user definition saved' => '定义已保存',
 ];

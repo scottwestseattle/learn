@@ -105,4 +105,6 @@ return [
 'Your Vocabulary Lists' => 'Tus Listas de Vocabulario',
 'Back to Home' => 'Volver a la página principal',
 'Add Vocabulary' => 'Añadir Vocabulario',
+'user definition added' => 'definición agregada',
+'user definition saved' => 'definición guardada',
 ];

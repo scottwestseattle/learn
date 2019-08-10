@@ -36,10 +36,27 @@
 	@endif	
 	</h1>
 	
-	
 <div class="accordion" id="accordionExample">
-
 @foreach($records as $record)
+
+@if (count($records) == 1)
+
+@foreach($record as $rec)
+	<a href="/lessons/view/{{$rec->id}}">
+	<button style="" type="button" class="btn btn-outline-info btn-lesson-index link-dark">
+		<table>
+			<tr>
+				<td>
+					<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->section_number}}.&nbsp;{{$rec->title}}</div>
+					<span style="font-size:.9em">{{$rec->description}}</span>	
+				</td>
+			</tr>
+		</table>
+	</button>
+	</a>
+@endforeach
+
+@else
 
   <div class="card">
     <div style=""  class="card-header" id="headingOne">
@@ -50,27 +67,28 @@
       </h3>
     </div>
 
-    <div id="collapse{{$record[0]->id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-      <div style="" class="card-body">
-	  @foreach($record as $rec)
-	<a href="/lessons/view/{{$rec->id}}">
-		<button style="" type="button" class="btn btn-outline-info btn-lesson-index link-dark">
-			<table>
-				<tr>
-					<td>
-						<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->section_number}}.&nbsp;{{$rec->title}}</div>
-						<span style="font-size:.9em">{{$rec->description}}</span>	
-					</td>
-				</tr>
-			</table>
-		</button>
-	</a>
-	  @endforeach
-      </div>
+	<div id="collapse{{$record[0]->id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+		<div style="" class="card-body">
+		@foreach($record as $rec)
+			<a href="/lessons/view/{{$rec->id}}">
+			<button style="" type="button" class="btn btn-outline-info btn-lesson-index link-dark">
+				<table>
+					<tr>
+						<td>
+							<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->section_number}}.&nbsp;{{$rec->title}}</div>
+							<span style="font-size:.9em">{{$rec->description}}</span>	
+						</td>
+					</tr>
+				</table>
+			</button>
+			</a>
+		@endforeach
+		</div>
     </div>
   </div>
- 
-	
+  
+@endif
+
 @endforeach
 
 </div>
