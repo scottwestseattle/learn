@@ -663,8 +663,8 @@ function setFloat(obj, id)
 
 
 function insertChar(char, id = 0)
-{	
-	if (id != 0)
+{
+	if (id != 0 && id != '0')
 	{
 		txtarea = document.getElementById(id);
 	}

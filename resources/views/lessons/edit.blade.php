@@ -24,7 +24,7 @@
 				<a class="nav-link" href='/{{$prefix}}/edit2/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-pencil"></span></a>
 			</li>
 			<li class="nav-item">
-				@component('components.control-accent-chars-esp', ['visible' => true])@endcomponent																		
+				@component('components.data-accent-chars-esp')@endcomponent																		
 			</li>
 		</ul>	
 	
@@ -42,7 +42,7 @@
 		
 			<div class="form-group">
 				<label for="title" class="control-label">@LANG('gen.Title'):</label>
-				<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
+				<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}"></input>	
 			</div>
 		
 			<!--------------------------------------------------------------------------->

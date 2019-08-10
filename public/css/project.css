@@ -10,6 +10,15 @@ Glyph Icon Blue: #286090
 Super Light Green: #eff7f0
 ************************************************************/
 
+.data-accent-chars {
+}
+
+@media (max-width:576px) {
+	.data-accent-chars {
+		display:none;
+	}
+}
+
 .vocab-pills {
 	font-weight: normal; 
 	font-size: 1.1em; 
@@ -650,6 +659,7 @@ body {
 .lesson-table thead th {
     xborder-bottom-width: 2px;
     background-color: #eff7f0;
+	text-align:left;
 }
 /**************************************************************/
 
