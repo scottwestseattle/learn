@@ -29,6 +29,7 @@ Route::get('/phpinfo', 'FrontPageController@phpinfo');
 Route::get('/eunoticeaccept/', 'FrontPageController@eunoticeaccept');
 Route::get('/eunoticereset/', 'FrontPageController@eunoticereset');
 Route::get('/sample/', 'FrontPageController@sample');
+Route::get('/authenticated', 'HomeController@authenticated');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');

@@ -163,7 +163,7 @@ class Word extends Base
 		catch (\Exception $e)
 		{
 			$msg = 'Error getting vocabulary list';
-			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . Tools::itos($parent_id), null, $msg . ': ' . $e->getMessage());
+			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . Tools::itoa($parent_id), null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 		}			
 

@@ -6,6 +6,9 @@
 
 Latest DB Changes:
 
+8/11/2019
+ALTER TABLE `events` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL COMMENT '1=Info, 2=Warning, 3=Error, 4=Exception, 5=Tracking/Permanent, 99=other';
+
 8/6/2019
 ALTER TABLE `words` ADD `vocab_id` INT NULL COMMENT 'vocab word that this word refers to' AFTER `parent_id`;
 

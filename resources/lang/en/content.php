@@ -107,4 +107,11 @@ return [
 'Add Vocabulary' => 'Add Vocabulary',
 'user definition added' => 'user definition added',
 'user definition saved' => 'user definition saved',
+'Continue Lesson' => 'Continue Lesson',
+'No lessons viewed yet' => 'No lessons viewed yet',
+'Your Current Location' => 'Your Current Location',
+'Last viewed on' => 'Last viewed on',
+'Your Stats' => 'Your Stats',
+'Last Login' => 'Last Login',
+'none' => 'none',
 ];

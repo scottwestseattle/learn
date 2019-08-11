@@ -43,7 +43,7 @@ class WordController extends Controller
 		catch (\Exception $e)
 		{
 			$msg = 'Error getting ' . $this->title . ' list';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg . ' for parent ' . Tools::itos($parent_id), $parent_id, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg . ' for parent ' . Tools::itoa($parent_id), $parent_id, $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
 

@@ -26,12 +26,14 @@ define('LOG_TYPE_INFO', 1);
 define('LOG_TYPE_WARNING', 2);
 define('LOG_TYPE_ERROR', 3);
 define('LOG_TYPE_EXCEPTION', 4);
+define('LOG_TYPE_TRACKING', 5);
 define('LOG_TYPE_OTHER', 99);
 
 define('LOG_MODEL_ARTICLES', 'articles');
 define('LOG_MODEL_BLOGS', 'blogs');
 define('LOG_MODEL_BLOG_ENTRIES', 'blog entries');
 define('LOG_MODEL_ENTRIES', 'entries');
+define('LOG_MODEL_EVENTS', 'events');
 define('LOG_MODEL_GALLERIES', 'galleries');
 define('LOG_MODEL_OTHER', 'other');
 define('LOG_MODEL_PHOTOS', 'photos');
@@ -58,6 +60,8 @@ define('LOG_ACTION_INDEX', 'index');
 define('LOG_ACTION_PERMALINK', 'permalink');
 define('LOG_ACTION_UNDELETE', 'undelete');
 define('LOG_ACTION_PUBLISH', 'publish');
+define('LOG_ACTION_LOGIN', 'login');
+define('LOG_ACTION_LOGOUT', 'logout');
 
 define('LOG_PAGE_INDEX', 'index');
 define('LOG_PAGE_VIEW', 'view');

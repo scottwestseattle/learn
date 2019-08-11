@@ -31,11 +31,9 @@ class FrontPageController extends Controller
     {
 		if (Tools::isAdmin())
 		{
-			//return redirect('/admin');
 		}
 		else if (Auth::check())
 		{
-			//return redirect('/home');
 		}
 			
 		return view('frontpage.index', $this->getViewData([

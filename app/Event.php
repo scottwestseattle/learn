@@ -27,7 +27,32 @@ class Event extends Base
 
 		return $records;
 	}
-
+	
+    static public function getLast($type, $model, $action)
+    {
+		$record = null;
+		
+		try
+		{
+			$record = Event::select()
+				->where('deleted_flag', 0)
+				->where('user_id', Auth::id())
+				->where('type_flag', $type)
+				->where('model_flag', $model)
+				->where('action_flag', $action)
+				->orderByRaw('created_at DESC')
+				->first();
+		}
+		catch(\Exception $e)
+		{
+		    $msg = "Error getting last event";
+			Event::logException(LOG_MODEL_EVENTS, LOG_ACTION_SELECT, $type . '/' . $model . '/' . $action, null, $e->getMessage());
+			Tools::flash('danger', $msg);			
+		}
+		
+		return $record;
+	}		
+	
     static public function getAlerts($limit = 0)
 	{
 		// get all alerts that are not 'Info' (Warning, Error, Exception, and Other)
@@ -75,6 +100,11 @@ class Event extends Base
 		Event::add(LOG_TYPE_EXCEPTION, $model, $action, $title, null, $record_id, $error);
 	}
 
+    static public function logTracking($model, $action, $record_id = null)
+    {
+		Event::add(LOG_TYPE_TRACKING, $model, $action, null, null, $record_id);
+	}
+	
     static public function logInfo($model, $action, $title)
 	{
 		Event::add(LOG_TYPE_INFO, $model, $action, $title);

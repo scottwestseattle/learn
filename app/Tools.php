@@ -45,7 +45,7 @@ class Tools
         return $r;
     }
 
-    static public function itos($n)
+    static public function itoa($n)
     {
 		$rc = '';
 		

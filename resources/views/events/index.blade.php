@@ -22,7 +22,8 @@
 					if ($record->type_flag == 2) $type = 'Warning';
 					if ($record->type_flag == 3) $type = 'Error';
 					if ($record->type_flag == 4) $type = 'Exception';
-					if ($record->type_flag == 5) $type = 'Other';
+					if ($record->type_flag == 5) $type = 'Tracking';
+					if ($record->type_flag == 99) $type = 'Other';
 				?>
 				
 				<tr>
@@ -32,17 +33,19 @@
 							<tr>
 								<th>Timestamp</th>
 								<th>Site</th>
+								<th>User</th>
 								<th>Type</th>
 								<th>Model</th>
 								<th>Action</th>
 							</tr>			
 							@endif
 							<tr>
-								<td style="width:50px;">{{$record->created_at}}</td>
-								<td style="width:50px;">{{$record->site_id}}</td>
-								<td style="width:50px;">{{$type}}</td>
-								<td style="width:50px;">{{$record->model_flag}}</td>
-								<td style="width:50px;">{{$record->action_flag}}</td>
+								<td>{{$record->created_at}}</td>
+								<td>{{$record->site_id}}</td>
+								<td>{{$record->user_id}}</td>
+								<td>{{$type}}</td>
+								<td>{{$record->model_flag}}</td>
+								<td>{{$record->action_flag}}</td>
 							</tr>
 						</table>
 						@if (isset($record->updates))

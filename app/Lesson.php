@@ -7,6 +7,7 @@ use DB;
 use Auth;
 use App\Course;
 use App\Word;
+use App\User;
 
 define('LESSON_FORMAT_DEFAULT', 0);
 define('LESSON_FORMAT_AUTO', 1);
@@ -51,7 +52,7 @@ class Lesson extends Base
 		// if $reviewType not set, it uses the type setting on the lesson
 		if (!isset($reviewType))
 			$reviewType = $this->type_flag;
-			
+		
 		switch($reviewType)
 		{
 			case LESSONTYPE_QUIZ_FIB:
@@ -61,22 +62,22 @@ class Lesson extends Base
 				
 			case LESSONTYPE_QUIZ_MC1:
 				// expects embedded list of answers like [one, two, three] which will be converted to buttons
-				$quiz = $this->formatMc1($quiz);
+				$quiz = $this->formatMc1($quiz, $reviewType);
 				break;
 				
 			case LESSONTYPE_QUIZ_MC2:
 				// creates random answers and puts them in the questions
-				$quiz = $this->formatMc2($quiz);
+				$quiz = $this->formatMc2($quiz, $reviewType);
 				break;
 
 			case LESSONTYPE_QUIZ_MC3:
 				// create random answers with new quiz layout
-				$quiz = $this->formatMc3($quiz);
+				$quiz = $this->formatMc3($quiz, $reviewType);
 				break;
 
 			case LESSONTYPE_QUIZ_MC4:
 				// not used yet, same as LESSONTYPE_QUIZ_MC3
-				$quiz = $this->formatMc4($quiz);
+				$quiz = $this->formatMc4($quiz, $reviewType);
 				break;
 				
 			default:
@@ -87,7 +88,7 @@ class Lesson extends Base
 	}
 
 	// this version puts the answer options into a separate cell
-	private function formatMc3($quiz)
+	private function formatMc3($quiz, $reviewType)
     {
 		$quizNew = [];
 		$answers = [];
@@ -159,16 +160,16 @@ class Lesson extends Base
 		}
 		
 		//dd($quizNew);
-		return $this->formatMc1($quizNew);		
+		return $this->formatMc1($quizNew, $reviewType);		
 	}
 
 	//todo: not used yet
-	private function formatMc4($quiz)
+	private function formatMc4($quiz, $reviewType)
     {
-		return $this->formatMc3($quiz);
+		return $this->formatMc3($quiz, $reviewType);
 	}
 	
-	private function formatMc2($quiz)
+	private function formatMc2($quiz, $reviewType)
     {
 		$quizNew = [];
 		$answers = [];
@@ -247,7 +248,7 @@ class Lesson extends Base
 		}
 		
 		//dd($quizNew);
-		return $this->formatMc1($quizNew);		
+		return $this->formatMc1($quizNew, $reviewType);		
 	}
 
 	static private function getCommaSeparatedWords($text)
@@ -286,7 +287,7 @@ class Lesson extends Base
 	
 	// creates buttons for each answer option
 	// and puts them into the question
-	private function formatMc1($quiz)
+	private function formatMc1($quiz, $reviewType)
     {
 		/*
 		I [am, is, are] hungry. - am
@@ -306,7 +307,7 @@ class Lesson extends Base
 
 			if (strlen($a) > 0)
 			{
-				if (array_key_exists('options', $record))
+				if (array_key_exists('options', $record) && is_array($record['options']))
 				{
 					// use the options
 					$options = $record['options'];
@@ -335,7 +336,7 @@ class Lesson extends Base
 				{
 					// get the answer options from the question text
 					$answers = self::getCommaSeparatedWords($q);
-					
+
 					if (count($answers) > 0)
 					{
 						//
@@ -355,7 +356,16 @@ class Lesson extends Base
 						//dd($buttons);
 						
 						// replace the options with the buttons
-						$q = preg_replace("/\[.*\]/is", "", $q);
+						if ($reviewType == LESSONTYPE_QUIZ_MC1)
+						{
+							// embed the buttons in the question text
+							$q = preg_replace("/\[.*\]/is", $buttons, $q);
+							$buttons = null; // set 'options' to null below
+						}
+						else
+						{
+							$q = preg_replace("/\[.*\]/is", '', $q);
+						}
 						
 						// put the formatted info back into the quiz
 						$quizNew[] = [
@@ -824,4 +834,62 @@ class Lesson extends Base
     {
     	return Tools::makeNumberArray($start, $end);
     }
+
+	static public function getCurrentLocation()
+	{
+		$record['lesson'] = null;
+		$record['date'] = null;
+		
+		// get last location view from event log
+		$event = Event::getLast(LOG_TYPE_TRACKING, LOG_MODEL_LESSONS, LOG_ACTION_VIEW);
+		if (isset($event))
+		{
+			// load this lesson
+			$record['lesson'] = Lesson::get($event->record_id);
+			
+			// get the time of last visit
+			$record['date'] = $event->created_at;
+		}
+		else
+		{
+			//todo: check for location cookie
+		}
+	
+    	return $record;
+	}
+	
+	static public function setCurrentLocation($lessonId)
+	{
+		if (Auth::check())
+		{
+			Event::logTracking(LOG_MODEL_LESSONS, LOG_ACTION_VIEW, $lessonId);
+		}
+		else
+		{
+			//todo: set cookie
+		}
+	}		
+	
+    static private function get($id)
+	{
+		$id = intval($id);
+		$record = null;
+		
+		try
+		{
+			$record = Lesson::select()
+				->where('deleted_flag', 0)
+				->where('id', $id)
+				->first();
+		}
+		catch(\Exception $e)
+		{
+		    $msg = "Error getting current location";
+			Event::logException(LOG_MODEL_LESSONS, LOG_ACTION_SELECT, 'id = ' . $id, null, $e->getMessage());
+			Tools::flash('danger', $msg);			
+		}
+		
+		return $record;
+	}
+	
 }

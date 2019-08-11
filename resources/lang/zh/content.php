@@ -107,4 +107,11 @@ return [
 'Add Vocabulary' => '添加词汇',
 'user definition added' => '定义添加',
 'user definition saved' => '定义已保存',
+'Continue Lesson' => '继续课程',
+'No lessons viewed yet' => '还没有看过课程',
+'Your Current Location' => '您当前的位置',
+'Last viewed on' => '上次查看',
+'Your Stats' => '你的统计数据',
+'Last Login' => '上次登录',
+'none' => '没有',
 ];

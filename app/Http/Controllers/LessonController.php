@@ -217,6 +217,8 @@ class LessonController extends Controller
 
 	public function view(Lesson $lesson)
     {
+		Lesson::setCurrentLocation($lesson->id);
+		
 		$lesson->text = Tools::convertToHtml($lesson->text);
 
 		if ($lesson->format_flag == LESSON_FORMAT_AUTO)

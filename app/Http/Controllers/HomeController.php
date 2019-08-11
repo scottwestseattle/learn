@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Lang;
+
 use App\Tools;
 use App\Event;
 use App\Visitor;
 use App\User;
 use App\Course;
+use App\Lesson;
 use App\Word;
 
 class HomeController extends Controller
@@ -19,7 +22,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('index');
 
 		parent::__construct();
     }
@@ -30,6 +33,13 @@ class HomeController extends Controller
 			]);
     }	
 
+    public function authenticated()
+    {
+		Event::logTracking(LOG_MODEL_USERS, LOG_ACTION_LOGIN);
+		
+		return $this->index();
+    }	
+	
     public function hash()
     {
 		return view('home.hash', $this->getViewData([
@@ -62,13 +72,25 @@ class HomeController extends Controller
 		$words = Word::getIndex();
 		
 		//
-		// users's courses that have been started or finished
+		// get user's last viewed lesson so he can resume where he left off
 		//
-		$courses = Course::getIndex(['public']);
+		$record = Lesson::getCurrentLocation();
+		$date = $record['date'];
+		$lesson = $record['lesson'];
+		$course = isset($lesson) ? $lesson->course : null;
+
+		//
+		// get some user stats
+		//
+		$lastLogin = Event::getLast(LOG_TYPE_TRACKING, LOG_MODEL_USERS, LOG_ACTION_LOGIN);
+		$lastLogin = isset($lastLogin) ? $lastLogin->created_at : Lang::get('content.none');
 		
         return view('home.index', $this->getViewData([
-			'courses' => $courses,
+			'course' => $course,
+			'lesson' => $lesson,
+			'lessonDate' => $record['date'],
 			'words' => $words,
+			'lastLogin' => $lastLogin,
 			]));
     }
 

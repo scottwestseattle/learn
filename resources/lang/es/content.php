@@ -107,4 +107,11 @@ return [
 'Add Vocabulary' => 'Añadir Vocabulario',
 'user definition added' => 'definición agregada',
 'user definition saved' => 'definición guardada',
+'Continue Lesson' => 'Continuar Lección',
+'No lessons viewed yet' => 'No hay lecciones vistas todavía',
+'Your Current Location' => 'Su Ubicación Actual',
+'Last viewed on' => 'Visto por última vez en',
+'Your Stats' => 'Sus Estadísticas',
+'Last Login' => 'Último Acceso',
+'none' => 'ninguno',
 ];
