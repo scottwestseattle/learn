@@ -102,7 +102,7 @@ return [
 'Your Courses' => 'Sus Cursos',
 'Go to Courses' => 'Ver Cursos',
 'Go to Vocabulary' => 'Ver Listas de Vocabulario',
-'Your Vocabulary Lists' => 'Tus Listas de Vocabulario',
+'Your Vocabulary Lists' => 'Sus Listas de Vocabulario',
 'Back to Home' => 'Volver a la página principal',
 'Add Vocabulary' => 'Añadir Vocabulario',
 'user definition added' => 'definición agregada',
@@ -114,4 +114,9 @@ return [
 'Your Stats' => 'Sus Estadísticas',
 'Last Login' => 'Último Acceso',
 'none' => 'ninguno',
+'Account Created' => 'Cuenta Creada',
+'Your Quiz Results' => 'Resultados de Sus Prácticas',
+'Date' => 'Fecha',
+'Score' => 'Puntuación',
+'No quiz results yet' => 'Aún no hay resultados de practicas',
 ];
