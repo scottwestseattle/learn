@@ -146,6 +146,17 @@ class WordController extends Controller
 		
 		try
 		{
+			if (isset($record->parent_id))
+			{
+				if ($record->type_flag == WORDTYPE_USERLIST)
+					throw new \Exception("user list word with parent_id");
+			}
+			else
+			{
+				if ($record->type_flag == WORDTYPE_LESSONLIST)
+					throw new \Exception("lesson list word without parent_id");
+			}
+			
 			$record->save();
 
 			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);

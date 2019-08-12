@@ -34,7 +34,7 @@
 		<div class="card-body">
 			<span class="card-text">
 				@component('components.data-badge-list', ['records' => $words, 'edit' => '/words/edit-user/'])@endcomponent	
-				<p><a class="btn btn-primary btn-lg" href="/words/add/" role="button">@LANG('content.Add Vocabulary')</a></p>
+				<p><a class="btn btn-primary btn-lg" href="/words/add-user/" role="button">@LANG('content.Add Vocabulary')</a></p>
 			</span>
 		</div>
 	</div>
