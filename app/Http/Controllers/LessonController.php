@@ -542,4 +542,23 @@ class LessonController extends Controller
 			'isMc' => $lesson->isMc($reviewType),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
+	
+    public function logQuiz($lessonId, $score)
+    {
+		$rc = '';
+		
+		if (Auth::check())
+		{
+			Event::logTracking(LOG_MODEL_LESSONS, LOG_ACTION_QUIZ, $lessonId, $score);
+			$rc = 'event logged';
+		}
+		else
+		{
+			//todo: set cookie
+			$rc = 'user not logged in: event not logged';
+		}
+
+		return $rc;
+	}
+	
 }

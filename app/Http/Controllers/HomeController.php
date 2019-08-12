@@ -91,7 +91,8 @@ class HomeController extends Controller
 		// get quiz results
 		//
 		$quizes = Auth::check() ? ['Africa Hard Ones' => '87.3% (7/9)', 'Spanish Vocabulary 1' => '63.2% (17/29)', 'English 1 - Vocabulary List 3' => '46.7% (11/23)'] : [];
-			
+		$quizes = Lesson::getQuizScores(5);
+
         return view('home.index', $this->getViewData([
 			'course' => $course,
 			'lesson' => $lesson,

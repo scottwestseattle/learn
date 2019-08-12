@@ -23,6 +23,7 @@
 	data-quiztext-override-correct="@LANG('content.Change to Correct')" 
 	data-quiztext-override-wrong="@LANG('content.Change to Wrong')" 
 	data-quiztext-score-changed="@LANG('content.Score Changed')" 
+	data-lessonid="{{$record->id}}" 	
 ></div>
 
 	<!-------------------------------------------------------->

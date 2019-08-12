@@ -106,6 +106,7 @@ Route::group(['prefix' => 'lessons'], function () {
 	Route::post('/view/{lesson}','LessonController@view'); // just in case they hit enter on the ajax form
 	Route::get('/review/{lesson}/{reviewType?}','LessonController@review');
 	Route::get('/reviewmc/{lesson}/{reviewType?}','LessonController@reviewmc');
+	Route::get('/log-quiz/{lessonId}/{score}', 'LessonController@logQuiz');
 
 	// add/create
 	Route::get('/add','LessonController@add');
@@ -180,7 +181,7 @@ Route::group(['prefix' => 'events'], function () {
 
 	// index
 	Route::get('/', 'EventController@index');
-	Route::post('/', 'EventController@index');
+	Route::post('/', 'EventController@index');	
 });
 
 // Samples

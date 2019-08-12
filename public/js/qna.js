@@ -127,7 +127,8 @@ function quiz() {
 	this.quizTextWrongAnswer = 'not set';	// Wrong!
 	this.quizTextOverrideCorrect = 'not set';
 	this.quizTextOverrideWrong = 'not set';
-	this.quizTextScoreChanged = 'not set';	
+	this.quizTextScoreChanged = 'not set';
+	this.lessonId = 'not set';
 
 	this.getQuestionId = function(index) {
 		return this.qna[this.qna[index].order].id;
@@ -163,11 +164,17 @@ function quiz() {
 
 				roundText = $("#panelResultsRoundBase").text() + ' ' + round;
 				count = right + '/' + total;
-				percent = score.toFixed(2) + '%';
+				var fScore = score.toFixed(2);
+				percent = fScore + '%';
 				
 				$("#panelResultsRound").text(roundText);
 				$("#panelResultsPercent").text(percent);
 				$("#panelResultsCount").text(count);
+				
+				// log the quiz round
+				if (parseInt(round) == 1)
+					ajaxexec('/lessons/log-quiz/' + this.lessonId + '/' + fScore);
+				
 				break;
 			}
 			case RUNSTATE_START:
@@ -499,7 +506,8 @@ function loadData()
 		quiz.quizTextWrongAnswer = container.data('quiztext-wrong-answer');
 		quiz.quizTextOverrideCorrect = container.data('quiztext-override-correct') + " (Alt+c)";
 		quiz.quizTextOverrideWrong = container.data('quiztext-override-wrong') + " (Alt+c)";
-		quiz.quizTextScoreChanged = container.data('quiztext-score-changed');	
+		quiz.quizTextScoreChanged = container.data('quiztext-score-changed');
+		quiz.lessonId = container.data('lessonid');
 		
 		if (i == 0)
 			alert(quiz.qna[i].q);

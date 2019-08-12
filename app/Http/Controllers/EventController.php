@@ -15,7 +15,7 @@ class EventController extends Controller
 
 		parent::__construct();
     }
-
+	
     public function index($type_flag = null)
     {
 		$type = intval($type_flag);

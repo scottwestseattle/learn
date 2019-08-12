@@ -4,47 +4,46 @@
 
 <div class="container page-normal">
 
-	<div class="card mb-5">
-		<div class="card-header">
+	<div class="mb-5">
+		<div class="">
 			<h3>@LANG('content.Your Stats')</h3>
 		</div>
-		<div class="card-body">
-			<span class="card-text">
-				<div class="alert alert-primary" role="alert">
-					<p style="font-size:1.2em;"><strong>@LANG('content.Account Created'):</strong>&nbsp;{{$stats['accountCreated']}}</p>
-				</div>
-				<div class="alert alert-success">
-					<p style="font-size:1.2em;"><strong>@LANG('content.Last Login'):</strong>&nbsp;{{$stats['lastLogin']}}</p>
-				</div>
+		<div class="">
+			<div class="alert alert-primary" role="alert">
+				<p style="font-size:1.2em;"><strong>@LANG('content.Account Created'):</strong>&nbsp;{{$stats['accountCreated']}}</p>
+			</div>
+			<div class="alert alert-success">
+				<p style="font-size:1.2em;"><strong>@LANG('content.Last Login'):</strong>&nbsp;{{$stats['lastLogin']}}</p>
+			</div>
 
-				@guest
-					<p>
-						<a class="btn btn-primary btn-lg" href="/login" role="button">@LANG('ui.Login')</a>
-						<a class="btn btn-primary btn-lg" href="/register" role="button">@LANG('ui.Register')</a>
-					</p>
-				@endguest
-			</span>
+			@guest
+				<p>
+					<a class="btn btn-primary btn-lg" href="/login" role="button">@LANG('ui.Login')</a>
+					<a class="btn btn-primary btn-lg" href="/register" role="button">@LANG('ui.Register')</a>
+				</p>
+			@endguest
 		</div>
 	</div>
 
-	<div class="card mb-5">
-		<div class="card-header">
+	<hr />
+	
+	<div class="mb-5">
+		<div class="">
 			<h3>@LANG('content.Your Vocabulary Lists') ({{count($words)}})</h3>
 		</div>
-		<div class="card-body">
-			<span class="card-text">
-				@component('components.data-badge-list', ['records' => $words, 'edit' => '/words/edit-user/'])@endcomponent	
-				<p><a class="btn btn-primary btn-lg" href="/words/add-user/" role="button">@LANG('content.Add Vocabulary')</a></p>
-			</span>
+		<div class="">
+			@component('components.data-badge-list', ['records' => $words, 'edit' => '/words/edit-user/'])@endcomponent	
+			<p><a class="btn btn-primary btn-lg" href="/words/add-user/" role="button">@LANG('content.Add Vocabulary')</a></p>
 		</div>
 	</div>
 
-	<div class="card mb-5">
-		<div class="card-header">
+	<hr />
+	
+	<div class="mb-5">
+		<div class="">
 			<h3>@LANG('content.Your Current Location')</h3>
 		</div>
-		<div class="card-body">
-			<span class="card-text">
+		<div class="">
 
 			@if (isset($course))
 				<div class="alert alert-primary" role="alert">
@@ -65,23 +64,22 @@
 			
 				<p><a class="btn btn-primary btn-lg" href="/courses" role="button">@LANG('content.Go to Courses')</a></p>			
 			
-			</span>
 		</div>
 	</div>
 		
-	<div class="card mb-5">
-		<div class="card-header">
-			<h3>@LANG('content.Your Quiz Results')</h3>
-		</div>
-		<div class="card-body">
-			<span class="card-text">
+	<hr />
+		
+	<div class="mb-5">
+		<h3>@LANG('content.Your Quiz Results')</h3>
+
+		<div class="">
 
 			@if (count($quizes) > 0)
 			<ul class="list-group">	
-				@foreach($quizes as $quiz => $score)
-					<li class="list-group-item list-group-item-primary">
-						<p style="font-size:1.4em; font-weight:bold;" class="alert-heading mb-3">{{$quiz}}</p>
-						<p><strong>{{$score}}</strong> - @LANG('content.Date'): 2019-02-12</p>					
+				@foreach($quizes as $quiz)
+					<li class="list-group-item list-group-item-{{\App\Lesson::getQuizResultColor($quiz->extraInfo)}}">
+						<p style="font-size:1.4em; font-weight:bold;" class="alert-heading mb-3">{{$quiz->title}}</p>
+						<p><strong>{{$quiz->extraInfo}}%</strong> - {{$quiz->created_at}}</p>					
 					</li>								
 				@endforeach
 			</ul>			
@@ -91,7 +89,6 @@
 				</div>
 			@endif							
 
-			</span>
 		</div>
 	</div>		
 		

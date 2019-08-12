@@ -100,9 +100,9 @@ class Event extends Base
 		Event::add(LOG_TYPE_EXCEPTION, $model, $action, $title, null, $record_id, $error);
 	}
 
-    static public function logTracking($model, $action, $record_id = null)
+    static public function logTracking($model, $action, $record_id = null, $extraInfo = null)
     {
-		Event::add(LOG_TYPE_TRACKING, $model, $action, null, null, $record_id);
+		Event::add(LOG_TYPE_TRACKING, $model, $action, null, null, $record_id, null, null, $extraInfo);
 	}
 	
     static public function logInfo($model, $action, $title)
@@ -111,7 +111,7 @@ class Event extends Base
 	}
 
 	// this is the add for all records
-    static public function add($type, $model, $action, $title, $description = null, $record_id = null, $error = null, $changes = null)
+    static public function add($type, $model, $action, $title, $description = null, $record_id = null, $error = null, $changes = null, $extraInfo = null)
     {
 		$record = new Event();
 
@@ -129,6 +129,7 @@ class Event extends Base
 		$record->record_id 		= intval($record_id);
 		$record->error 			= $error;
 		$record->updates 		= $changes;
+		$record->extraInfo		= $extraInfo;
 
 		try
 		{

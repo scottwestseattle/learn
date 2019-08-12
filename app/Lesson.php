@@ -8,6 +8,7 @@ use Auth;
 use App\Course;
 use App\Word;
 use App\User;
+use App\Event;
 
 define('LESSON_FORMAT_DEFAULT', 0);
 define('LESSON_FORMAT_AUTO', 1);
@@ -891,5 +892,75 @@ class Lesson extends Base
 		
 		return $record;
 	}
+
+	static public function getQuizScores($count)
+	{
+		$count = intval($count);
+		$records = [];
+		
+		try
+		{			
+			$records = DB::table('events')
+				->join('lessons', 'events.record_id', '=', 'lessons.id')
+				->select('events.*', 'lessons.title', 'lessons.id')
+				->where('events.deleted_flag', 0)
+				->where('lessons.deleted_flag', 0)
+				->where('events.user_id', Auth::id())
+				->where('events.type_flag', LOG_TYPE_TRACKING)
+				->where('events.model_flag', LOG_MODEL_LESSONS)
+				->where('events.action_flag', LOG_ACTION_QUIZ)
+				->orderByRaw('events.id DESC')
+				->limit($count)
+				->get();
+		}
+		catch (\Exception $e)
+		{
+		    $msg = "Error getting quiz results";
+			Event::logException(LOG_MODEL_LESSONS, LOG_ACTION_SELECT, null, null, $e->getMessage());
+			Tools::flash('danger', $msg);			
+		}
+
+		return $records;
+	}
+
+	static public function getQuizResultColor($score)
+	{
+		$color = 'light';
+		$score = intval($score);
+		
+		if ($score >= 90)
+			$color = 'primary';
+		else if ($score >= 70)
+			$color = 'success';
+		else if ($score >= 60)
+			$color = 'warning';
+		else 
+			$color = 'danger';
+		
+		return $color;
+	}
 	
+	static public function getQuizScores2()
+	{
+		$scores = [];
+		$quiz['title'] = null;
+		$quiz['date'] = null;
+		$quiz['score'] = null;
+		
+		// get last 5 quiz results for current user
+		$events = Lesson::getQuizLogs(/* count = */ 5);
+		foreach($events as $event)
+		{
+		}
+		
+		if (isset($event))
+		{
+		}
+		else
+		{
+			//todo: check for location cookie
+		}
+	
+    	return $scores;
+	}	
 }

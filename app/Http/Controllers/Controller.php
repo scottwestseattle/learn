@@ -62,6 +62,7 @@ define('LOG_ACTION_UNDELETE', 'undelete');
 define('LOG_ACTION_PUBLISH', 'publish');
 define('LOG_ACTION_LOGIN', 'login');
 define('LOG_ACTION_LOGOUT', 'logout');
+define('LOG_ACTION_QUIZ', 'quiz');
 
 define('LOG_PAGE_INDEX', 'index');
 define('LOG_PAGE_VIEW', 'view');
