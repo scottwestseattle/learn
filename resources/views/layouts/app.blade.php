@@ -65,6 +65,8 @@ $domainName = isset($domainName) ? $domainName : '';
 			@else
 				<div style="" class=""><a class="" role="" href="/home"><span style="color:gray;" class="glyphicon glyphicon-user"></span></a></div>
 			@endif
+			
+			<div style="" class="ml-3 mr-2"><a href="/search"><span style="color:white;" class="glyphicon glyphicon-search"></span></a></div>
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
 				aria-expanded="false" aria-label="Toggle navigation">

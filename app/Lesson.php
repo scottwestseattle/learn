@@ -48,6 +48,62 @@ class Lesson extends Base
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
 
+	static public function search($search)
+    {
+		$records = null;
+		
+		try
+		{
+			$search = '%' . $search . '%';
+
+			if (Tools::isSuperAdmin())
+			{
+				$records = Lesson::select()
+					->where('deleted_flag', 0)
+					->whereRaw("(`title` like '$search' OR `text` like '$search')")
+					->get();
+			}
+			else if (Tools::isAdmin())
+			{
+				$records = Lesson::select()
+					->where('deleted_flag', 0)
+					->where('site_id', SITE_ID) 
+					->where('title', 'like', $search)
+					->orWhere('description', 'like', $search)
+					->get();
+			}
+			else if (Auth::check())
+			{
+				// only search public lessons and words and their own private ones
+				$records = Lesson::select()
+					->where('deleted_flag', 0)
+					->where('site_id', SITE_ID)
+					->where('user_id', Auth::id())
+					->where('title', 'like', $search)
+					->orWhere('description', 'like', $search)
+					->get();
+			}
+			else
+			{
+				// only search public lessons and words
+				$records = Lesson::select()
+					->where('deleted_flag', 0)
+					->where('site_id', SITE_ID)
+					->where('title', 'like', $search)
+					->orWhere('description', 'like', $search)
+					->get();
+			}			
+		}
+		catch(\Exception $e)
+		{
+		    $msg = "Search Error";
+			Event::logException(LOG_MODEL_LESSONS, LOG_ACTION_SEARCH, 'search = ' . $search, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
+		return $records;
+	}
+	
 	public function formatByType($quiz, $reviewType)
     {
 		// if $reviewType not set, it uses the type setting on the lesson
@@ -58,7 +114,7 @@ class Lesson extends Base
 		{
 			case LESSONTYPE_QUIZ_FIB:
 				// FIB doesn't use answer options, so if any, remove them
-				$quiz = self::removeEmbeddedAnswers($quiz);
+				$quiz = self::removeEmbeddedAnswers($quiz, $reviewType);
 				break;
 				
 			case LESSONTYPE_QUIZ_MC1:
@@ -360,8 +416,9 @@ class Lesson extends Base
 						if ($reviewType == LESSONTYPE_QUIZ_MC1)
 						{
 							// embed the buttons in the question text
-							$q = preg_replace("/\[.*\]/is", $buttons, $q);
-							$buttons = null; // set 'options' to null below
+							//$q = preg_replace("/\[.*\]/is", $buttons, $q);
+							//$buttons = null; // set 'options' to null below
+							$q = preg_replace("/\[.*\]/is", '_______', $q);
 						}
 						else
 						{
@@ -384,7 +441,7 @@ class Lesson extends Base
 		return $quizNew;
 	}
 	
-    public function removeEmbeddedAnswers($quiz)
+    public function removeEmbeddedAnswers($quiz, $reviewType)
 	{
 		$quizNew = [];
 		$i = 0;
@@ -403,7 +460,6 @@ class Lesson extends Base
 			{
 				// remove them
 				$q = preg_replace("/\[.*\]/is", "", $q);
-				
 			}
 
 			// put the formatted info back into the quiz
@@ -939,28 +995,4 @@ class Lesson extends Base
 		
 		return $color;
 	}
-	
-	static public function getQuizScores2()
-	{
-		$scores = [];
-		$quiz['title'] = null;
-		$quiz['date'] = null;
-		$quiz['score'] = null;
-		
-		// get last 5 quiz results for current user
-		$events = Lesson::getQuizLogs(/* count = */ 5);
-		foreach($events as $event)
-		{
-		}
-		
-		if (isset($event))
-		{
-		}
-		else
-		{
-			//todo: check for location cookie
-		}
-	
-    	return $scores;
-	}	
 }

@@ -23,6 +23,63 @@ class Word extends Base
     }
 */
 	
+	static public function search($search)
+    {
+		$records = null;
+		
+		try
+		{
+			$search = '%' . $search . '%';
+
+			if (Tools::isSuperAdmin())
+			{
+				$records = Word::select()
+					->where('deleted_flag', 0)
+					->where('title', 'like', $search)
+					->orWhere('description', 'like', $search)
+					->get();
+			}
+			else if (Tools::isAdmin())
+			{
+				$records = Word::select()
+					->where('deleted_flag', 0)
+					->where('site_id', SITE_ID) 
+					->where('title', 'like', $search)
+					->orWhere('description', 'like', $search)
+					->get();
+			}
+			else if (Auth::check())
+			{
+				// only search public lessons and words and their own private ones
+				$records = Word::select()
+					->where('deleted_flag', 0)
+					->where('site_id', SITE_ID)
+					->where('user_id', Auth::id())
+					->where('title', 'like', $search)
+					->orWhere('description', 'like', $search)
+					->get();
+			}
+			else
+			{
+				// only search public lessons and words
+				$records = Word::select()
+					->where('deleted_flag', 0)
+					->where('site_id', SITE_ID)
+					->where('title', 'like', $search)
+					->orWhere('description', 'like', $search)
+					->get();
+			}			
+		}
+		catch(\Exception $e)
+		{
+		    $msg = "Search Error";
+			Event::logException(LOG_MODEL_WORDS, LOG_ACTION_SEARCH, 'search = ' . $search, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
+		return $records;
+	}	
+	
     static public function addList($parent_id, $words)
     {
 		$parent_id = intval($parent_id);

@@ -23,7 +23,7 @@ class LessonController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'permalink']);
+        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'permalink', 'logQuiz']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -512,7 +512,7 @@ class LessonController extends Controller
 		$next = Lesson::getNext($lesson);
 
 		$quiz = LessonController::makeQuiz($lesson->text); // splits text into questions and answers
-		$quiz = $lesson->formatByType($quiz, $reviewType); // format the answers according to quiz type
+		$quiz = $lesson->formatByType($quiz, $lesson->type_flag); // format the answers according to quiz type
 
 		//todo: not working yet
 		$quizText = [

@@ -23,7 +23,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('index');
+        $this->middleware('auth')->except('index', 'search');
 
 		parent::__construct();
     }
@@ -168,4 +168,47 @@ class HomeController extends Controller
 			'new_visitor' => Visitor::isNew($ip),
 		]));
     }
+	
+    public function search(Request $request)
+    {
+		$search = null;
+		$lessons = null;
+		$words = null;
+		$isPost = $request->isMethod('post');
+		$count = 0;
+		
+		if ($isPost)
+		{
+			// do the search 
+			
+			$search = $request->searchText;
+			if (strlen($search) > 1)
+			{
+				try
+				{
+					$lessons = Lesson::search($search);
+					$count += (isset($lessons) ? count($lessons) : 0);
+					
+					$words = Word::search($search);
+					$count += (isset($words) ? count($words) : 0);
+					
+				}
+				catch (\Exception $e) 
+				{
+				}
+			}
+		}
+		else // show the results
+		{
+		}
+
+		return view('home.search', $this->getViewData([
+			'lessons' => $lessons,
+			'words' => $words,
+			'isPost' => $isPost,
+			'count' => $count,
+			'search' => $search,
+		]));		
+	}
+		
 }

@@ -36,6 +36,9 @@ Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admi
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/unauthorized', 'HomeController@unauthorized');
 
+Route::get('/search', 'HomeController@search');
+Route::post('/search', 'HomeController@search');
+
 // protected
 Route::get('/hash', 'HomeController@hash');
 Route::post('/hasher', 'HomeController@hasher');

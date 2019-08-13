@@ -66,7 +66,7 @@
 					
 					@if ($record->getLessonType() == LESSONTYPE_QUIZ_MC1)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Start Review - Multiple Choice</button></a>
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Start Review - Multiple Choice</button></a>
 					</div>
 					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC2)
 					<div style="margin: 20px 0;">

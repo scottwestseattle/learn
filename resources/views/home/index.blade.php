@@ -79,7 +79,8 @@
 				@foreach($quizes as $quiz)
 					<li class="list-group-item list-group-item-{{\App\Lesson::getQuizResultColor($quiz->extraInfo)}}">
 						<p style="font-size:1.4em; font-weight:bold;" class="alert-heading mb-3">{{$quiz->title}}</p>
-						<p><strong>{{$quiz->extraInfo}}%</strong> - {{$quiz->created_at}}</p>					
+						<!-- p><strong>{{$quiz->extraInfo}}%</strong> - {{$quiz->created_at}}</p -->
+						<p><strong><span style="font-size:1em;" class="badge badge-light badge-pill">{{floatVal($quiz->extraInfo)}}%</span></strong> - {{$quiz->created_at}}</p>
 					</li>								
 				@endforeach
 			</ul>			
