@@ -188,7 +188,7 @@ class HomeController extends Controller
 				{
 					// double check for dangerous characters
 					//$clean = preg_replace("/[^a-zA-Z0-9\s\p{P}]/", 'X', $search);
-					$clean = preg_replace("/[^a-zA-Z0-9\s\.\-\,\?\'\;\(\)\_\=\+\!\#\$\%\*]/", '', $search);
+					$clean = preg_replace("/[^a-zA-Z0-9\s\.\-\,\?\'\;\(\)\_\=\+\!\#\$\%\*áéíóúüñÁÉÍÚÜÑ]/", '', $search);
 					if ($search != $clean) // if not alphanumeric or punctuation
 					{
 						$search = $clean;
