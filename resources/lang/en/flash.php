@@ -22,4 +22,5 @@ return [
 'New record has been added' => 'New record has been added',
 'Record has been updated' => 'Record has been updated',
 'Record has been deleted' => 'Record has been deleted',
+'Search Error' => 'Search Error',
 ];

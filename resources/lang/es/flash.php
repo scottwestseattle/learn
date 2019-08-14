@@ -22,4 +22,5 @@ return [
 'New record has been added' => 'Se agregó nuevo registro',
 'Record has been updated' => 'El registro ha sido actualizado',
 'Record has been deleted' => 'El registro ha sido eliminado',
+'Search Error' => 'Error de busqueda',
 ];

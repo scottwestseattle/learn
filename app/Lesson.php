@@ -58,39 +58,51 @@ class Lesson extends Base
 
 			if (Tools::isSuperAdmin())
 			{
+				if (false)
+				dd(Lesson::select()
+					->where('deleted_flag', 0)					
+					->where(function ($query) use ($search){
+						$query->where('title', 'LIKE', $search)
+							  ->orWhere('text', 'LIKE', $search);})
+					->toSql());
+
 				$records = Lesson::select()
-					->where('deleted_flag', 0)
-					->whereRaw("(`title` like '$search' OR `text` like '$search')")
+					->where('deleted_flag', 0)					
+					->where(function ($query) use ($search){$query
+						->where('title', 'LIKE', $search)
+						->orWhere('text', 'LIKE', $search);})
 					->get();
 			}
 			else if (Tools::isAdmin())
 			{
 				$records = Lesson::select()
-					->where('deleted_flag', 0)
-					->where('site_id', SITE_ID) 
-					->where('title', 'like', $search)
-					->orWhere('description', 'like', $search)
-					->get();
+					//->where('site_id', SITE_ID) 
+					->where('deleted_flag', 0)					
+					->where(function ($query) use ($search){$query
+						->where('title', 'LIKE', $search)
+						->orWhere('text', 'LIKE', $search);})
+					->get();					
 			}
 			else if (Auth::check())
 			{
 				// only search public lessons and words and their own private ones
 				$records = Lesson::select()
-					->where('deleted_flag', 0)
-					->where('site_id', SITE_ID)
-					->where('user_id', Auth::id())
-					->where('title', 'like', $search)
-					->orWhere('description', 'like', $search)
-					->get();
+					//->where('site_id', SITE_ID) 
+					->where('deleted_flag', 0)					
+					->where(function ($query) use ($search){$query
+						->where('title', 'LIKE', $search)
+						->orWhere('text', 'LIKE', $search);})
+					->get();					
 			}
 			else
 			{
 				// only search public lessons and words
 				$records = Lesson::select()
 					->where('deleted_flag', 0)
-					->where('site_id', SITE_ID)
-					->where('title', 'like', $search)
-					->orWhere('description', 'like', $search)
+					//->where('site_id', SITE_ID)
+					->where(function ($query) use ($search){$query
+						->where('title', 'LIKE', $search)
+						->orWhere('text', 'LIKE', $search);})
 					->get();
 			}			
 		}

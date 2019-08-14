@@ -186,6 +186,15 @@ class HomeController extends Controller
 			{
 				try
 				{
+					// double check for dangerous characters
+					//$clean = preg_replace("/[^a-zA-Z0-9\s\p{P}]/", 'X', $search);
+					$clean = preg_replace("/[^a-zA-Z0-9\s\.\-\,\?\'\;\(\)\_\=\+\!\#\$\%\*]/", '', $search);
+					if ($search != $clean) // if not alphanumeric or punctuation
+					{
+						$search = $clean;
+						throw new \Exception("dangerous search characters");
+					}
+					
 					$lessons = Lesson::search($search);
 					$count += (isset($lessons) ? count($lessons) : 0);
 					
@@ -195,6 +204,9 @@ class HomeController extends Controller
 				}
 				catch (\Exception $e) 
 				{
+					$msg = 'Search Error';
+					Event::logException(LOG_MODEL_HOME, LOG_ACTION_SEARCH, $msg . ': ' . $search, null, $e->getMessage());
+					Tools::flash('danger', $msg);
 				}
 			}
 		}
