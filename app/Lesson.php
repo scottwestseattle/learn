@@ -960,6 +960,37 @@ class Lesson extends Base
 		
 		return $record;
 	}
+	
+    static public function getCourse($id)
+    {
+		$record = null;
+		$id = intval($id);
+
+		try
+		{
+			$lesson = Lesson::select()
+				->where('deleted_flag', 0)
+				->where('id', $id)
+				->first();
+				
+			if (!isset($lesson))
+				throw new \Exception("Lesson not found " . $id);
+
+			if (!isset($lesson->Course))
+				throw new \Exception("Course not found for lesson " . $id);
+			
+			$record = $lesson->Course;
+		}
+		catch(\Exception $e)
+		{
+		    $msg = "Error getting course from lesson id";
+			Event::logException(LOG_MODEL_LESSONS, LOG_ACTION_SELECT, 'id = ' . $id, null, $e->getMessage());
+			Tools::flash('danger', $msg);			
+		}
+
+		return $record;
+	}
+	
 
 	static public function getQuizScores($count)
 	{

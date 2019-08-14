@@ -99,18 +99,6 @@ class WordController extends Controller
 		]));
     }
 
-    public function add($parent_id = null)
-    {
-		$words = Word::getIndex($parent_id);
-		
-		return view(PREFIX . '.add', $this->getViewData([
-			'parent_id' => $parent_id,
-			'type_flag' => WORDTYPE_LESSONLIST,
-			'records' => $words,
-			'lesson' => true,
-			]));
-	}
-
     public function addUser()
     {
 		$words = Word::getIndex();
@@ -128,8 +116,21 @@ class WordController extends Controller
 		return $this->create($request);
 	}
 	
+    public function add($parent_id = null)
+    {
+		$words = Word::getIndex($parent_id);
+		
+		return view(PREFIX . '.add', $this->getViewData([
+			'parent_id' => $parent_id,
+			'type_flag' => WORDTYPE_LESSONLIST,
+			'records' => $words,
+			'lesson' => true,
+			]));
+	}
+	
     public function create(Request $request)
     {
+		$msg = null;
 		$record = new Word();
 		$parent_id = isset($request->parent_id) ? intval($request->parent_id) : null;
 
@@ -141,13 +142,19 @@ class WordController extends Controller
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
 		$record->permalink		= Tools::createPermalink($request->title);
-
-		$duplicate = Word::exists($record->title) ? 'Duplicate: ' : '';
 		
 		try
 		{
+			$course = Word::getCourse($record->title, $parent_id);
+			if (isset($course))
+			{
+				$msg = "Word already exists in this course in lesson: " . $course->title;
+				throw new \Exception($msg);
+			}
+			
 			if (isset($record->parent_id))
 			{
+				
 				if ($record->type_flag == WORDTYPE_USERLIST)
 					throw new \Exception("user list word with parent_id");
 			}
@@ -167,7 +174,7 @@ class WordController extends Controller
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Error adding new ' . TITLE_LC;
+			$msg = isset($msg) ? $msg : 'Error adding new ' . TITLE_LC;
 			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 

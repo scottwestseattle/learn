@@ -159,6 +159,43 @@ class Word extends Base
 		return($count > 0);
 	}
 	
+    static public function getCourse($word, $parent_id)
+    {
+		$count = 0;
+		$course = null;
+		
+		$course = Lesson::getCourse($parent_id); // $parent_id is the lesson id
+		if (isset($course))
+		{		
+			try
+			{
+				$count = Word::select()
+					->where('deleted_flag', 0)
+					->where('parent_id', $parent_id)
+					->where('title', $word)
+					->count();
+					
+				$records = DB::table('words')
+					->where('words.deleted_flag', 0)
+					->join('lessons', 'words.parent_id', '=', 'lessons.id')
+					->select('lessons.title', 'lessons.id')
+					->where('lessons.deleted_flag', 0)
+					->where('lessons.parent_id', $course->id)
+					->where('words.title', $word)
+					->get();
+dd($records);
+			}
+			catch (\Exception $e)
+			{
+				$msg = 'Error getting count';
+				Event::logException('word', LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
+				Tools::flash('danger', $msg);
+			}
+		}
+	
+		return $course;
+	}
+	
     static public function create($parent_id, $word)
     {
 		$rc = false;

@@ -194,7 +194,7 @@ class Course extends Base
 
 		return $record;
 	}
-
+	
     static public function getIndex($parms = [])
     {
 		$records = []; // make this countable so view will always work
