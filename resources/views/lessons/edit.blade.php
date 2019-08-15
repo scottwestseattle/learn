@@ -24,7 +24,10 @@
 				<a class="nav-link" href='/{{$prefix}}/edit2/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-pencil"></span></a>
 			</li>
 			<li class="nav-item">
-				@component('components.data-accent-chars-esp')@endcomponent																		
+				@component('components.control-accent-chars-esp', ['target' => 'text', 'visible' => true, 'tinymce' => true, 'flat' => true])@endcomponent																		
+@if (false)
+				@component('components.data-accent-chars-esp')@endcomponent											
+@endif			
 			</li>
 		</ul>	
 	
@@ -125,88 +128,7 @@
 
 @endsection
 
+@if (false)
 <script src="https://cdn.tiny.cloud/1/vft1qzd41vab0e8lnjogftv02qxpfv11j340z7i97o2poj6n/tinymce/5/tinymce.min.js"></script>
+@endif
 
-<script>
-
-function setTab(event, tab)
-{
-	event.preventDefault();
-	
-	if (tab == 1)
-	{
-		$('#tab-text').show(); 
-		$('#tab-title').hide();
-		
-		$('#nav-link-text').addClass('active'); 
-		$('#nav-link-title').removeClass('active');
-	}
-	else
-	{
-		$('#tab-text').hide(); 
-		$('#tab-title').show();
-		
-		$('#nav-link-text').removeClass('active'); 
-		$('#nav-link-title').addClass('active');
-	}
-	
-}
-
-tinymce.init({
-	selector:'#text',
-	plugins: 'table code lists',
-	toolbar: 'code formatselect | bold italic forecolor backcolor permanentpen formatpainter | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol'
-});
-
-function saveAndStay()
-{
-	alert('Not implemented yet');
-	return;
-	
-	//$.post('/lesson/update/{{$record->id}}', $('#form-edit').serialize());	
-	
-$("#form-edit").submit(function(e) {
-
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-
-    var form = $(this);
-    var url = form.attr('action');
-
-    $.ajax({
-           type: "POST",
-           url: url,
-           data: form.serialize(), // serializes the form's elements.
-           success: function(data)
-           {
-               alert(data); // show response from the php script.
-           }
-         });
-
-
-});
-	
-}
-
-function refreshView()
-{
-	if ($("#preview").is(":visible"))
-	{
-		$("#preview").hide();
-		$("#rich").show();
-		
-		tinymce.init({selector:'#text'});		
-	}
-	else
-	{
-		tinymce.remove();
-		
-		$("#preview").html(
-			$("#text").text()
-		);
-		
-		$("#preview").show();
-		$("#rich").hide();
-	}
-}
-
-</script>

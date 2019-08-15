@@ -174,7 +174,7 @@ class Word extends Base
 					->where('parent_id', $parent_id)
 					->where('title', $word)
 					->count();
-					
+/*					
 				$records = DB::table('words')
 					->where('words.deleted_flag', 0)
 					->join('lessons', 'words.parent_id', '=', 'lessons.id')
@@ -184,6 +184,7 @@ class Word extends Base
 					->where('words.title', $word)
 					->get();
 dd($records);
+*/
 			}
 			catch (\Exception $e)
 			{

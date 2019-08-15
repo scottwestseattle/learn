@@ -13,39 +13,21 @@ $domainName = isset($domainName) ? $domainName : '';
 	<title>Learn - Remote Virtual Training</title>
 
     <!-- Scripts -->
-@if (false)	
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-@endif
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 	<script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
-	
+
+@if (isset($tinymce))
+	<script src="/js/tinymce/tinymce.min.js"></script>
+	<script src="/js/loadTinyMce.js"></script>
+@endif
     <script src="{{ asset('js/project.js') }}"></script>
 
 	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
-
     <!-- Custom styles for this template -->
     <link href="/css/project.css" rel="stylesheet">
     <link href="/css/glyphicons-short.css" rel="stylesheet">
-
 
 </head>
 

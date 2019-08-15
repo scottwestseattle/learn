@@ -653,7 +653,7 @@ function ajaxPost(url, formId, resultId)
 		;
 }
 
-prevFocus = 'undefined';
+prevFocus = null;
 function setFloat(obj, id)
 {
 	prevFocus = obj;
@@ -661,23 +661,53 @@ function setFloat(obj, id)
 	$("#accent-chars-esp").appendTo("#" + id);
 }
 
-
-function insertChar(char, id = 0)
+function setFocus(obj)
 {
+	prevFocus = obj;
+}
+
+function insertChar(char, id, isTinyMce)
+{	
+	var txtarea = null;
+	
+	if (isTinyMce)
+	{
+		if (tinymce.activeEditor)
+			tinymce.activeEditor.execCommand('mceInsertContent', false, char);
+		else
+			console.log('tinymce.activeEditor not set');
+		
+		return;
+	}
+
 	if (id != 0 && id != '0')
 	{
 		txtarea = document.getElementById(id);
 	}
-	else if (prevFocus == 'undefined')
+	else if (!prevFocus || prevFocus == 'undefined')
 	{
+		console.log('id not set and prevFocus not set');
 		return;
 	}
 	else
 	{
 		id = prevFocus.attr('id');
-		txtarea = document.getElementById(id);
+		if (!id)
+		{
+			console.log('id = ' + id);
+			return;
+		}
+		else
+		{
+			txtarea = document.getElementById(id);
+			if (!txtarea)
+			{
+				console.log('txtarea not set: ' + txtarea);
+				return;
+			}
+		}
 	}
-
+	
     var scrollPos = txtarea.scrollTop;
     var caretPos = txtarea.selectionStart;
 
@@ -688,20 +718,78 @@ function insertChar(char, id = 0)
     txtarea.selectionStart = caretPos;
     txtarea.selectionEnd = caretPos;
     txtarea.focus();
-    txtarea.scrollTop = scrollPos;
+    txtarea.scrollTop = scrollPos;			
 }
 
-function insertAtCaret(txtarea, text) 
+function setTab(event, tab)
 {
-    var scrollPos = txtarea.scrollTop;
-    var caretPos = txtarea.selectionStart;
+	event.preventDefault();
+	
+	if (tab == 1)
+	{
+		$('#tab-text').show(); 
+		$('#tab-title').hide();
+		
+		$('#nav-link-text').addClass('active'); 
+		$('#nav-link-title').removeClass('active');
+	}
+	else
+	{
+		$('#tab-text').hide(); 
+		$('#tab-title').show();
+		
+		$('#nav-link-text').removeClass('active'); 
+		$('#nav-link-title').addClass('active');
+	}
+	
+}
+  
+function saveAndStay()
+{
+	alert('Not implemented yet');
+	
+	//$.post('/lesson/update/{{$record->id}}', $('#form-edit').serialize());	
+	
+	$("#form-edit").submit(function(e) {
 
-    var front = (txtarea.value).substring(0, caretPos);
-    var back = (txtarea.value).substring(txtarea.selectionEnd, txtarea.value.length);
-    txtarea.value = front + text + back;
-    caretPos = caretPos + text.length;
-    txtarea.selectionStart = caretPos;
-    txtarea.selectionEnd = caretPos;
-    txtarea.focus();
-    txtarea.scrollTop = scrollPos;
+		e.preventDefault(); // avoid to execute the actual submit of the form.
+
+		var form = $(this);
+		var url = form.attr('action');
+
+		$.ajax({
+			   type: "POST",
+			   url: url,
+			   data: form.serialize(), // serializes the form's elements.
+			   success: function(data)
+			   {
+				   alert(data); // show response from the php script.
+			   }
+			 });
+
+
+	});
+	
+}
+
+function refreshView()
+{
+	if ($("#preview").is(":visible"))
+	{
+		$("#preview").hide();
+		$("#rich").show();
+		
+		tinymce.init({selector:'#text'});		
+	}
+	else
+	{
+		tinymce.remove();
+		
+		$("#preview").html(
+			$("#text").text()
+		);
+		
+		$("#preview").show();
+		$("#rich").hide();
+	}
 }

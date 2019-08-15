@@ -24,7 +24,7 @@
 		@endif
 	@endif
 
-	@component('components.control-accent-chars-esp', ['visible' => true, 'target' => 'title'])@endcomponent																		
+	@component('components.control-accent-chars-esp', ['visible' => true, 'target' => null, 'flat' => true])@endcomponent																		
 	
 	<form method="POST" action="{{isset($parent_id) ? '/words/create' : '/words/create-user' }}">
 	
@@ -33,13 +33,13 @@
 		
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('content.Word or Phrase'):</label>
-			<input type="text" id="title" name="title" class="form-control" autocomplete="off" />
+			<input type="text" id="title" name="title" class="form-control" autocomplete="off" onfocus="setFocus($(this))" />
 		<div>
 		
 		@if (!$lesson)
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('content.Translation, Definition, or Hint'):</label>
-			<textarea name="description" class="form-control" autocomplete="off"></textarea>
+			<textarea name="description" id="description" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
 		<div>
 		@endif
 		

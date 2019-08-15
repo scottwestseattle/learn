@@ -255,6 +255,7 @@ class LessonController extends Controller
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $lesson,
 			'courses' => LessonController::getCourses(LOG_ACTION_EDIT), // for the course dropdown
+			'tinymce' => true,
 			]));
     }
 

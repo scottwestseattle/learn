@@ -8,7 +8,7 @@
 	
 	<h1>@LANG('ui.Edit') @LANG('content.' . $title)</h1>
 
-	@component('components.control-accent-chars-esp', ['visible' => true, 'target' => 'title'])@endcomponent																		
+	@component('components.control-accent-chars-esp', ['visible' => true, 'flat' => true])@endcomponent																		
 	
 	@if ($isAdmin)
 		<form method="POST" id="form-edit" action="/words/update/{{$record->id}}">
@@ -18,13 +18,13 @@
 		
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('content.Word'):</label>
-			<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}" autocomplete="off" ></input>	
+			<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}" autocomplete="off"  onfocus="setFocus($(this))"></input>	
 		</div>
 
 		@if (!$lesson)
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('content.Translation, Definition, or Hint'):</label>
-			<textarea name="description" class="form-control" autocomplete="off" >{{$record->description}}</textarea>
+			<textarea name="description" id="description" class="form-control" autocomplete="off"  onfocus="setFocus($(this))" >{{$record->description}}</textarea>
 		<div>
 		@endif
 		
