@@ -1,3 +1,6 @@
+@if (App\Tools::isMobile())
+	<!-- dont show for mobiles -->
+@else
 <?php 
 	$id = isset($target) ? $target : 0; 
 	$tinymce = isset($tinymce);
@@ -42,4 +45,5 @@
 		</div>
 	</div>
 </div>
+@endif
 @endif
