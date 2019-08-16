@@ -119,4 +119,5 @@ return [
 'Date' => '日期',
 'Score' => '得分了',
 'No quiz results yet' => '还没有测验结果',
+'Latest Vocabulary' => '新词汇',
 ];

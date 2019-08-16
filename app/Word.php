@@ -225,19 +225,19 @@ dd($records);
 		return $rc;
     }	
 	
-    static public function getIndex($parent_id = null)
+    static public function getIndex($parent_id = null, $limit = 10000)
 	{
 		$records = [];
 		
 		if (isset($parent_id))
-			$records = self::getByParent($parent_id, WORDTYPE_LESSONLIST);
+			$records = self::getByParent($parent_id, WORDTYPE_LESSONLIST, $limit);
 		else
-			$records = self::getByParent(null, WORDTYPE_USERLIST);
+			$records = self::getByParent(null, WORDTYPE_USERLIST, $limit);
 			
 		return $records;
 	}
 	
-    static public function getByParent($parent_id, $type_flag)
+    static public function getByParent($parent_id, $type_flag, $limit)
     {
 		$records = [];
 			
@@ -252,6 +252,7 @@ dd($records);
 					->where('parent_id', $parent_id)
 					->where('type_flag', $type_flag)
 					->orderBy('id')
+					->limit($limit)
 					->get();
 			}
 			else
@@ -261,7 +262,8 @@ dd($records);
 					->whereNull('parent_id')
 					->where('user_id', Auth::id())
 					->where('type_flag', $type_flag)
-					->orderBy('id')
+					->orderByRaw('id desc')
+					->limit($limit)
 					->get();
 			}
 		}

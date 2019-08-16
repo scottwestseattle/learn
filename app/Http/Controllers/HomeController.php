@@ -70,7 +70,7 @@ class HomeController extends Controller
 		//
 		// user's vocab lists
 		//
-		$words = Word::getIndex();
+		$words = Word::getIndex(/* parentId = */ null, /* limit = */ 10);
 		
 		//
 		// get user's last viewed lesson so he can resume where he left off

@@ -1,5 +1,6 @@
+<?php $title = isset($title) ? $title : 'Vocabulary'; ?>
 @if (isset($records))
-<h4>@LANG('content.Vocabulary') ({{count($records)}})</h4>
+<h4>@LANG('content.' . $title) ({{count($records)}})</h4>
 <div class="mb-3">
 	@foreach($records as $record)
 		<span class="badge badge-info vocab-pills">

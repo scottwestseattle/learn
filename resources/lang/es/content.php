@@ -119,4 +119,5 @@ return [
 'Date' => 'Fecha',
 'Score' => 'Puntuación',
 'No quiz results yet' => 'Aún no hay resultados de practicas',
+'Latest Vocabulary' => 'Nuevo Vocabulario',
 ];
