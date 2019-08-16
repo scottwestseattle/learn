@@ -115,7 +115,7 @@ return [
 'Last Login' => 'Último Acceso',
 'none' => 'ninguno',
 'Account Created' => 'Cuenta Creada',
-'Your Quiz Results' => 'Resultados de Sus Prácticas',
+'Latest Quiz Results' => 'Resultados de Sus Últimas Prácticas',
 'Date' => 'Fecha',
 'Score' => 'Puntuación',
 'No quiz results yet' => 'Aún no hay resultados de practicas',

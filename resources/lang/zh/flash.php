@@ -23,4 +23,6 @@ return [
 'Record has been updated' => '记录已更新',
 'Record has been deleted' => '记录已被删除',
 'Search Error' => '搜索错误',
+'Word already exists in this course in lesson' => '课程中已存在词汇',
+'Word already exists in your vocabulary list' => '单词已存在于词汇表中',
 ];

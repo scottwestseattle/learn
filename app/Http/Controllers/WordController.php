@@ -142,19 +142,23 @@ class WordController extends Controller
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
 		$record->permalink		= Tools::createPermalink($request->title);
-		
+
+		$parent = Word::getParent($record->title, $parent_id);
+
 		try
 		{
-			$course = Word::getCourse($record->title, $parent_id);
-			if (isset($course))
+			if (isset($parent))
 			{
-				$msg = "Word already exists in this course in lesson: " . $course->title;
+				if (array_key_exists('lesson', $parent))
+					$msg = 'Word already exists in this course in lesson' . ': ' . $parent['lesson'];
+				else
+					$msg = 'Word already exists in your vocabulary list';
+				
 				throw new \Exception($msg);
 			}
 			
 			if (isset($record->parent_id))
 			{
-				
 				if ($record->type_flag == WORDTYPE_USERLIST)
 					throw new \Exception("user list word with parent_id");
 			}
@@ -258,17 +262,30 @@ class WordController extends Controller
     public function update(Request $request, Word $word)
     {
 		$record = $word;
-
+		$msg = '';
 		$isDirty = false;
 		$changes = '';
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-		
+
+		$parent_id = isset($word->parent_id) ? $word->parent_id : null;
+		$parent = Word::getParent($record->title, $parent_id);
+
 		if ($isDirty)
 		{
 			try
 			{
+				if (isset($parent))
+				{
+					if (array_key_exists('lesson', $parent))
+						$msg = 'Word already exists in this course in lesson' . ': ' . $parent['lesson'];
+					else
+						$msg = 'Word already exists in your vocabulary list';
+					
+					throw new \Exception($msg);
+				}
+				
 				$record->save();
 
 				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
@@ -276,7 +293,7 @@ class WordController extends Controller
 			}
 			catch (\Exception $e)
 			{
-				$msg = "Error updating record";
+				$msg = isset($msg) ? $msg : "Error updating record";
 				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg . ': title = ' . $record->title, null, $e->getMessage());
 				Tools::flash('danger', $msg);
 			}

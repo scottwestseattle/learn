@@ -115,7 +115,7 @@ return [
 'Last Login' => '上次登录',
 'none' => '没有',
 'Account Created' => '帐户已创建',
-'Your Quiz Results' => '你的测验结果',
+'Latest Quiz Results' => '您最新的测验结果',
 'Date' => '日期',
 'Score' => '得分了',
 'No quiz results yet' => '还没有测验结果',

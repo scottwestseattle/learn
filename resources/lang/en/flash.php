@@ -23,4 +23,6 @@ return [
 'Record has been updated' => 'Record has been updated',
 'Record has been deleted' => 'Record has been deleted',
 'Search Error' => 'Search Error',
+'Word already exists in this course in lesson' => 'Word already exists in this course in lesson',
+'Word already exists in your vocabulary list' => 'Word already exists in your vocabulary list',
 ];

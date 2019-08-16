@@ -115,7 +115,7 @@ return [
 'Last Login' => 'Last Login',
 'none' => 'none',
 'Account Created' => 'Account Created',
-'Your Quiz Results' => 'Your Quiz Results',
+'Latest Quiz Results' => 'Latest Quiz Results',
 'Date' => 'Date',
 'Score' => 'Score',
 'No quiz results yet' => 'No quiz results yet',

@@ -6,29 +6,6 @@
 
 	<div class="mb-5">
 		<div class="">
-			<h3>@LANG('content.Your Stats')</h3>
-		</div>
-		<div class="">
-			<div class="alert alert-primary" role="alert">
-				<p style="font-size:1.2em;"><strong>@LANG('content.Account Created'):</strong>&nbsp;{{$stats['accountCreated']}}</p>
-			</div>
-			<div class="alert alert-success">
-				<p style="font-size:1.2em;"><strong>@LANG('content.Last Login'):</strong>&nbsp;{{$stats['lastLogin']}}</p>
-			</div>
-
-			@guest
-				<p>
-					<a class="btn btn-primary btn-lg" href="/login" role="button">@LANG('ui.Login')</a>
-					<a class="btn btn-primary btn-lg" href="/register" role="button">@LANG('ui.Register')</a>
-				</p>
-			@endguest
-		</div>
-	</div>
-
-	<hr />
-	
-	<div class="mb-5">
-		<div class="">
 			<h3>@LANG('content.Your Vocabulary Lists') ({{count($words)}})</h3>
 		</div>
 		<div class="">
@@ -70,7 +47,7 @@
 	<hr />
 		
 	<div class="mb-5">
-		<h3>@LANG('content.Your Quiz Results')</h3>
+		<h3>@LANG('content.Latest Quiz Results')</h3>
 
 		<div class="">
 
@@ -78,7 +55,8 @@
 			<ul class="list-group">	
 				@foreach($quizes as $quiz)
 					<li class="list-group-item list-group-item-{{\App\Lesson::getQuizResultColor($quiz->extraInfo)}}">
-						<p style="font-size:1.4em; font-weight:bold;" class="alert-heading mb-3">{{$quiz->title}}</p>
+						<p style="font-size:1.2em; font-weight:normal;" class="mb-0"><a style="color:#3f3f3f; text-decoration:none;" href="/courses/view/{{$quiz->course_id}}">{{$quiz->course_title}}</a></p>
+						<p style="font-size:1.4em; font-weight:bold;" class="alert-heading mb-3"><a style="color:#3f3f3f; text-decoration:none;"  href="/lessons/view/{{$quiz->lesson_id}}">{{$quiz->lesson_title}}</a></p>
 						<!-- p><strong>{{$quiz->extraInfo}}%</strong> - {{$quiz->created_at}}</p -->
 						<p><strong><span style="font-size:1em;" class="badge badge-light badge-pill">{{floatVal($quiz->extraInfo)}}%</span></strong> - {{$quiz->created_at}}</p>
 					</li>								
@@ -92,6 +70,29 @@
 
 		</div>
 	</div>		
+		
+	<div class="mb-5">
+		<div class="">
+			<h3>@LANG('content.Your Stats')</h3>
+		</div>
+		<div class="">
+			<div class="alert alert-primary" role="alert">
+				<p style="font-size:1.2em;"><strong>@LANG('content.Account Created'):</strong>&nbsp;{{$stats['accountCreated']}}</p>
+			</div>
+			<div class="alert alert-success">
+				<p style="font-size:1.2em;"><strong>@LANG('content.Last Login'):</strong>&nbsp;{{$stats['lastLogin']}}</p>
+			</div>
+
+			@guest
+				<p>
+					<a class="btn btn-primary btn-lg" href="/login" role="button">@LANG('ui.Login')</a>
+					<a class="btn btn-primary btn-lg" href="/register" role="button">@LANG('ui.Register')</a>
+				</p>
+			@endguest
+		</div>
+	</div>
+
+	<hr />		
 		
 </div>
 

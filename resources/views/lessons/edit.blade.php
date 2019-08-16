@@ -6,7 +6,7 @@
 
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
-	<h1>@LANG('ui.Edit') @LANG('content.' . $title)</h1>
+	<h1>@LANG('ui.Edit') @LANG('content.' . $title) - {{$record->title}}</h1>
 
 	<form method="POST" id="form-edit" action="/{{$prefix}}/update/{{$record->id}}">
 	
@@ -15,7 +15,7 @@
 				<a id="nav-link-text" class="nav-link active" href="#" onclick="setTab(event, 1);">@LANG('gen.Text')</a>
 			</li>
 			<li class="nav-item">
-				<a id="nav-link-title" class="nav-link" href="#" onclick="setTab(event, 2);">@LANG('ui.Title')</a>
+				<a id="nav-link-title" class="nav-link" href="#" onclick="setTab(event, 2);"><span class="glyphCustom glyphicon glyphicon-cog"></span><!-- @LANG('ui.Title')--></a>
 			</li>
 			<li class="nav-item">
 				<button type="submit" name="update" style="margin-top:5px; margin-left:5px;" class="btn btn-sm btn-primary">@LANG('ui.Save')</button>

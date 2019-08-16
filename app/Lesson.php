@@ -914,7 +914,7 @@ class Lesson extends Base
 		if (isset($event))
 		{
 			// load this lesson
-			$record['lesson'] = Lesson::get($event->record_id);
+			$record['lesson'] = Lesson::getLesson($event->record_id);
 			
 			// get the time of last visit
 			$record['date'] = $event->created_at;
@@ -939,7 +939,7 @@ class Lesson extends Base
 		}
 	}		
 	
-    static private function get($id)
+    static public function getLesson($id)
 	{
 		$id = intval($id);
 		$record = null;
@@ -1001,7 +1001,8 @@ class Lesson extends Base
 		{			
 			$records = DB::table('events')
 				->join('lessons', 'events.record_id', '=', 'lessons.id')
-				->select('events.*', 'lessons.title', 'lessons.id')
+				->join('courses', 'courses.id', '=', 'lessons.parent_id')
+				->select('events.*', 'lessons.title as lesson_title', 'lessons.id as lesson_id', 'courses.id as course_id', 'courses.title as course_title')
 				->where('events.deleted_flag', 0)
 				->where('lessons.deleted_flag', 0)
 				->where('events.user_id', Auth::id())

@@ -23,4 +23,6 @@ return [
 'Record has been updated' => 'El registro ha sido actualizado',
 'Record has been deleted' => 'El registro ha sido eliminado',
 'Search Error' => 'Error de busqueda',
+'Word already exists in this course in lesson' => 'El vocabulario ya existe en este curso en la lección',
+'Word already exists in your vocabulary list' => 'Palabra ya existe en su lista de vocabulario',
 ];

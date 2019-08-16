@@ -159,42 +159,63 @@ class Word extends Base
 		return($count > 0);
 	}
 	
-    static public function getCourse($word, $parent_id)
+    static public function getParent($word, $parent_id)
     {
 		$count = 0;
-		$course = null;
+		$parent = null;
+		$msg = '';
+		$rc = null;
 		
-		$course = Lesson::getCourse($parent_id); // $parent_id is the lesson id
-		if (isset($course))
-		{		
-			try
+		if (isset($parent_id) && $parent_id > 0)
+			$parent = Lesson::getLesson($parent_id); // get the lesson we are working on
+		
+		try
+		{
+			if (isset($parent))
 			{
+				$msg = 'lesson word';
+				
+				// check if this word already belongs to any lesson in the course
+				$lesson = DB::table('words')
+					->join('lessons', 'lessons.id', '=', 'words.parent_id')
+					->where('words.deleted_flag', 0)
+					->where('words.title', $word)
+					->where('lessons.deleted_flag', 0)
+					->where('lessons.parent_id', $parent->parent_id)
+					->first();
+					
+				if (isset($lesson))
+				{
+					$rc = [];
+					$rc['lesson'] = $lesson->title;
+				}				
+			}
+			else if (Auth::check())
+			{
+				$msg = 'user word';
+				
 				$count = Word::select()
 					->where('deleted_flag', 0)
-					->where('parent_id', $parent_id)
+					->where('user_id', Auth::id())
+					->where('type_flag', WORDTYPE_USERLIST)
 					->where('title', $word)
 					->count();
-/*					
-				$records = DB::table('words')
-					->where('words.deleted_flag', 0)
-					->join('lessons', 'words.parent_id', '=', 'lessons.id')
-					->select('lessons.title', 'lessons.id')
-					->where('lessons.deleted_flag', 0)
-					->where('lessons.parent_id', $course->id)
-					->where('words.title', $word)
-					->get();
-dd($records);
-*/
-			}
-			catch (\Exception $e)
-			{
-				$msg = 'Error getting count';
-				Event::logException('word', LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
-				Tools::flash('danger', $msg);
+					
+				if ($count > 0)
+				{
+					$rc = [];
+					$rc['count'] = $count;
+				}
 			}
 		}
-	
-		return $course;
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting ' . $msg;
+			Event::logException('word', LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $rc;
 	}
 	
     static public function create($parent_id, $word)

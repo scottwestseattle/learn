@@ -21,7 +21,9 @@
 		<button onclick="event.preventDefault(); insertChar('Ó', '{{$id}}', '{{$tinymce}}')">Ó</button>
 		<button onclick="event.preventDefault(); insertChar('Ú', '{{$id}}', '{{$tinymce}}')">Ú</button>
 		<button onclick="event.preventDefault(); insertChar('Ü', '{{$id}}', '{{$tinymce}}')">Ü</button>
-		<button onclick="event.preventDefault(); insertChar('Ñ', '{{$id}}', '{{$tinymce}}')">Ñ</button>		
+		<button onclick="event.preventDefault(); insertChar('Ñ', '{{$id}}', '{{$tinymce}}')">Ñ</button>	
+		<button onclick="event.preventDefault(); insertChar('&rarr;', '{{$id}}', '{{$tinymce}}')">&rarr;</button>	
+		
 	</div>	
 @else
 <div class="{{isset($visible) && $visible ? '' : 'hidden'}}">
