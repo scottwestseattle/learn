@@ -118,7 +118,8 @@ class WordController extends Controller
 	
     public function add($parent_id = null)
     {
-		$words = Word::getIndex($parent_id);
+		//$words = Word::getIndex($parent_id);
+		$words = Word::getCourseWords($parent_id)->groupBy('parent_id');
 		
 		return view(PREFIX . '.add', $this->getViewData([
 			'parent_id' => $parent_id,

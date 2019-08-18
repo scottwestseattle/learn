@@ -178,16 +178,18 @@ class Word extends Base
 				// check if this word already belongs to any lesson in the course
 				$lesson = DB::table('words')
 					->join('lessons', 'lessons.id', '=', 'words.parent_id')
+					->select('words.*', 'lessons.title as lessonTitle')
 					->where('words.deleted_flag', 0)
+					->where('words.type_flag', WORDTYPE_LESSONLIST)
 					->where('words.title', $word)
 					->where('lessons.deleted_flag', 0)
 					->where('lessons.parent_id', $parent->parent_id)
 					->first();
-					
+
 				if (isset($lesson))
 				{
 					$rc = [];
-					$rc['lesson'] = $lesson->title;
+					$rc['lesson'] = $lesson->lessonTitle;
 				}				
 			}
 			else if (Auth::check())
@@ -217,6 +219,39 @@ class Word extends Base
 
 		return $rc;
 	}
+	
+    static public function getCourseWords($parent_id)
+    {
+		$parent_id = intval($parent_id);	
+		$words = [];		
+		
+		$parent = Lesson::getLesson($parent_id); // get the lesson for the course id
+		
+		try
+		{
+			if (isset($parent))
+			{				
+				// check if this word already belongs to any lesson in the course
+				$words = DB::table('words')
+					->join('lessons', 'lessons.id', '=', 'words.parent_id')
+					->select('words.*', 'lessons.title as lessonTitle', 'lessons.lesson_number', 'lessons.section_number')
+					->where('words.deleted_flag', 0)
+					->where('words.type_flag', WORDTYPE_LESSONLIST)
+					->where('lessons.deleted_flag', 0)
+					->where('lessons.parent_id', $parent->parent_id) // only lessons of this course
+					->orderByRaw('lesson_number, section_number, id')
+					->get();		
+			}
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting course words';
+			Event::logException('word', LOG_ACTION_SELECT, 'lesson id: ' . $parent_id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $words;
+	}	
 	
     static public function create($parent_id, $word)
     {
