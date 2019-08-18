@@ -34,50 +34,24 @@ class Word extends Base
 			if (Tools::isSuperAdmin())
 			{
 				$records = Word::select()
-					->where('deleted_flag', 0)
+					->where('words.user_id', Auth::id())
+					->where('words.deleted_flag', 0)
+					->where('words.type_flag', WORDTYPE_USERLIST)
 					->where(function ($query) use ($search){$query
-						->where('title', 'LIKE', $search)
-						->orWhere('description', 'LIKE', $search);})
+						->where('words.title', 'LIKE', $search)
+						->orWhere('words.description', 'LIKE', $search);})
 					->get();
+					//->toSql();
+				//dd($records);
 			}
 			else if (Tools::isAdmin())
 			{
-				$records = Word::select()
-					->where('deleted_flag', 0)
-					//->where('site_id', SITE_ID) 
-					->where(function ($query) use ($search){$query
-						->where('title', 'LIKE', $search)
-						->orWhere('description', 'LIKE', $search);})
-					->get();
 			}
 			else if (Auth::check())
 			{
-				// only search public lessons and words and their own private ones
-				//dd(
-				$records = 
-					Word::select()
-					->where('deleted_flag', 0)
-					//->where('site_id', SITE_ID)
-					->where(function ($query) use ($search){$query
-						->where('user_id', Auth::id())
-						->orWhere('type_flag', WORDTYPE_LESSONLIST);})
-					->where(function ($query) use ($search){$query
-						->where('title', 'LIKE', $search)
-						->orWhere('description', 'LIKE', $search);})
-					->get();
-					//->toSql());
 			}
 			else
 			{
-				// only search public lessons and words
-				$records = Word::select()
-					->where('deleted_flag', 0)
-					//->where('site_id', SITE_ID)
-					->where('type_flag', WORDTYPE_LESSONLIST)				
-					->where(function ($query) use ($search){$query
-						->where('title', 'LIKE', $search)
-						->orWhere('description', 'LIKE', $search);})
-					->get();
 			}			
 		}
 		catch(\Exception $e)
@@ -220,7 +194,7 @@ class Word extends Base
 		return $rc;
 	}
 	
-    static public function getCourseWords($parent_id)
+    static public function getCourseWords($parent_id, $orderBy)
     {
 		$parent_id = intval($parent_id);	
 		$words = [];		
@@ -234,12 +208,12 @@ class Word extends Base
 				// check if this word already belongs to any lesson in the course
 				$words = DB::table('words')
 					->join('lessons', 'lessons.id', '=', 'words.parent_id')
-					->select('words.*', 'lessons.title as lessonTitle', 'lessons.lesson_number', 'lessons.section_number')
+					->select('words.*', 'lessons.id as lessonId', 'lessons.title as lessonTitle', 'lessons.lesson_number', 'lessons.section_number')
 					->where('words.deleted_flag', 0)
 					->where('words.type_flag', WORDTYPE_LESSONLIST)
 					->where('lessons.deleted_flag', 0)
 					->where('lessons.parent_id', $parent->parent_id) // only lessons of this course
-					->orderByRaw('lesson_number, section_number, id')
+					->orderByRaw($orderBy)
 					->get();		
 			}
 		}

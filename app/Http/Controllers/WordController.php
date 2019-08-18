@@ -38,7 +38,29 @@ class WordController extends Controller
 
 		try
 		{
-			$records = Word::getIndex($parent_id);
+			// 
+			// check for dupe words in course lessons
+			//
+			$records = Word::getCourseWords($parent_id, 'title');
+			
+			$words = [];
+			$dupe = false;
+			foreach($records as $record)
+			{
+				if (array_key_exists($record->title, $words))
+				{
+					dump('dupe: ' . $record->title);
+					$dupe = true;
+				}
+				
+				$words[$record->title] = $record->title;
+			}
+			
+			if ($dupe)
+				dd('done');
+			// done with dupe check
+			
+			$records = Word::getIndex($parent_id);			
 		}
 		catch (\Exception $e)
 		{
@@ -118,9 +140,8 @@ class WordController extends Controller
 	
     public function add($parent_id = null)
     {
-		//$words = Word::getIndex($parent_id);
-		$words = Word::getCourseWords($parent_id)->groupBy('parent_id');
-		
+		$words = Word::getCourseWords($parent_id, 'lesson_number, section_number, id')->groupBy('parent_id');
+
 		return view(PREFIX . '.add', $this->getViewData([
 			'parent_id' => $parent_id,
 			'type_flag' => WORDTYPE_LESSONLIST,

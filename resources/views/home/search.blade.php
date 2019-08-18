@@ -27,7 +27,7 @@
 					@foreach($lessons as $record)
 						<tr>
 							<td>@LANG('content.Lesson')</td>
-							<td><a href="/lessons/view/{{$record->id}}" target="_blank">{{$record->title}}</a></td>
+							<td><a href="/lessons/view/{{$record->id}}" target="_blank">{{$record->courseTitle}} - {{$record->lesson_number}}.{{$record->section_number}} {{$record->title}}</a></td>
 						</tr>
 					@endforeach
 				@endif
@@ -37,7 +37,7 @@
 						<tr>
 							@if ($record->type_flag == WORDTYPE_LESSONLIST || $record->type_flag == WORDTYPE_LESSONLIST_USERCOPY)
 								<td>@LANG('content.Lesson')</td>
-								<td><a href="/lessons/view/{{$record->parent_id}}" target="_blank">{{$record->title}}</a></td>
+								<td><a href="/lessons/view/{{$record->parent_id}}" target="_blank">{{$record->courseTitle}} - {{$record->lesson_number}}.{{$record->section_number}} {{$record->lessonTitle}}</a></td>
 							@else
 								<td>@LANG('content.Vocabulary')</td>
 								<td><a href="/words/edit-user/{{$record->id}}" target="_blank">{{$record->title}}</a></td>

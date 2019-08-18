@@ -58,52 +58,34 @@ class Lesson extends Base
 
 			if (Tools::isSuperAdmin())
 			{
-				if (false)
-				dd(Lesson::select()
-					->where('deleted_flag', 0)					
-					->where(function ($query) use ($search){
-						$query->where('title', 'LIKE', $search)
-							  ->orWhere('text', 'LIKE', $search);})
-					->toSql());
-
+				// where 'deleted_flag = 0' AND (title like %search% OR text like %search%)
 				$records = Lesson::select()
-					->where('deleted_flag', 0)					
+					->join('courses', 'courses.id', '=', 'lessons.parent_id')
+					->leftJoin('words', 'lessons.id', '=', 'words.parent_id')
+					->select('lessons.id', 'lessons.lesson_number', 'lessons.section_number', 'lessons.title', 'courses.title as courseTitle')
+					->where('lessons.deleted_flag', 0)
+					->where('courses.release_flag', RELEASE_PUBLISHED)
 					->where(function ($query) use ($search){$query
-						->where('title', 'LIKE', $search)
-						->orWhere('text', 'LIKE', $search);})
+						->where('lessons.title', 'LIKE', $search)
+						->orWhere('lessons.text', 'LIKE', $search)
+						->orWhere(function ($query) use ($search){$query
+									->where('words.deleted_flag', 0)
+									->where('words.title', 'LIKE', $search);})
+									;})
+					->groupBy('lessons.id', 'lessons.lesson_number', 'lessons.section_number', 'lessons.title', 'courses.title')
+					->orderBy('courses.title')
+					->orderBy('lessons.lesson_number')
+					->orderBy('lessons.section_number')
 					->get();
 			}
 			else if (Tools::isAdmin())
 			{
-				$records = Lesson::select()
-					//->where('site_id', SITE_ID) 
-					->where('deleted_flag', 0)					
-					->where(function ($query) use ($search){$query
-						->where('title', 'LIKE', $search)
-						->orWhere('text', 'LIKE', $search);})
-					->get();					
 			}
 			else if (Auth::check())
 			{
-				// only search public lessons and words and their own private ones
-				$records = Lesson::select()
-					//->where('site_id', SITE_ID) 
-					->where('deleted_flag', 0)					
-					->where(function ($query) use ($search){$query
-						->where('title', 'LIKE', $search)
-						->orWhere('text', 'LIKE', $search);})
-					->get();					
 			}
 			else
 			{
-				// only search public lessons and words
-				$records = Lesson::select()
-					->where('deleted_flag', 0)
-					//->where('site_id', SITE_ID)
-					->where(function ($query) use ($search){$query
-						->where('title', 'LIKE', $search)
-						->orWhere('text', 'LIKE', $search);})
-					->get();
 			}			
 		}
 		catch(\Exception $e)

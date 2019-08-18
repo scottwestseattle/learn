@@ -73,6 +73,21 @@ define('WORDTYPE_LESSONLIST', 1);
 define('WORDTYPE_LESSONLIST_USERCOPY', 2);
 define('WORDTYPE_USERLIST', 3);
 
+define('RELEASE_NOTSET', 0);
+define('RELEASE_ADMIN', 10);
+define('RELEASE_DRAFT', 20);
+define('RELEASE_REVIEW', 30);
+define('RELEASE_APPROVED', 90);
+define('RELEASE_PUBLISHED', 100);
+define('RELEASE_DEFAULT', RELEASE_DRAFT);
+
+define('WIP_NOTSET', 0);
+define('WIP_INACTIVE', 10);
+define('WIP_DEV', 20);
+define('WIP_TEST', 30);
+define('WIP_FINISHED', 100);
+define('WIP_DEFAULT', WIP_DEV);
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

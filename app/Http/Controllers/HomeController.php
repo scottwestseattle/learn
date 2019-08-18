@@ -174,6 +174,7 @@ class HomeController extends Controller
 		$search = null;
 		$lessons = null;
 		$words = null;
+		$wordsUser = null;
 		$isPost = $request->isMethod('post');
 		$count = 0;
 		
@@ -199,8 +200,7 @@ class HomeController extends Controller
 					$count += (isset($lessons) ? count($lessons) : 0);
 					
 					$words = Word::search($search);
-					$count += (isset($words) ? count($words) : 0);
-					
+					$count += (isset($words) ? count($words) : 0);			
 				}
 				catch (\Exception $e) 
 				{

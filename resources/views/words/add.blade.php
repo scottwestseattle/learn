@@ -62,7 +62,7 @@
 		<h4>@LANG('content.' . $title) ({{count($records)}})</h4>
 		<div class="mb-3">
 			@foreach($records as $lesson)
-				<div>Lesson {{$lesson[0]->lesson_number}}.{{$lesson[0]->section_number}} ({{count($lesson)}})</div>
+				<div><a href="/lessons/view/{{$lesson[0]->lessonId}}">Lesson {{$lesson[0]->lesson_number}}.{{$lesson[0]->section_number}} ({{count($lesson)}})</a></div>
 				@foreach($lesson as $record)				
 					<span class="badge badge-info vocab-pills">
 					@if (isset($edit))
