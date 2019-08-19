@@ -48,6 +48,20 @@ class Lesson extends Base
     	return $this->belongsTo('App\Course', 'parent_id', 'id');
     }
 
+    static public function getName($lesson)
+    {
+		$rc = $lesson->lesson_number . '.' . $lesson->section_number . ' ' . $lesson->lesson_title;
+
+    	return $rc;
+    }
+
+    public function getFullName()
+    {
+		$rc = $this->lesson_number . '.' . $this->section_number . ' ' . $this->title;
+
+    	return $rc;
+    }
+	
 	static public function search($search)
     {
 		$records = null;
@@ -984,7 +998,7 @@ class Lesson extends Base
 			$records = DB::table('events')
 				->join('lessons', 'events.record_id', '=', 'lessons.id')
 				->join('courses', 'courses.id', '=', 'lessons.parent_id')
-				->select('events.*', 'lessons.title as lesson_title', 'lessons.id as lesson_id', 'courses.id as course_id', 'courses.title as course_title')
+				->select('events.*', 'lessons.lesson_number', 'lessons.section_number', 'lessons.title as lesson_title', 'lessons.id as lesson_id', 'courses.id as course_id', 'courses.title as course_title')
 				->where('events.deleted_flag', 0)
 				->where('lessons.deleted_flag', 0)
 				->where('events.user_id', Auth::id())

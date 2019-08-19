@@ -56,7 +56,7 @@
 				@foreach($quizes as $quiz)
 					<li class="list-group-item list-group-item-{{\App\Lesson::getQuizResultColor($quiz->extraInfo)}}">
 						<p style="font-size:1.2em; font-weight:normal;" class="mb-0"><a style="color:#3f3f3f; text-decoration:none;" href="/courses/view/{{$quiz->course_id}}">{{$quiz->course_title}}</a></p>
-						<p style="font-size:1.4em; font-weight:bold;" class="alert-heading mb-3"><a style="color:#3f3f3f; text-decoration:none;"  href="/lessons/view/{{$quiz->lesson_id}}">{{$quiz->lesson_title}}</a></p>
+						<p style="font-size:1.4em; font-weight:bold;" class="alert-heading mb-3"><a style="color:#3f3f3f; text-decoration:none;"  href="/lessons/view/{{$quiz->lesson_id}}">{{App\Lesson::getName($quiz)}}</a></p>
 						<!-- p><strong>{{$quiz->extraInfo}}%</strong> - {{$quiz->created_at}}</p -->
 						<p><strong><span style="font-size:1em;" class="badge badge-light badge-pill">{{floatVal($quiz->extraInfo)}}%</span></strong> - {{$quiz->created_at}}</p>
 					</li>								
