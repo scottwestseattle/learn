@@ -258,10 +258,13 @@ class WordController extends Controller
     {
 		$record = $word;
 		
+		$words = Word::getCourseWords($word->parent_id, 'lesson_number, section_number, id')->groupBy('parent_id');
+//dd($words);
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
 			'records' => Word::getIndex($word->parent_id),
 			'lesson' => $record->type_flag == WORDTYPE_LESSONLIST,
+			'words' => $words,
 			]));
     }
 
@@ -287,17 +290,25 @@ class WordController extends Controller
 		$msg = '';
 		$isDirty = false;
 		$changes = '';
+		$parent = null;
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
+		$isDirtyTitle = $isDirty;
+		
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-
-		$parent_id = isset($word->parent_id) ? $word->parent_id : null;
-		$parent = Word::getParent($record->title, $parent_id);
-
+		$record->parent_id =  Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
+		
 		if ($isDirty)
 		{
 			try
 			{
+				if ($isDirtyTitle)
+				{
+					// check for dupes if the word has changed
+					$parent_id = isset($word->parent_id) ? $word->parent_id : null;
+					$parent = Word::getParent($record->title, $parent_id);
+				}
+				
 				if (isset($parent))
 				{
 					if (array_key_exists('lesson', $parent))

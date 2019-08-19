@@ -25,9 +25,6 @@
 			</li>
 			<li class="nav-item">
 				@component('components.control-accent-chars-esp', ['target' => 'text', 'visible' => true, 'tinymce' => true, 'flat' => true])@endcomponent																		
-@if (false)
-				@component('components.data-accent-chars-esp')@endcomponent											
-@endif			
 			</li>
 		</ul>	
 	

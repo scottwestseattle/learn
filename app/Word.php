@@ -193,6 +193,24 @@ class Word extends Base
 
 		return $rc;
 	}
+
+    static public function getCourseLessons($lessons)
+    {
+		$rc = [];
+		
+		if (isset($lessons))
+		{
+			foreach($lessons as $lesson)
+			{
+				foreach($lesson as $word)
+				{
+					$rc[$word->lessonId] = $word->lesson_number . '.' . $word->section_number . ' - ' . $word->lessonTitle;
+				}
+			}
+		}
+		
+		return $rc;
+	}
 	
     static public function getCourseWords($parent_id, $orderBy)
     {

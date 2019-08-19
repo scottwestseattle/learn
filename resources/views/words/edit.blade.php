@@ -27,6 +27,20 @@
 			<textarea name="description" id="description" class="form-control" autocomplete="off"  onfocus="setFocus($(this))" >{{$record->description}}</textarea>
 		<div>
 		@endif
+
+		@if (isset($words))
+			<div class="form-group">
+			@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix, 
+				'isAdmin' => $isAdmin, 
+				'prompt' => 'Lesson: ',
+				'options' => App\Word::getCourseLessons($words),
+				'selected_option' => $record->parent_id,
+				'field_name' => 'parent_id',
+				'prompt_div' => true,
+				'select_class' => 'form-control',
+			])@endcomponent
+			</div>
+		@endif
 		
 		<div class="form-group">
 			<div class="submit-button">
@@ -38,8 +52,12 @@
 		
 	</form>
 	
-	@component('components.data-badge-list', ['edit' => $lesson ? '/words/edit/' : '/words/edit-user/', 'records' => $records])@endcomponent																		
-	
+	@if (isset($record->parent_id))
+		@component('components.data-course-words', ['edit' => $lesson ? '/words/edit/' : '/words/edit-user/', 'words' => $words])@endcomponent																				
+	@else
+		@component('components.data-badge-list', ['edit' => $lesson ? '/words/edit/' : '/words/edit-user/', 'records' => $records])@endcomponent																			
+	@endif
+
 </div>
 
 @endsection
