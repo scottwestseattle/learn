@@ -140,7 +140,7 @@ class WordController extends Controller
 	
     public function add($parent_id = null)
     {
-		$words = Word::getCourseWords($parent_id, 'lesson_number, section_number, id')->groupBy('parent_id');
+		$words = isset($parent_id) ? Word::getCourseWords($parent_id, 'lesson_number, section_number, id')->groupBy('parent_id') : null;
 
 		return view(PREFIX . '.add', $this->getViewData([
 			'parent_id' => $parent_id,
@@ -258,8 +258,8 @@ class WordController extends Controller
     {
 		$record = $word;
 		
-		$words = Word::getCourseWords($word->parent_id, 'lesson_number, section_number, id')->groupBy('parent_id');
-//dd($words);
+		$words = isset($word->parent_id) ? Word::getCourseWords($word->parent_id, 'lesson_number, section_number, id')->groupBy('parent_id') : null;
+
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
 			'records' => Word::getIndex($word->parent_id),
@@ -489,10 +489,10 @@ class WordController extends Controller
 			Tools::flash('danger', $msg);
 		}
 
-		if (Tools::isAdmin() || $word->type_flag == WORDTYPE_LESSONLIST)
+		if ($word->type_flag == WORDTYPE_LESSONLIST)
 			return redirect('/words/add/' . $word->parent_id);
 		else
-			return redirect('/words/add-user/' . $word->parent_id);		
+			return redirect('/words/add-user');
     }
 
     public function fastdelete(Word $word)
