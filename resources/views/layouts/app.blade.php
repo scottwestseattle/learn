@@ -1,5 +1,6 @@
 <?php
 $domainName = isset($domainName) ? $domainName : '';
+$siteTitle = isset($siteTitle) ? $siteTitle : 'Site Title';
 ?>
 <!doctype html>
 <html lang="en">
@@ -10,7 +11,7 @@ $domainName = isset($domainName) ? $domainName : '';
 	<meta name="author" content="Learn Systems">
 	<meta name="generator" content="Jekyll v3.8.5">
 	<meta name="csrf-token" content="{{ csrf_token() }}" />	
-	<title>Learn - Remote Virtual Training</title>
+	<title>{{$siteTitle}}</title>
 
     <!-- Scripts -->
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
@@ -147,7 +148,7 @@ $domainName = isset($domainName) ? $domainName : '';
 		<div class="container marketing text-center" style="padding:50px;">
 			<a href="#"><img src="/img/logo.png" height="60" /></a>
 			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
-			<p style="font-size:1.2em;" class="">@LANG('content.Site Title')</p>
+			<p style="font-size:1.2em;" class="">{{$siteTitle}}</p>
 			<p>&copy; 2019 {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
 			<span class="footer-links">
 				<a href="/privacy">@LANG('ui.Privacy Policy')</a>&bull;

@@ -10,12 +10,12 @@
 	
 	<h1>@LANG('ui.Terms of Use')</h1>
 	
-	<div class="entry-div" style="margin-top:30px;">
-		<div class="entry">
-			<h3>This is the Terms of Use.</h3>
-		</div>
+	<div class="" style="margin-top:30px;">
+		<p>@LANG('fp.terms-p1')</p>
+		<p>@LANG('fp.terms-p2')</p>
 	</div>
 			
 </div>
 
 @endsection
+

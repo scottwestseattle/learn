@@ -9,12 +9,10 @@
 <div class="container page-normal">
 	
 	<h1>@LANG('ui.Contact')</h1>
+
+	<h3>@LANG('fp.Please contact us at the following email address.')</h3>
 	
-	<div class="entry-div" style="margin-top:30px;">
-		<div class="entry">
-			<h3>Email: info@email.com</h3>
-		</div>
-	</div>
+	<h3>{{$email}}</h3>
 			
 </div>
 

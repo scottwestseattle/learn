@@ -10,12 +10,7 @@
 	
 	<h1>@LANG('ui.About')</h1>
 		
-	<span style="font-size:1.5em;">
-		All Images, Photos, Graphics, and Content on this site ©2019 Learn Online. 
-		All Rights Reserved. 
-		Do not copy, archive or re-post without written permission from the author. 
-		For more information, please contact info@learnonline.com.			
-	</span>
+	<span style="font-size:1.5em;">@LANG('fp.about-p1')&nbsp;<a href="/contact">@LANG('ui.by clicking here')</a>.</span>
 	
 	<p style="margin-top: 20px;">{{$domainName}} {{$version}}<p>
 	

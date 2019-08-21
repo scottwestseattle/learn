@@ -111,4 +111,6 @@ return [
 'Clear' => 'Limpiar',
 'Save' => 'Guardar',
 'Quit' => 'Salir',
+'by clicking here' => 'haciendo clic aquí',
+'Search' => 'Buscar',
 ];

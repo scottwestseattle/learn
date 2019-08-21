@@ -35,7 +35,7 @@ return [
 'Comments' => 'Comments',
 'Show All Comments' => 'Show All Comments',
 'Back to Comments' => 'Back to Comments',
-'Site Title' => 'Learn English Online',
+'Site Title English' => 'Learn English Online',
 'Frontpage Header Title' => 'Learn English Online With Live Instructors',
 'Frontpage Header Body' => 'Learn and practice English from the comfort of your home. One-on-one or small group classes for more personal attention. We teach online so our costs are kept low and these savings are passed on to our students.',
 'Section' => 'Section',
@@ -120,4 +120,5 @@ return [
 'Score' => 'Score',
 'No quiz results yet' => 'No quiz results yet',
 'Latest Vocabulary' => 'Latest Vocabulary',
+'Site Title Spanish' => 'Learn Spanish Online',
 ];

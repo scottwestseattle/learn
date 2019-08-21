@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use DB;
 use App;
 use Auth;
+use Lang;
 use App\User;
 use App\Visitor;
 use App\Event;
@@ -119,6 +120,8 @@ class Controller extends BaseController
 			
 			return $next($request);
 		});
+		
+		
 	}
 
 	static private function showPrivacyNotice()
@@ -131,7 +134,7 @@ class Controller extends BaseController
 	{
 		return (Auth::check() && Auth::id() == $user_id);
 	}
-
+	
 	protected function getViewData($vdata = null, $model = null, $page = null)
 	{
 		//
@@ -143,7 +146,7 @@ class Controller extends BaseController
 		// add-on the mandatory parts
 		//
 //todo:		$this->viewData['site'] = Controller::getSite();
-		$this->viewData['siteTitle'] = 'content.Site Title';
+		$this->viewData['siteTitle'] = $this->getSiteTitle();
 		$this->viewData['showPrivacyNotice'] = Controller::showPrivacyNotice();
 
 		$this->viewData['prefix'] = $this->prefix;
@@ -173,6 +176,18 @@ class Controller extends BaseController
 		return $this->viewData;
 	}
 
+	protected function getSiteTitle()
+	{			
+		$rc = $this->getDomainName();
+		
+		if ($rc == 'spanish50.com')
+			$rc .=  ' - ' . Lang::get('content.Site Title Spanish');
+		else
+			$rc .=  ' - ' . Lang::get('content.Site Title English');
+		
+		return $rc;
+	}
+	
 	protected function getDomainName()
 	{
 		// if not set yet

@@ -49,7 +49,10 @@ class FrontPageController extends Controller
 
     public function contact()
     {
+		$email = 'info@' . Tools::getDomainName();
+		
 		return view('frontpage.contact', $this->getViewData([
+			'email' => $email,
 		], LOG_MODEL, 'contact'));
     }
 

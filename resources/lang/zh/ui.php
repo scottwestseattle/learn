@@ -111,4 +111,6 @@ return [
 'Clear' => '重启',
 'Save' => '保存',
 'Quit' => '出口',
+'by clicking here' => '点击这里',
+'Search' => '搜索',
 ];

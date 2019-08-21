@@ -6,7 +6,7 @@
 
 <div class="container page-normal">
 
-	<h1>Search{{$isPost ? ' (' . $count . ')' : ''}}</h1>
+	<h1>@LANG('ui.Search'){{$isPost ? ' (' . $count . ')' : ''}}</h1>
 	
 	<form method="POST" action="/search">
 		<div class="form-group form-control-big">
@@ -14,7 +14,7 @@
 				
 		</div>
 		<div class="form-group">
-				<button type="submit" name="submit" class="btn btn-primary">Search</button>
+				<button type="submit" name="submit" class="btn btn-primary">@LANG('ui.Search')</button>
 		</div>
 		{{ csrf_field() }}
 	</form>
