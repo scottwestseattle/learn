@@ -13,10 +13,19 @@ Super Light Green: #eff7f0
 .data-accent-chars {
 }
 
+.section-image {
+	max-height: 450px;
+}  
+
 @media (max-width:576px) {
 	.data-accent-chars {
 		display:none;
 	}
+	
+  .section-image {
+		max-height:300px;
+  }  
+	
 }
 
 .vocab-pills {
@@ -584,12 +593,13 @@ body {
   .featurette-heading {
     font-size: 50px;
   }
+  
 }
 
 @media (min-width: 62em) {
   .featurette-heading {
     margin-top: 7rem;
-  }
+  }  
 }
 
 .lesson-note {

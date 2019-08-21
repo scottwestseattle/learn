@@ -24,7 +24,7 @@
 				<p class="lead">@LANG('fp.Frontpage Section 1 Body')</p>
 			</div>
 			<div class="col-md-5 text-center">
-				<img src="/img/image1.png" width="100%" style="max-width: 350px;" />
+				<img class="section-image" src="/img/image1.png" />
 			</div>
 		</div>
 	</div>
@@ -38,7 +38,7 @@
 				<p class="lead">@LANG('fp.Frontpage Section 2 Body')</p>
 			</div>
 			<div class="col-md-5 order-md-1 text-center">
-				<img src="/img/image2.png" width="100%" style="max-width: 350px;" />
+				<img class="section-image" src="/img/image2.png" />
 			</div>
 		</div>
 	</div>
@@ -52,7 +52,7 @@
 			<p class="lead">@LANG('fp.Frontpage Section 3 Body')</p>
 		  </div>
 		  <div class="col-md-5 text-center">
-				<img src="/img/globe.png" width="100%" style="max-width: 350px;" />
+				<img class="section-image" src="/img/globe.png" />
 		  </div>
 		</div>
 		

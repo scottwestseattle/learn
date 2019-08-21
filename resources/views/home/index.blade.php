@@ -25,13 +25,12 @@
 			@if (isset($course))
 				<div class="alert alert-primary" role="alert">
 					<h3 class="alert-heading mb-3">{{$course->title}}</h3>
-					
-						@if (isset($lesson))
-						<hr>
-						<h4>{{$lesson->title}}</h4>
-						<p>@LANG('content.Last viewed on') {{$stats['lessonDate']}}</p>
-						<p><a class="btn btn-primary btn-lg" href="/lessons/view/{{$lesson->id}}" role="button">@LANG('content.Continue Lesson') &raquo;</a></p>
-						@endif
+					@if (isset($lesson))
+					<hr>
+					<h4>@LANG('content.Chapter') {{$lesson->getFullName()}}</h4>
+					<p>@LANG('content.Last viewed on') {{$stats['lessonDate']}}</p>
+					<p><a class="btn btn-primary btn-lg" href="/lessons/view/{{$lesson->id}}" role="button">@LANG('content.Continue Lesson') &raquo;</a></p>
+					@endif
 				</div>
 			@else
 				<div class="mb-5">
