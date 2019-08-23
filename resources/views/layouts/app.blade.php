@@ -1,6 +1,7 @@
 <?php
-$domainName = isset($domainName) ? $domainName : '';
-$siteTitle = isset($siteTitle) ? $siteTitle : 'Site Title';
+$domainName = isset($domainName) ? $domainName : App\Tools::getDomainName();
+$siteTitle = isset($siteTitle) ? $siteTitle : App\Tools::getSiteTitle();
+$siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitle(false);
 ?>
 <!doctype html>
 <html lang="en">
@@ -148,7 +149,7 @@ $siteTitle = isset($siteTitle) ? $siteTitle : 'Site Title';
 		<div class="container marketing text-center" style="padding:50px;">
 			<a href="#"><img src="/img/logo.png" height="60" /></a>
 			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
-			<p style="font-size:1.2em;" class="">{{$siteTitle}}</p>
+			<p style="font-size:1.2em;" class="">{{$siteTitleLite}}</p>
 			<p>&copy; 2019 {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
 			<span class="footer-links">
 				<a href="/privacy">@LANG('ui.Privacy Policy')</a>&bull;

@@ -3,6 +3,7 @@
 namespace App;
 
 use Auth;
+use Lang;
 use App\User;
 
 class Tools
@@ -337,6 +338,21 @@ class Tools
 		return $v;
 	}
 
+	static public function getSiteTitle($withDomainName = true)
+	{
+		$d = self::getDomainName();
+		$s = '';
+		
+		if ($d == 'spanish50.com')
+			$s = Lang::get('content.Site Title Spanish');
+		else
+			$s = Lang::get('content.Site Title English');
+		
+		$s = $withDomainName ? $d . ' - ' . $s : $s;
+		
+		return $s;
+	}
+	
 	static public function getIp()
 	{
 		$ip = null;

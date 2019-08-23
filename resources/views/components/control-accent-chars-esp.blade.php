@@ -1,13 +1,12 @@
-@if (App\Tools::isMobile())
-	<!-- dont show for mobiles -->
-@else
 <?php 
 	$id = isset($target) ? $target : 0; 
 	$tinymce = isset($tinymce);
 	$flat = isset($flat);
 ?>
+
 @if ($flat)
-	<div class="flat-content">
+	
+	<div class="data-accent-chars flat-content">
 		<button onclick="event.preventDefault(); insertChar('á', '{{$id}}', '{{$tinymce}}')">á</button>
 		<button onclick="event.preventDefault(); insertChar('é', '{{$id}}', '{{$tinymce}}')">é</button>
 		<button onclick="event.preventDefault(); insertChar('í', '{{$id}}', '{{$tinymce}}')">í</button>
@@ -25,8 +24,10 @@
 		<button onclick="event.preventDefault(); insertChar('&rarr;', '{{$id}}', '{{$tinymce}}')">&rarr;</button>	
 		
 	</div>	
+	
 @else
-<div class="{{isset($visible) && $visible ? '' : 'hidden'}}">
+	
+<div class="data-accent-chars">
 	<div id="accent-chars-esp" class="dropdown">
 		<span class="dropdown-trigger">Ñ</span>
 		<div class="dropdown-content accent-buttons">
@@ -47,5 +48,5 @@
 		</div>
 	</div>
 </div>
-@endif
+
 @endif

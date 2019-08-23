@@ -1,4 +1,3 @@
-
 /***********************************************************
 
 Colors:
@@ -8,25 +7,178 @@ Header Blue: #4993FD
 Section and Button Green: #5CB85C
 Glyph Icon Blue: #286090
 Super Light Green: #eff7f0
+
 ************************************************************/
 
-.data-accent-chars {
-}
+/***********************************************************
+
+	Device Sizes
+
+	No media query for Extra small devices since that is the default in Bootstrap
+	Extra small devices (portrait phones, less than 576px)
+
+************************************************************/
+
+/* Extra Small devices (portrait phones) */
 
 .section-image {
-	max-height: 450px;
+	max-width: 250px;
 }  
 
-@media (max-width:576px) {
+.data-accent-chars {
+	display:none;
+}
+
+h1,h3 {
+	xmargin:10px 0 15px 0;
+}
+
+.size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
+.size-xs { display: initial; }
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) { 
+
+	.size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
+	.size-sm { display: initial; }
+
 	.data-accent-chars {
-		display:none;
+		display: initial;
 	}
 	
-  .section-image {
-		max-height:300px;
-  }  
+	.section-image {
+		max-width:400px;
+		width: 100%;
+	}  
+
+	h1,h3 {
+		margin:20px 0 30px 0;
+	}
 	
 }
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+	
+	.size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
+	.size-md { display: initial; }
+	
+	.section-image {
+		max-width: 450px;
+	}  
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+	
+	.size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
+	.size-lg { display: initial; }
+	
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+	
+	.size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
+	.size-xl { display: initial; }
+	
+}
+
+/***********************************************************
+
+	Start of generic settings for all sizes
+
+************************************************************/
+
+body {
+  padding-top: 3rem;
+  padding-bottom: 0;
+  color: #5a5a5a;
+}
+
+/* this is the wrapper around the page yield */
+.page-layout {
+    margin-top: 14px;	/* this adjust for the fixed nav bar height */
+}
+
+/* spacing for normal, non-front pages */
+.page-normal {
+    padding-top: 15px;
+    margin-bottom: 3rem;
+	min-height: 500px;
+}
+
+.page-normal h1 {
+	font-size: 1.7em;
+}
+
+.grassy-green {
+	background-color: #449D44;
+	color: white;
+}
+
+.bright-blue {
+	background-color: #4993FD;
+	color: white;
+}
+
+.bright-blue-fg {
+	color: #4993FD;
+}
+
+.power-purple {
+	background-color: #800080;
+	color: white;
+}
+
+.oolong-orange {
+	background-color: #FF6900;
+	color: white;"
+}
+
+.backin-black {
+	background-color: black;
+	color: white;
+}
+
+.fpheader {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+ 	background-color: #800080;
+	color: white;
+}
+
+.fpheader p {
+	font-size: 1.3em;
+}
+
+@media (min-width:576px) { /* small screen and up */
+    .fpheader {
+        padding: 4rem 2rem
+    }
+}
+
+.navbar-dark .navbar-nav .nav-link {
+	color: rgba(255,255,255);
+	font-size: 20px;
+}
+
+.power-list {
+	padding: 10px 0 20px 20px;
+	border-left: 5px solid red;
+	/* background-color: #f1f1f1; */
+	list-style-type: none;
+}
+
+.power-list li {
+	padding-bottom:15px;
+}
+
+/***********************************************************
+
+ Vocab list styling
+ 
+************************************************************/
 
 .vocab-pills {
 	font-weight: normal; 
@@ -37,10 +189,6 @@ Super Light Green: #eff7f0
 .vocab-pills a {
 	color: white;
 	text-decoration: none;
-}
-
-h1,h3 {
-	margin:20px 0 30px 0;
 }
 
 .vocab-accent-popup {
@@ -173,7 +321,7 @@ h1,h3 {
 	width:10px;
 }
 
-@media (max-width:576px) {
+@media (max-width:576px) { /* small screen only */
 
 	.table-lesson-list {
 		width: 100%;
@@ -315,8 +463,7 @@ h1,h3 {
 	margin-left: 5px;
 }
 
-/* small screen only */
-@media (max-width:576px) {
+@media (max-width:576px) { /* small screen only */
 
 .page-nav-buttons {
 	margin: 5px 0;
@@ -371,90 +518,6 @@ h1,h3 {
 	clear:left;
 }
 
-body {
-  padding-top: 3rem;
-  padding-bottom: 0;
-  color: #5a5a5a;
-}
-
-/* this is the wrapper around the page yield */
-.page-layout {
-    margin-top: 14px;	/* this adjust for the fixed nav bar height */
-}
-
-/* spacing for normal, non-front pages */
-.page-normal {
-    padding-top: 15px;
-    margin-bottom: 3rem;
-	min-height: 500px;
-}
-
-.page-normal h1 {
-	font-size: 1.7em;
-}
-
-.grassy-green {
-	background-color: #449D44;
-	color: white;
-}
-
-.bright-blue {
-	background-color: #4993FD;
-	color: white;
-}
-
-.bright-blue-fg {
-	color: #4993FD;
-}
-
-.power-purple {
-	background-color: #800080;
-	color: white;
-}
-
-.oolong-orange {
-	background-color: #FF6900;
-	color: white;"
-}
-
-.backin-black {
-	background-color: black;
-	color: white;
-}
-
-.fpheader {
-    padding: 2rem 1rem;
-    margin-bottom: 2rem;
- 	background-color: #800080;
-	color: white;
-}
-
-.fpheader p {
-	font-size: 1.3em;
-}
-
-@media (min-width:576px) {
-    .fpheader {
-        padding: 4rem 2rem
-    }
-}
-
-.navbar-dark .navbar-nav .nav-link {
-	color: rgba(255,255,255);
-	font-size: 20px;
-}
-
-.power-list {
-	padding: 10px 0 20px 20px;
-	border-left: 5px solid red;
-	/* background-color: #f1f1f1; */
-	list-style-type: none;
-}
-
-.power-list li {
-	padding-bottom:15px;
-}
-
 /***************************************************
  Section
 ***************************************************/
@@ -467,16 +530,14 @@ body {
 	margin-top: 2rem;
 }
 
-/* medium */
-@media (min-width: 40em) {
+@media (min-width: 48em) { /* medium devices and up */
 	.section-heading {
 		font-size: 50px;
 		margin-top: 2rem;
 	}
 }
 
-/* large */
-@media (min-width: 62em) {
+@media (min-width: 62em) { /* large devices and up */
 	.section-heading {
 		margin-top: 3rem;
 	}
@@ -505,16 +566,14 @@ body {
 }
 
 
-/* medium */
-@media (min-width: 40em) {
+@media (min-width: 48em) { /* medium devices and up */
   .footer-heading {
 		font-size: 50px;
 		margin-top: 2rem;
   }
 }
 
-/* large */
-@media (min-width: 62em) {
+@media (min-width: 62em) { /* large devices and up */
   .footer-heading {
     margin-top: 3rem;
   }
@@ -582,7 +641,7 @@ body {
 /* RESPONSIVE CSS
 -------------------------------------------------- */
 
-@media (min-width: 40em) {
+@media (min-width: 48em) { /* medium devices and up */
   /* Bump up size of carousel content */
   .carousel-caption p {
     margin-bottom: 1.25rem;
@@ -596,7 +655,7 @@ body {
   
 }
 
-@media (min-width: 62em) {
+@media (min-width: 62em) { /* large devices and up */
   .featurette-heading {
     margin-top: 7rem;
   }  

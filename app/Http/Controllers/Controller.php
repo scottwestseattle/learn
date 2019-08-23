@@ -108,7 +108,7 @@ class Controller extends BaseController
 			// set locale according to selected language
 			$locale = session('locale');
 			if (isset($locale))
-				App::setLocale($locale);
+				App::setLocale($locale);			
 
 			//todo: where does this go?
 			//look at: 
@@ -120,8 +120,7 @@ class Controller extends BaseController
 			
 			return $next($request);
 		});
-		
-		
+
 	}
 
 	static private function showPrivacyNotice()
@@ -147,6 +146,7 @@ class Controller extends BaseController
 		//
 //todo:		$this->viewData['site'] = Controller::getSite();
 		$this->viewData['siteTitle'] = $this->getSiteTitle();
+		$this->viewData['siteTitleLite'] = $this->getSiteTitle(false);
 		$this->viewData['showPrivacyNotice'] = Controller::showPrivacyNotice();
 
 		$this->viewData['prefix'] = $this->prefix;
@@ -176,16 +176,11 @@ class Controller extends BaseController
 		return $this->viewData;
 	}
 
-	protected function getSiteTitle()
+	protected function getSiteTitle($withDomainName = true)
 	{			
-		$rc = $this->getDomainName();
-		
-		if ($rc == 'spanish50.com')
-			$rc .=  ' - ' . Lang::get('content.Site Title Spanish');
-		else
-			$rc .=  ' - ' . Lang::get('content.Site Title English');
-		
-		return $rc;
+		$siteTitle = Tools::getSiteTitle($withDomainName);
+				
+		return $siteTitle;
 	}
 	
 	protected function getDomainName()
