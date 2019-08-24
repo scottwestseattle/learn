@@ -25,4 +25,7 @@ return [
 'Search Error' => 'Error de busqueda',
 'Word already exists in this course in lesson' => 'El vocabulario ya existe en este curso en la lección',
 'Word already exists in your vocabulary list' => 'Palabra ya existe en su lista de vocabulario',
+'Email has been sent' => 'Email ha sido enviado',
+'Error sending email' => 'Error al enviar email',
+'Error getting word of the day' => 'Error al accesar la palabra del día',
 ];

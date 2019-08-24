@@ -14,6 +14,9 @@ use App\Course;
 use App\Lesson;
 use App\Word;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMailable;
+
 class HomeController extends Controller
 {
     /**
@@ -27,7 +30,99 @@ class HomeController extends Controller
 
 		parent::__construct();
     }
+
+    public function mail()
+    {		
+		$name = 'scott';
+		$addressTo = 'scott@scotthub.com';
+		$addressTo = 'sbwilkinson1@gmail.com';
+		$addressTo = 'scottscott@yopmail.com';
+		$addressFrom = env('MAIL_FROM_ADDRESS', '63f42e54a4-f10d4b@inbox.mailtrap.io');
+		$to = Lang::get('content.To:');
+		$from = Lang::get('content.From:');
+		
+		$msg = $from . ' ' . $addressFrom . ', ' . $to . ' ' . $addressTo;
+		
+		try
+		{			
+			Mail::to($address)->send(new SendMailable($name));			
+			
+			$msg = 'Email has been sent ' . $msg;
+			
+			Event::logInfo(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg);
+			
+			Tools::flash('success', $msg);
+		}
+		catch (\Exception $e) 
+		{
+			$msg = 'Error sending email ' . $msg;
+			Event::logException(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
+		return redirect('/events');
+	}
 	
+	//
+	// word of the day
+	//
+    public function wod()
+    {		
+		$name = 'scott';
+		$addressTo = 'scott@scotthub.com';
+		$addressTo = 'sbwilkinson1@gmail.com';
+		$addressTo = 'scottscott@yopmail.com';
+		$addressFrom = env('MAIL_FROM_ADDRESS', '63f42e54a4-f10d4b@inbox.mailtrap.io');
+		$to = Lang::get('content.To');
+		$from = Lang::get('content.From');
+		
+		//
+		// get the wod
+		//
+		$word = Word::getWod();
+		if (isset($word))
+		{
+			//
+			// send the email
+			//
+			// From: from@mail.com, To: to@mail.com
+			$msg = $from . ': ' . $addressFrom . ', ' . $to . ': ' . $addressTo;
+			try
+			{
+				$email = new SendMailable($name);
+
+				$email->word = $word->title;
+				$email->definition = $word->description;
+				$email->subject = Lang::get('content.Word of the Day');
+				
+				$d = 'https://' . (Tools::isLocalhost() ? 'learnfast.xyz' : Tools::getDomainName());
+				$email->link = $d . '/words/edit-user/' . $word->id;
+				
+				Mail::to($addressTo)->send($email);
+				
+				$msg = Lang::get('flash.Email has been sent') . ': ' . $msg;
+				
+				Event::logInfo(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg);
+				
+				Tools::flash('success', 'translated.' . $msg);
+			}
+			catch (\Exception $e) 
+			{
+				$msg = Lang::get('flash.Error sending email') . ': ' . $msg;
+				Event::logException(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg, null, $e->getMessage());
+				Tools::flash('danger', 'translated.' . $msg);
+			}
+		}
+		else
+		{
+			$msg = 'Error getting word of the day';
+			Event::logException(LOG_MODEL_HOME, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
+		return redirect('/events');
+   }
+   
     public function unauthorized()
     {		
         return view('home.unauthorized', [

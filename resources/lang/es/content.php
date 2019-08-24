@@ -121,4 +121,7 @@ return [
 'No quiz results yet' => 'Aún no hay resultados de practicas',
 'Latest Vocabulary' => 'Nuevo Vocabulario',
 'Site Title Spanish' => 'Aprende español en línea',
+'From' => 'De',
+'To' => 'A',
+'Word of the Day' => 'Palabra del día',
 ];

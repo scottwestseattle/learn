@@ -43,6 +43,10 @@ Route::post('/search', 'HomeController@search');
 Route::get('/hash', 'HomeController@hash');
 Route::post('/hasher', 'HomeController@hasher');
 
+// Email
+Route::get('/send/email', 'HomeController@wod');
+Route::get('/send/wod', 'HomeController@wod');
+
 // Words
 Route::group(['prefix' => 'words'], function () {
 	Route::get('/indexowner/{parent_id}', 'WordController@indexowner');

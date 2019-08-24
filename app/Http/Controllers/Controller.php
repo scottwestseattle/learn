@@ -61,6 +61,7 @@ define('LOG_ACTION_LOGIN', 'login');
 define('LOG_ACTION_LOGOUT', 'logout');
 define('LOG_ACTION_QUIZ', 'quiz');
 define('LOG_ACTION_SEARCH', 'search');
+define('LOG_ACTION_EMAIL', 'email');
 
 define('LOG_PAGE_INDEX', 'index');
 define('LOG_PAGE_VIEW', 'view');

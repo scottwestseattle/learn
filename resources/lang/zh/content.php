@@ -121,4 +121,7 @@ return [
 'No quiz results yet' => '还没有测验结果',
 'Latest Vocabulary' => '新词汇',
 'Site Title Spanish' => '在线学习西班牙语',
+'From' => '从',
+'To' => '至',
+'Word of the Day' => '每日一词',
 ];

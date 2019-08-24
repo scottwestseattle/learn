@@ -352,6 +352,13 @@ class Tools
 		
 		return $s;
 	}
+
+	static public function isLocalhost()
+	{
+		$ip = self::getIp();
+
+		return ($ip == '::1');
+	}
 	
 	static public function getIp()
 	{
@@ -382,6 +389,26 @@ class Tools
 		return $string;
 	}
 
+	static public function getFlashMessage($msg)
+	{		
+		$rc = '';		
+		$translated = 'translated.'; // prefix to show that it was already translated 
+		$flash = 'flash.'; // no prefix means not translated, so lang key will be added
+
+		if (self::startsWith($msg, $translated))
+		{
+			// already translated
+			$rc = substr($msg, strlen($translated)); // remove the prefix
+		}
+		else
+		{	
+			// needs translation from the 'flash' section
+			$rc = Lang::get($flash . $msg); // add the prefix 'flash' and get the translation
+		}
+
+		return $rc;
+	}
+	
 	static public function startsWith($haystack, $needle)
 	{
 		$rc = false;

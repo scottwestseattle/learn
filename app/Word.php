@@ -401,5 +401,35 @@ class Word extends Base
 
 		return $records;		
     }	
-	
+
+    static public function getWod()
+    {
+		$wod = null;
+		$records = [];
+			
+		try
+		{
+			$records = Word::select()
+				->where('deleted_flag', 0)
+				->where('user_id', 1)
+				->where('type_flag', WORDTYPE_USERLIST)
+				->orderBy('id')
+				->get();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting word of the day list';
+			Event::logException('word', LOG_ACTION_SELECT, null, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		$cnt = count($records) - 1;
+		if ($cnt > 0)
+		{
+			$index = rand(0, $cnt);
+			$wod = $records[$index];
+		}
+
+		return $wod; // return one random word
+    }	
 }

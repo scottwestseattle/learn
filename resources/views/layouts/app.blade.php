@@ -47,6 +47,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 				<div style="" class=""><a class="" role="" href="/admin"><span style="color:LightGreen;" class="glyphicon glyphicon-user"></span></a></div>
 			@elseif (Auth::check())
 				<div style="" class=""><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
+				<div style="" class="ml-3 mr-2"><a class="" role="" href="/send/email"><span style="color:white;" class="glyphicon glyphicon-envelope"></span></a></div>
 			@else
 				<div style="" class=""><a class="" role="" href="/home"><span style="color:gray;" class="glyphicon glyphicon-user"></span></a></div>
 			@endif
@@ -129,7 +130,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 		@if(session()->has('message.level'))
 			<div style="" class="alert alert-{{ session('message.level') }}">
-				@LANG('flash.' . session('message.content'))
+				{{App\Tools::getFlashMessage(session('message.content'))}}
 			</div>
 		@endif
 

@@ -258,7 +258,7 @@ class WordController extends Controller
     {
 		$record = $word;
 		
-		$words = isset($word->parent_id) ? Word::getCourseWords($word->parent_id, 'lesson_number, section_number, id')->groupBy('parent_id') : null;
+		$words = isset($word->parent_id) ? Word::getCourseWords($word->parent_id, 'lesson_number, section_number, id')->groupBy('parent_id') : [];
 
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
@@ -272,10 +272,13 @@ class WordController extends Controller
     {
 		$record = $word;
 		
+		$words = [];
+		
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
 			'records' => Word::getIndex(),
 			'lesson' => $record->type_flag == WORDTYPE_LESSONLIST,
+			'words' => $words,
 			]));
     }
 

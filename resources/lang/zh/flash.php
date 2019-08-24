@@ -25,4 +25,7 @@ return [
 'Search Error' => '搜索错误',
 'Word already exists in this course in lesson' => '课程中已存在词汇',
 'Word already exists in your vocabulary list' => '单词已存在于词汇表中',
+'Email has been sent' => '邮件已发送',
+'Error sending email' => '发送邮件时出错',
+'Error getting word of the day' => '获取当天的消息时出错',
 ];

@@ -121,4 +121,7 @@ return [
 'No quiz results yet' => 'No quiz results yet',
 'Latest Vocabulary' => 'Latest Vocabulary',
 'Site Title Spanish' => 'Learn Spanish Online',
+'From' => 'From',
+'To' => 'To',
+'Word of the Day' => 'Word of the Day',
 ];
