@@ -36,7 +36,6 @@ class UsersController extends Controller
 				->orderByRaw('id DESC')
 				->get();
 		}
-		
 
 		return view('users.index', 
 			$this->getViewData([

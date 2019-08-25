@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Tools;
 
 class IsAdmin
 {
@@ -19,13 +20,15 @@ class IsAdmin
 		{
 			if ($role == 'super')
 			{
-				if (auth()->user()->isSuperAdmin()) {
+				dd($role);
+				// i don't think this is being used for super admin
+				if (Tools::isSuperAdmin()) {
 					return $next($request);
 				}
 			}
 			else
 			{
-				if (auth()->user()->isAdmin()) {
+				if (Tools::isAdmin()) {
 					return $next($request);
 				}
 			}

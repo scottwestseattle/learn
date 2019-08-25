@@ -402,7 +402,7 @@ class Word extends Base
 		return $records;		
     }	
 
-    static public function getWod()
+    static public function getWod($userId)
     {
 		$wod = null;
 		$records = [];
@@ -411,10 +411,10 @@ class Word extends Base
 		{
 			$records = Word::select()
 				->where('deleted_flag', 0)
-				->where('user_id', 1)
+				->where('user_id', $userId)
 				->where('type_flag', WORDTYPE_USERLIST)
 				->orderBy('id')
-				->get();
+				->get();				
 		}
 		catch (\Exception $e)
 		{
@@ -428,6 +428,12 @@ class Word extends Base
 		{
 			$index = rand(0, $cnt);
 			$wod = $records[$index];
+		}
+		else
+		{
+			$msg = 'Error getting word list, cnt = ' . $cnt;
+			Event::logException(LOG_MODEL_WORDS, LOG_ACTION_SELECT, null, null, $msg);
+			Tools::flash('danger', $msg);
 		}
 
 		return $wod; // return one random word

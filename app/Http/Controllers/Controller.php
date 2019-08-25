@@ -41,6 +41,7 @@ define('LOG_MODEL_SITES', 'sites');
 define('LOG_MODEL_USERS', 'users');
 define('LOG_MODEL_TRANSLATIONS', 'translations');
 define('LOG_MODEL_VISITORS', 'visitors');
+define('LOG_MODEL_WORDS', 'words');
 
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');

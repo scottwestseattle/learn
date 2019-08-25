@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('index', 'search');
+        $this->middleware('auth')->except('index', 'search', 'mail', 'wod');
 
 		parent::__construct();
     }
@@ -60,26 +60,47 @@ class HomeController extends Controller
 			Tools::flash('danger', $msg);
 		}
 		
-		return redirect('/events');
+		if (Auth::check())
+			return redirect('/events');
+		else
+			return redirect('/');
 	}
 	
 	//
 	// word of the day
 	//
     public function wod()
-    {		
-		$name = 'scott';
-		$addressTo = 'scott@scotthub.com';
-		$addressTo = 'sbwilkinson1@gmail.com';
-		$addressTo = 'scottscott@yopmail.com';
+    {
+		$users = User::getIndex();
+		
+		foreach($users as $record)
+		{
+			if ($record->isSuperAdminUser())
+			{
+				$this->sendWod($record);
+				//break; // too many emails per second
+			}
+		}
+		
+		if (Auth::check())
+			return redirect('/events');
+		else
+			return redirect('/');		
+	}
+	
+    public function sendWod($user)
+    {
+		$name = $user->name;
+		$addressTo = $user->email;
 		$addressFrom = env('MAIL_FROM_ADDRESS', '63f42e54a4-f10d4b@inbox.mailtrap.io');
 		$to = Lang::get('content.To');
 		$from = Lang::get('content.From');
+		$debug = false;
 		
 		//
 		// get the wod
 		//
-		$word = Word::getWod();
+		$word = Word::getWod($user->id);
 		if (isset($word))
 		{
 			//
@@ -98,7 +119,8 @@ class HomeController extends Controller
 				$d = 'https://' . (Tools::isLocalhost() ? 'learnfast.xyz' : Tools::getDomainName());
 				$email->link = $d . '/words/edit-user/' . $word->id;
 				
-				Mail::to($addressTo)->send($email);
+				if (!$debug)
+					Mail::to($addressTo)->send($email);
 				
 				$msg = Lang::get('flash.Email has been sent') . ': ' . $msg;
 				
@@ -116,11 +138,9 @@ class HomeController extends Controller
 		else
 		{
 			$msg = 'Error getting word of the day';
-			Event::logException(LOG_MODEL_HOME, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Event::logException(LOG_MODEL_HOME, LOG_ACTION_SELECT, $msg);
 			Tools::flash('danger', $msg);
 		}
-		
-		return redirect('/events');
    }
    
     public function unauthorized()

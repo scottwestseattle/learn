@@ -55,6 +55,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    static public function getIndex()
+    {
+		$records = User::select()
+			->where('site_id', SITE_ID)
+			->get();
+			
+		return $records;
+	}
+	
 	public function getBlocked()
 	{
 		return $this->blocked_flag ? 'yes' : 'no';
@@ -105,4 +114,9 @@ class User extends Authenticatable
 	{
 		return (Auth::check() && Auth::user()->user_type >= USER_SUPER_ADMIN);
 	}
+	
+	public function isSuperAdminUser()
+	{
+		return ($this->user_type >= USER_SUPER_ADMIN);
+	}	
 }
