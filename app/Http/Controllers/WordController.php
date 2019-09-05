@@ -241,19 +241,6 @@ class WordController extends Controller
 			], LOG_MODEL, LOG_PAGE_PERMALINK));
 	}
 	
-	public function view(Word $word)
-    {
-		$record = $word;
-		$prev = null;//Word::getPrev($word);
-		$next = null;//Word::getNext($word);
-
-		return view(PREFIX . '.view', $this->getViewData([
-			'record' => $record,
-			'prev' => $prev,
-			'next' => $next,
-			], LOG_MODEL, LOG_PAGE_VIEW));
-    }
-
 	public function edit(Word $word)
     {
 		$record = $word;
@@ -540,17 +527,32 @@ class WordController extends Controller
 		]));
 	}
 
-	public function review(Word $word, $reviewType = null)
+	public function view()
     {
-		$record = $word;
+		$records = null;
 		
-		$prev = Word::getPrev($record);
-		$next = Word::getNext($record);
-		
+		return view(PREFIX . '.view', $this->getViewData([
+			'records' => $records,
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
+	public function review()
+    {
+		$words = Word::getIndex();
+				
+		$options = [];
+
+		$options['prompt'] = 'Select the correct answer';
+		$options['prompt-reverse'] = 'Select the correct question';
+		$options['question-count'] = count($words);
+		$options['font-size'] = '120%';
+				
 		return view(PREFIX . '.review', $this->getViewData([
-			'record' => $record,
-			'prev' => $prev,
-			'next' => $next,
+			'records' => $words,
+			'options' => $options,
+			'canEdit' => false,
+			'quizText' => null,
+			'isMc' => false,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }	
 }
