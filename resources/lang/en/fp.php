@@ -24,7 +24,7 @@ return [
 'privacy-h2' => 'How do we use cookies?',
 'privacy-h3' => 'Links to Other Sites',
 'privacy-h4' => 'European General Data Protection Regulation (GDPR)',
-'about-p1' => 'All Images, Photos, Graphics, and Content on this site ©2019 Learn Online. All Rights Reserved. Do not copy, archive or re-post without written permission from the author. For more information, please contact us',
+'about-p1' => 'All Images, Photos, Graphics, and Content on this site ©2019 Site Title. All Rights Reserved. Do not copy, archive or re-post without written permission from the author. For more information, please contact us',
 'terms-p2' => 'If you do not agree to these terms, then you have no right to access or use the services or register an account on this web site.',
 'terms-p1' => 'You acknowledge and agree that, by accessing or using the services or by downloading or posting any content from or on the services, you are idicating that you have read, and that you understand and agree to be bound by these terms, whether or not you have registered with us.',
 'Please contact us at the following email address.' => 'Please contact us at the following email address.',

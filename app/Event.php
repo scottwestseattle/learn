@@ -143,10 +143,14 @@ class Event extends Base
 			$line = $msg . ': ' . $e->getMessage() . ' / ' . $model . ' / ' . $action . ' / ' . $title;
 			if (!Tools::appendFile('appeventlog.txt', $line))
 			{
-				// already dumping error message
+				// already dumping error message below
+    			dd($msg . ' - Error Appending Log File: ~/appeventlog');
+			}
+			else
+			{
+    			dd($msg . ' - Check ~/appeventlog');
 			}
 
-			dd($msg . ' - Check ~/appeventlog');
 		}
     }
 

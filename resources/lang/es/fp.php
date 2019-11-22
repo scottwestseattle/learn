@@ -24,7 +24,7 @@ return [
 'privacy-h2' => 'Cómo usamos las cookies?',
 'privacy-h3' => 'Enlaces a otros sitios',
 'privacy-h4' => 'Reglamento General Europeo de Protección de Datos (GDPR)',
-'about-p1' => 'Todas las imágenes, fotos, gráficos y contenido de este sitio © 2019 Learn Online. Todos los derechos reservados. No copie, archive o vuelva a publicar sin el permiso por escrito del autor. Para más información, contáctenos',
+'about-p1' => 'Todas las imágenes, fotos, gráficos y contenido de este sitio © 2019 Site Title. Todos los derechos reservados. No copie, archive o vuelva a publicar sin el permiso por escrito del autor. Para más información, contáctenos',
 'terms-p2' => 'Si no está de acuerdo con estos términos, no tiene derecho a acceder o utilizar los servicios o registrar una cuenta en este sitio web.',
 'terms-p1' => 'Usted reconoce y acepta que, al acceder o utilizar los servicios o al descargar o publicar cualquier contenido de los servicios, está identificando que ha leído y que comprende y acepta estar sujeto a estos términos, independientemente de si usted o no se ha registrado con nosotros.',
 'Please contact us at the following email address.' => 'Por favor contáctenos en la siguiente dirección de correo electrónico.',

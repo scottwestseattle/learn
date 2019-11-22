@@ -21,6 +21,7 @@ sitemap-*.txt
 *.lock
 *.xsd
 public/error_log
+public/appeventlog.txt
 /docs/graphics
 /docs/install
 *.zip
