@@ -23,9 +23,11 @@
 				<h2 class="featurette-heading">@LANG('fp.Frontpage Section 1 Title')</h2>
 				<p class="lead">@LANG('fp.Frontpage Section 1 Body')</p>
 			</div>
+			@if (false)
 			<div class="col-md-5 text-center">
 				<img class="section-image" src="/img/image1.png" />
 			</div>
+			@endif
 		</div>
 	</div>
 
@@ -37,9 +39,11 @@
 				<h2 class="featurette-heading">@LANG('fp.Frontpage Section 2 Title')</h2>
 				<p class="lead">@LANG('fp.Frontpage Section 2 Body')</p>
 			</div>
+			@if (false)
 			<div class="col-md-5 order-md-1 text-center">
 				<img class="section-image" src="/img/image2.png" />
 			</div>
+            @endif
 		</div>
 	</div>
 
@@ -47,15 +51,16 @@
 
 	<div class="container marketing">
 		<div class="row featurette">
-		  <div class="col-md-7">
-			<h2 class="featurette-heading">@LANG('fp.Frontpage Section 3 Title')</h2>
-			<p class="lead">@LANG('fp.Frontpage Section 3 Body')</p>
-		  </div>
-		  <div class="col-md-5 text-center">
-				<img class="section-image" src="/img/image3.png" />
-		  </div>
+            <div class="col-md-7">
+                <h2 class="featurette-heading">@LANG('fp.Frontpage Section 3 Title')</h2>
+                <p class="lead">@LANG('fp.Frontpage Section 3 Body')</p>
+            </div>
+            @if (false)
+            <div class="col-md-5 text-center">
+                <img class="section-image" src="/img/image3.png" />
+            </div>
+            @endif
 		</div>
-
 	</div>
 
     <div style="padding:50px;"><!-- SPACER ONLY --></div>

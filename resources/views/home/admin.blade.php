@@ -6,19 +6,19 @@
 
 	@component('home.menu-submenu', ['isAdmin' => $isAdmin])@endcomponent
 
-	<h2 style="">{{$isSuperAdmin ? 'Super ' : ''}}Admin Dashboard</h2>
+	<h2 style="">Dashboard</h2>
 
 	<div class="form-group">
 		<ul style="font-size: 1.1em; list-style-type: none; padding-left: 0px;">
-			<li>Time: {{date("Y-m-d H:i:s")}}</li>
+			<li>Server Time: {{date("Y-m-d H:i:s")}}</li>
+			<li>User Type: {{$isSuperAdmin ? 'Super ' : ''}}Admin</li>
 			@if (false)
-			<li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
+			    <li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
 			@endif
-			<li>My IP:&nbsp;{{$ip}}</li>
+			<li>My IP:&nbsp;{{$ip}} {{$location}}</li>
 			<li>{{substr(base_path(), 0, 28)}}...</li>
-			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}, SITE_ID: {{SITE_ID}}</li>
+			<li>SITE_ID: {{SITE_ID}}</li>
 			<li>Life:&nbsp;{{env('SESSION_LIFETIME', 0)}}, New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</li>
-			<li><a href="/eunoticereset">Show EU Privacy Notice</a></li>
 			@if ($isSuperAdmin)
 				<li>Size:
 					<span class="size-xs">Extra Small</span>
@@ -28,6 +28,12 @@
 					<span class="size-xl">Extra Large</span>
 				</li>
 			@endif
+			@if (NULL != env('APP_DEBUG'))
+	    		<li style="color:red; font-weight:bold;">DEBUG IS ON</li>
+	    	@else
+	    	    <li><a href="">Turn on Debug</a></li>
+			@endif
+			<li><a href="/eunoticereset">Show EU Privacy Notice</a></li>
 		</ul>
 	</div>
 

@@ -198,14 +198,9 @@ class Controller extends BaseController
 
 	protected function saveVisitor($model, $page, $record_id = null)
 	{
-		//todo: add log visitors to site record
-		// ignore these
-		if (strtolower($this->getDomainName()) == 'blog.scotthub.com')
-			return;
-
 		$spy = session('spy', null);
 		if (isset($spy))
-			return; // spy mode, don't count views
+			return; // spy mode is on, don't count views
 
 		if (Auth::check())
 			return; // user logged in, don't save visitor

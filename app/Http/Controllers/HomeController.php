@@ -226,13 +226,17 @@ class HomeController extends Controller
 		// get today's visitors
 		//
 		$visitors = VisitorController::removeRobots(Visitor::getVisitors());
-		$ip = Tools::getIp();
+        $ip = Tools::getIp();
+        $location = Tools::getIpLocation($ip);
+        $location = (strlen($location) > 0) ? '(' . $location . ')' : '';
+
 		return view('home.admin', $this->getViewData([
 			'events' => $events,
 			'users' => $users,
 			'visitors' => $visitors,
 			'comments' => $comments,
 			'ip' => $ip,
+			'location' => $location,
 			'new_visitor' => Visitor::isNew($ip),
 		]));
     }
