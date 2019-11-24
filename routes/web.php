@@ -47,99 +47,6 @@ Route::post('/hasher', 'HomeController@hasher');
 Route::get('/send/email', 'HomeController@wod');
 Route::get('/send/wod', 'HomeController@wod');
 
-// Words
-Route::group(['prefix' => 'words'], function () {
-	Route::get('/indexowner/{parent_id}', 'WordController@indexowner');
-	Route::get('/admin', 'WordController@admin');
-	Route::get('/view','WordController@view');
-	Route::get('/review', 'WordController@review');
-
-	// add/create
-	Route::get('/add/{parent_id?}','WordController@add');
-	Route::post('/create','WordController@create');
-	Route::get('/add-user', 'WordController@addUser')->middleware('auth');
-	Route::post('/create-user','WordController@createUser')->middleware('auth');
-
-
-	// edit/update
-	Route::get('/edit/{word}','WordController@edit');
-	Route::post('/update/{word}','WordController@update');	
-	Route::get('/edit-user/{word}','WordController@editUser')->middleware('is_owner');
-	Route::post('/update-user/{word}','WordController@updateUser')->middleware('is_owner');
-	
-	Route::post('/updateajax/{word}','WordController@updateajax');
-	Route::get('/updateajax/{word}','WordController@updateajax');
-
-	// delete
-	Route::get('/confirmdelete/{word}','WordController@confirmdelete');
-	Route::post('/delete/{word}','WordController@delete');
-	Route::get('/confirmdelete-user/{word}','WordController@confirmDeleteUser')->middleware('is_owner');
-	Route::post('/delete-user/{word}','WordController@deleteUser')->middleware('is_owner');
-	
-	Route::get('/undelete', 'WordController@undelete');
-	Route::get('/fastdelete/{word}','WordController@fastdelete');
-	
-	// index
-	Route::get('/{parent_id?}', 'WordController@index');	
-});
-
-// Courses
-Route::group(['prefix' => 'courses'], function () {
-	Route::get('/', 'CourseController@index');
-	Route::get('/admin', 'CourseController@admin');
-	Route::get('/view/{course}','CourseController@view');
-
-	// add/create
-	Route::get('/add','CourseController@add');
-	Route::post('/create','CourseController@create');
-
-	// edit/update
-	Route::get('/edit/{course}','CourseController@edit');
-	Route::post('/update/{course}','CourseController@update');
-
-	// delete
-	Route::get('/confirmdelete/{course}','CourseController@confirmdelete');
-	Route::post('/delete/{course}','CourseController@delete');
-	Route::get('/undelete', 'CourseController@undelete');
-
-	// add/create
-	Route::get('/publish/{course}','CourseController@publish');
-	Route::post('/publishupdate/{course}','CourseController@publishupdate');
-});
-
-// Lessons
-Route::group(['prefix' => 'lessons'], function () {
-	Route::get('/admin/{course_id?}', 'LessonController@admin');
-	Route::get('/view/{lesson}','LessonController@view');
-	Route::post('/view/{lesson}','LessonController@view'); // just in case they hit enter on the ajax form
-	Route::get('/review/{lesson}/{reviewType?}','LessonController@review');
-	Route::get('/reviewmc/{lesson}/{reviewType?}','LessonController@reviewmc');
-	Route::get('/log-quiz/{lessonId}/{score}', 'LessonController@logQuiz');
-
-	// add/create
-	Route::get('/add','LessonController@add');
-	Route::get('/add/{course}','LessonController@add');
-	Route::post('/create','LessonController@create');
-
-	// edit/update
-	Route::get('/edit/{lesson}','LessonController@edit');
-	Route::post('/update/{lesson}','LessonController@update');
-	Route::get('/edit2/{lesson}','LessonController@edit2');
-	Route::post('/update2/{lesson}','LessonController@update2');
-
-	// delete
-	Route::get('/confirmdelete/{lesson}','LessonController@confirmdelete');
-	Route::post('/delete/{lesson}','LessonController@delete');
-	Route::get('/undelete', 'LessonController@undelete');
-
-	// add/create
-	Route::get('/publish/{lesson}','LessonController@publish');
-	Route::post('/publishupdate/{lesson}','LessonController@publishupdate');
-	
-	Route::get('/{parent_id}', 'LessonController@index');
-});
-
-
 // Users
 Route::group(['prefix' => 'users'], function () {
 	Route::get('/', 'UsersController@index');
@@ -189,7 +96,7 @@ Route::group(['prefix' => 'events'], function () {
 
 	// index
 	Route::get('/', 'EventController@index');
-	Route::post('/', 'EventController@index');	
+	Route::post('/', 'EventController@index');
 });
 
 // Samples

@@ -11,7 +11,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	<meta name="description" content="">
 	<meta name="author" content="Learn Systems">
 	<meta name="generator" content="Jekyll v3.8.5">
-	<meta name="csrf-token" content="{{ csrf_token() }}" />	
+	<meta name="csrf-token" content="{{ csrf_token() }}" />
 	<title>{{$siteTitle}}</title>
 
     <!-- Scripts -->
@@ -19,7 +19,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	<script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 
     <script src="{{ asset('/js/project.js') }}"></script>
-	
+
 @if (isset($tinymce))
 	<script src="/js/tinymce/tinymce.min.js"></script>
 	<script src="/js/loadTinyMce.js"></script>
@@ -50,7 +50,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 			@else
 				<div style="" class=""><a class="" role="" href="/home"><span style="color:gray;" class="glyphicon glyphicon-user"></span></a></div>
 			@endif
-			
+
 			<div style="" class="ml-3 mr-2"><a href="/search"><span style="color:white;" class="glyphicon glyphicon-search"></span></a></div>
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
@@ -60,7 +60,6 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="/courses">@LANG('content.Courses')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/contact">@LANG('ui.Contact')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/about">@LANG('ui.About')</a></li>
 
@@ -82,13 +81,13 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
+                                <a class="dropdown-item" href="/home">@LANG('ui.Home')</a>
                                 <a class="dropdown-item" href="/admin">@LANG('ui.Admin')</a>
                                 <a class="dropdown-item" href="/users">@LANG('ui.Users')</a>
                                 <a class="dropdown-item" href="/visitors">@LANG('ui.Visitors')</a>
                                 <a class="dropdown-item" href="/events">@LANG('ui.Events')</a>
 								<div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
-                                <a class="dropdown-item" href="/courses/admin">@LANG('content.Courses')</a>
 
 								<div class="dropdown-divider"></div>
 

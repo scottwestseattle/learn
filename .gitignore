@@ -4,10 +4,12 @@
 /node_modules
 /public/hot
 /public/storage
+/public/img/raw
+/public/error_log
+/public/appeventlog.txt
 /storage/*.key
 /.idea
 /.vagrant
-/public/img/raw
 /docs/raw
 Homestead.json
 Homestead.yaml
@@ -20,7 +22,6 @@ yarn-error.log
 sitemap-*.txt
 *.lock
 *.xsd
-public/error_log
 /docs/graphics
 /docs/install
 *.zip
