@@ -39,20 +39,12 @@ class Visitor extends Model
 		$visitor->page = $page;
 		$visitor->record_id = $record_id;
 
-		$ipInfo = Tools::getIpInfo($ip);
-		if (isset($ipInfo))
-		{
-            $visitor->country = $ipInfo['country'];
-            $visitor->city = $ipInfo['city'];
-        }
-//dd($visitor);
 		try
 		{
 			$visitor->save();
 		}
 		catch (\Exception $e)
 		{
-//dd($e);
 			Event::logException(LOG_MODEL_VISITORS, LOG_ACTION_ADD, 'Error Adding Visitor', null, $e->getMessage());
 			throw $e;
 		}

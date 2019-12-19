@@ -6,10 +6,6 @@
 
 Latest DB Changes:
 
-
-11/22/2019
-ALTER TABLE `events` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL COMMENT '1=Info, 2=Warning, 3=Error, 4=Exception, 5=tracking, 99=other';
-
 8/11/2019
 ALTER TABLE `events` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL COMMENT '1=Info, 2=Warning, 3=Error, 4=Exception, 5=Tracking/Permanent, 99=other';
 
@@ -130,7 +126,8 @@ Bootstrap Samples
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // MacBook - Switching localhost projects
 
-sudo vi /etc/apache2/httpd.conf
+cd \etc\apache2
+sudo vi httpd.conf
 look for DocumentRoot and <Directory ...>
 
 Restart apache webserver:

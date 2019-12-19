@@ -27,11 +27,11 @@ class Event extends Base
 
 		return $records;
 	}
-
+	
     static public function getLast($type, $model, $action)
     {
 		$record = null;
-
+		
 		try
 		{
 			$record = Event::select()
@@ -47,12 +47,12 @@ class Event extends Base
 		{
 		    $msg = "Error getting last event";
 			Event::logException(LOG_MODEL_EVENTS, LOG_ACTION_SELECT, $type . '/' . $model . '/' . $action, null, $e->getMessage());
-			Tools::flash('danger', $msg);
+			Tools::flash('danger', $msg);			
 		}
-
+		
 		return $record;
-	}
-
+	}		
+	
     static public function getAlerts($limit = 0)
 	{
 		// get all alerts that are not 'Info' (Warning, Error, Exception, and Other)
@@ -104,7 +104,7 @@ class Event extends Base
     {
 		Event::add(LOG_TYPE_TRACKING, $model, $action, null, null, $record_id, null, null, $extraInfo);
 	}
-
+	
     static public function logInfo($model, $action, $title)
 	{
 		Event::add(LOG_TYPE_INFO, $model, $action, $title);
@@ -124,6 +124,7 @@ class Event extends Base
 		$record->action_flag	= $action;
 
 		$record->title 			= $title;
+
 		$record->description	= $description;
 		$record->record_id 		= intval($record_id);
 		$record->error 			= $error;
@@ -143,14 +144,10 @@ class Event extends Base
 			$line = $msg . ': ' . $e->getMessage() . ' / ' . $model . ' / ' . $action . ' / ' . $title;
 			if (!Tools::appendFile('appeventlog.txt', $line))
 			{
-				// already dumping error message below
-    			dd($msg . ' - Error Appending Log File: ~/appeventlog');
+				// already dumping error message
 			}
-			else
-			{
-    			dd($msg . ' - Check ~/appeventlog');
-			}
-
+			
+			dd($msg . ' - Check ~/appeventlog');			
 		}
     }
 

@@ -35,9 +35,9 @@ class FrontPageController extends Controller
 		else if (Auth::check())
 		{
 		}
-
+			
 		return view('frontpage.index', $this->getViewData([
-		    ], LOG_MODEL, LOG_PAGE_INDEX));
+		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 
     public function about()
@@ -50,7 +50,7 @@ class FrontPageController extends Controller
     public function contact()
     {
 		$email = 'info@' . Tools::getDomainName();
-
+		
 		return view('frontpage.contact', $this->getViewData([
 			'email' => $email,
 		], LOG_MODEL, 'contact'));
