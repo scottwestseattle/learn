@@ -8,6 +8,7 @@ use Auth;
 use App\Lesson;
 use App\Event;
 use App\Tools;
+use DateTime;
 
 class Word extends Base
 {
@@ -426,6 +427,44 @@ class Word extends Base
     }	
 
     static public function getWod($userId)
+    {
+		$wod = null;
+		$records = [];
+			
+		try
+		{
+			$record = Word::select()
+				->where('deleted_flag', 0)
+				->where('user_id', $userId)
+				->where('type_flag', WORDTYPE_USERLIST)
+				->orderBy('wod_at')
+				->first();
+
+			// update the wod timestamp so it will move to the back of the list
+			$dt = new DateTime();
+			$record->wod_at = $dt->format('Y-m-d H:i:s');
+			$record->save();
+			//dd($record);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting word of the day list';
+			Event::logException('word', LOG_ACTION_SELECT, null, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		if (!isset($record))
+		{
+			$msg = 'Word of the Day Not Found';
+			Event::logException(LOG_MODEL_WORDS, LOG_ACTION_SELECT, null, null, $msg);
+			Tools::flash('danger', $msg);
+		}
+
+		return $record; // return one random word
+    }
+
+	// Not Used
+    static public function getWodRandom($userId)
     {
 		$wod = null;
 		$records = [];

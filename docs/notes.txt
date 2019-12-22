@@ -6,6 +6,9 @@
 
 Latest DB Changes:
 
+12/21/2019
+ALTER TABLE `words` ADD `wod_at` TIMESTAMP NULL AFTER `deleted_flag`;
+
 8/11/2019
 ALTER TABLE `events` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL COMMENT '1=Info, 2=Warning, 3=Error, 4=Exception, 5=Tracking/Permanent, 99=other';
 
