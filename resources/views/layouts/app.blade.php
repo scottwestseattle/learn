@@ -60,6 +60,9 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
+					@if (Auth::check())
+					<li class="nav-item"><a class="nav-link" href="/home">@LANG('ui.Home')</a></li>
+					@endif
 					<li class="nav-item"><a class="nav-link" href="/courses">@LANG('content.Courses')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/contact">@LANG('ui.Contact')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/about">@LANG('ui.About')</a></li>
