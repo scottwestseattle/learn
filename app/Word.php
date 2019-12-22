@@ -23,6 +23,29 @@ class Word extends Base
     }
 */
 	
+    public function getNext()
+    {
+		$record = null;
+			
+		try
+		{
+			$record = Word::select()
+				->where('deleted_flag', 0)
+				->where('words.type_flag', WORDTYPE_USERLIST)
+				->where('words.id', '<', $this->id)
+				->orderByRaw('words.id DESC')
+				->first();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting next word';
+			Event::logException('word', LOG_ACTION_SELECT, 'word id = ' . $this->id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}			
+
+		return $record;		
+    }	
+	
 	static public function search($search)
     {
 		$records = null;

@@ -531,10 +531,13 @@ class WordController extends Controller
     {
 		$record = $word;
 		
+		$next = $word->getNext();
+
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
 			'records' => Word::getIndex(),
 			'lesson' => false,
+			'next' => $next,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
