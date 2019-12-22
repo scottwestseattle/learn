@@ -5,6 +5,7 @@ namespace App;
 use Auth;
 use Lang;
 use App\User;
+use DateTime;
 
 class Tools
 {
@@ -481,4 +482,11 @@ class Tools
 
 		return $rc;
 	}
+	
+	static public function getTimestamp()
+	{
+		$dt = new DateTime();
+		
+		return $dt->format('Y-m-d H:i:s');
+	}	
 }

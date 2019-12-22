@@ -8,7 +8,6 @@ use Auth;
 use App\Lesson;
 use App\Event;
 use App\Tools;
-use DateTime;
 
 class Word extends Base
 {
@@ -46,6 +45,22 @@ class Word extends Base
 
 		return $record;		
     }	
+	
+    public function updateLastViewedTime()
+    {
+		try
+		{
+			// update the wod timestamp so it will move to the back of the list
+			$this->last_viewed_at = Tools::getTimestamp();
+			$this->save();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error updating last viewed timestamp';
+			Event::logException('word', LOG_ACTION_SELECT, 'id = ' . $this->id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}				
+    }
 	
 	static public function search($search)
     {
@@ -437,13 +452,10 @@ class Word extends Base
 				->where('deleted_flag', 0)
 				->where('user_id', $userId)
 				->where('type_flag', WORDTYPE_USERLIST)
-				->orderBy('wod_at')
+				->orderBy('last_viewed_at')
 				->first();
 
-			// update the wod timestamp so it will move to the back of the list
-			$dt = new DateTime();
-			$record->wod_at = $dt->format('Y-m-d H:i:s');
-			$record->save();
+			$record->updateLastViewedTime();			
 			//dd($record);
 		}
 		catch (\Exception $e)

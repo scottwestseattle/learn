@@ -28,6 +28,7 @@
 					<span class="size-xl">Extra Large</span>
 				</li>
 			@endif
+			<li><a href="/send/email">Send Wod Email</a></li>
 		</ul>
 	</div>
 	
