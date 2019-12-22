@@ -51,7 +51,7 @@ Route::get('/send/wod', 'HomeController@wod');
 Route::group(['prefix' => 'words'], function () {
 	Route::get('/indexowner/{parent_id}', 'WordController@indexowner');
 	Route::get('/admin', 'WordController@admin');
-	Route::get('/view','WordController@view');
+	Route::get('/view/{word}','WordController@view');
 	Route::get('/review', 'WordController@review');
 
 	// add/create
@@ -59,7 +59,6 @@ Route::group(['prefix' => 'words'], function () {
 	Route::post('/create','WordController@create');
 	Route::get('/add-user', 'WordController@addUser')->middleware('auth');
 	Route::post('/create-user','WordController@createUser')->middleware('auth');
-
 
 	// edit/update
 	Route::get('/edit/{word}','WordController@edit');

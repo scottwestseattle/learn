@@ -12,7 +12,7 @@
 			<td><a href='/words/add-user'><span class="glyphCustom glyphicon glyphicon-add"></span></a></td>
 		@endif
 		@if (isset($record->id))
-			<!-- td><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td -->
+			<td><a href='/{{$prefix}}/edit-user/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 			<td><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-delete"></span></a></td>
 		@else
 		@endif

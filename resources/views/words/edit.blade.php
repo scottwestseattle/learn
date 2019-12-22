@@ -53,9 +53,9 @@
 	</form>
 	
 	@if (isset($record->parent_id))
-		@component('components.data-course-words', ['edit' => $lesson ? '/words/edit/' : '/words/edit-user/', 'words' => $words])@endcomponent																				
+		@component('components.data-course-words', ['edit' => $lesson ? '/words/edit/' : '/words/view/', 'words' => $words])@endcomponent																				
 	@else
-		@component('components.data-badge-list', ['edit' => $lesson ? '/words/edit/' : '/words/edit-user/', 'records' => $records])@endcomponent																			
+		@component('components.data-badge-list', ['edit' => $lesson ? '/words/edit/' : '/words/view/', 'records' => $records])@endcomponent																			
 	@endif
 
 </div>

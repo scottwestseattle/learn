@@ -117,7 +117,7 @@ class HomeController extends Controller
 				$email->subject = Lang::get('content.Word of the Day');
 				
 				$d = 'https://' . (Tools::isLocalhost() ? 'learnfast.xyz' : Tools::getDomainName());
-				$email->link = $d . '/words/edit-user/' . $word->id;
+				$email->link = $d . '/words/view/' . $word->id;
 				
 				if (!$debug)
 					Mail::to($addressTo)->send($email);

@@ -527,12 +527,14 @@ class WordController extends Controller
 		]));
 	}
 
-	public function view()
+	public function view(Word $word)
     {
-		$records = null;
+		$record = $word;
 		
 		return view(PREFIX . '.view', $this->getViewData([
-			'records' => $records,
+			'record' => $record,
+			'records' => Word::getIndex(),
+			'lesson' => false,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
