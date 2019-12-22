@@ -32,8 +32,7 @@ class Word extends Base
 			$record = Word::select()
 				->where('deleted_flag', 0)
 				->where('words.type_flag', WORDTYPE_USERLIST)
-				->where('words.id', '<', $this->id)
-				->orderByRaw('words.id DESC')
+				->orderByRaw('words.last_viewed_at') // the longest time not viewed
 				->first();
 		}
 		catch (\Exception $e)

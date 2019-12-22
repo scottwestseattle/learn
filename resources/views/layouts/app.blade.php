@@ -42,16 +42,18 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
 
 			@if ($isSuperAdmin)
-				<div style="" class=""><a class="" role="" href="/admin"><span style="color:gold;" class="glyphicon glyphicon-user"></span></a></div>
+				<div class="mr-2"><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-home"></span></a></div>
+				<div class="ml-2 mr-2"><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
 			@elseif ($isAdmin)
-				<div style="" class=""><a class="" role="" href="/admin"><span style="color:LightGreen;" class="glyphicon glyphicon-user"></span></a></div>
+				<div class="mr-2"><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-home"></span></a></div>
+				<div class="ml-2 mr-2"><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
 			@elseif (Auth::check())
-				<div style="" class=""><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
+				<div class=""><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
 			@else
-				<div style="" class=""><a class="" role="" href="/home"><span style="color:gray;" class="glyphicon glyphicon-user"></span></a></div>
+				<div class=""><a class="" role="" href="/home"><span style="color:gray;" class="glyphicon glyphicon-user"></span></a></div>
 			@endif
 			
-			<div style="" class="ml-3 mr-2"><a href="/search"><span style="color:white;" class="glyphicon glyphicon-search"></span></a></div>
+			<div class="ml-2 mr-2"><a href="/search"><span style="color:white;" class="glyphicon glyphicon-search"></span></a></div>
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
 				aria-expanded="false" aria-label="Toggle navigation">
@@ -60,9 +62,6 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
-					@if (Auth::check())
-					<li class="nav-item"><a class="nav-link" href="/home">@LANG('ui.Home')</a></li>
-					@endif
 					<li class="nav-item"><a class="nav-link" href="/courses">@LANG('content.Courses')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/contact">@LANG('ui.Contact')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/about">@LANG('ui.About')</a></li>
