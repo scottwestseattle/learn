@@ -127,6 +127,9 @@ class HomeController extends Controller
 				Event::logInfo(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg);
 				
 				Tools::flash('success', 'translated.' . $msg);
+				
+				// since it was successfully set, update it's latest viewed time so it goes to the end of the list
+				$record->updateLastViewedTime();
 			}
 			catch (\Exception $e) 
 			{

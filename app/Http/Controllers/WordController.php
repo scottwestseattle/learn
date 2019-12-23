@@ -533,8 +533,9 @@ class WordController extends Controller
 		
 		// update the view timestamp so it will move to the back of the list
 		$record->updateLastViewedTime();
-		
-		$next = $word->getNext();
+
+		// since the currend WOD just got updated, this will get the next wod in line
+		$next = $word->getWod($word->user_id);
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,

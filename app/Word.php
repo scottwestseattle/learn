@@ -23,28 +23,6 @@ class Word extends Base
     }
 */
 	
-    public function getNext()
-    {
-		$record = null;
-			
-		try
-		{
-			$record = Word::select()
-				->where('deleted_flag', 0)
-				->where('words.type_flag', WORDTYPE_USERLIST)
-				->orderByRaw('words.last_viewed_at') // the longest time not viewed
-				->first();
-		}
-		catch (\Exception $e)
-		{
-			$msg = 'Error getting next word';
-			Event::logException('word', LOG_ACTION_SELECT, 'word id = ' . $this->id, null, $msg . ': ' . $e->getMessage());
-			Tools::flash('danger', $msg);
-		}			
-
-		return $record;		
-    }	
-	
     public function updateLastViewedTime()
     {
 		try
@@ -454,7 +432,6 @@ class Word extends Base
 				->orderBy('last_viewed_at')
 				->first();
 
-			$record->updateLastViewedTime();			
 			//dd($record);
 		}
 		catch (\Exception $e)
@@ -472,7 +449,7 @@ class Word extends Base
 		}
 
 		return $record; // return one random word
-    }
+    }	
 
 	// Not Used
     static public function getWodRandom($userId)
