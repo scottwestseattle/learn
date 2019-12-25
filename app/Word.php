@@ -289,14 +289,38 @@ class Word extends Base
 		return $rc;
     }	
 	
+	static public function getWodIndex($parms = null)
+	{
+		$records = [];
+		
+		$limit = is_array($parms) && array_key_exists('limit', $parms) ? $parms['limit'] : PHP_INT_MAX;
+			
+		try
+		{
+			$records = Word::select()
+				->where('deleted_flag', 0)
+				->whereNull('parent_id')
+				->where('user_id', Auth::id())
+				->where('type_flag', WORDTYPE_USERLIST)
+				->orderBy('last_viewed_at')
+				->limit($limit)
+				->get();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting wod index';
+			Event::logException('word', LOG_ACTION_SELECT, 'wod id = ' . $this->id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}			
+
+		return $records;		
+	}
+	
     static public function getIndex($parent_id = null, $limit = 10000)
 	{
 		$records = [];
 		
-		if (isset($parent_id))
-			$records = self::getByParent($parent_id, WORDTYPE_LESSONLIST, $limit);
-		else
-			$records = self::getByParent(null, WORDTYPE_USERLIST, $limit);
+		$records = self::getByParent($parent_id, WORDTYPE_LESSONLIST, $limit);
 			
 		return $records;
 	}

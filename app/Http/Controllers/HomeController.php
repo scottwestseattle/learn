@@ -188,7 +188,7 @@ class HomeController extends Controller
 		//
 		// user's vocab lists
 		//
-		$words = Word::getIndex(/* parentId = */ null, /* limit = */ 10);
+		$words = Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]);
 		
 		//
 		// get user's last viewed lesson so he can resume where he left off

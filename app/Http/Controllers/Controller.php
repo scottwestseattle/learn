@@ -75,6 +75,7 @@ define('TRANSLATIONS_FOLDER', '../resources/lang/');
 define('WORDTYPE_LESSONLIST', 1);
 define('WORDTYPE_LESSONLIST_USERCOPY', 2);
 define('WORDTYPE_USERLIST', 3);
+define('WORDTYPE_USERLIST_LIMIT', 20); 
 
 define('RELEASE_NOTSET', 0);
 define('RELEASE_ADMIN', 10);

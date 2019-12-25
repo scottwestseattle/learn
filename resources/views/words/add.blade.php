@@ -40,6 +40,8 @@
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('content.Translation, Definition, or Hint'):</label>
 			<textarea name="description" id="description" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
+			<label for="examples" class="control-label">@LANG('content.Examples'):</label>
+			<textarea name="examples" class="form-control" autocomplete="off" ></textarea>
 		<div>
 		@endif
 		
@@ -56,7 +58,7 @@
 	@if (isset($parent_id))
 		@component('components.data-course-words', ['edit' => $lesson ? '/words/edit/' : '/words/edit-user/', 'words' => $records])@endcomponent																				
 	@else
-		@component('components.data-badge-list', ['edit' => $lesson ? '/words/edit/' : '/words/edit-user/', 'records' => $records])@endcomponent																			
+		@component('components.data-badge-list', ['edit' => '/words/view/', 'records' => $records, 'title' => 'Vocabulary'])@endcomponent																			
 	@endif
 	
 </div>

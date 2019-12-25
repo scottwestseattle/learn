@@ -12,21 +12,22 @@
 
 	<div class="">
 		<p style="font-size:1.2em;">{{$record->description}}</p>
+		<p style="font-size:1.1em;"><i>{{$record->examples}}</i></p>
 	<div>
 	
 	<div style="margin-top:50px;">
 		@if (isset($next))
-		<a href="/words/view/{{$next->id}}" class="btn btn-outline-primary btn-sm" style="font-size:14px;" role="button">{{$next->title}}</a>
+		<a href="/words/view/{{$next->id}}" class="btn btn-outline-primary btn-sm" style="font-size:16px;" role="button">{{$next->title}}</a>
 		@else
 		<a href="/words/view/{{$records[0]->id}}" class="btn btn-outline-primary btn-sm" style="font-size:14px;" role="button">{{$records[0]->title}}</a>
 		@endif
 	</div>
 
-	<div style="font-size:.8em; margin-top:50px;">
+	<div style="margin-top:50px;">
 	@if (isset($record->parent_id))
 		@component('components.data-course-words', ['edit' => $lesson ? '/words/edit/' : '/words/view/', 'words' => $words])@endcomponent																				
 	@else
-		@component('components.data-badge-list', ['edit' => $lesson ? '/words/edit/' : '/words/view/', 'records' => $records])@endcomponent																			
+		@component('components.data-badge-list', ['edit' => '/words/view/', 'records' => $records, 'title' => 'Vocabulary'])@endcomponent																			
 	@endif
 	</div>
 	

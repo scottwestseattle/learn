@@ -6,7 +6,8 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 
 Latest DB Changes:
 
-12/21/2019
+12/23/2019
+ALTER TABLE `words` ADD `examples` VARCHAR(512) NULL AFTER `description`;
 ALTER TABLE `words` ADD `last_viewed_at` TIMESTAMP NULL AFTER `deleted_flag`;
 
 8/11/2019

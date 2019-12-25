@@ -76,6 +76,19 @@ class WordController extends Controller
 		]));
     }
 
+    public function indexUser(Request $request)
+    {
+		$parent_id = null;
+		
+		$records = Word::getWodIndex();
+
+		return view(PREFIX . '.index', $this->getViewData([
+			'records' => $records,
+			'parent_id' => $parent_id,
+			'lesson' => isset($parent_id),
+		]));
+    }
+	
     public function indexowner(Request $request, $parent_id)
     {
 		$parent_id = intval($parent_id);
@@ -123,7 +136,7 @@ class WordController extends Controller
 
     public function addUser()
     {
-		$words = Word::getIndex();
+		$words = Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]);
 		
 		return view(PREFIX . '.add', $this->getViewData([
 			'parent_id' => null,
@@ -163,6 +176,7 @@ class WordController extends Controller
 		$record->type_flag 		= $request->type_flag;
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
+		$record->examples		= $request->examples;
 		$record->permalink		= Tools::createPermalink($request->title);
 
 		$parent = Word::getParent($record->title, $parent_id);
@@ -263,7 +277,7 @@ class WordController extends Controller
 		
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
-			'records' => Word::getIndex(),
+			'records' => Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]),
 			'lesson' => $record->type_flag == WORDTYPE_LESSONLIST,
 			'words' => $words,
 			]));
@@ -286,6 +300,7 @@ class WordController extends Controller
 		$isDirtyTitle = $isDirty;
 		
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
+		$record->examples = Tools::copyDirty($record->examples, $request->examples, $isDirty, $changes);
 		$record->parent_id =  Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
 		
 		if ($isDirty)
@@ -326,10 +341,7 @@ class WordController extends Controller
 			Tools::flash('success', 'No changes were made');
 		}
 
-		if (Tools::isAdmin() || $word->type_flag == WORDTYPE_LESSONLIST)
-			return redirect('/words/edit/' . $word->id);
-		else
-			return redirect('/words/edit-user/' . $word->id);
+		return redirect('/words/view/' . $word->id);
 	}
 
     public function updateajax(Request $request, Word $word)
@@ -539,7 +551,7 @@ class WordController extends Controller
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
-			'records' => Word::getIndex(),
+			'records' => Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]),
 			'lesson' => false,
 			'next' => $next,
 			], LOG_MODEL, LOG_PAGE_VIEW));

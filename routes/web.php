@@ -49,6 +49,7 @@ Route::get('/send/wod', 'HomeController@wod');
 
 // Words
 Route::group(['prefix' => 'words'], function () {
+	Route::get('/index', 'WordController@indexUser');	
 	Route::get('/indexowner/{parent_id}', 'WordController@indexowner');
 	Route::get('/admin', 'WordController@admin');
 	Route::get('/view/{word}','WordController@view');
@@ -77,9 +78,6 @@ Route::group(['prefix' => 'words'], function () {
 	
 	Route::get('/undelete', 'WordController@undelete');
 	Route::get('/fastdelete/{word}','WordController@fastdelete');
-	
-	// index
-	Route::get('/{parent_id?}', 'WordController@index');	
 });
 
 // Courses

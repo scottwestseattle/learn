@@ -124,4 +124,5 @@ return [
 'From' => 'De',
 'To' => 'A',
 'Word of the Day' => 'Palabra del día',
+'Examples' => 'Ejemplos',
 ];
