@@ -29,6 +29,7 @@ class Word extends Base
 		{
 			// update the wod timestamp so it will move to the back of the list
 			$this->last_viewed_at = Tools::getTimestamp();
+			$this->view_count++;
 			$this->save();
 		}
 		catch (\Exception $e)
@@ -294,6 +295,7 @@ class Word extends Base
 		$records = [];
 		
 		$limit = is_array($parms) && array_key_exists('limit', $parms) ? $parms['limit'] : PHP_INT_MAX;
+		$orderBy = is_array($parms) && array_key_exists('orderBy', $parms) ? $parms['orderBy'] : 'last_viewed_at';
 			
 		try
 		{
@@ -302,7 +304,7 @@ class Word extends Base
 				->whereNull('parent_id')
 				->where('user_id', Auth::id())
 				->where('type_flag', WORDTYPE_USERLIST)
-				->orderBy('last_viewed_at')
+				->orderByRaw($orderBy)
 				->limit($limit)
 				->get();
 		}

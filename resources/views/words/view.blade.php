@@ -7,7 +7,9 @@
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin, 'parent_id' => $record->parent_id])@endcomponent
 	
 	<div style="margin-top:30px;">
-		<h3>{{$record->title}}</h3>
+		<h3>
+			{{$record->title}}<span style="vertical-align: middle; background-color: LightGray; color: gray; margin-left: 7px; font-size:12px; padding:3px 3px; font-weight:bold;" class="badge">{{$record->view_count}}</span>		
+		</h3>
 	</div>
 
 	<div class="">

@@ -50,7 +50,7 @@ Route::get('/send/wod', 'HomeController@wod');
 // Words
 Route::group(['prefix' => 'words'], function () {
 	Route::get('/index', 'WordController@indexUser');	
-	Route::get('/indexowner/{parent_id}', 'WordController@indexowner');
+	Route::get('/indexowner/{parent_id?}', 'WordController@indexowner');
 	Route::get('/admin', 'WordController@admin');
 	Route::get('/view/{word}','WordController@view');
 	Route::get('/review', 'WordController@review');

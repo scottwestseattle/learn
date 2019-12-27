@@ -89,15 +89,23 @@ class WordController extends Controller
 		]));
     }
 	
-    public function indexowner(Request $request, $parent_id)
+    public function indexowner(Request $request, $parent_id = null)
     {
-		$parent_id = intval($parent_id);
-
 		$records = []; // make this countable so view will always work
-
+		$view = PREFIX . '.indexowner';
+		
 		try
 		{
-			$records = Word::getIndex($parent_id);
+			if (isset($parent_id))
+			{
+				$parent_id = intval($parent_id);
+				$records = Word::getIndex($parent_id);
+			}
+			else
+			{
+				$records = Word::getWodIndex(['orderBy' => 'id desc']);
+				$view = PREFIX . '.indexadmin';			
+			}
 		}
 		catch (\Exception $e)
 		{
@@ -106,7 +114,7 @@ class WordController extends Controller
 			Tools::flash('danger', $msg);
 		}
 
-		return view(PREFIX . '.indexowner', $this->getViewData([
+		return view($view, $this->getViewData([
 			'records' => $records,
 			'parent_id' => $parent_id,
 		]));
