@@ -39,9 +39,9 @@
 		@if (!$lesson)
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('content.Translation, Definition, or Hint'):</label>
-			<textarea name="description" id="description" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
+			<textarea rows="3" name="description" id="description" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
 			<label for="examples" class="control-label">@LANG('content.Examples'):</label>
-			<textarea name="examples" class="form-control" autocomplete="off" ></textarea>
+			<textarea rows="3" name="examples" class="form-control" autocomplete="off" ></textarea>
 		<div>
 		@endif
 		

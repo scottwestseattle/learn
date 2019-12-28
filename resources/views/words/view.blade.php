@@ -14,7 +14,9 @@
 
 	<div class="">
 		<p style="font-size:1.2em;">{{$record->description}}</p>
-		<p style="font-size:1.1em;"><i>{{$record->examples}}</i></p>
+		@foreach($record->examples as $example)
+			<p><i>{{$example}}</i></p>
+		@endforeach
 	<div>
 	
 	<div style="margin-top:50px;">

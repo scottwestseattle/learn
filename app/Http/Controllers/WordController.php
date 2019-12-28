@@ -550,10 +550,13 @@ class WordController extends Controller
 	public function view(Word $word)
     {
 		$record = $word;
-		
+
 		// update the view timestamp so it will move to the back of the list
 		$record->updateLastViewedTime();
 
+		// format the examples to display as separate sentences
+		$record->examples = Tools::splitSentences($record->examples);
+		
 		// since the currend WOD just got updated, this will get the next wod in line
 		$next = $word->getWod($word->user_id);
 

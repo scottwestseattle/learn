@@ -460,6 +460,39 @@ class Tools
 		return $rc;
 	}
 
+	// appends text if it doesn't already exist.
+	static public function appendIfMissing($haystack, $needle)
+	{
+		if (!self::endsWith($haystack, $needle))
+		{
+			$haystack .= $needle;
+		}
+
+		return $haystack;
+	}
+
+	static public function splitSentences($text)
+	{
+		$sentences = null;
+		
+		if (isset($text))
+		{
+			$records = explode('.', trim($text));
+			foreach($records as $record)
+			{
+				$parts = explode(';', trim($record));
+				foreach($parts as $part)
+				{
+					$part = trim($part);
+					if (strlen($part) > 0)
+						$sentences[] = self::appendIfMissing(ucfirst($part), '.');
+				}
+			}			
+		}
+		
+		return $sentences;
+	}
+	
 	static public function appendFile($filename, $line)
 	{
 		$rc = false;
