@@ -471,22 +471,20 @@ class Tools
 		return $haystack;
 	}
 
-	static public function splitSentences($text)
+	static public function splitSentences($string)
 	{
 		$sentences = null;
 		
-		if (isset($text))
+		if (isset($string))
 		{
-			$records = explode('.', trim($text));
-			foreach($records as $record)
+			$pattern = '/[\r\n]/';
+			$parts = preg_split($pattern, $string);
+
+			foreach($parts as $part)
 			{
-				$parts = explode(';', trim($record));
-				foreach($parts as $part)
-				{
-					$part = trim($part);
-					if (strlen($part) > 0)
-						$sentences[] = self::appendIfMissing(ucfirst($part), '.');
-				}
+				$part = trim($part);
+				if (strlen($part) > 0)
+					$sentences[] = ucfirst($part); // self::appendIfMissing(ucfirst($part), '.');
 			}			
 		}
 		
