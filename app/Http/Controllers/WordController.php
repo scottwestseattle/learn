@@ -558,13 +558,19 @@ class WordController extends Controller
 		$record->examples = Tools::splitSentences($record->examples);
 		
 		// since the currend WOD just got updated, this will get the next wod in line
-		$next = $word->getWod($word->user_id);
+		$nextWod = $word->getWod($word->user_id);
 
+		// get next and prev words in ID order
+		$prev = $word->getPrev();
+		$next = $word->getNext();
+		
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
 			'records' => Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]),
 			'lesson' => false,
+			'nextWod' => $nextWod,
 			'next' => $next,
+			'prev' => $prev,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

@@ -477,6 +477,43 @@ class Word extends Base
 		return $record; // return one random word
     }	
 
+    public function getPrev()
+    {
+		return self::getPrevNext($this->user_id, $this->id);
+	}
+
+    public function getNext()
+    {
+		return self::getPrevNext($this->user_id, $this->id, /* $prev = */ false);
+	}
+	
+    static public function getPrevNext($userId, $id, $prev = true)
+    {
+		$record = null;
+			
+		try
+		{
+			// get prev or next word by id, null is okay
+			$record = Word::select()
+				->where('deleted_flag', 0)
+				->where('user_id', $userId)
+				->where('type_flag', WORDTYPE_USERLIST)
+				->where('id', $prev ? '<' : '>', $id)
+				->orderByRaw('id ' . ($prev ? 'DESC' : 'ASC'))
+				->first();
+
+			//dd($record);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting word of the day list';
+			Event::logException('word', LOG_ACTION_SELECT, null, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $record;
+    }
+	
 	// Not Used
     static public function getWodRandom($userId)
     {
