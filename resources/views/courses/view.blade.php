@@ -23,7 +23,7 @@
 		@endif
 	</h3>
 
-	<p>{{$record->description }}</p>
+	<p>{{$record->description}}</p>
 	
 	<a href="/lessons/view/{{$firstId}}">
 		<button type="button" style="text-align:center; font-size: 1.3em; color:white;" class="btn btn-info btn-lesson-index" {{$disabled}}>@LANG('content.Start at the beginning')</button>	
@@ -48,7 +48,7 @@
 			<tr>
 				<td>
 					<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->section_number}}.&nbsp;{{$rec->title}}</div>
-					<span style="font-size:.9em">{{$rec->description}}</span>	
+					<span style="font-size:12px; color:#D64D32;">{{$rec->description}}</span>	
 				</td>
 			</tr>
 		</table>
@@ -76,7 +76,7 @@
 					<tr>
 						<td>
 							<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->section_number}}.&nbsp;{{$rec->title}}</div>
-							<span style="font-size:.9em">{{$rec->description}}</span>	
+							<span style="font-size:12px; color:#D64D32;">{{$rec->description}}</span>	
 						</td>
 					</tr>
 				</table>
