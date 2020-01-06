@@ -101,8 +101,8 @@ Bootstrap Samples
 	<li class="nav-item">
 		<a class="nav-link" href="#">@LANG('ui.Chinese')</a>
 	</li>
-</ul>		
-	
+</ul>
+
 <div class="table-responsive">
 <table class="table lesson-table">
 <thead>
@@ -130,8 +130,7 @@ Bootstrap Samples
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // MacBook - Switching localhost projects
 
-cd \etc\apache2
-sudo vi httpd.conf
+sudo vi /etc/apache2/httpd.conf
 look for DocumentRoot and <Directory ...>
 
 Restart apache webserver:
