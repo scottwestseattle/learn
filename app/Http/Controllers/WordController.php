@@ -38,11 +38,11 @@ class WordController extends Controller
 
 		try
 		{
-			// 
+			//
 			// check for dupe words in course lessons
 			//
 			$records = Word::getCourseWords($parent_id, 'title');
-			
+
 			$words = [];
 			$dupe = false;
 			foreach($records as $record)
@@ -52,15 +52,15 @@ class WordController extends Controller
 					dump('dupe: ' . $record->title);
 					$dupe = true;
 				}
-				
+
 				$words[$record->title] = $record->title;
 			}
-			
+
 			if ($dupe)
 				dd('done');
 			// done with dupe check
-			
-			$records = Word::getIndex($parent_id);			
+
+			$records = Word::getIndex($parent_id);
 		}
 		catch (\Exception $e)
 		{
@@ -79,7 +79,7 @@ class WordController extends Controller
     public function indexUser(Request $request)
     {
 		$parent_id = null;
-		
+
 		$records = Word::getWodIndex();
 
 		return view(PREFIX . '.index', $this->getViewData([
@@ -88,12 +88,12 @@ class WordController extends Controller
 			'lesson' => isset($parent_id),
 		]));
     }
-	
+
     public function indexowner(Request $request, $parent_id = null)
     {
 		$records = []; // make this countable so view will always work
 		$view = PREFIX . '.indexowner';
-		
+
 		try
 		{
 			if (isset($parent_id))
@@ -104,7 +104,7 @@ class WordController extends Controller
 			else
 			{
 				$records = Word::getWodIndex(['orderBy' => 'id desc']);
-				$view = PREFIX . '.indexadmin';			
+				$view = PREFIX . '.indexadmin';
 			}
 		}
 		catch (\Exception $e)
@@ -119,7 +119,7 @@ class WordController extends Controller
 			'parent_id' => $parent_id,
 		]));
     }
-	
+
     public function admin(Request $request, $parent_id = null)
     {
 		$parent_id = intval($parent_id);
@@ -145,7 +145,7 @@ class WordController extends Controller
     public function addUser()
     {
 		$words = Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]);
-		
+
 		return view(PREFIX . '.add', $this->getViewData([
 			'parent_id' => null,
 			'type_flag' => WORDTYPE_USERLIST,
@@ -158,7 +158,7 @@ class WordController extends Controller
     {
 		return $this->create($request);
 	}
-	
+
     public function add($parent_id = null)
     {
 		$words = isset($parent_id) ? Word::getCourseWords($parent_id, 'lesson_number, section_number, id')->groupBy('parent_id') : null;
@@ -170,7 +170,7 @@ class WordController extends Controller
 			'lesson' => true,
 			]));
 	}
-	
+
     public function create(Request $request)
     {
 		$msg = null;
@@ -179,7 +179,7 @@ class WordController extends Controller
 
 		if ($parent_id > 0)
 			$record->parent_id = $parent_id;
-		
+
 		$record->user_id 		= Auth::id();
 		$record->type_flag 		= $request->type_flag;
 		$record->title 			= $request->title;
@@ -197,10 +197,10 @@ class WordController extends Controller
 					$msg = 'Word already exists in this course in lesson' . ': ' . $parent['lesson'];
 				else
 					$msg = 'Word already exists in your vocabulary list';
-				
+
 				throw new \Exception($msg);
 			}
-			
+
 			if (isset($record->parent_id))
 			{
 				if ($record->type_flag == WORDTYPE_USERLIST)
@@ -211,13 +211,13 @@ class WordController extends Controller
 				if ($record->type_flag == WORDTYPE_LESSONLIST)
 					throw new \Exception("lesson list word without parent_id");
 			}
-			
+
 			$record->save();
 
 			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
-			
+
 			$msg = 'New record has been added';
-				
+
 			Tools::flash('success', /* $duplicate . */$msg);
 		}
 		catch (\Exception $e)
@@ -232,9 +232,9 @@ class WordController extends Controller
 		if (isset($parent_id) && $parent_id > 0)
 			return redirect('/words/add/' . $parent_id);
 		else
-			return redirect('/words/add-user/');
+			return redirect('/words/indexowner/');
     }
-	
+
     public function permalink(Request $request, $permalink)
     {
 		$permalink = trim($permalink);
@@ -262,11 +262,11 @@ class WordController extends Controller
 			'record' => $record,
 			], LOG_MODEL, LOG_PAGE_PERMALINK));
 	}
-	
+
 	public function edit(Word $word)
     {
 		$record = $word;
-		
+
 		$words = isset($word->parent_id) ? Word::getCourseWords($word->parent_id, 'lesson_number, section_number, id')->groupBy('parent_id') : [];
 
 		return view(PREFIX . '.edit', $this->getViewData([
@@ -280,9 +280,9 @@ class WordController extends Controller
 	public function editUser(Word $word)
     {
 		$record = $word;
-		
+
 		$words = [];
-		
+
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
 			'records' => Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]),
@@ -295,7 +295,7 @@ class WordController extends Controller
     {
 		return $this->update($request, $word);
 	}
-	
+
     public function update(Request $request, Word $word)
     {
 		$record = $word;
@@ -306,11 +306,11 @@ class WordController extends Controller
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$isDirtyTitle = $isDirty;
-		
+
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->examples = Tools::copyDirty($record->examples, $request->examples, $isDirty, $changes);
 		$record->parent_id =  Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
-		
+
 		if ($isDirty)
 		{
 			try
@@ -321,17 +321,17 @@ class WordController extends Controller
 					$parent_id = isset($word->parent_id) ? $word->parent_id : null;
 					$parent = Word::getParent($record->title, $parent_id);
 				}
-				
+
 				if (isset($parent))
 				{
 					if (array_key_exists('lesson', $parent))
 						$msg = 'Word already exists in this course in lesson' . ': ' . $parent['lesson'];
 					else
 						$msg = 'Word already exists in your vocabulary list';
-					
+
 					throw new \Exception($msg);
 				}
-				
+
 				$record->save();
 
 				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
@@ -355,7 +355,7 @@ class WordController extends Controller
     public function updateajax(Request $request, Word $word)
     {
 		$record = $word;
-		$rc = ''; // no change	
+		$rc = ''; // no change
 		$duplicate = false;
 
 		if (!Auth::check())
@@ -375,15 +375,15 @@ class WordController extends Controller
 
 			if ($isDirty && Word::exists($request->title)) // title changing, check for dupes
 				$duplicate = true;
-				
+
 			$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 
 			if ($isDirty)
 			{
 				try
-				{			
+				{
 					$record->save();
-					$rc = $duplicate 
+					$rc = $duplicate
 						? Lang::get('content.duplicate saved')
 						: Lang::get('content.saved');
 
@@ -395,7 +395,7 @@ class WordController extends Controller
 					Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg . ': title = ' . $record->title, null, $e->getMessage());
 					$rc = Lang::get('content.error');
 				}
-			}				
+			}
 		}
 		else
 		{
@@ -422,20 +422,20 @@ class WordController extends Controller
 						$word->type_flag 	= WORDTYPE_LESSONLIST_USERCOPY;
 						$word->title 		= $record->title;
 						$word->permalink	= $record->permalink;
-						
+
 						$rc = $this->saveAjax($request, $word);
 					}
-				}				
+				}
 			}
 		}
 
 		return $rc;
 	}
-	
+
     public function saveAjax(Request $request, Word $record)
     {
 		$rc = '';
-		
+
 		// if he doesn't already have a copy, make one for him
 		$isAdd = (!isset($record->id));
 		$isDirty = $isAdd;
@@ -443,7 +443,7 @@ class WordController extends Controller
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 
 		//$duplicate = Word::exists($record->title) ? 'Duplicate: ' : '';
-		
+
 		if ($isDirty)
 		{
 			try
@@ -459,10 +459,10 @@ class WordController extends Controller
 				$rc = $msg;
 			}
 		}
-		
+
 		return $rc;
 	}
-	
+
     public function confirmdelete(Word $word)
     {
 		return view(PREFIX . '.confirmdelete', $this->getViewData([
@@ -476,12 +476,12 @@ class WordController extends Controller
 			'record' => $word,
 		]));
     }
-	
+
     public function deleteUser(Request $request, Word $word)
     {
 		return $this->delete($request, $word);
 	}
-	
+
     public function delete(Request $request, Word $word)
     {
 		$record = $word;
@@ -523,7 +523,7 @@ class WordController extends Controller
 		//return redirect('/words/indexowner/' . $record->parent_id);
 		return back();
     }
-	
+
     public function undelete()
     {
 		$records = []; // make this countable so view will always work
@@ -556,14 +556,14 @@ class WordController extends Controller
 
 		// format the examples to display as separate sentences
 		$record->examples = Tools::splitSentences($record->examples);
-		
+
 		// since the currend WOD just got updated, this will get the next wod in line
 		$nextWod = $word->getWod($word->user_id);
 
 		// get next and prev words in ID order
 		$prev = $word->getPrev();
 		$next = $word->getNext();
-		
+
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
 			'records' => Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]),
@@ -577,14 +577,14 @@ class WordController extends Controller
 	public function review()
     {
 		$words = Word::getIndex();
-				
+
 		$options = [];
 
 		$options['prompt'] = 'Select the correct answer';
 		$options['prompt-reverse'] = 'Select the correct question';
 		$options['question-count'] = count($words);
 		$options['font-size'] = '120%';
-				
+
 		return view(PREFIX . '.review', $this->getViewData([
 			'records' => $words,
 			'options' => $options,
@@ -592,5 +592,5 @@ class WordController extends Controller
 			'quizText' => null,
 			'isMc' => false,
 			], LOG_MODEL, LOG_PAGE_VIEW));
-    }	
+    }
 }

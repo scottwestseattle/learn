@@ -22,7 +22,7 @@ class Word extends Base
     	return $this->belongsTo('App\Lesson', 'parent_id', 'id');
     }
 */
-	
+
     public function updateLastViewedTime()
     {
 		try
@@ -37,13 +37,13 @@ class Word extends Base
 			$msg = 'Error updating last viewed timestamp';
 			Event::logException('word', LOG_ACTION_SELECT, 'id = ' . $this->id, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
-		}				
+		}
     }
-	
+
 	static public function search($search)
     {
 		$records = null;
-		
+
 		try
 		{
 			$search = '%' . $search . '%';
@@ -69,7 +69,7 @@ class Word extends Base
 			}
 			else
 			{
-			}			
+			}
 		}
 		catch(\Exception $e)
 		{
@@ -77,18 +77,18 @@ class Word extends Base
 			Event::logException(LOG_MODEL_WORDS, LOG_ACTION_SEARCH, 'search = ' . $search, null, $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
-		
+
 		return $records;
-	}	
-	
+	}
+
     static public function addList($parent_id, $words)
     {
 		$parent_id = intval($parent_id);
-		
+
 		$rc = [];
 		$rc['error'] = false;
 		$cnt = 0;
-		
+
 		if (is_array($words))
 		{
 			foreach($words as $word)
@@ -112,16 +112,16 @@ class Word extends Base
 				}
 			}
 		}
-		
+
 		$rc['cnt'] = $cnt;
-		
+
 		return $rc;
     }
 
     static public function exists($word, $parent_id = null)
     {
 		$count = 0;
-				
+
 		try
 		{
 			if (isset($parent_id))
@@ -146,26 +146,26 @@ class Word extends Base
 			Event::logException('word', LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
-	
+
 		return($count > 0);
 	}
-	
+
     static public function getParent($word, $parent_id)
     {
 		$count = 0;
 		$parent = null;
 		$msg = '';
 		$rc = null;
-		
+
 		if (isset($parent_id) && $parent_id > 0)
 			$parent = Lesson::getLesson($parent_id); // get the lesson we are working on
-		
+
 		try
 		{
 			if (isset($parent))
 			{
 				$msg = 'lesson word';
-				
+
 				// check if this word already belongs to any lesson in the course
 				$lesson = DB::table('words')
 					->join('lessons', 'lessons.id', '=', 'words.parent_id')
@@ -181,19 +181,19 @@ class Word extends Base
 				{
 					$rc = [];
 					$rc['lesson'] = $lesson->lessonTitle;
-				}				
+				}
 			}
 			else if (Auth::check())
 			{
 				$msg = 'user word';
-				
+
 				$count = Word::select()
 					->where('deleted_flag', 0)
 					->where('user_id', Auth::id())
 					->where('type_flag', WORDTYPE_USERLIST)
 					->where('title', $word)
 					->count();
-					
+
 				if ($count > 0)
 				{
 					$rc = [];
@@ -214,7 +214,7 @@ class Word extends Base
     static public function getCourseLessons($lessons)
     {
 		$rc = [];
-		
+
 		if (isset($lessons))
 		{
 			foreach($lessons as $lesson)
@@ -225,21 +225,21 @@ class Word extends Base
 				}
 			}
 		}
-		
+
 		return $rc;
 	}
-	
+
     static public function getCourseWords($parent_id, $orderBy)
     {
-		$parent_id = intval($parent_id);	
-		$words = [];		
-		
+		$parent_id = intval($parent_id);
+		$words = [];
+
 		$parent = Lesson::getLesson($parent_id); // get the lesson for the course id
-		
+
 		try
 		{
 			if (isset($parent))
-			{				
+			{
 				// check if this word already belongs to any lesson in the course
 				$words = DB::table('words')
 					->join('lessons', 'lessons.id', '=', 'words.parent_id')
@@ -249,7 +249,7 @@ class Word extends Base
 					->where('lessons.deleted_flag', 0)
 					->where('lessons.parent_id', $parent->parent_id) // only lessons of this course
 					->orderByRaw($orderBy)
-					->get();		
+					->get();
 			}
 		}
 		catch (\Exception $e)
@@ -260,8 +260,8 @@ class Word extends Base
 		}
 
 		return $words;
-	}	
-	
+	}
+
     static public function create($parent_id, $word)
     {
 		$rc = false;
@@ -286,17 +286,17 @@ class Word extends Base
 			Event::logException('word', LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
-		
+
 		return $rc;
-    }	
-	
+    }
+
 	static public function getWodIndex($parms = null)
 	{
 		$records = [];
-		
+
 		$limit = is_array($parms) && array_key_exists('limit', $parms) ? $parms['limit'] : PHP_INT_MAX;
 		$orderBy = is_array($parms) && array_key_exists('orderBy', $parms) ? $parms['orderBy'] : 'last_viewed_at';
-			
+
 		try
 		{
 			$records = Word::select()
@@ -311,32 +311,32 @@ class Word extends Base
 		catch (\Exception $e)
 		{
 			$msg = 'Error getting wod index';
-			Event::logException('word', LOG_ACTION_SELECT, 'wod id = ' . $this->id, null, $msg . ': ' . $e->getMessage());
+			Event::logException('word', LOG_ACTION_SELECT, 'getWodIndex()', null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
-		}			
+		}
 
-		return $records;		
+		return $records;
 	}
-	
+
     static public function getIndex($parent_id = null, $limit = 10000)
 	{
 		$records = [];
-		
+
 		$records = self::getByParent($parent_id, WORDTYPE_LESSONLIST, $limit);
-			
+
 		return $records;
 	}
-	
+
     static public function getByParent($parent_id, $type_flag, $limit)
     {
 		$records = [];
-			
+
 		try
 		{
 			if (isset($parent_id))
 			{
 				$parent_id = intval($parent_id);
-				
+
 				$records = Word::select()
 					->where('deleted_flag', 0)
 					->where('parent_id', $parent_id)
@@ -362,16 +362,16 @@ class Word extends Base
 			$msg = 'Error getting vocabulary list';
 			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . Tools::itoa($parent_id), null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
-		}			
+		}
 
-		return $records;		
-    }	
-	
+		return $records;
+    }
+
     static public function getLessonUserWord($parent_id, $user_id, $vocab_id)
     {
 		$parent_id = intval($parent_id);
 		$user_id = intval($user_id);
-			
+
 		try
 		{
 			$record = Word::select()
@@ -386,18 +386,18 @@ class Word extends Base
 		{
 			$msg = 'Error getting user lesson word';
 			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id . ', user: ' . $user_id . ', title=' . $title, null, $msg . ': ' . $e->getMessage());
-		}			
+		}
 
-		return $record;		
+		return $record;
     }
-	
+
     static public function getLessonUserWords($parent_id)
     {
 		$parent_id = intval($parent_id);
 		$parent_id = $parent_id > 0 ? $parent_id : '%';
 
 		$records = [];
-			
+
 		try
 		{
 			$records = Word::select()
@@ -413,18 +413,18 @@ class Word extends Base
 			$msg = 'Error getting user vocabulary list';
 			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
-		}			
+		}
 
-		return $records;		
+		return $records;
     }
-	
+
     static public function getByType($parent_id, $type_flag)
     {
 		$type_flag = intval($type_flag);
 		$parent_id = intval($parent_id);
 
 		$records = [];
-			
+
 		try
 		{
 			$records = Word::select()
@@ -439,16 +439,16 @@ class Word extends Base
 			$msg = 'Error getting vocabulary list by type';
 			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
-		}			
+		}
 
-		return $records;		
-    }	
+		return $records;
+    }
 
     static public function getWod($userId)
     {
 		$wod = null;
 		$records = [];
-			
+
 		try
 		{
 			$record = Word::select()
@@ -475,7 +475,7 @@ class Word extends Base
 		}
 
 		return $record; // return one random word
-    }	
+    }
 
     public function getPrev()
     {
@@ -486,11 +486,11 @@ class Word extends Base
     {
 		return self::getPrevNext($this->user_id, $this->id, /* $prev = */ false);
 	}
-	
+
     static public function getPrevNext($userId, $id, $prev = true)
     {
 		$record = null;
-			
+
 		try
 		{
 			// get prev or next word by id, null is okay
@@ -513,13 +513,13 @@ class Word extends Base
 
 		return $record;
     }
-	
+
 	// Not Used
     static public function getWodRandom($userId)
     {
 		$wod = null;
 		$records = [];
-			
+
 		try
 		{
 			$records = Word::select()
@@ -527,7 +527,7 @@ class Word extends Base
 				->where('user_id', $userId)
 				->where('type_flag', WORDTYPE_USERLIST)
 				->orderBy('id')
-				->get();				
+				->get();
 		}
 		catch (\Exception $e)
 		{
@@ -550,5 +550,5 @@ class Word extends Base
 		}
 
 		return $wod; // return one random word
-    }	
+    }
 }
