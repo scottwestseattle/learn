@@ -152,7 +152,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 			<a href="#"><img src="/img/logo.png" height="60" /></a>
 			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
 			<p style="font-size:1.2em;" class="">{{$siteTitleLite}}</p>
-			<p>&copy; 2019 {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
+			<p>&copy; {{date("Y")}} {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
 			<span class="footer-links">
 				<a href="/privacy">@LANG('ui.Privacy Policy')</a>&bull;
 				<a href="/terms">@LANG('ui.Terms of Use')</a>&bull;
