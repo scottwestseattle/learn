@@ -457,7 +457,7 @@ class LessonController extends Controller
 		$cnt = 0;
 		foreach($records as $record)
 		{
-			$parts = explode(' - ', $record[1]); // split the line into q and a
+			$parts = explode(' - ', $record[1]); // split the line into q and a, looks like: "question text - correct answer text"
 
 			if (count($parts) > 0)
 			{

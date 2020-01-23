@@ -65,9 +65,12 @@
 			
 			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 				<div style="min-height:300px;">
+				
+					@if ($isAdmin)
 					<div style="margin: 20px 0;">
 						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Start Review</button></a>
 					</div>
+					@endif
 					
 					@if ($record->getLessonType() == LESSONTYPE_QUIZ_MC1)
 					<div style="margin: 20px 0;">
