@@ -145,11 +145,19 @@ class CourseController extends Controller
 	public function view(Course $course)
     {
 		$record = $course;
-
+		$count = 0;
 		$records = []; // make this countable so view will always work
+		
 		try
 		{
 			$records = Lesson::getChapters($course->id);
+			
+			// get the lesson count.  if only one chapter, count it's sections
+			$count = count($records); // count the chapters
+			if ($count == 1)
+			{
+				$count = count($records->first()); // count the sections
+			}
 		}
 		catch (\Exception $e)
 		{
@@ -168,6 +176,7 @@ class CourseController extends Controller
 			'records' => $records,
 			'disabled' => $disabled,
 			'firstId' => $firstId,
+			'displayCount' => $count,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

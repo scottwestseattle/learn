@@ -7,4 +7,5 @@ return [
 'Select the correct question' => '选择正确的问题',
 'Rewrite the sentence with isn&apos;t and aren&apos;t to make it negative' => '用isn&apos;t和aren&apos;t写句子使其为负数',
 'Rewrite the sentence with &apos;is not&apos; and &apos;are not&apos; to make it negative' => '用is not和are not写句子使其为负数',
+'Finished' => '已完成',
 ];

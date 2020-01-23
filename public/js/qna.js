@@ -37,6 +37,8 @@ var nbr = 0;
 var max = 0;
 var statsMax = 0;
 
+var nextAttemptTimer = null;
+
 $(document).keydown(function(event) {
 
 	//alert(event.altKey);
@@ -77,7 +79,9 @@ $( document ).ready(function() {
 	
 	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());	
 	
-	quiz.showPanel();	
+	quiz.showPanel();
+	
+	quiz.start();
 });
 
 //
@@ -569,6 +573,8 @@ function next()
 
 function nextAttempt()
 {
+	clearTimeout(nextAttemptTimer);
+	
 	quiz.setButtonStates(RUNSTATE_ASKING);
 
 	var done = false;
@@ -791,6 +797,9 @@ function checkAnswerMc1(id, answer)
 		
 		//alert(answer);
 		checkAnswer(CHECKANSWER_MC1, answer);
+		
+		// load next question on a timer
+		nextAttemptTimer = setTimeout(nextAttempt, 2000);
 	}
 	else if (quiz.runState == RUNSTATE_CHECKING)
 	{

@@ -29,7 +29,7 @@
 		<button type="button" style="text-align:center; font-size: 1.3em; color:white;" class="btn btn-info btn-lesson-index" {{$disabled}}>@LANG('content.Start at the beginning')</button>	
 	</a>
 	
-	<h1>@LANG('content.Lessons') ({{count($records)}})
+	<h1>@LANG('content.Lessons') ({{$displayCount}})
 	@if ($isAdmin)
 		<span><a href="/lessons/admin/{{$record->id}}"><span class="glyphCustom glyphicon glyphicon-admin"></span></a></span>
 		<span><a href="/lessons/add/{{$record->id}}"><span class="glyphCustom glyphicon glyphicon-add"></span></a></span>

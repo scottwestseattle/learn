@@ -562,4 +562,23 @@ class LessonController extends Controller
 		return $rc;
 	}
 	
+    public function toggleFinished(Lesson $lesson)
+    {		
+		$rc = '';
+		
+		if (Auth::check())
+		{
+			//Event::logTracking(LOG_MODEL_LESSONS, LOG_ACTION_QUIZ, $lessonId, $score);
+			$rc = 'event logged';
+		}
+		else
+		{
+			//todo: set cookie
+			$rc = 'user not logged in: event not logged';
+		}
+		
+		$rc = 'Not implemented yet';
+
+		return $rc;
+	}	
 }

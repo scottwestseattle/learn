@@ -133,6 +133,9 @@ Route::group(['prefix' => 'lessons'], function () {
 	// add/create
 	Route::get('/publish/{lesson}','LessonController@publish');
 	Route::post('/publishupdate/{lesson}','LessonController@publishupdate');
+
+	// ajax
+	Route::get('/finished/{lesson}','LessonController@toggleFinished');
 	
 	Route::get('/{parent_id}', 'LessonController@index');
 });

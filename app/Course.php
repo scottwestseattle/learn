@@ -233,6 +233,7 @@ class Course extends Base
 //				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->where('release_flag', '>=', RELEASE_PUBLISHED)
+				->orderBy('type_flag')
 				->orderBy('display_order')
 				->get();
 		}
