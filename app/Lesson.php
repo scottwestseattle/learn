@@ -735,6 +735,24 @@ class Lesson extends Base
     	return ['text' => $text, 'color' => $color, 'btn' => $btn, 'done' => $done];
     }
 
+    public function getFinishedStatus()
+    {
+		$text = '';
+		$color = '';
+		$done = true;
+		$btn = '';
+
+		if (!$this->finished_flag)
+		{
+			$text = 'Finish';
+			$color = 'red';
+			$btn = 'btn-danger';
+			$done = false;
+		}
+
+    	return ['text' => $text, 'color' => $color, 'btn' => $btn, 'done' => $done];
+    }
+	
     public function getDisplayNumber()
     {
     	return $this->lesson_number . '.' . $this->section_number;

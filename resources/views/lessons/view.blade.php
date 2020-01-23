@@ -30,7 +30,12 @@
 			@else
 				&nbsp;<a href="/{{$prefix}}/edit2/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
 			@endif
-			<a class="btn {{($status=$record->getStatus())['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$status['text']}}</a>
+			@if (!($published=$record->getStatus())['done'])
+				<a class="btn {{$published['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$published['text']}}</a>
+			@endif
+			@if (!($finished=$record->getFinishedStatus())['done'])
+				<a class="btn {{$finished['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$finished['text']}}</a>
+			@endif
 		@endif
 	</div>
 	<h3 name="title" class="">{{$record->title }}</h3>

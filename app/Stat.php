@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Stat extends Model
 {
  	// this is the add for all records
-    static public function add($type, $model, $action, $title, $description = null, $record_id = null, $error = null, $changes = null, $extraInfo = null)
+    static public function add($type, $model, $action, $title, $description, $record_id)
     {
 		$record = new Stat();
 
@@ -30,9 +30,9 @@ class Stat extends Model
 		}
 		catch (\Exception $e)
 		{
-		    $msg = "Fatal Error Adding Event";
+		    $msg = "Fatal Error Adding Stat";
 
-			// database failed so show and log event message
+			// database failed so show and log message
 			// write an emergency log file
 			$line = $msg . ': ' . $e->getMessage() . ' / ' . $model . ' / ' . $action . ' / ' . $title;
 			if (!Tools::appendFile('appeventlog.txt', $line))

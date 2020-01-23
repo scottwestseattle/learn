@@ -43,12 +43,28 @@
 
 @foreach($record as $rec)
 	<a href="/lessons/view/{{$rec->id}}">
-	<button style="" type="button" class="btn btn-outline-info btn-lesson-index link-dark">
+	<button style="" type="button" class="btn btn-outline-info btn-lesson-index">
 		<table>
 			<tr>
 				<td>
-					<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->section_number}}.&nbsp;{{$rec->title}}</div>
-					<span style="font-size:12px; color:#D64D32;">{{$rec->description}}</span>	
+					<div style="font-size:1em; color:purple; padding-right:5px;">
+						{{$rec->section_number}}.&nbsp;{{$rec->title}}
+					</div>
+					<span style="font-size:12px; color:#D64D32;">{{$rec->description}}</span>
+					
+					@if (App\User::isAdmin())
+						<?php $published = $rec->getStatus(); $finished = $rec->getFinishedStatus(); ?>
+						@if (!$published['done'] || !$finished['done'])
+						<div>
+							@if (!$published['done'])
+								<a class="btn {{$published['btn']}} btn-xs" role="button" href="/lessons/publish/{{$rec->id}}">{{$published['text']}}</a>
+							@endif
+							@if (!$finished['done'])
+								<a class="btn {{$finished['btn']}} btn-xs" role="button" href="/lessons/publish/{{$rec->id}}">{{$finished['text']}}</a>
+							@endif
+						</div>
+						@endif
+					@endif
 				</td>
 			</tr>
 		</table>
@@ -75,7 +91,7 @@
 				<table>
 					<tr>
 						<td>
-							<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->section_number}}.&nbsp;{{$rec->title}}</div>
+							<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->finished_flag}} {{$rec->section_number}}.&nbsp;{{$rec->title}}</div>
 							<span style="font-size:12px; color:#D64D32;">{{$rec->description}}</span>	
 						</td>
 					</tr>
