@@ -125,4 +125,5 @@ return [
 'To' => 'A',
 'Word of the Day' => 'Palabra del día',
 'Examples' => 'Ejemplos',
+'Lists' => 'Listas',
 ];

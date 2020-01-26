@@ -125,4 +125,5 @@ return [
 'To' => 'To',
 'Word of the Day' => 'Word of the Day',
 'Examples' => 'Examples',
+'Lists' => 'Lists',
 ];

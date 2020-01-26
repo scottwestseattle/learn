@@ -125,4 +125,5 @@ return [
 'To' => '至',
 'Word of the Day' => '每日一词',
 'Examples' => '例子',
+'Lists' => '清单',
 ];
