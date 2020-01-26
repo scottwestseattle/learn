@@ -37,6 +37,8 @@ var nbr = 0;
 var max = 0;
 var statsMax = 0;
 
+var nextAttemptTimer = null;
+
 $(document).keydown(function(event) {
 
 	//alert(event.altKey);
@@ -77,7 +79,9 @@ $( document ).ready(function() {
 	
 	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());	
 	
-	quiz.showPanel();	
+	quiz.showPanel();
+	
+	quiz.start();
 });
 
 //
@@ -270,7 +274,10 @@ function quiz() {
 				
 				$(".btn-wrong").css('background-color','LightGray');
 				$(".btn-wrong").css('border-color','LightGray');
-
+				
+				$(".btn-chosen").css('background-color','red');
+				$(".btn-chosen").css('border-color','DarkRed');
+				
 				// check if the chosen button is invisible
 				//if ($(".btn-chosen").is(":hidden"))
 				//{
@@ -457,7 +464,7 @@ function loadData()
 
 		// add the record
 		quiz.qna[i] = {q:question.toString(), a:answer.toString(), id:id.toString(), options:options.toString(), order:0, correct:false};
-
+		//alert(quiz.qna[i].id);
 		//if (i == 0) alert(quiz.qna[i].q);
 
 		i++;
@@ -569,6 +576,8 @@ function next()
 
 function nextAttempt()
 {
+	clearTimeout(nextAttemptTimer);
+	
 	quiz.setButtonStates(RUNSTATE_ASKING);
 
 	var done = false;
@@ -787,10 +796,14 @@ function checkAnswerMc1(id, answer)
 {
 	if (quiz.runState == RUNSTATE_ASKING)
 	{
-		$("#" + id).addClass( "btn-chosen" ); // set a class on the chosen button so we don't have to pass the id all the way through
+		if (!$("#" + id).hasClass("btn-right")) // if WRONG answer chosen, mark so we can show it as red
+			$("#" + id).addClass( "btn-chosen" ); // set a class on the chosen button so we don't have to pass the id all the way through
 		
 		//alert(answer);
 		checkAnswer(CHECKANSWER_MC1, answer);
+		
+		// load next question on a timer
+		nextAttemptTimer = setTimeout(nextAttempt, 2000);
 	}
 	else if (quiz.runState == RUNSTATE_CHECKING)
 	{
@@ -858,7 +871,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 		if ((answer != null && attempt != null) && cleanAnswer == cleanAttempt)
 		{
 			result = quiz.quizTextCorrectAnswer;
-			answerColor = 'darkBlue';
+			answerColor = 'green';
 			quiz.qna[quiz.qna[curr].order].correct = true;
 			$("#button-next-attempt").focus();
 			quiz.showOverrideButton(false, quiz.quizTextOverrideWrong);

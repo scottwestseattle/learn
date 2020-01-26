@@ -30,13 +30,18 @@
 			@else
 				&nbsp;<a href="/{{$prefix}}/edit2/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
 			@endif
-			<a class="btn {{($status=$record->getStatus())['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$status['text']}}</a>
+			@if (!($published=$record->getStatus())['done'])
+				<a class="btn {{$published['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$published['text']}}</a>
+			@endif
+			@if (!($finished=$record->getFinishedStatus())['done'])
+				<a class="btn {{$finished['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$finished['text']}}</a>
+			@endif
 		@endif
 	</div>
 	<h3 name="title" class="">{{$record->title }}</h3>
 
-	@if (false && strlen($record->description) > 0)
-		<p class=""><i>{{$record->description }}</i></p>
+	@if (strlen($record->description) > 0)
+		<p class="">{{$record->description }}</p>
 	@endif
 
 	@if ($record->isQuiz())
@@ -60,25 +65,28 @@
 			
 			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 				<div style="min-height:300px;">
+				
+					@if ($isAdmin)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Start Review Questions</button></a>
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Start Review</button></a>
 					</div>
+					@endif
 					
 					@if ($record->getLessonType() == LESSONTYPE_QUIZ_MC1)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Start Review - Multiple Choice</button></a>
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Start Quiz</button></a>
 					</div>
 					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC2)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Start Review - Multiple Choice</button></a>
+						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Start Quiz</button></a>
 					</div>
 					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC3)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC3}}"><button class="btn btn-info">Start Review - Multiple Choice</button></a>
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC3}}"><button class="btn btn-info">Start Quiz</button></a>
 					</div>
 					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC4)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC4}}"><button class="btn btn-info">Start Review - Multiple Choice</button></a>
+						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC4}}"><button class="btn btn-info">Start Quiz</button></a>
 					</div>
 					@else
 						<!-- FIB ONLY -->
@@ -195,6 +203,15 @@
 		<!------------------------------------------------------------------------------->
 		<p>{!! $record->text !!}</p>
 		
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <div class="input-group-text">
+      <input id="checkboxFinished" type="checkbox" onClick="setFinished()" aria-label="Checkbox for following text input">
+    </div>
+  </div>
+	<a class="btn btn-info btn-sm" role="button" onClick="setFinished()" href="#">@LANG('lesson.Finished')</a>
+</div>		
+		
 	@endif
 	
 	<div class="page-nav-buttons">
@@ -206,3 +223,15 @@
 	
 </div>
 @endsection
+
+<script>
+
+function setFinished()
+{
+	event.preventDefault();
+	var check = !$('#checkboxFinished').prop('checked');
+
+	$('#checkboxFinished').prop('checked', check);
+}
+
+</script>

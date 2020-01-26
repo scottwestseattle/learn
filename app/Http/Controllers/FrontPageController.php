@@ -7,6 +7,7 @@ use DB;
 use Auth;
 use App\Event;
 use App\Tools;
+use App\Course;
 
 define('LOG_MODEL', 'frontpage');
 
@@ -28,6 +29,31 @@ class FrontPageController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
+    {		
+		$courses = []; // make this countable so view will always work
+
+		try
+		{
+			$courses = Course::getIndex(['public']);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting courses';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}		
+			
+		return view('frontpage.index', $this->getViewData([
+			'courses' => $courses,
+		], LOG_MODEL, LOG_PAGE_INDEX));
+    }
+
+    /**
+     * Show the original application front page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index2()
     {
 		if (Tools::isAdmin())
 		{
@@ -35,11 +61,11 @@ class FrontPageController extends Controller
 		else if (Auth::check())
 		{
 		}
-			
-		return view('frontpage.index', $this->getViewData([
+
+		return view('frontpage.index2', $this->getViewData([
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
-
+	
     public function about()
     {
 		return view('frontpage.about', $this->getViewData([

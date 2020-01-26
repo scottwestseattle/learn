@@ -209,8 +209,6 @@ class Lesson extends Base
 						}
 					}
 					
-					//dump($options);
-					
 					$quizNew[$cnt]['options'] = $options;
 				}
 				
@@ -218,7 +216,7 @@ class Lesson extends Base
 				$quizNew[$cnt]['a'] = $record['a'];
 				$quizNew[$cnt]['id'] = $record['id'];
 
-				//dd($quizNew[$cnt]);				
+				//dump($quizNew[$cnt]);				
 				
 				$cnt++;
 			}
@@ -346,6 +344,7 @@ class Lesson extends Base
 	private function formatButton($text, $id, $class)
     {					
 		$button = '<div><button id="' . $id . '" onclick="checkAnswerMc1(' . $id . ', \'' . $text . '\')" class="btn btn-primary btn-quiz-mc3 ' . $class . '">' . $text . '</button></div>';
+		//dump($button);
 		
 		return $button;
 	}	
@@ -372,6 +371,7 @@ class Lesson extends Base
 
 			if (strlen($a) > 0)
 			{
+				$buttonId = 0;
 				if (array_key_exists('options', $record) && is_array($record['options']))
 				{
 					// use the options
@@ -386,7 +386,7 @@ class Lesson extends Base
 						// mark the correct button so it can be styled during the quiz
 						$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
 						
-						$buttons .= self::formatButton($m, $id, $buttonClass);
+						$buttons .= self::formatButton($m, $buttonId++, $buttonClass);
 					}
 					
 					// put the formatted info back into the quiz
@@ -415,7 +415,7 @@ class Lesson extends Base
 							// mark the correct button so it can be styled during the quiz
 							$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
 							
-							$buttons .= self::formatButton($m, $id, $buttonClass);
+							$buttons .= self::formatButton($m, $buttonId++, $buttonClass);
 							
 						}
 						//dd($buttons);
@@ -735,6 +735,24 @@ class Lesson extends Base
     	return ['text' => $text, 'color' => $color, 'btn' => $btn, 'done' => $done];
     }
 
+    public function getFinishedStatus()
+    {
+		$text = '';
+		$color = '';
+		$done = true;
+		$btn = '';
+
+		if (!$this->finished_flag)
+		{
+			$text = 'Finish';
+			$color = 'red';
+			$btn = 'btn-danger';
+			$done = false;
+		}
+
+    	return ['text' => $text, 'color' => $color, 'btn' => $btn, 'done' => $done];
+    }
+	
     public function getDisplayNumber()
     {
     	return $this->lesson_number . '.' . $this->section_number;

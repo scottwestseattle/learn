@@ -107,14 +107,14 @@ class HomeController extends Controller
 			// send the email
 			//
 			// From: from@mail.com, To: to@mail.com
-			$msg = $from . ': ' . $addressFrom . ', ' . $to . ': ' . $addressTo;
+			$msg = $from . ': ' . $addressFrom . ', ' . $to . ': ' . $addressTo . ', ' . $word->title;
 			try
 			{
 				$email = new SendMailable($name);
 
 				$email->word = $word->title;
 				$email->definition = $word->description;
-				$email->subject = Lang::get('content.Word of the Day');
+				$email->subject = Lang::get('content.Word of the Day') . ': ' . $word->title;
 				
 				$d = 'https://' . (Tools::isLocalhost() ? 'learnfast.xyz' : Tools::getDomainName());
 				$email->link = $d . '/words/view/' . $word->id;
@@ -122,14 +122,12 @@ class HomeController extends Controller
 				if (!$debug)
 					Mail::to($addressTo)->send($email);
 				
-				$msg = Lang::get('flash.Email has been sent') . ': ' . $msg;
-				
+				$msg = Lang::get('flash.Email has been sent') . ': ' . $msg;	
 				Event::logInfo(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg);
-				
 				Tools::flash('success', 'translated.' . $msg);
 				
 				// since it was successfully set, update it's latest viewed time so it goes to the end of the list
-				$record->updateLastViewedTime();
+				$word->updateLastViewedTime();
 			}
 			catch (\Exception $e) 
 			{

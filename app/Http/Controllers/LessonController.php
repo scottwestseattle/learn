@@ -457,7 +457,7 @@ class LessonController extends Controller
 		$cnt = 0;
 		foreach($records as $record)
 		{
-			$parts = explode(' - ', $record[1]); // split the line into q and a
+			$parts = explode(' - ', $record[1]); // split the line into q and a, looks like: "question text - correct answer text"
 
 			if (count($parts) > 0)
 			{
@@ -562,4 +562,23 @@ class LessonController extends Controller
 		return $rc;
 	}
 	
+    public function toggleFinished(Lesson $lesson)
+    {		
+		$rc = '';
+		
+		if (Auth::check())
+		{
+			//Event::logTracking(LOG_MODEL_LESSONS, LOG_ACTION_QUIZ, $lessonId, $score);
+			$rc = 'event logged';
+		}
+		else
+		{
+			//todo: set cookie
+			$rc = 'user not logged in: event not logged';
+		}
+		
+		$rc = 'Not implemented yet';
+
+		return $rc;
+	}	
 }
