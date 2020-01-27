@@ -8,7 +8,7 @@
 
 	<h1>Publish {{$title}}</h1>
 
-	<form method="POST" action="/{{$prefix}}/publishupdate/{{ $record->id }}">
+	<form method="POST" action="/{{$prefix}}/publishupdate/{{$record->id}}">
 
 		<h3 name="title" class="">{{$record->title }}</h3>
 
@@ -20,7 +20,7 @@
 				@endforeach
 			</select>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="release_flag" class="control-label">@LANG('content.Release Status'):</label>
 			<select name="release_flag" class="form-control">
@@ -29,7 +29,7 @@
 				@endforeach
 			</select>
 		</div>
-		
+
 		<div class="submit-button">
 			<button type="submit" class="btn btn-primary">Update</button>
 		</div>

@@ -9,26 +9,28 @@
 	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})</h1>
 
 	<div class="row">
-        <table>
+        <table class="table-responsive table-striped">
 		@foreach($records as $record)
             <tr>
-                <td>
-                    <a href="\words">{{$record->title}}</a>
-
-@if (false)
-                    <?php $published = $record->getStatus(); $finished = $record->getFinishedStatus(); ?>
+				<td>
+			        <?php $published = App\Status::getReleaseStatus($record->release_flag); ?>
+			        <?php $finished = App\Status::getWipStatus($record->wip_flag); ?>
                     @if (!$published['done'] || !$finished['done'])
-                    <div>
-                        @if (!$published['done'])
-                            <a class="btn {{$published['btn']}} btn-xs" role="button" href="/lessons/publish/{{$record->id}}">{{$published['text']}}</a>
+                         @if (!$published['done'])
+                            <a class="btn {{$published['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$published['text']}}</a>
                         @endif
                         @if (!$finished['done'])
-                            <a class="btn {{$finished['btn']}} btn-xs" role="button" href="/lessons/publish/{{$record->id}}">{{$finished['text']}}</a>
+                            <a class="btn {{$finished['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$finished['text']}}</a>
                         @endif
-                    </div>
+                    @else
+        				<a href='/{{$prefix}}/publish/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-publish"></span></a>
                     @endif
-@endif
+				</td>
+				<td><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
+                <td>
+                    <a href="\words">{{$record->title}}</a>
                 </td>
+				<td><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
             </tr>
 		@endforeach
         </table>

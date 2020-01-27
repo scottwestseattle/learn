@@ -59,12 +59,16 @@ Route::group(['prefix' => 'vocab-lists'], function () {
 	Route::post('/create','VocabListController@create');
 
 	// edit/update
-	Route::get('/edit/{list}','VocabListController@edit');
-	Route::post('/update/{list}','VocabListController@update');
+	Route::get('/edit/{vocabList}','VocabListController@edit');
+	Route::post('/update/{vocabList}','VocabListController@update');
 
 	// delete
-	Route::get('/confirmdelete/{list}','VocabListController@confirmdelete');
-	Route::post('/delete/{list}','VocabListController@delete');
+	Route::get('/confirmdelete/{vocabList}','VocabListController@confirmdelete');
+	Route::post('/delete/{vocabList}','VocabListController@delete');
+
+	// publish
+	Route::get('/publish/{vocabList}','VocabListController@publish');
+	Route::post('/publishupdate/{vocabList}','VocabListController@publishupdate');
 
 	Route::get('/undelete', 'VocabListController@undelete');
 	Route::get('/fastdelete/{vocabList}','VocabListController@fastdelete');
@@ -124,7 +128,7 @@ Route::group(['prefix' => 'courses'], function () {
 	Route::post('/delete/{course}','CourseController@delete');
 	Route::get('/undelete', 'CourseController@undelete');
 
-	// add/create
+	// publish
 	Route::get('/publish/{course}','CourseController@publish');
 	Route::post('/publishupdate/{course}','CourseController@publishupdate');
 });

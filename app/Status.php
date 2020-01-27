@@ -47,6 +47,7 @@ class Status
     {
 		$btn = '';
 		$text = Tools::safeArrayGetString(self::_releaseFlags, $release_flag, 'Unknown Value: ' . $release_flag);
+		$done = false;
 
 		switch ($release_flag)
 		{
@@ -63,6 +64,7 @@ class Status
 				// don't show anything for published records
 				$btn = '';
 				$text = '';
+				$done = true;
 				break;
 			default:
 				$btn = 'btn-danger';
@@ -73,6 +75,7 @@ class Status
 		return [
 				'btn' => $btn,
 				'text' => $text,
+				'done' => $done,
 			];
 	}
 
@@ -80,6 +83,7 @@ class Status
     {
 		$btn = '';
 		$text = Tools::safeArrayGetString(self::_wipFlags, $wip_flag, 'Unknown Value: ' . $wip_flag);
+        $done = false;
 
 		switch ($wip_flag)
 		{
@@ -99,6 +103,7 @@ class Status
 				// don't show anything for finished records
 				$btn = '';
 				$text = '';
+				$done = true;
 				break;
 			default:
 				$btn = 'btn-danger';
@@ -109,6 +114,7 @@ class Status
 		return [
 				'btn' => $btn,
 				'text' => $text,
+				'done' => $done,
 			];
 	}
 

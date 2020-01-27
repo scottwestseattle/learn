@@ -11,14 +11,15 @@ use App\VocabList;
 use App\Event;
 use App\Lesson;
 use App\Tools;
+use App\Status;
 
 define('PREFIX', 'vocab-lists');
 define('LOG_MODEL', 'VocabList');
 define('TITLE', 'Vocabulary List');
 define('TITLE_LC', 'vocabulary list');
 define('TITLE_PLURAL', 'Vocabulary Lists');
-define('REDIRECT', '/lists');
-define('REDIRECT_ADMIN', '/lists/admin');
+define('REDIRECT', '/vocab-lists');
+define('REDIRECT_ADMIN', '/vocab-lists/admin');
 
 class VocabListController extends Controller
 {
@@ -105,6 +106,8 @@ class VocabListController extends Controller
 		$record->user_id 		= Auth::id();
 		$record->title 			= $request->title;
 		$record->permalink		= Tools::createPermalink($request->title);
+        $record->wip_flag       = WIP_DEFAULT;
+        $record->release_flag   = RELEASE_DEFAULT;
 
 		try
 		{
@@ -182,7 +185,6 @@ class VocabListController extends Controller
 		$changes = '';
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
-		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 
 		if ($isDirty)
 		{
@@ -205,7 +207,7 @@ class VocabListController extends Controller
 			Tools::flash('success', 'No changes made to ' . TITLE_LC);
 		}
 
-		return redirect('/' . PREFIX . '/view/' . $record->id);
+		return redirect(REDIRECT);
 	}
 
     public function confirmdelete(VocabList $vocabList)
@@ -235,7 +237,7 @@ class VocabListController extends Controller
 			Tools::flash('danger', $e->getMessage());
 		}
 
-		return redirect(REDIRECT_ADMIN);
+		return redirect(REDIRECT);
     }
 
     public function undelete()
@@ -267,6 +269,8 @@ class VocabListController extends Controller
 
 		return view(PREFIX . '.publish', $this->getViewData([
 			'record' => $record,
+			'release_flags' => Status::getReleaseFlags(),
+			'wip_flags' => Status::getWipFlags(),
 		]));
     }
 
@@ -274,9 +278,8 @@ class VocabListController extends Controller
     {
 		$record = $vocabList;
 
-		$record->published_flag = isset($request->published_flag) ? 1 : 0;
-		$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
-		$record->finished_flag = isset($request->finished_flag) ? 1 : 0;
+		$record->release_flag = $request->release_flag;
+		$record->wip_flag = $request->wip_flag;
 
 		try
 		{
@@ -290,6 +293,6 @@ class VocabListController extends Controller
 			Tools::flash('danger', $e->getMessage());
 		}
 
-		return redirect(REDIRECT_ADMIN);
+		return redirect(REDIRECT);
     }
 }
