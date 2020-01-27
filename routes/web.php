@@ -52,7 +52,7 @@ Route::get('/send/wod', 'HomeController@wod');
 Route::group(['prefix' => 'vocab-lists'], function () {
 	Route::get('/', 'VocabListController@index');
 	Route::get('/index', 'VocabListController@index');
-	Route::get('/view/{list}','VocabListController@view');
+	Route::get('/view/{vocabList}','VocabListController@view');
 
 	// add/create
 	Route::get('/add','VocabListController@add');
@@ -87,6 +87,8 @@ Route::group(['prefix' => 'words'], function () {
 	Route::post('/create','WordController@create');
 	Route::get('/add-user', 'WordController@addUser')->middleware('auth');
 	Route::post('/create-user','WordController@createUser')->middleware('auth');
+	Route::get('/add-vocab-word/{vocabList}','WordController@addVocabListWord');
+	Route::post('/create-vocab-word','WordController@createVocabListWord');
 
 	// edit/update
 	Route::get('/edit/{word}','WordController@edit');

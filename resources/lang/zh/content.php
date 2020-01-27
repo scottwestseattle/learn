@@ -128,4 +128,5 @@ return [
 'Lists' => '清单',
 'Vocabulary Lists' => '词汇表',
 'Vocabulary List' => '词汇表',
+'Vocabulary List Word' => '词汇表单词',
 ];

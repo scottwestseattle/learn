@@ -10,6 +10,7 @@ use App\User;
 use App\Event;
 use App\Tools;
 use App\Word;
+use App\VocabList;
 
 define('PREFIX', 'words');
 define('LOG_MODEL', 'words');
@@ -151,6 +152,7 @@ class WordController extends Controller
 			'type_flag' => WORDTYPE_USERLIST,
 			'records' => $words,
 			'lesson' => false,
+			'postAction' => isset($parent_id) ? '/words/create' : '/words/create-user',
 			]));
 	}
 
@@ -168,6 +170,7 @@ class WordController extends Controller
 			'type_flag' => WORDTYPE_LESSONLIST,
 			'records' => $words,
 			'lesson' => true,
+			'postAction' => isset($parent_id) ? '/words/create' : '/words/create-user',
 			]));
 	}
 
@@ -233,6 +236,78 @@ class WordController extends Controller
 			return redirect('/words/add/' . $parent_id);
 		else
 			return redirect('/words/indexowner/');
+    }
+
+    public function addVocabListWord(VocabList $vocabList)
+    {
+        $parent = $vocabList;
+
+		return view(PREFIX . '.add', $this->getViewData([
+			'parent_id' => $parent->id,
+			'parent_title' => $parent->title,
+			'type_flag' => WORDTYPE_VOCABLIST,
+			'records' => null,//$words,
+			'postAction' => '/words/create-vocab-word',
+			]));
+	}
+
+    public function createVocabListWord(Request $request, VocabList $vocabList)
+    {
+		$msg = null;
+		$record = new Word();
+
+		$record->parent_id      = intval($request->parent_id);
+		$record->user_id 		= Auth::id();
+		$record->type_flag 		= $request->type_flag;
+		$record->title 			= $request->title;
+		$record->description	= $request->description;
+		$record->examples		= $request->examples;
+		$record->permalink		= Tools::createPermalink($request->title);
+
+		//$parent = Word::getParent($record->title, $parent_id);
+        $parent = null; //todo: check for dupes
+
+		try
+		{
+			if (isset($parent))
+			{
+				if (array_key_exists('lesson', $parent))
+					$msg = 'Word already exists in this course in lesson' . ': ' . $parent['lesson'];
+				else
+					$msg = 'Word already exists in your vocabulary list';
+
+				throw new \Exception($msg);
+			}
+
+			if (isset($record->parent_id))
+			{
+				if ($record->type_flag == WORDTYPE_USERLIST)
+					throw new \Exception("user list word with parent_id");
+			}
+			else
+			{
+				if ($record->type_flag == WORDTYPE_LESSONLIST)
+					throw new \Exception("lesson list word without parent_id");
+			}
+
+			$record->save();
+
+			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
+
+			$msg = 'New record has been added';
+
+			Tools::flash('success', /* $duplicate . */$msg);
+		}
+		catch (\Exception $e)
+		{
+			$msg = isset($msg) ? $msg : 'Error adding new ' . TITLE_LC;
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+
+			return back();
+		}
+
+		return redirect('/vocab-lists/');
     }
 
     public function permalink(Request $request, $permalink)

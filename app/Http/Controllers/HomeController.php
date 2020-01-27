@@ -32,7 +32,7 @@ class HomeController extends Controller
     }
 
     public function mail()
-    {		
+    {
 		$name = 'scott';
 		$addressTo = 'scott@scotthub.com';
 		$addressTo = 'sbwilkinson1@gmail.com';
@@ -40,39 +40,39 @@ class HomeController extends Controller
 		$addressFrom = env('MAIL_FROM_ADDRESS', '63f42e54a4-f10d4b@inbox.mailtrap.io');
 		$to = Lang::get('content.To:');
 		$from = Lang::get('content.From:');
-		
+
 		$msg = $from . ' ' . $addressFrom . ', ' . $to . ' ' . $addressTo;
-		
+
 		try
-		{			
-			Mail::to($address)->send(new SendMailable($name));			
-			
+		{
+			Mail::to($address)->send(new SendMailable($name));
+
 			$msg = 'Email has been sent ' . $msg;
-			
+
 			Event::logInfo(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg);
-			
+
 			Tools::flash('success', $msg);
 		}
-		catch (\Exception $e) 
+		catch (\Exception $e)
 		{
 			$msg = 'Error sending email ' . $msg;
 			Event::logException(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg, null, $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
-		
+
 		if (Auth::check())
 			return redirect('/events');
 		else
 			return redirect('/');
 	}
-	
+
 	//
 	// word of the day
 	//
     public function wod()
     {
 		$users = User::getIndex();
-		
+
 		foreach($users as $record)
 		{
 			if ($record->isSuperAdminUser())
@@ -81,13 +81,13 @@ class HomeController extends Controller
 				//break; // too many emails per second
 			}
 		}
-		
+
 		if (Auth::check())
 			return redirect('/events');
 		else
-			return redirect('/');		
+			return redirect('/');
 	}
-	
+
     public function sendWod($user)
     {
 		$name = $user->name;
@@ -96,7 +96,7 @@ class HomeController extends Controller
 		$to = Lang::get('content.To');
 		$from = Lang::get('content.From');
 		$debug = false;
-		
+
 		//
 		// get the wod
 		//
@@ -115,21 +115,21 @@ class HomeController extends Controller
 				$email->word = $word->title;
 				$email->definition = $word->description;
 				$email->subject = Lang::get('content.Word of the Day') . ': ' . $word->title;
-				
+
 				$d = 'https://' . (Tools::isLocalhost() ? 'learnfast.xyz' : Tools::getDomainName());
 				$email->link = $d . '/words/view/' . $word->id;
-				
+
 				if (!$debug)
 					Mail::to($addressTo)->send($email);
-				
-				$msg = Lang::get('flash.Email has been sent') . ': ' . $msg;	
+
+				$msg = Lang::get('flash.Email has been sent') . ': ' . $msg;
 				Event::logInfo(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg);
 				Tools::flash('success', 'translated.' . $msg);
-				
+
 				// since it was successfully set, update it's latest viewed time so it goes to the end of the list
 				$word->updateLastViewedTime();
 			}
-			catch (\Exception $e) 
+			catch (\Exception $e)
 			{
 				$msg = Lang::get('flash.Error sending email') . ': ' . $msg;
 				Event::logException(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg, null, $e->getMessage());
@@ -143,20 +143,20 @@ class HomeController extends Controller
 			Tools::flash('danger', $msg);
 		}
    }
-   
+
     public function unauthorized()
-    {		
+    {
         return view('home.unauthorized', [
 			]);
-    }	
+    }
 
     public function authenticated()
     {
 		Event::logTracking(LOG_MODEL_USERS, LOG_ACTION_LOGIN);
-		
+
 		return $this->index();
-    }	
-	
+    }
+
     public function hash()
     {
 		return view('home.hash', $this->getViewData([
@@ -187,7 +187,7 @@ class HomeController extends Controller
 		// user's vocab lists
 		//
 		$words = Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]);
-		
+
 		//
 		// get user's last viewed lesson so he can resume where he left off
 		//
@@ -195,14 +195,14 @@ class HomeController extends Controller
 		$lesson = $record['lesson'];
 		$course = isset($lesson) ? $lesson->course : null;
 		$stats['lessonDate'] = $record['date'];
-		
+
 		//
 		// get some user stats
 		//
 		$lastLogin = Event::getLast(LOG_TYPE_TRACKING, LOG_MODEL_USERS, LOG_ACTION_LOGIN);
 		$stats['lastLogin'] = isset($lastLogin) ? $lastLogin->created_at : Lang::get('content.none');
 		$stats['accountCreated'] = Auth::check() ? Auth::user()->created_at : Lang::get('content.none');
-		
+
 		//
 		// get quiz results
 		//
@@ -223,7 +223,7 @@ class HomeController extends Controller
 		// courses that aren't finished
 		//
 		$courses = Course::getIndex(['unfinished']);
-		
+
 		//
 		// get Sites
 		//
@@ -283,7 +283,7 @@ class HomeController extends Controller
 			'new_visitor' => Visitor::isNew($ip),
 		]));
     }
-	
+
     public function search(Request $request)
     {
 		$search = null;
@@ -292,11 +292,11 @@ class HomeController extends Controller
 		$wordsUser = null;
 		$isPost = $request->isMethod('post');
 		$count = 0;
-		
+
 		if ($isPost)
 		{
-			// do the search 
-			
+			// do the search
+
 			$search = $request->searchText;
 			if (strlen($search) > 1)
 			{
@@ -310,14 +310,14 @@ class HomeController extends Controller
 						$search = $clean;
 						throw new \Exception("dangerous search characters");
 					}
-					
+
 					$lessons = Lesson::search($search);
 					$count += (isset($lessons) ? count($lessons) : 0);
-					
+
 					$words = Word::search($search);
-					$count += (isset($words) ? count($words) : 0);			
+					$count += (isset($words) ? count($words) : 0);
 				}
-				catch (\Exception $e) 
+				catch (\Exception $e)
 				{
 					$msg = 'Search Error';
 					Event::logException(LOG_MODEL_HOME, LOG_ACTION_SEARCH, $msg . ': ' . $search, null, $e->getMessage());
@@ -335,7 +335,7 @@ class HomeController extends Controller
 			'isPost' => $isPost,
 			'count' => $count,
 			'search' => $search,
-		]));		
+		]));
 	}
-		
+
 }

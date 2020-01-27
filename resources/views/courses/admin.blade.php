@@ -22,7 +22,7 @@
 				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->title}}</a>
 				<div>
 					@if (!\App\Status::isFinished($record->wip_flag))
-						<a href="/{{$prefix}}/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{\App\Status::getWipStatus($record->wip_flag)['btn']}}">{{\App\Status::getWipStatus($record->wip_flag)['text']}}</button></a>
+						<a href="/{{$prefix}}/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{App\Status::getWipStatus($record->wip_flag)['btn']}}">{{App\Status::getWipStatus($record->wip_flag)['text']}}</button></a>
 					@endif
 					@if (!\App\Status::isPublished($record->release_flag))
 						<a href="/{{$prefix}}/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getStatus()['btn']}}">{{$record->getStatus()['text']}}</button></a>

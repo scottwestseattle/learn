@@ -128,4 +128,5 @@ return [
 'Lists' => 'Listas',
 'Vocabulary Lists' => 'Listas de Vocabulario',
 'Vocabulary List' => 'Lista de Vocabulario',
+'Vocabulary List Word' => 'Palabra de Lista de Vocabulario',
 ];

@@ -42,7 +42,7 @@
 					<tr>
 						<td>
 							<a href="/courses/view/{{$record->id}}">{{$record->title}}</a>&nbsp;
-							<a href="/courses/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{\App\Status::getWipStatus($record->wip_flag)['btn']}}">{{$record->\App\Status::getWipStatus($record->wip_flag)['text']}}</button></a>
+							<a href="/courses/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{App\Status::getWipStatus($record->wip_flag)['btn']}}">{{App\Status::getWipStatus($record->wip_flag)['text']}}</button></a>
 							<a href="/courses/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getStatus()['btn']}}">{{$record->getStatus()['text']}}</button></a>
 						</td>
 					</tr>
