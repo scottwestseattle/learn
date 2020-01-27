@@ -7,21 +7,20 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use App\User;
-use App\Course;
+use App\VocabList;
 use App\Event;
 use App\Lesson;
 use App\Tools;
-use App\Status;
 
-define('PREFIX', 'courses');
-define('LOG_MODEL', 'courses');
-define('TITLE', 'Course');
-define('TITLE_LC', 'course');
-define('TITLE_PLURAL', 'Courses');
-define('REDIRECT', '/courses');
-define('REDIRECT_ADMIN', '/courses/admin');
+define('PREFIX', 'vocab-lists');
+define('LOG_MODEL', 'VocabList');
+define('TITLE', 'Vocabulary List');
+define('TITLE_LC', 'vocabulary list');
+define('TITLE_PLURAL', 'Vocabulary Lists');
+define('REDIRECT', '/lists');
+define('REDIRECT_ADMIN', '/lists/admin');
 
-class CourseController extends Controller
+class VocabListController extends Controller
 {
 	public function __construct ()
 	{
@@ -36,24 +35,35 @@ class CourseController extends Controller
 
     public function index(Request $request)
     {
-		$public = []; // make this countable so view will always work
-		$private = []; // make this countable so view will always work
+		$records = []; // make this countable so view will always work
 
 		try
 		{
-			$public = Course::getIndex(['public']);
-			$private = Course::getIndex(['private']);
+			if (Tools::isAdmin())
+			{
+				$records = VocabList::select()
+	//				->where('site_id', SITE_ID)
+					->where('deleted_flag', 0)
+					->get();
+			}
+			else
+			{
+				$records = VocabList::select()
+	//				->where('site_id', SITE_ID)
+					->where('deleted_flag', 0)
+					->where('release_flag', '>=', RELEASE_PUBLISHED)
+					->get();
+			}
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Error getting ' . TITLE_LC . ' list';
+			$msg = 'Error getting ' . TITLE_LC;
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
 
 		return view(PREFIX . '.index', $this->getViewData([
-			'public' => $public,
-			'private' => $private,
+			'records' => $records,
 		]));
     }
 
@@ -63,7 +73,12 @@ class CourseController extends Controller
 
 		try
 		{
-			$records = Course::getIndex(['all']);
+			$records = VocabList::select()
+//				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+//				->where('published_flag', 1)
+//				->where('approved_flag', 1)
+				->get();
 		}
 		catch (\Exception $e)
 		{
@@ -85,14 +100,11 @@ class CourseController extends Controller
 
     public function create(Request $request)
     {
-		$record = new Course();
+		$record = new VocabList();
 
 		$record->user_id 		= Auth::id();
 		$record->title 			= $request->title;
-		$record->description	= $request->description;
 		$record->permalink		= Tools::createPermalink($request->title);
-		$record->release_flag	= RELEASE_DEFAULT;
-		$record->wip_flag		= WIP_DEFAULT;
 
 		try
 		{
@@ -110,7 +122,7 @@ class CourseController extends Controller
 			return back();
 		}
 
-		return redirect(REDIRECT_ADMIN);
+		return redirect(REDIRECT);
     }
 
     public function permalink(Request $request, $permalink)
@@ -121,10 +133,11 @@ class CourseController extends Controller
 
 		try
 		{
-			$record = Course::select()
+			$record = VocabList::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
-				->where('release_flag', '>=', RELEASE_PUBLISHED)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
 				->where('permalink', $permalink)
 				->first();
 		}
@@ -143,64 +156,33 @@ class CourseController extends Controller
 			], LOG_MODEL, LOG_PAGE_PERMALINK));
 	}
 
-	public function view(Course $course)
+	public function view(VocabList $vocabList)
     {
-		$record = $course;
-		$count = 0;
-		$records = []; // make this countable so view will always work
-
-		try
-		{
-			$records = Lesson::getChapters($course->id);
-
-			// get the lesson count.  if only one chapter, count it's sections
-			$count = count($records); // count the chapters
-			if ($count == 1)
-			{
-				$count = count($records->first()); // count the sections
-			}
-		}
-		catch (\Exception $e)
-		{
-			$msg = 'Error getting lesson list';
-			Event::logException(LOG_MODEL, LOG_ACTION_VIEW, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);
-		}
-
-		// put some view helpers together
-		$disabled = (count($records) > 0) ? '' : 'disabled';
-
-		$firstId = (count($records) > 0) ? $records[1][0]->id : 0; // collection index starts at 1
+		$record = $vocabList;
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
-			'records' => $records,
-			'disabled' => $disabled,
-			'firstId' => $firstId,
-			'displayCount' => $count,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
-	public function edit(Course $course)
+	public function edit(VocabList $vocabList)
     {
-		$record = $course;
+		$record = $vocabList;
 
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
 			]));
     }
 
-    public function update(Request $request, Course $course)
+    public function update(Request $request, VocabList $vocabList)
     {
-		$record = $course;
+		$record = $vocabList;
 
 		$isDirty = false;
 		$changes = '';
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-		$record->display_order = Tools::copyDirty($record->display_order, $request->display_order, $isDirty, $changes);
-		$record->type_flag = Tools::copyDirty($record->type_flag, $request->type_flag, $isDirty, $changes);
 
 		if ($isDirty)
 		{
@@ -220,27 +202,26 @@ class CourseController extends Controller
 		}
 		else
 		{
-			Tools::flash('success', 'No changes were made');
+			Tools::flash('success', 'No changes made to ' . TITLE_LC);
 		}
 
 		return redirect('/' . PREFIX . '/view/' . $record->id);
 	}
 
-    public function confirmdelete(Course $course)
+    public function confirmdelete(VocabList $vocabList)
     {
-		$record = $course;
+		$record = $vocabList;
 
 		$vdata = $this->getViewData([
 			'record' => $record,
-			'children' => Lesson::getIndex($record->id),
 		]);
 
 		return view(PREFIX . '.confirmdelete', $vdata);
     }
 
-    public function delete(Request $request, Course $course)
+    public function delete(Request $request, VocabList $vocabList)
     {
-		$record = $course;
+		$record = $vocabList;
 
 		try
 		{
@@ -263,7 +244,7 @@ class CourseController extends Controller
 
 		try
 		{
-			$records = Course::select()
+			$records = VocabList::select()
 //				->where('site_id', SITE_ID)
 				->where('deleted_flag', 1)
 				->get();
@@ -280,36 +261,33 @@ class CourseController extends Controller
 		]));
     }
 
-    public function publish(Request $request, Course $course)
+    public function publish(Request $request, VocabList $vocabList)
     {
-		$record = $course;
+		$record = $vocabList;
 
 		return view(PREFIX . '.publish', $this->getViewData([
 			'record' => $record,
-			'release_flags' => Status::getReleaseFlags(),
-			'wip_flags' => Status::getWipFlags(),
 		]));
     }
 
-    public function publishupdate(Request $request, Course $course)
+    public function publishupdate(Request $request, VocabList $vocabList)
     {
-		$record = $course;
+		$record = $vocabList;
 
-		$record->release_flag = $request->release_flag;
-		$record->wip_flag = $request->wip_flag;
+		$record->published_flag = isset($request->published_flag) ? 1 : 0;
+		$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
+		$record->finished_flag = isset($request->finished_flag) ? 1 : 0;
 
 		try
 		{
 			$record->save();
-
-			Event::logEdit(LOG_MODEL, $record->title, $record->id, 'Release/work status updated');
+			Event::logEdit(LOG_MODEL, $record->title, $record->id, 'published/approved/finished status updated');
 			Tools::flash('success', $this->title . ' status has been updated');
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Error updating ' . TITLE_LC . ' status';
-			Event::logException(LOG_MODEL, LOG_ACTION_PUBLISH, $record->title, null, $e->getMessage());
-			Tools::flash('danger', $msg);
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $e->getMessage());
+			Tools::flash('danger', $e->getMessage());
 		}
 
 		return redirect(REDIRECT_ADMIN);

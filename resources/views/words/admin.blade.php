@@ -21,21 +21,21 @@
 				<td><a href="/{{$prefix}}/publish/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-publish"></span></a></td>
 				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->title}}</a>
 				<div>
-					@if (!$record->isFinished())
-						<a href="/{{$prefix}}/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getWipStatus()['btn']}}">{{$record->getWipStatus()['text']}}</button></a>
+					@if (!\App\Status::isFinished($record->wip_flag))
+						<a href="/{{$prefix}}/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{\App\Status::getWipStatus($record->wip_flag)['btn']}}">{{\App\Status::getWipStatus($record->wip_flag)['text']}}</button></a>
 					@endif
-					@if (!$record->isPublished())
+					@if (!\App\Status::isPublished($record->release_flag))
 						<a href="/{{$prefix}}/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getStatus()['btn']}}">{{$record->getStatus()['text']}}</button></a>
 					@endif
 				</div>
 				</td>
-				<td>{{substr($record->description, 0, 200)}}</td>				
+				<td>{{substr($record->description, 0, 200)}}</td>
 				<td><a href="/{{$prefix}}/edit/{{$record->id}}">{{$record->display_order}}</a></td>
 				<td><a href="/{{$prefix}}/confirmdelete/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
 			</tr>
 		@endforeach
 		</tbody>
 	</table>
-               
+
 </div>
 @endsection

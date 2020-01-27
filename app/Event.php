@@ -27,11 +27,11 @@ class Event extends Base
 
 		return $records;
 	}
-	
+
     static public function getLast($type, $model, $action)
     {
 		$record = null;
-		
+
 		try
 		{
 			$record = Event::select()
@@ -47,12 +47,12 @@ class Event extends Base
 		{
 		    $msg = "Error getting last event";
 			Event::logException(LOG_MODEL_EVENTS, LOG_ACTION_SELECT, $type . '/' . $model . '/' . $action, null, $e->getMessage());
-			Tools::flash('danger', $msg);			
+			Tools::flash('danger', $msg);
 		}
-		
+
 		return $record;
-	}		
-	
+	}
+
     static public function getAlerts($limit = 0)
 	{
 		// get all alerts that are not 'Info' (Warning, Error, Exception, and Other)
@@ -102,9 +102,9 @@ class Event extends Base
 
     static public function logTracking($model, $action, $record_id = null, $extraInfo = null)
     {
-		Event::add(LOG_TYPE_TRACKING, $model, $action, null, null, $record_id, null, null, $extraInfo);
+		Event::add(LOG_TYPE_TRACKING, $model, $action, 'Tracking', null, $record_id, null, null, $extraInfo);
 	}
-	
+
     static public function logInfo($model, $action, $title)
 	{
 		Event::add(LOG_TYPE_INFO, $model, $action, $title);
@@ -123,7 +123,7 @@ class Event extends Base
 		$record->model_flag		= $model;
 		$record->action_flag	= $action;
 
-		$record->title 			= $title;
+		$record->title 			= isset($title) && strlen($title) > 0 ? $title : '(Empty Title)';
 
 		$record->description	= $description;
 		$record->record_id 		= intval($record_id);
@@ -146,8 +146,8 @@ class Event extends Base
 			{
 				// already dumping error message
 			}
-			
-			dd($msg . ' - Check ~/appeventlog');			
+
+			dd($msg . ' - Check ~/appeventlog');
 		}
     }
 

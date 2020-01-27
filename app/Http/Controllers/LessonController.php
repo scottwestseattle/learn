@@ -218,7 +218,7 @@ class LessonController extends Controller
 	public function view(Lesson $lesson)
     {
 		Lesson::setCurrentLocation($lesson->id);
-		
+
 		$lesson->text = Tools::convertToHtml($lesson->text);
 
 		if ($lesson->format_flag == LESSON_FORMAT_AUTO)
@@ -543,11 +543,11 @@ class LessonController extends Controller
 			'isMc' => $lesson->isMc($reviewType),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
-	
+
     public function logQuiz($lessonId, $score)
     {
 		$rc = '';
-		
+
 		if (Auth::check())
 		{
 			Event::logTracking(LOG_MODEL_LESSONS, LOG_ACTION_QUIZ, $lessonId, $score);
@@ -561,11 +561,11 @@ class LessonController extends Controller
 
 		return $rc;
 	}
-	
+
     public function toggleFinished(Lesson $lesson)
-    {		
+    {
 		$rc = '';
-		
+
 		if (Auth::check())
 		{
 			//Event::logTracking(LOG_MODEL_LESSONS, LOG_ACTION_QUIZ, $lessonId, $score);
@@ -576,9 +576,9 @@ class LessonController extends Controller
 			//todo: set cookie
 			$rc = 'user not logged in: event not logged';
 		}
-		
+
 		$rc = 'Not implemented yet';
 
 		return $rc;
-	}	
+	}
 }

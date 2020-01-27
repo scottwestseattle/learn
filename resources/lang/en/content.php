@@ -126,4 +126,6 @@ return [
 'Word of the Day' => 'Word of the Day',
 'Examples' => 'Examples',
 'Lists' => 'Lists',
+'Vocabulary Lists' => 'Vocabulary Lists',
+'Vocabulary List' => 'Vocabulary List',
 ];

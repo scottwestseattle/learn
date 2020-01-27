@@ -41,18 +41,8 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
 
-			@if ($isSuperAdmin)
-				<div class="mr-2"><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-home"></span></a></div>
-				<div class="ml-2 mr-2"><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
-			@elseif ($isAdmin)
-				<div class="mr-2"><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-home"></span></a></div>
-				<div class="ml-2 mr-2"><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
-			@elseif (Auth::check())
-				<div class=""><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-user"></span></a></div>
-			@else
-				<div class=""><a class="" role="" href="/home"><span style="color:gray;" class="glyphicon glyphicon-user"></span></a></div>
-			@endif
-
+			<div class="mr-2"><a class="" role="" href="/"><span style="color:white;" class="glyphicon glyphicon-home"></span></a></div>
+			<div {{$isAdmin ? '' : 'hidden'}} class="ml-2 mr-2"><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-cog"></span></a></div>
 			<div class="ml-2 mr-2"><a href="/search"><span style="color:white;" class="glyphicon glyphicon-search"></span></a></div>
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
@@ -63,7 +53,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link" href="/courses">@LANG('content.Courses')</a></li>
-					<li class="nav-item"><a class="nav-link" href="/lists">@LANG('content.Lists')</a></li>
+					<li class="nav-item"><a class="nav-link" href="/vocab-lists">@LANG('content.Lists')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/contact">@LANG('ui.Contact')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/about">@LANG('ui.About')</a></li>
 
@@ -153,7 +143,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 			<a href="#"><img src="/img/logo.png" height="60" /></a>
 			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
 			<p style="font-size:1.2em;" class="">{{$siteTitleLite}}</p>
-			<p>&copy; 2019 {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
+			<p>&copy; {{date("Y")}} {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
 			<span class="footer-links">
 				<a href="/privacy">@LANG('ui.Privacy Policy')</a>&bull;
 				<a href="/terms">@LANG('ui.Terms of Use')</a>&bull;

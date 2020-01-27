@@ -48,9 +48,31 @@ Route::post('/hasher', 'HomeController@hasher');
 Route::get('/send/email', 'HomeController@wod');
 Route::get('/send/wod', 'HomeController@wod');
 
+// Vocabulary Lists
+Route::group(['prefix' => 'vocab-lists'], function () {
+	Route::get('/', 'VocabListController@index');
+	Route::get('/index', 'VocabListController@index');
+	Route::get('/view/{list}','VocabListController@view');
+
+	// add/create
+	Route::get('/add','VocabListController@add');
+	Route::post('/create','VocabListController@create');
+
+	// edit/update
+	Route::get('/edit/{list}','VocabListController@edit');
+	Route::post('/update/{list}','VocabListController@update');
+
+	// delete
+	Route::get('/confirmdelete/{list}','VocabListController@confirmdelete');
+	Route::post('/delete/{list}','VocabListController@delete');
+
+	Route::get('/undelete', 'VocabListController@undelete');
+	Route::get('/fastdelete/{vocabList}','VocabListController@fastdelete');
+});
+
 // Words
 Route::group(['prefix' => 'words'], function () {
-	Route::get('/index', 'WordController@indexUser');	
+	Route::get('/index', 'WordController@indexUser');
 	Route::get('/indexowner/{parent_id?}', 'WordController@indexowner');
 	Route::get('/admin', 'WordController@admin');
 	Route::get('/view/{word}','WordController@view');
@@ -64,10 +86,10 @@ Route::group(['prefix' => 'words'], function () {
 
 	// edit/update
 	Route::get('/edit/{word}','WordController@edit');
-	Route::post('/update/{word}','WordController@update');	
+	Route::post('/update/{word}','WordController@update');
 	Route::get('/edit-user/{word}','WordController@editUser')->middleware('is_owner');
 	Route::post('/update-user/{word}','WordController@updateUser')->middleware('is_owner');
-	
+
 	Route::post('/updateajax/{word}','WordController@updateajax');
 	Route::get('/updateajax/{word}','WordController@updateajax');
 
@@ -76,9 +98,11 @@ Route::group(['prefix' => 'words'], function () {
 	Route::post('/delete/{word}','WordController@delete');
 	Route::get('/confirmdelete-user/{word}','WordController@confirmDeleteUser')->middleware('is_owner');
 	Route::post('/delete-user/{word}','WordController@deleteUser')->middleware('is_owner');
-	
+
 	Route::get('/undelete', 'WordController@undelete');
 	Route::get('/fastdelete/{word}','WordController@fastdelete');
+
+	Route::get('/', 'WordController@indexUser');
 });
 
 // Courses
@@ -136,7 +160,7 @@ Route::group(['prefix' => 'lessons'], function () {
 
 	// ajax
 	Route::get('/finished/{lesson}','LessonController@toggleFinished');
-	
+
 	Route::get('/{parent_id}', 'LessonController@index');
 });
 
@@ -190,7 +214,7 @@ Route::group(['prefix' => 'events'], function () {
 
 	// index
 	Route::get('/', 'EventController@index');
-	Route::post('/', 'EventController@index');	
+	Route::post('/', 'EventController@index');
 });
 
 // Samples

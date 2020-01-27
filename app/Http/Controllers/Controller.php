@@ -75,15 +75,13 @@ define('TRANSLATIONS_FOLDER', '../resources/lang/');
 define('WORDTYPE_LESSONLIST', 1);
 define('WORDTYPE_LESSONLIST_USERCOPY', 2);
 define('WORDTYPE_USERLIST', 3);
-define('WORDTYPE_USERLIST_LIMIT', 20); 
+define('WORDTYPE_USERLIST_LIMIT', 20);
 
 define('RELEASE_NOTSET', 0);
-define('RELEASE_ADMIN', 10);
-define('RELEASE_DRAFT', 20);
-define('RELEASE_REVIEW', 30);
+define('RELEASE_PRIVATE', 10);
 define('RELEASE_APPROVED', 90);
 define('RELEASE_PUBLISHED', 100);
-define('RELEASE_DEFAULT', RELEASE_DRAFT);
+define('RELEASE_DEFAULT', RELEASE_PRIVATE);
 
 define('WIP_NOTSET', 0);
 define('WIP_INACTIVE', 10);
@@ -97,46 +95,46 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 	private $domainName = null;
-	
+
 	//todo: make private if this is the approach we are using
 	protected $prefix = 'prefix';
 	protected $title = 'Title';
-	protected $titlePlural = 'Titles';	
-	
+	protected $titlePlural = 'Titles';
+
 	public function __construct()
-	{		
+	{
 		// session don't work in constructors, work arround:
 		$this->middleware(function ($request, $next){
 
 			// set locale according to selected language
 			$locale = session('locale');
 			if (isset($locale))
-				App::setLocale($locale);			
+				App::setLocale($locale);
 
 			//todo: where does this go?
-			//look at: 
+			//look at:
 			if (Auth::user() && Auth::user()->blocked_flag)
 			{
                 Tools::flash('danger', 'Login Error: User is Blocked');
 				Auth::logout();
-			}			
-			
+			}
+
 			return $next($request);
 		});
 
 	}
 
 	static private function showPrivacyNotice()
-	{		
+	{
 		// don't show for admins or if user has closed it already
 		return session('eunotice', false) && !User::isAdmin();
 	}
-	
+
 	protected function isOwner($user_id)
 	{
 		return (Auth::check() && Auth::id() == $user_id);
 	}
-	
+
 	protected function getViewData($vdata = null, $model = null, $page = null)
 	{
 		//
@@ -157,7 +155,7 @@ class Controller extends BaseController
 		$this->viewData['titlePlural'] = $this->titlePlural;
 		$this->viewData['isAdmin'] = Tools::isAdmin();
 		$this->viewData['isSuperAdmin'] = Tools::isSuperAdmin();
-		
+
 		if ($this->getDomainName() == 'localhost')
 			$this->viewData['localhost'] = true;
 
@@ -180,12 +178,12 @@ class Controller extends BaseController
 	}
 
 	protected function getSiteTitle($withDomainName = true)
-	{			
+	{
 		$siteTitle = Tools::getSiteTitle($withDomainName);
-				
+
 		return $siteTitle;
 	}
-	
+
 	protected function getDomainName()
 	{
 		// if not set yet

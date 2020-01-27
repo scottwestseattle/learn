@@ -8,7 +8,7 @@
 
 	<h2 style="">{{$isSuperAdmin ? 'Super ' : ''}}Admin Dashboard</h2>
 
-	<div class="form-group">	
+	<div class="form-group">
 		<ul style="font-size: 1.1em; list-style-type: none; padding-left: 0px;">
 			<li>Time: {{date("Y-m-d H:i:s")}}</li>
 			@if (false)
@@ -20,7 +20,7 @@
 			<li>Life:&nbsp;{{env('SESSION_LIFETIME', 0)}}, New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</li>
 			<li><a href="/eunoticereset">Reset Privacy</a></li>
 			@if ($isSuperAdmin)
-				<li>Size: 
+				<li>Size:
 					<span class="size-xs">Extra Small</span>
 					<span class="size-sm">Small</span>
 					<span class="size-md">Medium</span>
@@ -31,9 +31,9 @@
 			<li><a href="/send/email">Send Wod Email</a></li>
 		</ul>
 	</div>
-	
+
 	@if (isset($courses))
-	<div class="form-group">	
+	<div class="form-group">
 		<h3>@LANG('content.Unfinished Courses') ({{count($courses)}})&nbsp;<a href="/courses/admin"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
 		<div class="table-responsive">
 		<table class="table table-striped">
@@ -42,24 +42,24 @@
 					<tr>
 						<td>
 							<a href="/courses/view/{{$record->id}}">{{$record->title}}</a>&nbsp;
-							<a href="/courses/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getWipStatus()['btn']}}">{{$record->getWipStatus()['text']}}</button></a>
+							<a href="/courses/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{\App\Status::getWipStatus($record->wip_flag)['btn']}}">{{$record->\App\Status::getWipStatus($record->wip_flag)['text']}}</button></a>
 							<a href="/courses/publish/{{$record->id}}"><button type="button" class="btn btn-xs {{$record->getStatus()['btn']}}">{{$record->getStatus()['text']}}</button></a>
-						</td>						
+						</td>
 					</tr>
 				@endforeach
 			</tbody>
 		</table>
 		</div>
-		
+
 	</div>
 	@endif
 
 	@if (isset($site_admins))
 	<hr />
-	@endif	
-	
+	@endif
+
 	@if (isset($comments))
-	<div>	
+	<div>
 		<h3 style="color:red;">Comments to Approve ({{count($comments)}})</h3>
 		<div class="table-responsive">
 		<table class="table table-striped">
@@ -81,16 +81,16 @@
 	</div>
 	<hr />
 	@endif
-	
-	@if (isset($visitors))			
+
+	@if (isset($visitors))
 	<div class="form-group">
 		<h3 style="">Today's Visitors: {{count($visitors)}}&nbsp;<a href="/visitors"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
 	</div>
 	<p>&nbsp;</p>
 	@endif
-	
+
 	@if (count($users) > 0)
-	<div class="form-group">	
+	<div class="form-group">
 		<h3 style="">Last New User ({{count($users)}} Total)&nbsp;<a href="/users/index"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
 		<div class="table-responsive">
 		<table class="table table-striped">
@@ -112,11 +112,11 @@
 	</div>
 	<hr />
 	@endif
-		
+
 	<div>
 		<h3 style="">Latest Events ({{count($events)}})&nbsp;<a href="/events"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
-@if (false)		
-		@component('events.menu-submenu-events-filter')@endcomponent	
+@if (false)
+		@component('events.menu-submenu-events-filter')@endcomponent
 @endif
 		<div class="table-responsive">
 		<table class="table table-striped">
@@ -138,7 +138,7 @@
 					if ($record->type_flag == 4) $type = 'Exception';
 					if ($record->type_flag == 5) $type = 'Other';
 				?>
-				
+
 				<tr>
 					<td>{{$record->created_at}}</td>
 					<td>{{$record->site_id}}</td>
@@ -153,9 +153,9 @@
 		</div>
 	</div>
 	<hr />
-	
+
 	@if (isset($sites))
-	<div style="margin-bottom:30px;">	
+	<div style="margin-bottom:30px;">
 		<h3>Sites ({{count($sites)}})</h3>
 		<div class="table-responsive">
 		<table class="table table-striped">
@@ -169,7 +169,7 @@
 		</table>
 		</div>
 	</div>
-	@endif	
-	
+	@endif
+
 </div>
 @endsection

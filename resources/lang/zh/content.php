@@ -126,4 +126,6 @@ return [
 'Word of the Day' => '每日一词',
 'Examples' => '例子',
 'Lists' => '清单',
+'Vocabulary Lists' => '词汇表',
+'Vocabulary List' => '词汇表',
 ];
