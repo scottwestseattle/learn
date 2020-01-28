@@ -541,6 +541,7 @@ class LessonController extends Controller
 			'canEdit' => true,
 			'quizText' => $quizText,
 			'isMc' => $lesson->isMc($reviewType),
+            'returnPath' => PREFIX . '/view',
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

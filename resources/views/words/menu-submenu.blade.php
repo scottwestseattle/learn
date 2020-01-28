@@ -1,6 +1,7 @@
 @if ($isAdmin)
 <div class="submenu-view">
 	<table><tr>
+		<td><a href="#" onclick="window.history.back()"><span class="glyphCustom glyphicon glyphicon-back"></span></a></td>
 		@if (isset($parent_id))
 			<td><a href='/lessons/view/{{$parent_id}}'><span class="glyphCustom glyphicon glyphicon-home"></span></a></td>
 			<!-- td><a href='/{{$prefix}}/{{$parent_id}}'><span class="glyphCustom glyphicon glyphicon-index"></span></a></td -->

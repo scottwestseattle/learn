@@ -5,11 +5,11 @@
 <div class="container page-normal">
 
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin, 'parent_id' => $record->parent_id])@endcomponent
-	
+
 	<div style="margin-top:30px;">
-		
+
 		<h3>
-			{{$record->title}}<span style="vertical-align: middle; background-color: LightGray; color: gray; margin-left: 7px; font-size:12px; padding:3px 3px; font-weight:bold;" class="badge">{{$record->view_count}}</span>		
+			{{$record->title}}<span style="vertical-align: middle; background-color: LightGray; color: gray; margin-left: 7px; font-size:12px; padding:3px 3px; font-weight:bold;" class="badge">{{$record->view_count}}</span>
 		</h3>
 	</div>
 
@@ -21,7 +21,7 @@
 		@endforeach
 		@endif
 	<div>
-	
+
 	<div style="margin-top:50px;">
 		@if (isset($nextWod))
 		<a href="/words/view/{{$nextWod->id}}" class="btn btn-outline-primary btn-sm" style="font-size:16px;" role="button">{{$nextWod->title}}</a>
@@ -43,16 +43,16 @@
 			<span class="glyphicon glyphicon-button-next"></span>
 		</a>
 		@endif
-	</div>		
-	
+	</div>
+
 	<div style="margin-top:50px;">
-	@if (isset($record->parent_id))
-		@component('components.data-course-words', ['edit' => $lesson ? '/words/edit/' : '/words/view/', 'words' => $words])@endcomponent																				
+	@if (isset($record->parent_id) && isset($words))
+		@component('components.data-course-words', ['edit' => $lesson ? '/words/edit/' : '/words/view/', 'words' => $words])@endcomponent
 	@else
-		@component('components.data-badge-list', ['edit' => '/words/view/', 'records' => $records, 'title' => 'Vocabulary'])@endcomponent																			
+		@component('components.data-badge-list', ['edit' => '/words/view/', 'records' => $records, 'title' => 'Vocabulary'])@endcomponent
 	@endif
 	</div>
-	
+
 </div>
 
 @endsection

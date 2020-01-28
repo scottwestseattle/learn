@@ -165,6 +165,7 @@ class VocabListController extends Controller
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
+			'prefixWord' => 'words',
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
@@ -295,4 +296,55 @@ class VocabListController extends Controller
 
 		return redirect(REDIRECT);
     }
+
+	public function review(VocabList $vocabList, $reviewType = null)
+    {
+		$quiz = self::makeQuiz($vocabList->words); // splits text into questions and answers
+		$quiz = Lesson::formatMc3($quiz, LESSONTYPE_QUIZ_MC3); // format the answers according to quiz type
+
+		$options = Tools::getOptionArray('font-size="150%"');
+
+		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
+		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
+		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
+		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
+
+		$quizText = [
+			'Round' => 'Round',
+			'Correct' => 'Correct',
+			'TypeAnswers' => 'Type the Answer',
+			'Wrong' => 'Wrong',
+			'of' => 'of',
+		];
+
+		return view('lessons.reviewmc', $this->getViewData([
+			'record' => $vocabList,
+			'sentenceCount' => count($quiz),
+			'records' => $quiz,
+			'options' => $options,
+			'canEdit' => true,
+			'quizText' => $quizText,
+			'isMc' => true,
+			'returnPath' => PREFIX . '/view',
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
+	public function makeQuiz($records)
+    {
+		$qna = [];
+		$cnt = 0;
+		foreach($records as $record)
+		{
+            $qna[$cnt]['q'] = $record->title;
+            $qna[$cnt]['a'] = $record->description;
+            $qna[$cnt]['id'] = $cnt;
+            $qna[$cnt]['options'] = '';
+
+			$cnt++;
+		}
+
+		//dd($qna);
+
+		return $qna;
+	}
 }

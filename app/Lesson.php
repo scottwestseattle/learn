@@ -25,7 +25,7 @@ define('LESSONTYPE_OTHER', 99);
 define('LESSONTYPE_DEFAULT', LESSONTYPE_TEXT);
 
 class Lesson extends Base
-{	
+{
     const _lessonTypeFlags = [
 		LESSONTYPE_NOTSET => 'Not Set',
 		LESSONTYPE_TEXT => 'Text',
@@ -37,7 +37,7 @@ class Lesson extends Base
 //todo: not used yet		LESSONTYPE_QUIZ_MC4 => 'Multiple Choice - Random Options New Layout (MC4)',
 		LESSONTYPE_OTHER => 'Other',
     ];
-	
+
     public function user()
     {
     	return $this->belongsTo(User::class);
@@ -61,11 +61,11 @@ class Lesson extends Base
 
     	return $rc;
     }
-	
+
 	static public function search($search)
     {
 		$records = null;
-		
+
 		try
 		{
 			$search = '%' . $search . '%';
@@ -100,7 +100,7 @@ class Lesson extends Base
 			}
 			else
 			{
-			}			
+			}
 		}
 		catch(\Exception $e)
 		{
@@ -108,28 +108,28 @@ class Lesson extends Base
 			Event::logException(LOG_MODEL_LESSONS, LOG_ACTION_SEARCH, 'search = ' . $search, null, $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
-		
+
 		return $records;
 	}
-	
+
 	public function formatByType($quiz, $reviewType)
     {
 		// if $reviewType not set, it uses the type setting on the lesson
 		if (!isset($reviewType))
 			$reviewType = $this->type_flag;
-		
+
 		switch($reviewType)
 		{
 			case LESSONTYPE_QUIZ_FIB:
 				// FIB doesn't use answer options, so if any, remove them
 				$quiz = self::removeEmbeddedAnswers($quiz, $reviewType);
 				break;
-				
+
 			case LESSONTYPE_QUIZ_MC1:
 				// expects embedded list of answers like [one, two, three] which will be converted to buttons
-				$quiz = $this->formatMc1($quiz, $reviewType);
+				$quiz = self::formatMc1($quiz, $reviewType);
 				break;
-				
+
 			case LESSONTYPE_QUIZ_MC2:
 				// creates random answers and puts them in the questions
 				$quiz = $this->formatMc2($quiz, $reviewType);
@@ -137,14 +137,14 @@ class Lesson extends Base
 
 			case LESSONTYPE_QUIZ_MC3:
 				// create random answers with new quiz layout
-				$quiz = $this->formatMc3($quiz, $reviewType);
+				$quiz = self::formatMc3($quiz, $reviewType);
 				break;
 
 			case LESSONTYPE_QUIZ_MC4:
 				// not used yet, same as LESSONTYPE_QUIZ_MC3
 				$quiz = $this->formatMc4($quiz, $reviewType);
 				break;
-				
+
 			default:
 				break;
 		}
@@ -153,7 +153,7 @@ class Lesson extends Base
 	}
 
 	// this version puts the answer options into a separate cell
-	private function formatMc3($quiz, $reviewType)
+	static public function formatMc3($quiz, $reviewType)
     {
 		$quizNew = [];
 		$answers = [];
@@ -166,7 +166,7 @@ class Lesson extends Base
 			foreach($quiz as $record)
 			{
 				$options = [];
-				
+
 				if (preg_match('#\[(.*)\]#is', $record['q']))
 				{
 					// there is already an answer so it will be handled in formatMc1
@@ -185,7 +185,7 @@ class Lesson extends Base
 						$rnd = rand(0, $max);	// answer from other random question
 						$option = $quiz[$rnd];
 						//dd($option['a']);
-						
+
 						// not the current question AND has answer text AND answer not used yet
 						if ($option['id'] != $record['id'] && strlen($option['a']) > 0 && !array_key_exists($option['a'], $options))
 						{
@@ -194,9 +194,9 @@ class Lesson extends Base
 								// add in the real answer randomly
 								$options[$record['a']] = $record['a'];
 							}
-								
+
 							$options[$option['a']] = $option['a'];
-							
+
 							if ($pos == count($options))
 							{
 								// add in the real answer randomly
@@ -208,30 +208,30 @@ class Lesson extends Base
 							//dump('duplicate: ' . $option);
 						}
 					}
-					
+
 					$quizNew[$cnt]['options'] = $options;
 				}
-				
+
 				$quizNew[$cnt]['q'] = $record['q'];
 				$quizNew[$cnt]['a'] = $record['a'];
 				$quizNew[$cnt]['id'] = $record['id'];
 
-				//dump($quizNew[$cnt]);				
-				
+				//dump($quizNew[$cnt]);
+
 				$cnt++;
 			}
 		}
-		
+
 		//dd($quizNew);
-		return $this->formatMc1($quizNew, $reviewType);		
+		return self::formatMc1($quizNew, $reviewType);
 	}
 
 	//todo: not used yet
 	private function formatMc4($quiz, $reviewType)
     {
-		return $this->formatMc3($quiz, $reviewType);
+		return self::formatMc3($quiz, $reviewType);
 	}
-	
+
 	private function formatMc2($quiz, $reviewType)
     {
 		$quizNew = [];
@@ -263,7 +263,7 @@ class Lesson extends Base
 						$rnd = rand(0, $max);	// answer from other random question
 						$option = $quiz[$rnd];
 						//dd($option['a']);
-						
+
 						// not the current question AND has answer text AND answer not used yet
 						if ($option['id'] != $record['id'] && strlen($option['a']) > 0 && !array_key_exists($option['a'], $options))
 						{
@@ -272,9 +272,9 @@ class Lesson extends Base
 								// add in the real answer randomly
 								$options[$record['a']] = $record['a'];
 							}
-								
+
 							$options[$option['a']] = $option['a'];
-							
+
 							if ($pos == count($options))
 							{
 								// add in the real answer randomly
@@ -286,9 +286,9 @@ class Lesson extends Base
 							//dump('duplicate: ' . $option);
 						}
 					}
-					
+
 					//dump($options);
-					
+
 					$q = $record['q'] . ' [';
 					foreach($options as $option)
 					{
@@ -297,38 +297,38 @@ class Lesson extends Base
 					}
 					$q .= ']';
 					$q = str_replace(', ]', ']', $q);
-					
+
 					$record['q'] = $q;
 				}
-				
+
 				$quizNew[$cnt]['q'] = $record['q'];
 				$quizNew[$cnt]['a'] = $record['a'];
 				$quizNew[$cnt]['id'] = $record['id'];
-				//dd($quiz[$i]);				
-				
+				//dd($quiz[$i]);
+
 				$cnt++;
 			}
 		}
-		
+
 		//dd($quizNew);
-		return $this->formatMc1($quizNew, $reviewType);		
+		return self::formatMc1($quizNew, $reviewType);
 	}
 
 	static private function getCommaSeparatedWords($text)
     {
 		$words = '';
 		$array = [];
-		
+
 		// pattern looks like: "The words [am, is, are] in the sentence."
 		preg_match_all('#\[(.*)\]#is', $text, $words, PREG_SET_ORDER);
 
 		// if answers not found, set it to ''
 		$words = (count($words) > 0 && count($words[0]) > 1) ? $words[0][1] : '';
-		
+
 		if (strlen($words) > 0)
 		{
 			$raw = explode(',', $words); // extract the comma-separated words
-			
+
 			if (is_array($raw) && count($raw) > 0)
 			{
 				foreach($raw as $word)
@@ -340,18 +340,26 @@ class Lesson extends Base
 
 		return $array;
 	}
-	
-	private function formatButton($text, $id, $class)
-    {					
-		$button = '<div><button id="' . $id . '" onclick="checkAnswerMc1(' . $id . ', \'' . $text . '\')" class="btn btn-primary btn-quiz-mc3 ' . $class . '">' . $text . '</button></div>';
+
+	static private function formatButton($text, $id, $class)
+    {
+		$button = '<div><button id="'
+            . $id
+            . '" onclick="checkAnswerMc1('
+            . $id . ', \''
+		    . $text . '\')" class="btn btn-primary btn-quiz-mc3 '
+		    . $class . '">'
+		    . $text
+		    . '</button></div>';
+
 		//dump($button);
-		
+
 		return $button;
-	}	
-	
+	}
+
 	// creates buttons for each answer option
 	// and puts them into the question
-	private function formatMc1($quiz, $reviewType)
+	static private function formatMc1($quiz, $reviewType)
     {
 		/*
 		I [am, is, are] hungry. - am
@@ -376,26 +384,26 @@ class Lesson extends Base
 				{
 					// use the options
 					$options = $record['options'];
-					
+
 					//
 					// create a button for each answer option
-					//				
-					$buttons = '';					
+					//
+					$buttons = '';
 					foreach($options as $m)
 					{
 						// mark the correct button so it can be styled during the quiz
 						$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
-						
+
 						$buttons .= self::formatButton($m, $buttonId++, $buttonClass);
 					}
-					
+
 					// put the formatted info back into the quiz
 					$quizNew[] = [
 						'q' => $q,
 						'a' => $a,
 						'options' => $buttons,
 						'id' => $record['id'],
-					];					
+					];
 				}
 				else
 				{
@@ -406,20 +414,20 @@ class Lesson extends Base
 					{
 						//
 						// create a button for each answer option
-						//				
+						//
 						$buttons = '';
 						foreach($answers as $m)
 						{
 							//todo: doesn't work $m = str_replace("'", "", trim($m)); // fix single apostrophe, for example N'Djamena
-							
+
 							// mark the correct button so it can be styled during the quiz
 							$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
-							
+
 							$buttons .= self::formatButton($m, $buttonId++, $buttonClass);
-							
+
 						}
 						//dd($buttons);
-						
+
 						// replace the options with the buttons
 						if ($reviewType == LESSONTYPE_QUIZ_MC1)
 						{
@@ -432,7 +440,7 @@ class Lesson extends Base
 						{
 							$q = preg_replace("/\[.*\]/is", '', $q);
 						}
-						
+
 						// put the formatted info back into the quiz
 						$quizNew[] = [
 							'q' => $q,
@@ -444,26 +452,26 @@ class Lesson extends Base
 				}
 			}
 		}
-		
+
 		//dd($quizNew);
 		return $quizNew;
 	}
-	
+
     public function removeEmbeddedAnswers($quiz, $reviewType)
 	{
 		$quizNew = [];
 		$i = 0;
 		//dump($quiz);
-		
+
 		foreach($quiz as $record)
 		{
 			$a = trim($record['a']);
 			$q = trim($record['q']);
 			$id = $record['id'];
-		
+
 			// get the answer options from the question text, like: Algeria [Rabat, Jerusalem, Algiers]
 			$answers = self::getCommaSeparatedWords($q);
-			
+
 			if (count($answers) > 0) // if there are embedded answers
 			{
 				// remove them
@@ -478,17 +486,17 @@ class Lesson extends Base
 				'options' => null,
 			];
 		}
-		
+
 		return $quizNew;
-	}					
-	
+	}
+
     public function isMc($reviewType)
 	{
 		$v = false;
-		
+
 		if (!isset($reviewType))
 			$reviewType = $this->type_flag;
-		
+
 		switch($reviewType)
 		{
 			case LESSONTYPE_QUIZ_MC1:
@@ -500,7 +508,7 @@ class Lesson extends Base
 			default:
 				break;
 		}
-		
+
 		return $v;
 	}
 
@@ -508,7 +516,7 @@ class Lesson extends Base
     {
 		$raw = [];
 		$records = [];
-		
+
 		$text = str_replace('&nbsp;', '', $text);
 
 		// first, try to split based on <br />
@@ -518,7 +526,7 @@ class Lesson extends Base
 			$text = str_replace('</p>', '', $text);
 			$raw = explode('<br />', $text);
 			//dd($raw);
-			
+
 			foreach($raw as $record)
 			{
 				$records[] = trim($record);
@@ -529,47 +537,47 @@ class Lesson extends Base
 			// try to split on <p>'s, each paragraph is one line
 			preg_match_all('#<p>(.*?)</p>#is', $text, $raw, PREG_SET_ORDER);
 			//dd($raw);
-			
+
 			foreach($raw as $record)
 			{
 				if (count($record) > 1)
 					$records[] = trim($record[1]);
 			}
-		}		
-		
+		}
+
 		//dd($records);
 
 		return $records;
 	}
-	
+
     public function updateVocab()
 	{
 		$rc = [];
-		
+
 		if ($this->type_flag == LESSONTYPE_VOCAB)
 		{
 			$words = self::getLines($this->text);
 			//dd($words);
-			
+
 			$rc = Word::addList($this->id, $words);
 		}
-		
+
 		return $rc;
 	}
-	
+
     public function getVocab()
 	{
 		$rc['records'] = null;
 		$rc['hasDefinitions'] = false;
-		
+
 		if ($this->type_flag == LESSONTYPE_VOCAB)
 		{
-			// if user logged in, get his copy of the vocab for this lesson with definitions 
+			// if user logged in, get his copy of the vocab for this lesson with definitions
 			$rc['recordsUser'] = Auth::check() ? Word::getLessonUserWords($this->id) : [];
-		
+
 			// get the official lesson copy which never has definitions
 			$rc['records'] = Word::getByType($this->id, WORDTYPE_LESSONLIST);
-			
+
 			// put the lists together
 			$recordsNew = [];
 			$cnt = 0;
@@ -585,23 +593,23 @@ class Lesson extends Base
 						$cntDefinitions++;
 						break;
 					}
-				}	
+				}
 
 				$cnt++;
-			}				
-			
+			}
+
 			$rc['hasDefinitions'] = ($cnt == $cntDefinitions);
-			
+
 			//dd($rc);
 		}
-		
+
 		return $rc;
 	}
-	
+
     public function isVocab()
 	{
 		$v = false;
-		
+
 		switch($this->type_flag)
 		{
 			case LESSONTYPE_VOCAB:
@@ -610,14 +618,14 @@ class Lesson extends Base
 			default:
 				break;
 		}
-		
+
 		return $v;
 	}
-	
+
     public function isQuiz()
 	{
 		$v = false;
-		
+
 		switch($this->type_flag)
 		{
 			case LESSONTYPE_QUIZ_FIB:
@@ -630,34 +638,34 @@ class Lesson extends Base
 			default:
 				break;
 		}
-		
+
 		return $v;
 	}
 
     public function getLessonType()
-	{		
+	{
 		return $this->type_flag;
 	}
-	
+
     static public function getLessonTypes()
 	{
 		return self::_lessonTypeFlags;
 	}
-	
+
     public function getChapterIndex()
 	{
 		$records = Lesson::getIndex($this->parent_id, $this->lesson_number);
 
 		return $records;
 	}
-	
+
     static public function getChapters($parentId)
 	{
 		$records = Lesson::getIndex($parentId);
 
 		return $records->groupBy('lesson_number');
 	}
-	
+
     static public function getIndex($parent_id, $chapter = '%')
 	{
 		$parent_id = intval($parent_id);
@@ -683,19 +691,19 @@ class Lesson extends Base
     static public function convertCodes($text)
 	{
 		$v = $text;
-		
+
 		// replace underscores with input controls
 		//$v = preg_replace('#___#is', "<input />", $v); //todo: do this at view time, don't permanently convert
 
 		//
 		// format tables
 		//
-		
+
 		/*
 		<div class="table-borderless">
 		<table class="table lesson-table-sm">
 		*/
-		
+
 		// this will wipe out any first table if more than 1 tables
 		//$v = preg_replace('#(<table.*</table>)#is', "<div class=\"table-borderless\">$1</div>", $v); // wrap in div
 		//$v = preg_replace('#border=\".*\"#is', "class=\"table lesson-table-sm\"", $v); // add table classes
@@ -752,7 +760,7 @@ class Lesson extends Base
 
     	return ['text' => $text, 'color' => $color, 'btn' => $btn, 'done' => $done];
     }
-	
+
     public function getDisplayNumber()
     {
     	return $this->lesson_number . '.' . $this->section_number;
@@ -835,14 +843,14 @@ class Lesson extends Base
 			->orderByRaw('lesson_number ASC, section_number ' . ($next ? 'ASC' : 'DESC '))
 			->first();
 
-		return $r ? $r->id : null;			
+		return $r ? $r->id : null;
     }
-	
+
 	public function getNextChapter()
 	{
 		return $this->getPrevNextChapter(/* next = */ true);
 	}
-	
+
 	// default is prev
     public function getPrevNextChapter($next = false)
     {
@@ -855,9 +863,9 @@ class Lesson extends Base
 			->orderByRaw('lesson_number ASC, section_number ' . ($next ? 'ASC' : 'DESC '))
 			->first();
 
-		return $r ? $r->id : null;			
-    }	
-	
+		return $r ? $r->id : null;
+    }
+
     static public function getLast($parentId)
     {
 		$r = Lesson::select()
@@ -866,9 +874,9 @@ class Lesson extends Base
 			->orderByRaw('lesson_number DESC, section_number DESC')
 			->first();
 
-		return $r;			
-    }	
-	
+		return $r;
+    }
+
 	static public function getPrev($curr)
 	{
 		return Lesson::getNextPrev($curr);
@@ -878,7 +886,7 @@ class Lesson extends Base
 	{
 		return Lesson::getNextPrev($curr, /* next = */ true);
 	}
-	
+
 	// default is prev
 	static protected function getNextPrev($curr, $next = false)
 	{
@@ -922,14 +930,14 @@ class Lesson extends Base
 	{
 		$record['lesson'] = null;
 		$record['date'] = null;
-		
+
 		// get last location view from event log
 		$event = Event::getLast(LOG_TYPE_TRACKING, LOG_MODEL_LESSONS, LOG_ACTION_VIEW);
 		if (isset($event))
 		{
 			// load this lesson
 			$record['lesson'] = Lesson::getLesson($event->record_id);
-			
+
 			// get the time of last visit
 			$record['date'] = $event->created_at;
 		}
@@ -937,10 +945,10 @@ class Lesson extends Base
 		{
 			//todo: check for location cookie
 		}
-	
+
     	return $record;
 	}
-	
+
 	static public function setCurrentLocation($lessonId)
 	{
 		if (Auth::check())
@@ -951,13 +959,13 @@ class Lesson extends Base
 		{
 			//todo: set cookie
 		}
-	}		
-	
+	}
+
     static public function getLesson($id)
 	{
 		$id = intval($id);
 		$record = null;
-		
+
 		try
 		{
 			$record = Lesson::select()
@@ -969,12 +977,12 @@ class Lesson extends Base
 		{
 		    $msg = "Error getting current location";
 			Event::logException(LOG_MODEL_LESSONS, LOG_ACTION_SELECT, 'id = ' . $id, null, $e->getMessage());
-			Tools::flash('danger', $msg);			
+			Tools::flash('danger', $msg);
 		}
-		
+
 		return $record;
 	}
-	
+
     static public function getCourse($id)
     {
 		$record = null;
@@ -986,33 +994,33 @@ class Lesson extends Base
 				->where('deleted_flag', 0)
 				->where('id', $id)
 				->first();
-				
+
 			if (!isset($lesson))
 				throw new \Exception("Lesson not found " . $id);
 
 			if (!isset($lesson->Course))
 				throw new \Exception("Course not found for lesson " . $id);
-			
+
 			$record = $lesson->Course;
 		}
 		catch(\Exception $e)
 		{
 		    $msg = "Error getting course from lesson id";
 			Event::logException(LOG_MODEL_LESSONS, LOG_ACTION_SELECT, 'id = ' . $id, null, $e->getMessage());
-			Tools::flash('danger', $msg);			
+			Tools::flash('danger', $msg);
 		}
 
 		return $record;
 	}
-	
+
 
 	static public function getQuizScores($count)
 	{
 		$count = intval($count);
 		$records = [];
-		
+
 		try
-		{			
+		{
 			$records = DB::table('events')
 				->join('lessons', 'events.record_id', '=', 'lessons.id')
 				->join('courses', 'courses.id', '=', 'lessons.parent_id')
@@ -1031,7 +1039,7 @@ class Lesson extends Base
 		{
 		    $msg = "Error getting quiz results";
 			Event::logException(LOG_MODEL_LESSONS, LOG_ACTION_SELECT, null, null, $e->getMessage());
-			Tools::flash('danger', $msg);			
+			Tools::flash('danger', $msg);
 		}
 
 		return $records;
@@ -1041,16 +1049,16 @@ class Lesson extends Base
 	{
 		$color = 'light';
 		$score = intval($score);
-		
+
 		if ($score >= 90)
 			$color = 'primary';
 		else if ($score >= 70)
 			$color = 'success';
 		else if ($score >= 60)
 			$color = 'warning';
-		else 
+		else
 			$color = 'danger';
-		
+
 		return $color;
 	}
 }

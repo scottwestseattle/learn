@@ -7,10 +7,7 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 Latest DB Changes:
 
 1/27/2020
-execute vocab_list.sql
-ALTER TABLE `vocab_lists` CHANGE `release_flag` `release_flag` TINYINT(4) NOT NULL DEFAULT '0' COMMENT 'see RELEASE_* values';
-ALTER TABLE `vocab_lists` CHANGE `wip_flag` `wip_flag` TINYINT(4) NOT NULL DEFAULT '0' COMMENT 'see WIP_* values';
-ALTER TABLE `vocab_lists` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL DEFAULT '0' COMMENT 'not used yet';
+import vocab_list.sql
 
 1/21/2020
 ALTER TABLE `lessons` CHANGE `finished_flag` `finished_flag` TINYINT(4) NULL DEFAULT '0' COMMENT 'Author finished creating lesson';

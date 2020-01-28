@@ -50,9 +50,11 @@ Route::get('/send/wod', 'HomeController@wod');
 
 // Vocabulary Lists
 Route::group(['prefix' => 'vocab-lists'], function () {
+
 	Route::get('/', 'VocabListController@index');
 	Route::get('/index', 'VocabListController@index');
 	Route::get('/view/{vocabList}','VocabListController@view');
+	Route::get('/review/{vocabList}', 'VocabListController@review');
 
 	// add/create
 	Route::get('/add','VocabListController@add');

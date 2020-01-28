@@ -129,4 +129,7 @@ return [
 'Vocabulary Lists' => 'Vocabulary Lists',
 'Vocabulary List' => 'Vocabulary List',
 'Vocabulary List Word' => 'Vocabulary List Word',
+'Back to Vocabulary Lists' => 'Back to Vocabulary Lists',
+'Add New Word' => 'Add New Word',
+'Review' => 'Review',
 ];

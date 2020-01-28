@@ -129,4 +129,7 @@ return [
 'Vocabulary Lists' => 'Listas de Vocabulario',
 'Vocabulary List' => 'Lista de Vocabulario',
 'Vocabulary List Word' => 'Palabra de Lista de Vocabulario',
+'Back to Vocabulary Lists' => 'Volver a las Listas de Vocabulario',
+'Add New Word' => 'Agregar Nueva Palabra',
+'Review' => 'Revisar',
 ];

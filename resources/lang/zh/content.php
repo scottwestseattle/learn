@@ -129,4 +129,7 @@ return [
 'Vocabulary Lists' => '词汇表',
 'Vocabulary List' => '词汇表',
 'Vocabulary List Word' => '词汇表单词',
+'Back to Vocabulary Lists' => '返回词汇表',
+'Add New Word' => '添加新词',
+'Review' => '评论',
 ];

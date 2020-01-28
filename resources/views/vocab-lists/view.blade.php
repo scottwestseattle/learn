@@ -6,7 +6,19 @@
 
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
-	<h3 name="" class="">{{$record->title}}
+	<div class="page-nav-buttons">
+		<a class="btn btn-success btn-md" role="button" href="/{{$prefix}}/">
+		    @LANG('content.Back to Vocabulary Lists')<span class="glyphicon glyphicon-button-back-to"></span>
+		</a>
+	    <a class="btn btn-info btn-primary" role="button" href="/words/add-vocab-word/{{$record->id}}">
+            @LANG('content.Add New Word')&nbsp;<span class="glyphicon glyphicon-plus-sign"></span>
+	    </a>
+	    <a class="btn btn-info btn-primary" role="button" href="/{{$prefix}}/review/{{$record->id}}">
+            @LANG('content.Review')&nbsp;<span class="glyphicon glyphicon-eye-open"></span>
+	    </a>
+	</div>
+
+	<h3 name="" class="" style="margin-bottom:10px;">{{$record->title}}
 		@if ($isAdmin)
 			@if (!\App\Status::isFinished($record->wip_flag))
 				<a class="btn {{($wip=\App\Status::getWipStatus($record->wip_flag))['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$wip['text']}}</a>
@@ -17,28 +29,24 @@
 		@endif
 	</h3>
 
-    @foreach($record->words as $word)
-		<table>
+	<table class="table table-responsive table-striped">
+		<thead>
 			<tr>
-				<td>{{$word->title}}</td>
+				<th></th><th></th><th>@LANG('gen.Title')</th><th>@LANG('gen.Description')</th><th></th><th></th>
 			</tr>
-		</table>
-    @endforeach
-
-@if (false)
-	<a href="/lessons/view/{{$record[0]->id}}">
-		<button style="" type="button" class="btn btn-outline-info btn-lesson-index link-dark">
-			<table>
-				<tr>
-					<td>
-						<div style="font-size:1.3em; color:purple; padding-right:5px;">Chapter {{$record[0]->lesson_number}}:&nbsp;{{$record[0]->title}}</div>
-						<span style="font-size:.9em">{{$record[0]->description}}</span>
-					</td>
-				</tr>
-			</table>
-		</button>
-	</a>
-@endif
+		</thead>
+		<tbody>
+		@foreach($record->words as $r)
+			<tr>
+				<td><a href="/{{$prefixWord}}/edit-user/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
+				<td><a href="/{{$prefixWord}}/publish/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-publish"></span></a></td>
+				<td><a href="/{{$prefixWord}}/view/{{$r->id}}">{{$r->title}}</a></td>
+				<td>{{$r->description}}</td>
+				<td><a href="/{{$prefixWord}}/confirmdelete/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
+			</tr>
+		@endforeach
+		</tbody>
+	</table>
 
 </div>
 @endsection

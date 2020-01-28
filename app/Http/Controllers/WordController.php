@@ -307,7 +307,7 @@ class WordController extends Controller
 			return back();
 		}
 
-		return redirect('/vocab-lists/');
+		return redirect('/vocab-lists/view/' . $record->parent_id);
     }
 
     public function permalink(Request $request, $permalink)
@@ -384,7 +384,15 @@ class WordController extends Controller
 
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->examples = Tools::copyDirty($record->examples, $request->examples, $isDirty, $changes);
-		$record->parent_id =  Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
+
+		if ($record->type_flag == WORDTYPE_VOCABLIST)
+		{
+		    //todo: allow words to be moved between lists
+		}
+		else
+		{
+		    $record->parent_id =  Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
+		}
 
 		if ($isDirty)
 		{
