@@ -8,6 +8,7 @@ use Auth;
 use App\Event;
 use App\Tools;
 use App\Course;
+use App\VocabList;
 
 define('LOG_MODEL', 'frontpage');
 
@@ -29,7 +30,7 @@ class FrontPageController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {		
+    {
 		$courses = []; // make this countable so view will always work
 
 		try
@@ -41,10 +42,22 @@ class FrontPageController extends Controller
 			$msg = 'Error getting courses';
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 			Tools::flash('danger', $msg);
-		}		
-			
+		}
+
+		try
+		{
+			$vocabLists = VocabList::getIndex();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting Vocab Lists';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
 		return view('frontpage.index', $this->getViewData([
 			'courses' => $courses,
+			'vocabLists' => $vocabLists,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 
@@ -65,7 +78,7 @@ class FrontPageController extends Controller
 		return view('frontpage.index2', $this->getViewData([
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
-	
+
     public function about()
     {
 		return view('frontpage.about', $this->getViewData([
@@ -76,7 +89,7 @@ class FrontPageController extends Controller
     public function contact()
     {
 		$email = 'info@' . Tools::getDomainName();
-		
+
 		return view('frontpage.contact', $this->getViewData([
 			'email' => $email,
 		], LOG_MODEL, 'contact'));

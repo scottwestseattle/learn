@@ -23,7 +23,7 @@ Super Light Green: #eff7f0
 
 .section-image {
 	max-width: 250px;
-}  
+}
 
 .data-accent-chars {
 	display:none;
@@ -37,7 +37,7 @@ h1,h3 {
 .size-xs { display: initial; }
 
 /* Small devices (landscape phones, 576px and up) */
-@media (min-width: 576px) { 
+@media (min-width: 576px) {
 
 	.size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
 	.size-sm { display: initial; }
@@ -45,43 +45,43 @@ h1,h3 {
 	.data-accent-chars {
 		display: initial;
 	}
-	
+
 	.section-image {
 		max-width:400px;
 		width: 100%;
-	}  
+	}
 
 	h1,h3 {
 		margin:20px 0 30px 0;
 	}
-	
+
 }
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-	
+
 	.size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
 	.size-md { display: initial; }
-	
+
 	.section-image {
 		max-width: 450px;
-	}  
+	}
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-	
+
 	.size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
 	.size-lg { display: initial; }
-	
+
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-	
+
 	.size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
 	.size-xl { display: initial; }
-	
+
 }
 
 /***********************************************************
@@ -177,12 +177,12 @@ body {
 /***********************************************************
 
  Vocab list styling
- 
+
 ************************************************************/
 
 .vocab-pills {
-	font-weight: normal; 
-	font-size: 1.1em; 
+	font-weight: normal;
+	font-size: 1.1em;
 	margin-bottom:5px;
 }
 
@@ -192,23 +192,23 @@ body {
 }
 
 .vocab-accent-popup {
-	font-size:.7em; 
+	font-size:.7em;
 	width:10px;
 	margin-bottom: 2px;
 }
 
 .vocab-save-results {
-	font-size:.7em; 
+	font-size:.7em;
 }
 
 .vocab-title {
-	float:left; 
+	float:left;
 	width:100%;
 }
 
 .vocab-description {
-	float:left; 
-	width:100%; 
+	float:left;
+	width:100%;
 }
 
 .btn-fixed {
@@ -230,7 +230,7 @@ body {
 /***********************************************************
 
  Dropdown character menu
- 
+
 ************************************************************/
 
 /***************************************************
@@ -279,14 +279,14 @@ body {
 	border: 0;
 	background: "#efefef";
 	box-shadow: none;
-	border-radius: 3px;	
+	border-radius: 3px;
 	margin:3px;
 }
 
 /***********************************************************
 
  Quiz Panels
- 
+
 ************************************************************/
 
 .quiz-panel {
@@ -357,12 +357,26 @@ body {
 }
 
 /***********************************************************
-	Custom cards for the Course list
-	
-	Unused colors:
-	
+	Cards for the Vocab List
+
 	background-color: #3dbcb1; * info *
-	
+
+************************************************************/
+
+.card-vocab-list, .card-vocab-list a {
+	height:110px;
+	color:white;
+	text-decoration:none;
+	background-color: #2AB455; /* plumb */
+}
+
+/***********************************************************
+	Custom cards for the Course list
+
+	Unused colors:
+
+	background-color: #3dbcb1; * info *
+
 ************************************************************/
 
 .card-course, .card-course a {
@@ -385,8 +399,8 @@ body {
 	background-color: #2AB455; /* green */
 }
 
-.card-course-type3 { /* Tech */	
-	background-color: #eaac10; /* darker amber */	
+.card-course-type3 { /* Tech */
+	background-color: #eaac10; /* darker amber */
 }
 
 .card-course-type4 { /* Other */
@@ -476,7 +490,7 @@ body {
 .btn-nav-lesson-sm {
 	margin-bottom:5px;
  }
- 
+
 }
 
 .btn-quiz-mc3 {
@@ -652,13 +666,13 @@ body {
   .featurette-heading {
     font-size: 50px;
   }
-  
+
 }
 
 @media (min-width: 62em) { /* large devices and up */
   .featurette-heading {
     margin-top: 7rem;
-  }  
+  }
 }
 
 .lesson-note {

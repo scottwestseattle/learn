@@ -15,11 +15,28 @@
 	</div>
 </div>
 
-<!-- SHOW COURSES -->
 <div class="container page-normal">
-	
+
+    <!-- SHOW VOCAB LISTS -->
+	<h3>@LANG('content.Vocabulary') ({{count($vocabLists)}})</h3>
+
+	<div class="row row-course">
+		@foreach($vocabLists as $record)
+		<div class="col-sm-4 col-course"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
+			<div class="card card-vocab-list truncate">
+			<a href="/vocab-lists/view/{{$record->id}}">
+				<div class="card-header">{{$record->title}}</div>
+				<div class="card-body"><p class="card-text">Word Count: {{$record->words->count()}}</p></div>
+			</a>
+			</div>
+		</div>
+		@endforeach
+	</div>
+    <!-- END OF VOCAB LISTS -->
+
+    <!-- SHOW COURSES -->
 	<h3>@LANG('content.Courses') ({{count($courses)}})</h3>
-	
+
 	<div class="row row-course">
 		@foreach($courses as $record)
 		<div class="col-sm-4 col-course"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
@@ -32,19 +49,19 @@
 		</div>
 		@endforeach
 	</div>
+    <!-- END OF COURSES -->
 
 </div>
-<!-- END OF COURSES -->
 
 <!-- PRE-FOOTER SECTION -->
 <div class="grassy-green">
 	<div class="container marketing text-center">
-		<div style="padding:50px;">	
-			<img src="/img/image5.png" width="100%" style="max-width: 350px;" /> 	
+		<div style="padding:50px;">
+			<img src="/img/image5.png" width="100%" style="max-width: 350px;" />
 			<h2 class="section-heading">@LANG('fp.Frontpage Subfooter Title')</h2>
 			<p class="lead">@LANG('fp.Frontpage Subfooter Body')</p>
-		</div>						
+		</div>
 	</div>
-</div>	
+</div>
 
 @endsection
