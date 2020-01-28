@@ -30,18 +30,14 @@
 	</h3>
 
 	<table class="table table-responsive table-striped">
-		<thead>
-			<tr>
-				<th></th><th></th><th>@LANG('gen.Title')</th><th>@LANG('gen.Description')</th><th></th><th></th>
-			</tr>
-		</thead>
 		<tbody>
 		@foreach($record->words as $r)
 			<tr>
 				<td><a href="/{{$prefixWord}}/edit-user/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
-				<td><a href="/{{$prefixWord}}/publish/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-publish"></span></a></td>
-				<td><a href="/{{$prefixWord}}/view/{{$r->id}}">{{$r->title}}</a></td>
-				<td>{{$r->description}}</td>
+				<td>
+				    <a href="/{{$prefixWord}}/view/{{$r->id}}">{{$r->title}}</a>
+				    <div>{{substr($r->description, 0, 200)}}</div>
+				</td>
 				<td><a href="/{{$prefixWord}}/confirmdelete/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
 			</tr>
 		@endforeach

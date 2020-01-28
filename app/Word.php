@@ -16,12 +16,24 @@ class Word extends Base
     	return $this->belongsTo(User::class);
     }
 
-/*todo: need?
-    public function lesson()
+    static public function deleteList($records)
     {
-    	return $this->belongsTo('App\Lesson', 'parent_id', 'id');
-    }
-*/
+		try
+		{
+            foreach($records as $record)
+            {
+    			$record->deleteSafe();
+    			$msg = 'deleteList() - deleted ' . $record->title;
+	    		Event::logDelete(LOG_MODEL, $msg, $record->id);
+            }
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error deleting list';
+			Event::logException('word', LOG_ACTION_DELETE, 'parent id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+	}
 
     public function updateLastViewedTime()
     {

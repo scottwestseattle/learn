@@ -12,6 +12,7 @@ use App\Event;
 use App\Lesson;
 use App\Tools;
 use App\Status;
+use App\Word;
 
 define('PREFIX', 'vocab-lists');
 define('LOG_MODEL', 'VocabList');
@@ -25,7 +26,7 @@ class VocabListController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'permalink']);
+        $this->middleware('is_admin')->except(['index', 'view', 'review', 'permalink']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -228,6 +229,8 @@ class VocabListController extends Controller
 
 		try
 		{
+		    Word::deleteList($vocabList->words);
+
 			$record->deleteSafe();
 			Event::logDelete(LOG_MODEL, $record->title, $record->id);
 			Tools::flash('success', $this->title . ' has been deleted');

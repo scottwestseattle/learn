@@ -166,6 +166,9 @@ Route::group(['prefix' => 'lessons'], function () {
 	Route::get('/publish/{lesson}','LessonController@publish');
 	Route::post('/publishupdate/{lesson}','LessonController@publishupdate');
 
+    // convert to list
+	Route::get('/convert-to-list/{lesson}','LessonController@convertToList');
+
 	// ajax
 	Route::get('/finished/{lesson}','LessonController@toggleFinished');
 

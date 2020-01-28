@@ -584,6 +584,8 @@ class WordController extends Controller
 
 		if ($word->type_flag == WORDTYPE_LESSONLIST)
 			return redirect('/words/add/' . $word->parent_id);
+		else if ($word->type_flag == WORDTYPE_VOCABLIST)
+			return redirect('/vocab-lists/view/' . $word->parent_id);
 		else
 			return redirect('/words/add-user');
     }

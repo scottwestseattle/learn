@@ -23,7 +23,7 @@
 
     <div style="font-size:.8em;">
 		{{$courseTitle}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
-		
+
 		@if ($isAdmin)
 			@if ($record->isVocab())
 				&nbsp;<a href="/words/add/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
@@ -38,14 +38,17 @@
 			@endif
 		@endif
 	</div>
-	<h3 name="title" class="">{{$record->title }}</h3>
+	<h3 name="title" class="">
+	    {{$record->title }}
+        <div><a href="/lessons/convert-to-list/{{$record->id}}"><button class="btn btn-info btn-xs">Convert</button></a></div>
+    </h3>
 
 	@if (strlen($record->description) > 0)
 		<p class="">{{$record->description }}</p>
 	@endif
 
 	@if ($record->isQuiz())
-		
+
 		@if ($isAdmin)
 		<ul class="nav nav-tabs" id="myTab" role="tablist">
 			<li class="nav-item">
@@ -62,16 +65,16 @@
 			<!------------------------------------------------------------------------------->
 			<!-- The quiz launch tab                                                       -->
 			<!------------------------------------------------------------------------------->
-			
+
 			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 				<div style="min-height:300px;">
-				
+
 					@if ($isAdmin)
 					<div style="margin: 20px 0;">
 						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Start Review</button></a>
 					</div>
 					@endif
-					
+
 					@if ($record->getLessonType() == LESSONTYPE_QUIZ_MC1)
 					<div style="margin: 20px 0;">
 						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Start Quiz</button></a>
@@ -91,20 +94,20 @@
 					@else
 						<!-- FIB ONLY -->
 					@endif
-				</div>		
+				</div>
 			</div>
-			
+
 			<!------------------------------------------------------------------------------->
 			<!-- The quiz launch tab raw view                                              -->
 			<!------------------------------------------------------------------------------->
 			<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 				<p>{!! $record->text !!}</p>
 			</div>
-			
+
 		</div>
-		
+
 	@elseif ($record->isVocab())
-			
+
 		<!------------------------------------------------------------------------------->
 		<!-- The vocab view                                              -->
 		<!------------------------------------------------------------------------------->
@@ -121,13 +124,13 @@
 				<p>If you already have an account, please <a href="/login">click here to login</a>, otherwise please <a href="/register">click here to register a new account</a>.</p>
 			@endif
 		@endif
-		
+
 		@if (isset($vocab) && count($vocab) > 0)
 		<div class="xrow">
 
 			<!-- repeat this block for each column -->
 			<div class="xcol-sm"><!-- need to split word list into multiple columns here -->
-			
+
 				<ul class="nav nav-tabs" id="vocabTab" role="tablist">
 					<li class="nav-item">
 						<a class="nav-link {{$hasDefinitions ? 'active' : ''}}" id="view-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="true">@LANG('View')&nbsp;({{count($vocab)}})</a>
@@ -139,9 +142,9 @@
 						<a class="nav-link" href="/lessons/view/{{$record->id}}" ><span style="font-size:.7em;" class="glyphicon glyphicon-refresh"></span></a>
 					</li>
 				</ul>
-			
+
 				<div class="tab-content" id="vocabTabContent">
-			
+
 				<div class="tab-pane fade {{$hasDefinitions ? 'show active' : ''}}" id="view" role="tabpanel" aria-labelledby="view-tab">
 					<div class="table">
 						<table class="table-responsive table-borderless">
@@ -156,7 +159,7 @@
 						</table>
 					</div>
 				</div>
-			
+
 				<div class="tab-pane fade {{!$hasDefinitions ? 'show active' : ''}}" id="edit" role="tabpanel" aria-labelledby="edit-tab">
 					<div class="">
 						<table class="table table-borderless">
@@ -170,8 +173,8 @@
 											<form id="form{{$word->id}}" method="POST" action="/lessons/view/{{$record->id}}">
 												<input type="hidden" name="type_flag" value="{{WORDTYPE_LESSONLIST_USERCOPY}}" />
 												<input name="description" id="text{{$word->id}}" class="form-control" type="text"
-													onfocus="setFloat($(this), 'float{{$word->id}}');" 
-													onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');" 
+													onfocus="setFloat($(this), 'float{{$word->id}}');"
+													onblur="ajaxPost('/words/updateajax/{{$word->id}}', 'form{{$word->id}}', 'result{{$word->id}}');"
 													value="{{$word->description}}"
 												/>
 												<div class="vocab-save-results" id="result{{$word->id}}"></div>
@@ -185,24 +188,24 @@
 						</table>
 					</div>
 				</div>
-				
+
 				</div>
-								
+
 			</div>
 			<!-- end of repeat block -->
 
-			@component('components.control-accent-chars-esp')@endcomponent																		
-			
+			@component('components.control-accent-chars-esp')@endcomponent
+
 		</div>
 		@endif
-	
+
 	@else
 
 		<!------------------------------------------------------------------------------->
 		<!-- The lesson text view -->
 		<!------------------------------------------------------------------------------->
 		<p>{!! $record->text !!}</p>
-		
+
 <div class="input-group mb-3">
   <div class="input-group-prepend">
     <div class="input-group-text">
@@ -210,17 +213,17 @@
     </div>
   </div>
 	<a class="btn btn-info btn-sm" role="button" onClick="setFinished()" href="#">@LANG('lesson.Finished')</a>
-</div>		
-		
+</div>
+
 	@endif
-	
+
 	<div class="page-nav-buttons">
 		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}"><span class="glyphicon glyphicon-button-prev"></span>@LANG('ui.Prev')</a>
 		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">@LANG('ui.Next')<span class="glyphicon glyphicon-button-next"></span></a>
 	</div>
 
 	@component('lessons.comp-lesson-list', ['records' => $lessons, 'tableClass' => 'table-lesson-list', 'selectedId' => $record->id])@endcomponent
-	
+
 </div>
 @endsection
 

@@ -10,6 +10,7 @@ use App\Event;
 use App\Lesson;
 use App\Tools;
 use App\Course;
+use App\VocabList;
 
 define('PREFIX', 'lessons');
 define('LOG_MODEL', 'lessons');
@@ -248,6 +249,16 @@ class LessonController extends Controller
 			'vocab' => $vocab['records'],
 			'hasDefinitions' => $vocab['hasDefinitions'], // if the user has already added one or more definitions
 			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
+	public function convertToList(Lesson $lesson)
+    {
+		$qna = LessonController::makeQuiz($lesson->text);
+
+		if (VocabList::import($qna, $lesson->title))
+    		return redirect('/vocab-lists');
+    	else
+    	    return back();
     }
 
 	public function edit(Lesson $lesson)
