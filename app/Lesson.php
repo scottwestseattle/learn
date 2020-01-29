@@ -490,7 +490,7 @@ class Lesson extends Base
 		return $quizNew;
 	}
 
-    public function isMc($reviewType)
+    public function isMc($reviewType = null)
 	{
 		$v = false;
 

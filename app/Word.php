@@ -484,13 +484,6 @@ class Word extends Base
 			Tools::flash('danger', $msg);
 		}
 
-		if (!isset($record))
-		{
-			$msg = 'Word of the Day Not Found';
-			Event::logException(LOG_MODEL_WORDS, LOG_ACTION_SELECT, null, null, $msg);
-			Tools::flash('danger', $msg);
-		}
-
 		return $record; // return one random word
     }
 

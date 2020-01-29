@@ -25,8 +25,9 @@
 	<div style="margin-top:50px;">
 		@if (isset($nextWod))
 		<a href="/words/view/{{$nextWod->id}}" class="btn btn-outline-primary btn-sm" style="font-size:16px;" role="button">{{$nextWod->title}}</a>
-		@else
-		<a href="/words/view/{{$records[0]->id}}" class="btn btn-outline-primary btn-sm" style="font-size:14px;" role="button">{{$records[0]->title}}</a>
+		@endif
+		@if (isset($firstWod))
+		<a href="/words/view/{{$firstWod->id}}" class="btn btn-outline-primary btn-sm" style="font-size:14px;" role="button">{{$firstWod->title}}</a>
 		@endif
 	</div>
 
@@ -48,7 +49,7 @@
 	<div style="margin-top:50px;">
 	@if (isset($record->parent_id) && isset($words))
 		@component('components.data-course-words', ['edit' => $lesson ? '/words/edit/' : '/words/view/', 'words' => $words])@endcomponent
-	@else
+	@elseif (isset($records) && $records->count() > 0)
 		@component('components.data-badge-list', ['edit' => '/words/view/', 'records' => $records, 'title' => 'Vocabulary'])@endcomponent
 	@endif
 	</div>

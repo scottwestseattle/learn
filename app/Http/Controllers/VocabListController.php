@@ -338,8 +338,9 @@ class VocabListController extends Controller
 		$cnt = 0;
 		foreach($records as $record)
 		{
-            $qna[$cnt]['q'] = $record->title;
-            $qna[$cnt]['a'] = $record->description;
+		    // flip the title and description so title will be the answer
+            $qna[$cnt]['q'] = $record->description;
+            $qna[$cnt]['a'] = $record->title;
             $qna[$cnt]['id'] = $cnt;
             $qna[$cnt]['options'] = '';
 

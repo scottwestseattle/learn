@@ -34,7 +34,7 @@ class VocabList extends Base
 		return $records;
 	}
 
-    static public function import($qna, $title)
+    static public function import($qna, $title, $isQuiz)
     {
         $success = false;
 
@@ -58,21 +58,34 @@ class VocabList extends Base
             //
             foreach($qna as $q)
             {
-        		$t = $q['q'];
         		$w = new Word();
 
-                if (strlen($t) > 255)
+                if ($isQuiz)
+                {
+                    // if it's text from a quiz, flip the qna
+                    $wordTitle = strip_tags($q['a']);
+                    $wordDescription = strip_tags($q['q']);
+
+                    // remove any embedded answer options, for example: [one, two three]
+                    $wordDescription = trim(preg_replace('`\[[^\]]*\]`', '', $wordDescription));
+                }
+                else
+                {
+                    $wordTitle = strip_tags($q['q']);
+                    $wordDescription = strip_tags($q['a']);
+                }
+
+                if (strlen($wordTitle) > 255)
                 {
                     dd($q);
                 }
+
                 $w->parent_id   = $record->id;
                 $w->user_id 	= Auth::id();
                 $w->type_flag 	= WORDTYPE_VOCABLIST;
-                $w->permalink	= Tools::createPermalink($t);
-
-                // lesson quizes are flipped so make the answer the word title
-                $w->title 		= $q['a'];
-                $w->description	= $t;
+                $w->permalink	= $record->id . '-' . Tools::createPermalink($wordTitle);
+                $w->title 		= $wordTitle;
+                $w->description	= $wordDescription;
 
                 $w->save();
             }

@@ -646,6 +646,8 @@ class WordController extends Controller
 
 		// since the currend WOD just got updated, this will get the next wod in line
 		$nextWod = $word->getWod($word->user_id);
+        $wodList = Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]);
+        $firstWod = (isset($wodList) && $wodList->count() > 0) ? $wodList[0] : null;
 
 		// get next and prev words in ID order
 		$prev = $word->getPrev();
@@ -653,7 +655,8 @@ class WordController extends Controller
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
-			'records' => Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]),
+			'firstWod' => $firstWod,
+			'records' => $wodList,
 			'lesson' => false,
 			'nextWod' => $nextWod,
 			'next' => $next,

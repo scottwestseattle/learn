@@ -253,9 +253,11 @@ class LessonController extends Controller
 
 	public function convertToList(Lesson $lesson)
     {
-		$qna = LessonController::makeQuiz($lesson->text);
+        $text = html_entity_decode($lesson->text); // make it plain text
 
-		if (VocabList::import($qna, $lesson->title))
+		$qna = LessonController::makeQuiz($text);
+
+		if (VocabList::import($qna, $lesson->title, $lesson->isMc()))
     		return redirect('/vocab-lists');
     	else
     	    return back();
