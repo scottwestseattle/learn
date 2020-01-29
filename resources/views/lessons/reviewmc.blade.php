@@ -182,7 +182,7 @@
 
 		<div class="btn-panel-bottom">
 			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Quiz')</button>
-			<a class="" role="" href="/lessons/view/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>
+			<a class="" role="" href="/{{$returnPath}}/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>
 		</div>
 
 	</div>
@@ -227,7 +227,7 @@
 
 		<div class="btn-panel-bottom">
 			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); startQuiz();" id="button-continue2">@LANG('content.Continue')</button>
-			<a class="" role="" href="/lessons/view/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>
+			<a class="" role="" href="/{{$returnPath}}/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>
 		</div>
 
 	</div>

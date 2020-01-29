@@ -68,9 +68,11 @@ class VocabList extends Base
                 $w->parent_id   = $record->id;
                 $w->user_id 	= Auth::id();
                 $w->type_flag 	= WORDTYPE_VOCABLIST;
-                $w->title 		= $t;
-                $w->description	= $q['a'];
                 $w->permalink	= Tools::createPermalink($t);
+
+                // lesson quizes are flipped so make the answer the word title
+                $w->title 		= $q['a'];
+                $w->description	= $t;
 
                 $w->save();
             }

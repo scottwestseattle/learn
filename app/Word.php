@@ -16,6 +16,11 @@ class Word extends Base
     	return $this->belongsTo(User::class);
     }
 
+    public function isVocabListWord()
+    {
+        return($this->type_flag == WORDTYPE_VOCABLIST);
+    }
+
     static public function deleteList($records)
     {
 		try

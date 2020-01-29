@@ -76,11 +76,11 @@ $( document ).ready(function() {
 	loadOrder();
 	quiz.showAnswersClick();
 	quiz.typeAnswersClick();
-	
-	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());	
-	
+
+	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());
+
 	quiz.showPanel();
-	
+
 	quiz.start();
 });
 
@@ -98,7 +98,7 @@ function quiz() {
 	this.promptQuestion = ''; // set to appropriate prompt: normal or reverse
 	this.lastScore = SCORE_NOTSET;
 	this.runState = RUNSTATE_START;
-	
+
 	//new:
 	this.quizType = 0;
 	this.isMc = 0;
@@ -123,7 +123,7 @@ function quiz() {
 
 	this.setControlStates = function() {
 		if (this.isTypeAnswers())
-			$("#attemptInput").focus();		
+			$("#attemptInput").focus();
 		else
 			$("#button-start").focus();
 	}
@@ -131,7 +131,7 @@ function quiz() {
 	this.showPanel = function(state = null) {
 
 		$(".quiz-panel").hide();
-		
+
 		if (state == null)
 			state = this.runState;
 
@@ -140,7 +140,7 @@ function quiz() {
 			case RUNSTATE_ENDOFQUIZ:
 				$("#panel-endofquiz").show();
 				break;
-			
+
 			case RUNSTATE_ENDOFROUND:
 			{
 				$("#panel-endofround").show();
@@ -149,15 +149,15 @@ function quiz() {
 				count = right + '/' + total;
 				var fScore = score.toFixed(2);
 				percent = fScore + '%';
-				
+
 				$("#panelResultsRound").text(roundText);
 				$("#panelResultsPercent").text(percent);
 				$("#panelResultsCount").text(count);
-				
+
 				// log the quiz round
 				if (parseInt(round) == 1)
 					ajaxexec('/lessons/log-quiz/' + this.lessonId + '/' + fScore);
-				
+
 				break;
 			}
 			case RUNSTATE_START:
@@ -178,12 +178,12 @@ function quiz() {
 	}
 
 	this.setFocus = function() {
-		
+
 		//todo: only done for start quiz
 		if (this.isTypeAnswers())
 			$("#attemptInput").focus();
-	}	
-	
+	}
+
 	this.setButtonStates = function(state) {
 
 		this.runState = state;
@@ -192,7 +192,7 @@ function quiz() {
 		{
 			$(".hide-for-mc").hide();
 		}
-		
+
 		if (state == RUNSTATE_START)
 		{
 			//
@@ -210,15 +210,15 @@ function quiz() {
 			$("#question-right").hide();
 			$("#question-wrong").hide();
 			$("#question-prompt").hide();
-	
-			$("#attemptInput").hide();		
+
+			$("#attemptInput").hide();
 		}
 		else if (state == RUNSTATE_ASKING)
 		{
 			//
 			// asking the question
 			//
-			
+
 			if (quiz.isMc)
 			{
 				$("#button-dont-know").hide();
@@ -236,7 +236,7 @@ function quiz() {
 				else
 				{
 					$("#button-check-answer").hide();
-					$("#button-dont-know").show();				
+					$("#button-dont-know").show();
 					$("#button-know").show();
 					$("#button-know").focus();
 				}
@@ -249,7 +249,7 @@ function quiz() {
 
 			$("#question-right").hide();
 			$("#question-wrong").hide();
-			$("#question-prompt").show();			
+			$("#question-prompt").show();
 		}
 		else if (state == RUNSTATE_CHECKING)
 		{
@@ -261,29 +261,29 @@ function quiz() {
 			$("#button-check-answer").hide();
 			$("#button-know").hide();
 			$("#button-dont-know").hide();
-			
+
 			quiz.showOverrideButton(true, null);
 			//$("#button-start").hide();
 			$("#button-stop").show();
-			
+
 			if (quiz.isMc)
 			{
 				// change the button colors to show the answer
 				$(".btn-right").css('background-color','#5CB85C');
 				$(".btn-right").css('border-color','#5CB85C');
-				
+
 				$(".btn-wrong").css('background-color','LightGray');
 				$(".btn-wrong").css('border-color','LightGray');
-				
+
 				$(".btn-chosen").css('background-color','red');
 				$(".btn-chosen").css('border-color','DarkRed');
-				
+
 				// check if the chosen button is invisible
 				//if ($(".btn-chosen").is(":hidden"))
 				//{
 				//	$(".btn-chosen").css('color','red');
 				//}
-				
+
 				$("#button-next-attempt").show();
 			}
 			else
@@ -315,18 +315,18 @@ function quiz() {
 		updateScore();
 
 		this.setButtonStates(RUNSTATE_ASKING);
-		
+
 		this.showPanel();
 	}
 
 	this.showQuestion = function() {
-				
+
 		clear();
 
 		// show question
-		var q = getQuestion(true);		
+		var q = getQuestion(true);
 		$("#prompt").html(q);
-		
+
 		// get button options
 		o = quiz.qna[quiz.qna[curr].order].options;
 		if (o && o.length > 0)
@@ -337,7 +337,7 @@ function quiz() {
 		{
 			var a = getQuestion(false);
 			$("#answer-show").html(a);
-			$("#answer-show").val(a);			
+			$("#answer-show").val(a);
 		}
 
 		// show prompt
@@ -354,9 +354,9 @@ function quiz() {
 			$("#attemptInput").hide();
 			$("#button-know").focus();
 		}
-		
+
 		quiz.setAlertPrompt(quiz.promptQuestion, COLOR_QUESTION_PROMPT);
-		
+
 		$("#stats").show();
 	}
 
@@ -390,16 +390,16 @@ function quiz() {
 			if (typeAnswers)
 			{
 				$("#attemptInput").show();
-				$("#attemptInput").focus();				
+				$("#attemptInput").focus();
 			}
 			else
 			{
 				$("#attemptInput").hide();
-			}			
+			}
 		}
-		
+
 		if (this.runState == RUNSTATE_ASKING)
-		{			
+		{
 			quiz.setAlertPrompt(quiz.promptQuestion, COLOR_QUESTION_PROMPT);
 		}
 	}
@@ -438,7 +438,7 @@ function quiz() {
 	}
 
 	this.setAlertPrompt = function(text, color, bold = false) {
-		
+
 		$("#alertPrompt").html(text);
 		$("#alertPrompt").css('color', color);
 		$("#alertPrompt").css('font-weight', bold ? 'bold' : 'normal');
@@ -480,7 +480,7 @@ function loadData()
 		quiz.promptQuestionNormal = container.data('prompt');
 		quiz.promptQuestionReverse = container.data('prompt-reverse');
 		quiz.promptQuestion = quiz.promptQuestionNormal;
-		
+
 		// new settings
 		quiz.quizType = container.data('quiztype');
 		quiz.isMc = container.data('ismc');
@@ -494,7 +494,7 @@ function loadData()
 		quiz.quizTextOverrideWrong = container.data('quiztext-override-wrong') + " (Alt+c)";
 		quiz.quizTextScoreChanged = container.data('quiztext-score-changed');
 		quiz.lessonId = container.data('lessonid');
-		
+
 		if (i == 0)
 			alert(quiz.qna[i].q);
 
@@ -577,7 +577,7 @@ function next()
 function nextAttempt()
 {
 	clearTimeout(nextAttemptTimer);
-	
+
 	quiz.setButtonStates(RUNSTATE_ASKING);
 
 	var done = false;
@@ -606,9 +606,9 @@ function nextAttempt()
 			{
 				//alert('End of Round???');
 			}
-			
+
 			//alert('End of Round ' + round + ': ' + score.toFixed(2) + '% (' + right + ' of ' + (right+wrong) + ')');
-			
+
 			round++;
 			statsMax = wrong;
 			right = 0;
@@ -653,10 +653,10 @@ function startQuiz()
 	quiz.setButtonStates(RUNSTATE_START);
 	quiz.setControlStates();
 	loadData();
-	loadOrder();	
-	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());	
-	
-	quiz.showPanel();	
+	loadOrder();
+	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());
+
+	quiz.showPanel();
 }
 
 function continueQuiz()
@@ -691,8 +691,8 @@ function resetQuiz()
 	nbr = 0;
 
 	loadOrder();
-	
-	$("#stats").hide();	
+
+	$("#stats").hide();
 	$("#panelEndofquizFinished").show();
 	$("#panelEndofquizStopped").hide();
 }
@@ -708,7 +708,7 @@ function clear()
 	$("#promptQuestion").text('');
 	$("#prompt").val('');
 	$("#prompt").text('');
-	
+
 	$("#attemptInput").val('');
 	$("#attemptInput").text('');
 
@@ -727,14 +727,14 @@ function getQuestion(question)
 {
 	var q = null;
 	var flip = (question) ? quiz.flipped() : !quiz.flipped(); // flip the flip for getting answers!!
-	
+
 	if (flip)
 		q = quiz.qna[quiz.qna[curr].order].a;
 	else
 		q = quiz.qna[quiz.qna[curr].order].q;
 
 	//alert(quiz + ': ' + curr);
-	
+
 	return q;
 }
 
@@ -798,12 +798,14 @@ function checkAnswerMc1(id, answer)
 	{
 		if (!$("#" + id).hasClass("btn-right")) // if WRONG answer chosen, mark so we can show it as red
 			$("#" + id).addClass( "btn-chosen" ); // set a class on the chosen button so we don't have to pass the id all the way through
-		
+
 		//alert(answer);
-		checkAnswer(CHECKANSWER_MC1, answer);
-		
+		var timerSeconds = 2;
+		if (!checkAnswer(CHECKANSWER_MC1, answer))
+		    timerSeconds *= 2; // add extra time for wrong answer
+
 		// load next question on a timer
-		nextAttemptTimer = setTimeout(nextAttempt, 2000);
+		nextAttemptTimer = setTimeout(nextAttempt, timerSeconds * 1000 /* make it milliseconds */);
 	}
 	else if (quiz.runState == RUNSTATE_CHECKING)
 	{
@@ -819,13 +821,14 @@ function checkAnswer(checkOptions, attemptMc = null)
 	var answerRaw = getAnswer();
 	var answer = cleanUpSpecialChars(answerRaw);
 	var attempt = $("#attemptInput").val();
-	
+	var rightAnswer = false;
+
 	if (checkOptions == CHECKANSWER_MC1)
 	{
 		// multiple choice 1, attempt comes from the MC button
 		attempt = attemptMc;
 	}
-		
+
 	var result = '';
 	var answerColor = 'black';
 
@@ -840,6 +843,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 		$("#question-right").show();
 
 		right++;
+		rightAnswer = true;
 	}
 	else if (checkOptions == CHECKANSWER_DONTKNOW)
 	{
@@ -858,16 +862,16 @@ function checkAnswer(checkOptions, attemptMc = null)
 		// typing the answers so check the entry
 		//
 //alert(encodeURI("S&atilde;o Tom&eacute; and Pr&iacute;ncipe") + " | " + unescape(attempt.toLowerCase()));
-//		$("").html('Some text with &lt;div&gt;html&lt;/div&gt;').text()	
-		
+//		$("").html('Some text with &lt;div&gt;html&lt;/div&gt;').text()
+
 		cleanAnswer = cleanQna(jQuery('<span>').html(answer).text());
 		cleanAttempt = cleanQna(jQuery('<span>').html(attempt).text());
 		if (cleanAnswer != cleanAttempt)
-		{			
+		{
 			cleanAnswer = accentFold(cleanAnswer);
 			cleanAttempt = accentFold(cleanAttempt);
 		}
-		
+
 		if ((answer != null && attempt != null) && cleanAnswer == cleanAttempt)
 		{
 			result = quiz.quizTextCorrectAnswer;
@@ -878,6 +882,7 @@ function checkAnswer(checkOptions, attemptMc = null)
 			quiz.lastScore = SCORE_WRONG;
 			$("#question-right").show();
 			right++;
+    		rightAnswer = true;
 		}
 		else
 		{
@@ -912,13 +917,15 @@ function checkAnswer(checkOptions, attemptMc = null)
 	}
 
 	updateScore();
+
+	return rightAnswer;
 }
 
-function cleanQna(str) 
+function cleanQna(str)
 {
 	str = str.toLowerCase().trim();
 	str = str.replace(/\.|\,/gi, ""); // remove all ',' and '.'
-	
+
 	return str;
 }
 
@@ -927,7 +934,7 @@ function updateScore()
 	var total = right + wrong;
 	var percent = total > 0 ? (right / total) * 100 : 0;
 	percent = percent.toFixed(2).replace(/\.?0*$/,'');
-	
+
 	$("#statsCount").html("<span class='quizStats'>" + quiz.quizTextQuestion + ": " + nbr + "/" + statsMax + "</span>");
 	$("#statsScore").html("<span class='quizStats'>" + quiz.quizTextCorrect + ": " + right + "/" + total + " (" + percent + "%)</span>");
 	$("#statsDebug").html("<span class='quizStats'>"
@@ -1005,20 +1012,20 @@ function override()
 	$("#button-next-attempt").focus();
 }
 
-function startWithTypeAnswers() 
-{	
+function startWithTypeAnswers()
+{
 	if (isMobile.any())
 		return false;
-	
+
 	if (quiz.isMc)
 		return false;
-	
+
 	return true;
 }
 
 var accentMap = {
-  'á':'a', 
-  'é':'e', 
+  'á':'a',
+  'é':'e',
   'í':'i',
   'ó':'o',
   'ú':'u',
@@ -1032,13 +1039,13 @@ var accentMap = {
   'Ñ':'N'
 };
 
-function accentFold (s) 
+function accentFold (s)
 {
 	if (!s) { return ''; }
 	var ret = '';
 	for (var i = 0; i < s.length; i++) {
 		ret += accentMap[s.charAt(i)] || s.charAt(i);
 	}
-	
+
 	return ret;
 }

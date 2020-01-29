@@ -132,11 +132,6 @@ class Controller extends BaseController
 		return session('eunotice', false) && !User::isAdmin();
 	}
 
-	protected function isOwner($user_id)
-	{
-		return (Auth::check() && Auth::id() == $user_id);
-	}
-
 	protected function getViewData($vdata = null, $model = null, $page = null)
 	{
 		//

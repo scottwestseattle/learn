@@ -19,9 +19,10 @@
                     <td><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
                     <td>
                         <a href="/{{$prefix}}/view/{{$record->id}}">{{$record->title}} ({{$record->words->count()}})</a>
+
                         <?php $published = App\Status::getReleaseStatus($record->release_flag); ?>
                         <?php $finished = App\Status::getWipStatus($record->wip_flag); ?>
-                        @if (!$published['done'] || !$finished['done'])
+    					@if (App\User::isOwner($record->user_id))
                              @if (!$published['done'])
                                 <a class="btn {{$published['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$published['text']}}</a>
                             @endif
@@ -31,11 +32,12 @@
                         @endif
                     </td>
                     <td>
-                        <a class="btn btn-info btn-primary btn-xs" role="button" href="/words/add-vocab-word/{{$record->id}}">
-                            Add Word&nbsp;<span class="glyphicon glyphicon-plus-sign"></span>
-                        </a>
+    					@if (App\User::isOwner($record->user_id))
+                            <a class="btn btn-info btn-primary btn-xs" role="button" href="/words/add-vocab-word/{{$record->id}}">
+                                Add Word&nbsp;<span class="glyphicon glyphicon-plus-sign"></span>
+                            </a>
+                        @endif
                     </td>
-
 
                     <td><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
                 </tr>

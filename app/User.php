@@ -27,7 +27,7 @@ class User extends Authenticatable
 		USER_SITE_ADMIN => 'Admin',
 		USER_SUPER_ADMIN => 'Super Admin',
 	];
-	
+
     /**
      * The attributes that are mass assignable.
      *
@@ -60,10 +60,10 @@ class User extends Authenticatable
 		$records = User::select()
 			->where('site_id', SITE_ID)
 			->get();
-			
+
 		return $records;
 	}
-	
+
 	public function getBlocked()
 	{
 		return $this->blocked_flag ? 'yes' : 'no';
@@ -73,11 +73,11 @@ class User extends Authenticatable
 	{
 		return User::$userTypes;
 	}
-	
+
 	public function getUserType()
 	{
 		$v = '';
-	
+
 		switch($this->user_type)
 		{
 			case USER_UNCONFIRMED:
@@ -101,10 +101,15 @@ class User extends Authenticatable
 			default:
 				$v = 'Unknown';
 		}
-		
+
 		return $v;
 	}
-	
+
+	static public function isOwner($user_id)
+	{
+		return ((Auth::check() && Auth::id() == $user_id) || self::isAdmin());
+	}
+
 	static public function isAdmin()
 	{
 		return (Auth::check() && Auth::user()->user_type >= USER_SITE_ADMIN);
@@ -114,9 +119,9 @@ class User extends Authenticatable
 	{
 		return (Auth::check() && Auth::user()->user_type >= USER_SUPER_ADMIN);
 	}
-	
+
 	public function isSuperAdminUser()
 	{
 		return ($this->user_type >= USER_SUPER_ADMIN);
-	}	
+	}
 }

@@ -38,10 +38,13 @@
 			@endif
 		@endif
 	</div>
+
+	@if ($isAdmin)
 	<h3 name="title" class="">
 	    {{$record->title }}
         <div><a href="/lessons/convert-to-list/{{$record->id}}"><button class="btn btn-info btn-xs">Convert</button></a></div>
     </h3>
+    @endif
 
 	@if (strlen($record->description) > 0)
 		<p class="">{{$record->description }}</p>
