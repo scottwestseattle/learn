@@ -22,7 +22,7 @@ class isOwner
 			if (isset($p) && array_key_exists('word', $p))
 			{
 				$record = $p['word'];
-				
+
 				if (isset($record) && $record->user_id == Auth::id())
 				{
 					return $next($request);
@@ -30,6 +30,6 @@ class isOwner
 			}
 		}
 
-        return redirect('unauthorized');		
+        return redirect('/login');
     }
 }

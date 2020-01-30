@@ -6,7 +6,8 @@
 
 <div class="container page-normal">
 
-	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin, 'parent_id' => $parent_id])@endcomponent
+
+	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin, 'parent_id' => $lesson_id != null ? $lesson_id : $vocab_list_id])@endcomponent
 
     @if ($type_flag == WORDTYPE_LESSONLIST)
         <h1>@LANG('ui.Add') @LANG('content.Lesson Vocabulary')</h1>
@@ -28,7 +29,8 @@
 
 	<form method="POST" action="{{$postAction}}">
 
-		<input type="hidden" name="parent_id" value={{$parent_id}} />
+		<input type="hidden" name="lesson_id" value={{$lesson_id}} />
+		<input type="hidden" name="vocab_list_id" value={{$vocab_list_id}} />
 		<input type="hidden" name="type_flag" value={{$type_flag}} />
 
 		<div class="form-group">
@@ -56,7 +58,7 @@
 	</form>
 
     @if ($type_flag != WORDTYPE_VOCABLIST)
-        @if (isset($parent_id))
+        @if (isset($lesson_id))
             @component('components.data-course-words', ['edit' => $lesson ? '/words/edit/' : '/words/edit-user/', 'words' => $records])@endcomponent
         @else
             @component('components.data-badge-list', ['edit' => '/words/view/', 'records' => $records, 'title' => 'Vocabulary'])@endcomponent

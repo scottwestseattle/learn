@@ -34,6 +34,6 @@ class IsAdmin
 			}
 		}
 
-        return redirect('unauthorized');
+        return redirect('/login');
     }
 }

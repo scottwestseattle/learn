@@ -75,7 +75,7 @@ class Lesson extends Base
 				// where 'deleted_flag = 0' AND (title like %search% OR text like %search%)
 				$records = Lesson::select()
 					->join('courses', 'courses.id', '=', 'lessons.parent_id')
-					->leftJoin('words', 'lessons.id', '=', 'words.parent_id')
+					->leftJoin('words', 'lessons.id', '=', 'words.lesson_id')
 					->select('lessons.id', 'lessons.lesson_number', 'lessons.section_number', 'lessons.title', 'courses.title as courseTitle')
 					->where('lessons.deleted_flag', 0)
 					->where('courses.release_flag', RELEASE_PUBLISHED)

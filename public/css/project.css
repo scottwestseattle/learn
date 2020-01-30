@@ -479,6 +479,10 @@ body {
 
 @media (max-width:576px) { /* small screen only */
 
+.btn-nav-top {
+    margin-top: 5px;
+}
+
 .page-nav-buttons {
 	margin: 5px 0;
 }

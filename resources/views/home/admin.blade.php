@@ -18,7 +18,6 @@
 			<li>{{substr(base_path(), 0, 28)}}...</li>
 			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}, SITE_ID: {{SITE_ID}}</li>
 			<li>Life:&nbsp;{{env('SESSION_LIFETIME', 0)}}, New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</li>
-			<li><a href="/eunoticereset">Reset Privacy</a></li>
 			@if ($isSuperAdmin)
 				<li>Size:
 					<span class="size-xs">Extra Small</span>
@@ -28,7 +27,6 @@
 					<span class="size-xl">Extra Large</span>
 				</li>
 			@endif
-			<li><a href="/send/email">Send Wod Email</a></li>
 		</ul>
 	</div>
 

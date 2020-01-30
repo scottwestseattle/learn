@@ -85,7 +85,7 @@ class WordController extends Controller
 
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records,
-			'parent_id' => $parent_id,
+			'lesson_id' => $parent_id,
 			'lesson' => isset($parent_id),
 		]));
     }
@@ -117,7 +117,7 @@ class WordController extends Controller
 
 		return view($view, $this->getViewData([
 			'records' => $records,
-			'parent_id' => $parent_id,
+			'lesson_id' => $parent_id,
 		]));
     }
 
@@ -148,7 +148,7 @@ class WordController extends Controller
 		$words = Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]);
 
 		return view(PREFIX . '.add', $this->getViewData([
-			'parent_id' => null,
+			'lesson_id' => null,
 			'type_flag' => WORDTYPE_USERLIST,
 			'records' => $words,
 			'lesson' => false,
@@ -161,12 +161,13 @@ class WordController extends Controller
 		return $this->create($request);
 	}
 
-    public function add($parent_id = null)
+    public function add($lesson_id = null)
     {
-		$words = isset($parent_id) ? Word::getCourseWords($parent_id, 'lesson_number, section_number, id')->groupBy('parent_id') : null;
+		$words = isset($lesson_id) ? Word::getCourseWords($lesson_id, 'lesson_number, section_number, id')->groupBy('lesson_id') : null;
 
 		return view(PREFIX . '.add', $this->getViewData([
-			'parent_id' => $parent_id,
+			'lesson_id' => $lesson_id,
+			'vocab_list_id' => null,
 			'type_flag' => WORDTYPE_LESSONLIST,
 			'records' => $words,
 			'lesson' => true,
@@ -180,15 +181,16 @@ class WordController extends Controller
 		$record = new Word();
 		$parent_id = isset($request->parent_id) ? intval($request->parent_id) : null;
 
-		if ($parent_id > 0)
-			$record->parent_id = $parent_id;
-
 		$record->user_id 		= Auth::id();
 		$record->type_flag 		= $request->type_flag;
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
 		$record->examples		= $request->examples;
 		$record->permalink		= Tools::createPermalink($request->title);
+
+        // use both because the one is use will not be null
+        $record->lesson_id = $request->lesson_id;
+        $record->vocab_list_id = $request->vocab_list_id;
 
 		$parent = Word::getParent($record->title, $parent_id);
 
@@ -243,7 +245,8 @@ class WordController extends Controller
         $parent = $vocabList;
 
 		return view(PREFIX . '.add', $this->getViewData([
-			'parent_id' => $parent->id,
+		    'lesson_id' => null,
+			'vocab_list_id' => $parent->id,
 			'parent_title' => $parent->title,
 			'type_flag' => WORDTYPE_VOCABLIST,
 			'records' => null,//$words,
@@ -256,7 +259,10 @@ class WordController extends Controller
 		$msg = null;
 		$record = new Word();
 
-		$record->parent_id      = intval($request->parent_id);
+        // use both because the one is use will not be null
+        $record->lesson_id = intval($request->lesson_id);
+        $record->vocab_list_id = intval($request->vocab_list_id);
+
 		$record->user_id 		= Auth::id();
 		$record->type_flag 		= $request->type_flag;
 		$record->title 			= $request->title;
@@ -279,7 +285,7 @@ class WordController extends Controller
 				throw new \Exception($msg);
 			}
 
-			if (isset($record->parent_id))
+			if (isset($record->vocab_list_id))
 			{
 				if ($record->type_flag == WORDTYPE_USERLIST)
 					throw new \Exception("user list word with parent_id");
@@ -307,7 +313,7 @@ class WordController extends Controller
 			return back();
 		}
 
-		return redirect('/vocab-lists/view/' . $record->parent_id);
+		return redirect('/vocab-lists/view/' . $record->vocab_list_id);
     }
 
     public function permalink(Request $request, $permalink)
@@ -319,7 +325,6 @@ class WordController extends Controller
 		try
 		{
 			$record = Word::select()
-				->where('deleted_flag', 0)
 				->where('permalink', $permalink)
 				->first();
 		}
@@ -342,11 +347,11 @@ class WordController extends Controller
     {
 		$record = $word;
 
-		$words = isset($word->parent_id) ? Word::getCourseWords($word->parent_id, 'lesson_number, section_number, id')->groupBy('parent_id') : [];
+		$words = isset($word->lesson_id) ? Word::getCourseWords($word->lesson_id, 'lesson_number, section_number, id')->groupBy('lesson_id') : [];
 
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
-			'records' => Word::getIndex($word->parent_id),
+			'records' => Word::getIndex($word->lesson_id),
 			'lesson' => $record->type_flag == WORDTYPE_LESSONLIST,
 			'words' => $words,
 			]));
@@ -391,7 +396,7 @@ class WordController extends Controller
 		}
 		else
 		{
-		    $record->parent_id =  Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
+		    $record->lesson_id =  Tools::copyDirty($record->lesson_id, $request->lesson_id, $isDirty, $changes);
 		}
 
 		if ($isDirty)
@@ -401,7 +406,7 @@ class WordController extends Controller
 				if ($isDirtyTitle)
 				{
 					// check for dupes if the word has changed
-					$parent_id = isset($word->parent_id) ? $word->parent_id : null;
+					$parent_id = isset($word->lesson_id) ? $word->lesson_id : null;
 					$parent = Word::getParent($record->title, $parent_id);
 				}
 
@@ -432,7 +437,7 @@ class WordController extends Controller
 			Tools::flash('success', 'No changes were made');
 		}
 
-        $returnPath = $word->isVocabListWord() ? '/vocab-lists/view/' . $word->parent_id : '/words/view/' . $word->id;
+        $returnPath = $word->isVocabListWord() ? '/vocab-lists/view/' . $word->vocab_list_id : '/words/view/' . $word->id;
 
 		return redirect($returnPath);
 	}
@@ -488,7 +493,7 @@ class WordController extends Controller
 			if ($request->type_flag == WORDTYPE_LESSONLIST_USERCOPY)
 			{
 				// user is adding a definition to a vocab word
-				$word = Word::getLessonUserWord($record->parent_id, Auth::id(), $record->id);
+				$word = Word::getLessonUserWord($record->lesson_id, Auth::id(), $record->id);
 				if (isset($word))
 				{
 					// updating existing lesson user word
@@ -502,7 +507,7 @@ class WordController extends Controller
 						$word = new Word();
 
 						$word->user_id 		= Auth::id();
-						$word->parent_id 	= $record->parent_id;
+						$word->lesson_id 	= $record->lesson_id;
 						$word->vocab_id 	= $record->id;
 						$word->type_flag 	= WORDTYPE_LESSONLIST_USERCOPY;
 						$word->title 		= $record->title;
@@ -573,7 +578,7 @@ class WordController extends Controller
 
 		try
 		{
-			$record->deleteSafe();
+			$record->delete();
 			Event::logDelete(LOG_MODEL, $record->title, $record->id);
 			Tools::flash('success', 'Record has been deleted');
 		}
@@ -585,9 +590,9 @@ class WordController extends Controller
 		}
 
 		if ($word->type_flag == WORDTYPE_LESSONLIST)
-			return redirect('/words/add/' . $word->parent_id);
+			return redirect('/words/add/' . $word->lesson_id);
 		else if ($word->type_flag == WORDTYPE_VOCABLIST)
-			return redirect('/vocab-lists/view/' . $word->parent_id);
+			return redirect('/vocab-lists/view/' . $word->vocab_list_id);
 		else
 			return redirect('/words/add-user');
     }
@@ -598,7 +603,7 @@ class WordController extends Controller
 
 		try
 		{
-			$record->deleteSafe();
+			$record->delete();
 		}
 		catch (\Exception $e)
 		{
@@ -607,7 +612,6 @@ class WordController extends Controller
 			Tools::flash('danger', $msg);
 		}
 
-		//return redirect('/words/indexowner/' . $record->parent_id);
 		return back();
     }
 
@@ -619,7 +623,7 @@ class WordController extends Controller
 		{
 			$records = Word::select()
 //				->where('site_id', SITE_ID)
-				->where('deleted_flag', 1)
+				->where('deleted_at', 'is not null')
 				->get();
 		}
 		catch (\Exception $e)
@@ -647,7 +651,7 @@ class WordController extends Controller
 		// since the currend WOD just got updated, this will get the next wod in line
 		$nextWod = $word->getWod($word->user_id);
         $wodList = Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]);
-        $firstWod = (isset($wodList) && $wodList->count() > 0) ? $wodList[0] : null;
+        $firstWod = (isset($wodList) && count($wodList) > 0) ? $wodList[0] : null;
 
 		// get next and prev words in ID order
 		$prev = $word->getPrev();

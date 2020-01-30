@@ -37,32 +37,7 @@ class VocabListController extends Controller
 
     public function index(Request $request)
     {
-		$records = []; // make this countable so view will always work
-
-		try
-		{
-			if (Tools::isAdmin())
-			{
-				$records = VocabList::select()
-	//				->where('site_id', SITE_ID)
-					->where('deleted_flag', 0)
-					->get();
-			}
-			else
-			{
-				$records = VocabList::select()
-	//				->where('site_id', SITE_ID)
-					->where('deleted_flag', 0)
-					->where('release_flag', '>=', RELEASE_PUBLISHED)
-					->get();
-			}
-		}
-		catch (\Exception $e)
-		{
-			$msg = 'Error getting ' . TITLE_LC;
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);
-		}
+        $records = VocabList::getIndex(['ownedOrPublic']);
 
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records,
@@ -77,7 +52,6 @@ class VocabListController extends Controller
 		{
 			$records = VocabList::select()
 //				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
 //				->where('published_flag', 1)
 //				->where('approved_flag', 1)
 				->get();
@@ -139,7 +113,6 @@ class VocabListController extends Controller
 		{
 			$record = VocabList::select()
 				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
 				->where('published_flag', 1)
 				->where('approved_flag', 1)
 				->where('permalink', $permalink)
@@ -162,7 +135,7 @@ class VocabListController extends Controller
 
 	public function view(VocabList $vocabList)
     {
-		$record = $vocabList;
+        $record = $vocabList;
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
@@ -231,7 +204,7 @@ class VocabListController extends Controller
 		{
 		    Word::deleteList($vocabList->words);
 
-			$record->deleteSafe();
+			$record->delete();
 			Event::logDelete(LOG_MODEL, $record->title, $record->id);
 			Tools::flash('success', $this->title . ' has been deleted');
 		}
@@ -252,7 +225,6 @@ class VocabListController extends Controller
 		{
 			$records = VocabList::select()
 //				->where('site_id', SITE_ID)
-				->where('deleted_flag', 1)
 				->get();
 		}
 		catch (\Exception $e)

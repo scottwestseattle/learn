@@ -7,18 +7,18 @@
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
 	<div class="page-nav-buttons">
-		<a class="btn btn-success btn-md" role="button" href="/{{$prefix}}/">
+		<a class="btn btn-success btn-sm btn-nav-top" role="button" href="/{{$prefix}}/">
 		    @LANG('content.Back to Vocabulary Lists')<span class="glyphicon glyphicon-button-back-to"></span>
 		</a>
-	    <a class="btn btn-info btn-primary" role="button" href="/words/add-vocab-word/{{$record->id}}">
+	    <a class="btn btn-info btn-sm btn-nav-top" role="button" href="/words/add-vocab-word/{{$record->id}}">
             @LANG('content.Add New Word')&nbsp;<span class="glyphicon glyphicon-plus-sign"></span>
 	    </a>
-	    <a class="btn btn-info btn-primary" role="button" href="/{{$prefix}}/review/{{$record->id}}">
+	    <a class="btn btn-primary btn-sm btn-nav-top" role="button" href="/{{$prefix}}/review/{{$record->id}}">
             @LANG('content.Review')&nbsp;<span class="glyphicon glyphicon-eye-open"></span>
 	    </a>
 	</div>
 
-	<h3 name="" class="" style="margin-bottom:10px;">{{$record->title}}
+	<h3 name="" class="" style="margin-bottom:10px;">{{$record->title}}<span style="background-color:purple; margin-left:10px; font-size:12px;" class="badge badge-dark">{{count($record->words)}}</span>
 		@if ($isAdmin)
 			@if (!\App\Status::isFinished($record->wip_flag))
 				<a class="btn {{($wip=\App\Status::getWipStatus($record->wip_flag))['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$wip['text']}}</a>
@@ -31,7 +31,7 @@
 
 	<table class="table table-responsive table-striped">
 		<tbody>
-		@foreach($record->words as $r)
+		@foreach($record->words->where('deleted_flag', 0) as $r)
 			<tr>
 				<td><a href="/{{$prefixWord}}/edit-user/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
 				<td>

@@ -18,7 +18,7 @@
                     </td>
                     <td><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
                     <td>
-                        <a href="/{{$prefix}}/view/{{$record->id}}">{{$record->title}} ({{$record->words->count()}})</a>
+                        <a href="/{{$prefix}}/view/{{$record->id}}">{{$record->title}}</a><span style="background-color:purple; margin-left:10px; font-size:12px;" class="badge badge-dark">{{$record->words->count()}}</span>
 
                         <?php $published = App\Status::getReleaseStatus($record->release_flag); ?>
                         <?php $finished = App\Status::getWipStatus($record->wip_flag); ?>

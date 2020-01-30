@@ -1,10 +1,7 @@
 @if ($isAdmin)
 <div class="submenu-view">
-	<table><tr>
-		<td><a href="/home"><span class="glyphCustom glyphicon glyphicon-user"></span></a></td>
-		<td><a href="/courses"><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
-		<td><a href="/send/email"><span class="glyphCustom glyphicon glyphicon-envelope"></span></a></td>
-		<td><a href="/hash"><span class="glyphCustom glyphicon glyphicon-sunglasses"></span></a></td>
-	</tr></table>
+    <a style="margin-top:3px;" class="btn btn-outline-info btn-sm" role="button" href="/eunoticereset">Reset Privacy Notice</span></a>
+    <a style="margin-top:3px;" class="btn btn-outline-info btn-sm" role="button" href="/send/email">Send Wod Email</span></a>
+    <a style="margin-top:3px;" class="btn btn-outline-info btn-sm" role="button" href="/hash">Hash</span></a>
 </div>
 @endif

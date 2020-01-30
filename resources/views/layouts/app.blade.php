@@ -41,7 +41,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
 
-			<div class="mr-2"><a class="" role="" href="/"><span style="color:white;" class="glyphicon glyphicon-home"></span></a></div>
+			<div class="mr-2"><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-home"></span></a></div>
 			<div {{$isAdmin ? '' : 'hidden'}} class="ml-2 mr-2"><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-cog"></span></a></div>
 			<div class="ml-2 mr-2"><a href="/search"><span style="color:white;" class="glyphicon glyphicon-search"></span></a></div>
 

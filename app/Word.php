@@ -3,14 +3,18 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use DB;
 use Auth;
 use App\Lesson;
 use App\Event;
 use App\Tools;
 
-class Word extends Base
+class Word extends Model
 {
+    use SoftDeletes;
+
     public function user()
     {
     	return $this->belongsTo(User::class);
@@ -21,13 +25,18 @@ class Word extends Base
         return($this->type_flag == WORDTYPE_VOCABLIST);
     }
 
+    public function isLessonWord()
+    {
+        return($this->type_flag == WORDTYPE_LESSONLIST || $this->type_flag == WORDTYPE_LESSONLIST_USERCOPY);
+    }
+
     static public function deleteList($records)
     {
 		try
 		{
             foreach($records as $record)
             {
-    			$record->deleteSafe();
+    			$record->delete();
     			$msg = 'deleteList() - deleted ' . $record->title;
 	    		Event::logDelete(LOG_MODEL, $msg, $record->id);
             }
@@ -35,7 +44,7 @@ class Word extends Base
 		catch (\Exception $e)
 		{
 			$msg = 'Error deleting list';
-			Event::logException('word', LOG_ACTION_DELETE, 'parent id = ' . $parent_id, null, $msg . ': ' . $e->getMessage());
+			Event::logException('word', LOG_ACTION_DELETE, 'parent id = ' . $records->first()->vocab_list_id, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
 	}
@@ -69,7 +78,6 @@ class Word extends Base
 			{
 				$records = Word::select()
 					->where('words.user_id', Auth::id())
-					->where('words.deleted_flag', 0)
 					->where('words.type_flag', WORDTYPE_USERLIST)
 					->where(function ($query) use ($search){$query
 						->where('words.title', 'LIKE', $search)
@@ -144,7 +152,6 @@ class Word extends Base
 			if (isset($parent_id))
 			{
 				$count = Word::select()
-					->where('deleted_flag', 0)
 					->where('parent_id', 'like', $parent_id)
 					->where('title', $word)
 					->count();
@@ -152,7 +159,6 @@ class Word extends Base
 			else
 			{
 				$count = Word::select()
-					->where('deleted_flag', 0)
 					->where('title', $word)
 					->count();
 			}
@@ -187,10 +193,8 @@ class Word extends Base
 				$lesson = DB::table('words')
 					->join('lessons', 'lessons.id', '=', 'words.parent_id')
 					->select('words.*', 'lessons.title as lessonTitle')
-					->where('words.deleted_flag', 0)
 					->where('words.type_flag', WORDTYPE_LESSONLIST)
 					->where('words.title', $word)
-					->where('lessons.deleted_flag', 0)
 					->where('lessons.parent_id', $parent->parent_id)
 					->first();
 
@@ -205,7 +209,6 @@ class Word extends Base
 				$msg = 'user word';
 
 				$count = Word::select()
-					->where('deleted_flag', 0)
 					->where('user_id', Auth::id())
 					->where('type_flag', WORDTYPE_USERLIST)
 					->where('title', $word)
@@ -261,9 +264,7 @@ class Word extends Base
 				$words = DB::table('words')
 					->join('lessons', 'lessons.id', '=', 'words.parent_id')
 					->select('words.*', 'lessons.id as lessonId', 'lessons.title as lessonTitle', 'lessons.lesson_number', 'lessons.section_number')
-					->where('words.deleted_flag', 0)
 					->where('words.type_flag', WORDTYPE_LESSONLIST)
-					->where('lessons.deleted_flag', 0)
 					->where('lessons.parent_id', $parent->parent_id) // only lessons of this course
 					->orderByRaw($orderBy)
 					->get();
@@ -317,8 +318,7 @@ class Word extends Base
 		try
 		{
 			$records = Word::select()
-				->where('deleted_flag', 0)
-				->whereNull('parent_id')
+				->whereNull('lesson_id')
 				->where('user_id', Auth::id())
 				->where('type_flag', WORDTYPE_USERLIST)
 				->orderByRaw($orderBy)
@@ -355,7 +355,6 @@ class Word extends Base
 				$parent_id = intval($parent_id);
 
 				$records = Word::select()
-					->where('deleted_flag', 0)
 					->where('parent_id', $parent_id)
 					->where('type_flag', $type_flag)
 					->orderBy('id')
@@ -365,7 +364,6 @@ class Word extends Base
 			else
 			{
 				$records = Word::select()
-					->where('deleted_flag', 0)
 					->whereNull('parent_id')
 					->where('user_id', Auth::id())
 					->where('type_flag', $type_flag)
@@ -392,7 +390,6 @@ class Word extends Base
 		try
 		{
 			$record = Word::select()
-				->where('deleted_flag', 0)
 				->where('parent_id', $parent_id)
 				->where('user_id', $user_id)
 				->where('type_flag', WORDTYPE_LESSONLIST_USERCOPY)
@@ -418,7 +415,6 @@ class Word extends Base
 		try
 		{
 			$records = Word::select()
-				->where('deleted_flag', 0)
 				->where('parent_id', 'like', $parent_id)
 				->where('user_id', Auth::id())
 				->where('type_flag', WORDTYPE_LESSONLIST_USERCOPY)
@@ -445,7 +441,6 @@ class Word extends Base
 		try
 		{
 			$records = Word::select()
-				->where('deleted_flag', 0)
 				->where('parent_id', $parent_id)
 				->where('type_flag', $type_flag)
 				->orderBy('id')
@@ -469,7 +464,6 @@ class Word extends Base
 		try
 		{
 			$record = Word::select()
-				->where('deleted_flag', 0)
 				->where('user_id', $userId)
 				->where('type_flag', WORDTYPE_USERLIST)
 				->orderBy('last_viewed_at')
@@ -505,7 +499,6 @@ class Word extends Base
 		{
 			// get prev or next word by id, null is okay
 			$record = Word::select()
-				->where('deleted_flag', 0)
 				->where('user_id', $userId)
 				->where('type_flag', WORDTYPE_USERLIST)
 				->where('id', $prev ? '<' : '>', $id)
@@ -533,7 +526,6 @@ class Word extends Base
 		try
 		{
 			$records = Word::select()
-				->where('deleted_flag', 0)
 				->where('user_id', $userId)
 				->where('type_flag', WORDTYPE_USERLIST)
 				->orderBy('id')

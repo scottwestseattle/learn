@@ -3,33 +3,78 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Auth;
 
-class VocabList extends Base
+class VocabList extends Model
 {
+    use SoftDeletes;
+
     public function words()
     {
-    	return $this->hasMany('App\Word', 'parent_id', 'id');
+        return $this->hasMany('App\Word', 'vocab_list_id', 'id')->orderByDesc('id');
     }
 
-    static public function getIndex()
+   static public function getIndex($parms = [])
     {
 		$records = []; // make this countable so view will always work
 
-		try
-		{
-            $records = VocabList::select()
+        // if no parms or 'public' specified, return public
+		$public = count($parms) == 0 || array_search('public', $parms) !== false;
+
+        if ($public)
+        {
+			$records = self::select()
 //				->where('site_id', SITE_ID)
-                ->where('deleted_flag', 0)
-                ->where('release_flag', '>=', RELEASE_PUBLISHED)
-                ->get();
-		}
-		catch (\Exception $e)
+				->where('release_flag', '>=', RELEASE_PUBLISHED)
+				->orderByRaw('id DESC')
+				->get();
+        }
+		else
 		{
-			$msg = 'Error getting Vocab Lists';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);
+            if (array_search('ownedOrPublic', $parms) !== false)
+            {
+                // only return the user's list
+                $records = self::select()
+    				->where('release_flag', '>=', RELEASE_PUBLISHED)
+                    ->orWhere('user_id', Auth::id())
+                    ->orderBy('type_flag')
+                    ->orderByRaw('id DESC')
+                    ->get();
+            }
+            else if (array_search('owned', $parms) !== false)
+            {
+                // only return the user's list
+                $records = self::select()
+                    ->where('user_id', Auth::id())
+                    ->orderBy('type_flag')
+                    ->orderByRaw('id DESC')
+                    ->get();
+            }
+            else if (array_search('deleted', $parms) !== false)
+            {
+                // only return deleted
+                $records = self::select()
+                    ->orderBy('type_flag')
+                    ->orderByRaw('id DESC')
+                    ->get();
+            }
+            else if (array_search('all', $parms) !== false)
+            {
+                // return all
+                $records = self::select()
+                    ->orderBy('type_flag')
+                    ->orderByRaw('id DESC')
+                    ->get();
+            }
+            else
+            {
+                Event::logError(LOG_MODEL, LOG_ACTION_SELECT, 'getIndex - unknown parameter');
+                Tools::flash('danger', 'Error getting vocabulary lists');
+            }
 		}
+
 
 		return $records;
 	}
@@ -80,12 +125,12 @@ class VocabList extends Base
                     dd($q);
                 }
 
-                $w->parent_id   = $record->id;
-                $w->user_id 	= Auth::id();
-                $w->type_flag 	= WORDTYPE_VOCABLIST;
-                $w->permalink	= $record->id . '-' . Tools::createPermalink($wordTitle);
-                $w->title 		= $wordTitle;
-                $w->description	= $wordDescription;
+                $w->vocab_list_id   = $record->id;
+                $w->user_id 	    = Auth::id();
+                $w->type_flag 	    = WORDTYPE_VOCABLIST;
+                $w->permalink	    = $record->id . '-' . Tools::createPermalink($wordTitle);
+                $w->title 		    = $wordTitle;
+                $w->description	    = $wordDescription;
 
                 $w->save();
             }

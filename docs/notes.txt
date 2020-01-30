@@ -1,3 +1,20 @@
+SAMPLES
+-------
+
+Implement Soft Deletes:
+1. Add to model:
+use Illuminate\Database\Eloquent\SoftDeletes;
+    use SoftDeletes; // in the class def
+2. Remove Base class
+3. Remove 'deleted_flag'
+4. Change 'deleteSafe' to 'delete'
+5. add 'deleted_at' column to table
+ALTER TABLE `words` ADD `deleted_at` TIMESTAMP NULL AFTER `updated_at`;
+DELETE from `words` WHERE deleted_flag = 1;
+ALTER TABLE `words` DROP `deleted_flag`;
+
+---------------------------------------------------------
+
 SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_view_at LIMIT 200
 →
 <table class="table table-borderless">
@@ -5,6 +22,21 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 Latest DB Changes:
+
+1/30/2020
+ALTER TABLE `words` ADD `vocab_list_id` INT NULL COMMENT 'parent vocab list' AFTER `parent_id`;
+ALTER TABLE `words` ADD `lesson_id` INT NULL COMMENT 'parent lesson' AFTER `parent_id`;
+UPDATE `words` SET vocab_list_id = parent_id WHERE 1 AND type_flag = 4  AND parent_id IS NOT NULL;
+UPDATE `words` SET lesson_id = parent_id WHERE 1 AND type_flag < 4 AND parent_id IS NOT NULL;
+ALTER TABLE `words` DROP `parent_id`;
+
+1/29/2020
+ALTER TABLE `vocab_lists` ADD `deleted_at` TIMESTAMP NULL AFTER `updated_at`;
+DELETE from `vocab_lists` WHERE deleted_flag = 1;
+ALTER TABLE `vocab_lists` DROP `deleted_flag`;
+ALTER TABLE `words` ADD `deleted_at` TIMESTAMP NULL AFTER `updated_at`;
+DELETE from `words` WHERE deleted_flag = 1;
+ALTER TABLE `words` DROP `deleted_flag`;
 
 1/27/2020
 import vocab_list.sql

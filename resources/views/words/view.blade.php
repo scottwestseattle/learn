@@ -49,7 +49,7 @@
 	<div style="margin-top:50px;">
 	@if (isset($record->parent_id) && isset($words))
 		@component('components.data-course-words', ['edit' => $lesson ? '/words/edit/' : '/words/view/', 'words' => $words])@endcomponent
-	@elseif (isset($records) && $records->count() > 0)
+	@elseif (isset($records) && count($records) > 0)
 		@component('components.data-badge-list', ['edit' => '/words/view/', 'records' => $records, 'title' => 'Vocabulary'])@endcomponent
 	@endif
 	</div>

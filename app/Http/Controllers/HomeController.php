@@ -13,6 +13,7 @@ use App\User;
 use App\Course;
 use App\Lesson;
 use App\Word;
+use App\VocabList;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMailable;
@@ -183,10 +184,16 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // if not logged in send them to the fp
+        if (!Auth::check())
+            return redirect('/');
+
+        $words = null;
+
 		//
 		// user's vocab lists
 		//
-		$words = Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]);
+		$vocabLists = VocabList::getIndex(['owned']);
 
 		//
 		// get user's last viewed lesson so he can resume where he left off
@@ -214,6 +221,7 @@ class HomeController extends Controller
 			'quizes' => $quizes,
 			'stats' => $stats,
 			'words' => $words,
+			'vocabLists' => $vocabLists,
 			]));
     }
 
