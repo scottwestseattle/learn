@@ -74,27 +74,11 @@ class Word extends Model
 		{
 			$search = '%' . $search . '%';
 
-			if (Tools::isSuperAdmin())
-			{
-				$records = Word::select()
-					->where('words.user_id', Auth::id())
-					->where('words.type_flag', WORDTYPE_USERLIST)
-					->where(function ($query) use ($search){$query
-						->where('words.title', 'LIKE', $search)
-						->orWhere('words.description', 'LIKE', $search);})
-					->get();
-					//->toSql();
-				//dd($records);
-			}
-			else if (Tools::isAdmin())
-			{
-			}
-			else if (Auth::check())
-			{
-			}
-			else
-			{
-			}
+            $records = Word::select()
+                ->where(function ($query) use ($search){$query
+                    ->where('words.title', 'LIKE', $search)
+                    ->orWhere('words.description', 'LIKE', $search);})
+                ->get();
 		}
 		catch(\Exception $e)
 		{
@@ -152,7 +136,7 @@ class Word extends Model
 			if (isset($parent_id))
 			{
 				$count = Word::select()
-					->where('parent_id', 'like', $parent_id)
+					->where('lesson_id', 'like', $parent_id)
 					->where('title', $word)
 					->count();
 			}
@@ -355,7 +339,7 @@ class Word extends Model
 				$parent_id = intval($parent_id);
 
 				$records = Word::select()
-					->where('parent_id', $parent_id)
+					->where('lesson_id', $parent_id)
 					->where('type_flag', $type_flag)
 					->orderBy('id')
 					->limit($limit)
@@ -364,7 +348,7 @@ class Word extends Model
 			else
 			{
 				$records = Word::select()
-					->whereNull('parent_id')
+					->whereNull('lesson_id')
 					->where('user_id', Auth::id())
 					->where('type_flag', $type_flag)
 					->orderByRaw('id desc')
@@ -390,7 +374,7 @@ class Word extends Model
 		try
 		{
 			$record = Word::select()
-				->where('parent_id', $parent_id)
+				->where('lesson_id', $parent_id)
 				->where('user_id', $user_id)
 				->where('type_flag', WORDTYPE_LESSONLIST_USERCOPY)
 				->where('vocab_id', $vocab_id)
@@ -415,7 +399,7 @@ class Word extends Model
 		try
 		{
 			$records = Word::select()
-				->where('parent_id', 'like', $parent_id)
+				->where('lesson_id', 'like', $parent_id)
 				->where('user_id', Auth::id())
 				->where('type_flag', WORDTYPE_LESSONLIST_USERCOPY)
 				->orderBy('id')
@@ -441,7 +425,7 @@ class Word extends Model
 		try
 		{
 			$records = Word::select()
-				->where('parent_id', $parent_id)
+				->where('lesson_id', $parent_id)
 				->where('type_flag', $type_flag)
 				->orderBy('id')
 				->get();

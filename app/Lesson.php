@@ -83,7 +83,7 @@ class Lesson extends Base
 						->where('lessons.title', 'LIKE', $search)
 						->orWhere('lessons.text', 'LIKE', $search)
 						->orWhere(function ($query) use ($search){$query
-									->where('words.deleted_flag', 0)
+									->whereNull('words.deleted_at')
 									->where('words.title', 'LIKE', $search);})
 									;})
 					->groupBy('lessons.id', 'lessons.lesson_number', 'lessons.section_number', 'lessons.title', 'courses.title')
