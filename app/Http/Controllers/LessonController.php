@@ -256,6 +256,7 @@ class LessonController extends Controller
         $text = html_entity_decode($lesson->text); // make it plain text
 
 		$qna = LessonController::makeQuiz($text);
+        //dd($qna);
 
 		if (VocabList::import($qna, $lesson->title, $lesson->isMc()))
     		return redirect('/vocab-lists');
@@ -470,12 +471,23 @@ class LessonController extends Controller
 		$cnt = 0;
 		foreach($records as $record)
 		{
-			$parts = explode(' - ', $record[1]); // split the line into q and a, looks like: "question text - correct answer text"
+		    // had to do this because html_entity_decode() wouldn't work in explode
+		    $line = mb_eregi_replace('&nbsp;', ' ', htmlentities($record[1]));
+		    $line = str_replace('[', '(', $line);
+		    $line = str_replace(']', ')', $line);
+            $line = html_entity_decode($line); // decode it back
+
+            // this doesn't work
+            //$line = html_entity_decode($record[1]); // doesn't change &nbsp; to space
+            //dump($line);
+
+			$parts = explode(' - ', $line); // split the line into q and a, looks like: "question text - correct answer text"
+            //dd($parts);
 
 			if (count($parts) > 0)
 			{
-				$records[$cnt]['q'] = $parts[0];
-				$records[$cnt]['a'] = array_key_exists(1, $parts) ? $parts[1] : '';
+				$records[$cnt]['q'] = trim($parts[0]);
+				$records[$cnt]['a'] = array_key_exists(1, $parts) ? trim($parts[1]) : '';
 				$records[$cnt]['id'] = $cnt;
 				$records[$cnt]['options'] = '';
 			}
