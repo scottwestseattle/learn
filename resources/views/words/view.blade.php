@@ -6,6 +6,22 @@
 
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin, 'parent_id' => $record->parent_id])@endcomponent
 
+	<div class="page-nav-buttons">
+		<a class="btn btn-success btn-sm btn-nav-top" role="button" href="/vocab-lists/view/{{$record->vocab_list_id}}/">
+		    @LANG('content.Back to List')<span class="glyphicon glyphicon-button-back-to"></span>
+		</a>
+	</div>
+	<div class="page-nav-buttons">
+		<a class="btn btn-primary btn-sm btn-nav-lesson {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}">
+			<span class="glyphicon glyphicon-button-prev"></span>
+			@LANG('ui.Prev')
+		</a>
+		<a class="btn btn-primary btn-sm btn-nav-lesson {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">
+			@LANG('ui.Next')
+			<span class="glyphicon glyphicon-button-next"></span>
+		</a>
+	</div>
+
 	<div style="margin-top:30px;">
 
 		<h3>

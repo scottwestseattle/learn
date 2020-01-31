@@ -76,15 +76,15 @@ class HomeController extends Controller
 
 		foreach($users as $record)
 		{
+		    // for now, just send one for testing
 			if ($record->isSuperAdminUser())
 			{
 				$this->sendWod($record);
-				//break; // too many emails per second
 			}
 		}
 
 		if (Auth::check())
-			return redirect('/events');
+			return redirect('/admin');
 		else
 			return redirect('/');
 	}
@@ -136,12 +136,6 @@ class HomeController extends Controller
 				Event::logException(LOG_MODEL_HOME, LOG_ACTION_EMAIL, $msg, null, $e->getMessage());
 				Tools::flash('danger', 'translated.' . $msg);
 			}
-		}
-		else
-		{
-			$msg = 'Error getting word of the day';
-			Event::logException(LOG_MODEL_HOME, LOG_ACTION_SELECT, $msg);
-			Tools::flash('danger', $msg);
 		}
    }
 

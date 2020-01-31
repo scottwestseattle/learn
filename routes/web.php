@@ -224,8 +224,8 @@ Route::group(['prefix' => 'visitors'], function () {
 Route::group(['prefix' => 'events'], function () {
 
 	// index
-	Route::get('/', 'EventController@index');
-	Route::post('/', 'EventController@index');
+	Route::get('/{type_flag?}', 'EventController@index');
+	Route::post('/{type_flag?}', 'EventController@index');
 });
 
 // Samples

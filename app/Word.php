@@ -443,13 +443,13 @@ class Word extends Model
     static public function getWod($userId)
     {
 		$wod = null;
-		$records = [];
+		$records = null;
 
 		try
 		{
 			$record = Word::select()
 				->where('user_id', $userId)
-				->where('type_flag', WORDTYPE_USERLIST)
+				->where('type_flag', WORDTYPE_VOCABLIST)
 				->orderBy('last_viewed_at')
 				->first();
 
@@ -459,6 +459,13 @@ class Word extends Model
 		{
 			$msg = 'Error getting word of the day list';
 			Event::logException('word', LOG_ACTION_SELECT, null, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		if ($record == null)
+		{
+			$msg = 'No words found for word of the day';
+			Event::logError('word', LOG_ACTION_SELECT, /* title = */ $msg);
 			Tools::flash('danger', $msg);
 		}
 
