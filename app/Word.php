@@ -442,8 +442,7 @@ class Word extends Model
 
     static public function getWod($userId)
     {
-		$wod = null;
-		$records = null;
+        $record = null;
 
 		try
 		{

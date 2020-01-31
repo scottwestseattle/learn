@@ -17,6 +17,29 @@
 
 <div class="container page-normal">
 
+    <!-- SHOW WORD OF THE DAY -->
+    @if (isset($wod))
+        <h3>@LANG('content.Word of the Day')</h3>
+
+    <div style="max-width:600px;">
+		<div class="card text-white bg-primary mb-3">
+			<div class="card-header"><h4>{{$wod->title}}</h4></div>
+			<div class="card-body">
+			    <p class="card-text">
+                    <p>{{$wod->description}}</p>
+                    @if (isset($wod->examples))
+                        @foreach($wod->examples as $example)
+                            <p><i>{{$example}}</i></p>
+                        @endforeach
+                    @endif
+			    </p>
+			</div>
+		</div>
+	</div>
+
+    @endif
+    <!-- END OF WORD OF THE DAY -->
+
     <!-- SHOW VOCAB LISTS -->
 	<h3>@LANG('content.Vocabulary') ({{count($vocabLists)}})</h3>
 

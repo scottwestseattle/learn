@@ -55,6 +55,41 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
+    static public function getSuperAdminUserId()
+    {
+        $superAdminId = null;
+        $record = null;
+        $id = null;
+
+		try
+		{
+            $record = User::select()
+                ->where('site_id', SITE_ID)
+                ->where('user_type', USER_SUPER_ADMIN)
+                ->first();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting super admin user id';
+			Event::logException('user', LOG_ACTION_SELECT, null, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		if ($record !== NULL)
+		{
+		    $id = $record->id;
+		}
+		else
+		{
+			$msg = 'No super admin record found';
+			Event::logError('user', LOG_ACTION_SELECT, /* title = */ $msg);
+			Tools::flash('danger', $msg);
+		}
+
+		return $id;
+	}
+
     static public function getIndex()
     {
 		$records = User::select()

@@ -9,6 +9,8 @@ use App\Event;
 use App\Tools;
 use App\Course;
 use App\VocabList;
+use App\Word;
+use App\User;
 
 define('LOG_MODEL', 'frontpage');
 
@@ -32,6 +34,12 @@ class FrontPageController extends Controller
     public function index()
     {
 		$courses = []; // make this countable so view will always work
+
+        // get word of the day
+        $wod = Word::getWod(User::getSuperAdminUserId());
+
+		// format the examples to display as separate sentences
+		$wod->examples = Tools::splitSentences($wod->examples);
 
 		try
 		{
@@ -58,6 +66,7 @@ class FrontPageController extends Controller
 		return view('frontpage.index', $this->getViewData([
 			'courses' => $courses,
 			'vocabLists' => $vocabLists,
+			'wod' => $wod,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 
