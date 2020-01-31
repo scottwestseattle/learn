@@ -93,6 +93,7 @@ class CourseController extends Controller
 		$record->permalink		= Tools::createPermalink($request->title);
 		$record->release_flag	= RELEASE_DEFAULT;
 		$record->wip_flag		= WIP_DEFAULT;
+        $record->type_flag      = COURSETYPE_DEFAULT;
 
 		try
 		{
@@ -145,6 +146,9 @@ class CourseController extends Controller
 
 	public function view(Course $course)
     {
+        if ($course->isTimedSlides())
+            return $this->startTimedSlides($course);
+
 		$record = $course;
 		$count = 0;
 		$records = []; // make this countable so view will always work
@@ -173,6 +177,57 @@ class CourseController extends Controller
 		$firstId = (count($records) > 0) ? $records[1][0]->id : 0; // collection index starts at 1
 
 		return view(PREFIX . '.view', $this->getViewData([
+			'record' => $record,
+			'records' => $records,
+			'disabled' => $disabled,
+			'firstId' => $firstId,
+			'displayCount' => $count,
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
+	public function startTimedSlides(Course $course)
+    {
+
+/*
+    Course - Plancha Principiante
+        Lesson - Dia 1
+            Paso - Slide 1
+            Paso - Slide 2
+            Paso - Slide 3
+        Lesson - Dia 2
+            Paso - Slide 1
+            Paso - Slide 2
+            Paso - Slide 3
+            Paso - Slide 4
+*/
+
+		$record = $course;
+		$count = 0;
+		$records = []; // make this countable so view will always work
+
+		try
+		{
+			$records = Lesson::getChapters($course->id);
+
+			// get the lesson count.  if only one chapter, count it's sections
+			$count = count($records); // count the chapters
+			if ($count == 1)
+			{
+				$count = count($records->first()); // count the sections
+			}
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting timed slides';
+			Event::logException(LOG_MODEL, LOG_ACTION_VIEW, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		// put some view helpers together
+		$disabled = (count($records) > 0) ? '' : 'disabled';
+		$firstId = (count($records) > 0) ? $records[1][0]->id : 0; // collection index starts at 1
+
+		return view(PREFIX . '.viewTimedSlides', $this->getViewData([
 			'record' => $record,
 			'records' => $records,
 			'disabled' => $disabled,

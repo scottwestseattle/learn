@@ -146,6 +146,7 @@ class LessonController extends Controller
 		$record->permalink		= Tools::createPermalink($request->title);
 		$record->lesson_number	= intval($request->lesson_number);
 		$record->section_number	= intval($request->section_number);
+        $record->type_flag      = LESSONTYPE_DEFAULT;
 
 		try
 		{

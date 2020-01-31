@@ -9,7 +9,7 @@
 	<h1>@LANG('ui.Edit') @LANG('content.' . $title) - {{$record->title}}</h1>
 
 	<form method="POST" id="form-edit" action="/{{$prefix}}/update/{{$record->id}}">
-	
+
 		<ul class="nav nav-tabs">
 			<li class="nav-item">
 				<a id="nav-link-text" class="nav-link active" href="#" onclick="setTab(event, 1);">@LANG('gen.Text')</a>
@@ -24,10 +24,10 @@
 				<a class="nav-link" href='/{{$prefix}}/edit2/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-pencil"></span></a>
 			</li>
 			<li class="nav-item">
-				@component('components.control-accent-chars-esp', ['target' => 'text', 'visible' => true, 'tinymce' => true, 'flat' => true])@endcomponent																		
+				@component('components.control-accent-chars-esp', ['target' => 'text', 'visible' => true, 'tinymce' => true, 'flat' => true])@endcomponent
 			</li>
-		</ul>	
-	
+		</ul>
+
 		<div style="display:none;" id="tab-title">
 
 			<div class="form-group">
@@ -39,42 +39,42 @@
 					@endforeach
 				</select>
 			</div>
-		
+
 			<div class="form-group">
 				<label for="title" class="control-label">@LANG('gen.Title'):</label>
-				<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}"></input>	
+				<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}"></input>
 			</div>
-		
+
 			<!--------------------------------------------------------------------------->
 			<!-- Lesson Type Dropdown -->
 			<!--------------------------------------------------------------------------->
-			
+
 			<div class="form-group">
-			@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix, 
-				'isAdmin' => $isAdmin, 
+			@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix,
+				'isAdmin' => $isAdmin,
 				'prompt' => 'Lesson Type: ',
 				'empty' => 'Select Lesson Type',
-				'options' => App\Lesson::getLessonTypes(),
+				'options' => App\Lesson::getTypes(),
 				'selected_option' => $record->type_flag,
 				'field_name' => 'type_flag',
 				'prompt_div' => true,
 				'select_class' => 'form-control',
 			])@endcomponent
 			</div>
-		
+
 			<!--------------------------------------------------------------------------->
 			<!-- Chapter / Section -->
 			<!--------------------------------------------------------------------------->
-		
+
 			<div class="form-group">
 				<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
 				<input type="number"  min="1" max="1000" step="1" name="lesson_number" class="form-control form-control-100" value="{{$record->lesson_number}}" />
-			</div>	
+			</div>
 
-			<div class="form-group">		
+			<div class="form-group">
 				<label for="section_number" class="control-label">@LANG('content.Section'):</label>
 				<input type="number"  min="0" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$record->section_number}}" />
-			</div>	
+			</div>
 
 			<div class="form-group">
 				<input type="checkbox" name="renumber_flag" id="renumber_flag" class="" />
@@ -90,7 +90,7 @@
 			<!--------------------------------------------------------------------------->
 			<label for="options" class="control-label">@LANG('content.Options'):</label>
 			<input type="text" name="options" class="form-control" value="{{$record->options}}" />
-			
+
 			<!--------------------------------------------------------------------------->
 			<!-- Description -->
 			<!--------------------------------------------------------------------------->
@@ -98,18 +98,18 @@
 			<textarea name="description" class="form-control">{{$record->description}}</textarea>
 
 		</div>
-		
+
 		<div id="tab-text">
-		
+
 			<div id ="rich" style="clear:both;display:default;">
 				<textarea style="height:500px" name="text" id="text" class="form-control big-text">{{$record->text}}</textarea>
 			</div>
-		
+
 		</div>
-				
-		@if (false)		
+
+		@if (false)
 			<button onclick="event.preventDefault(); saveAndStay();" name="update" class="btn btn-success">Save and Stay</button>
-		@endif				
+		@endif
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
 		</div>
@@ -118,9 +118,9 @@
 
 		<div id ="preview" style="display:none;">
 		</div>
-		
+
 	</form>
-	
+
 </div>
 
 @endsection

@@ -4,8 +4,25 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+define('COURSETYPE_NOTSET', 0);
+define('COURSETYPE_ENGLISH', 10);
+define('COURSETYPE_SPANISH', 20);
+define('COURSETYPE_TECH', 30);
+define('COURSETYPE_TIMED_SLIDES', 40);
+define('COURSETYPE_OTHER', 99);
+define('COURSETYPE_DEFAULT', COURSETYPE_NOTSET);
+
 class Course extends Base
 {
+	const _typeFlags = [
+        COURSETYPE_NOTSET => 'Not Set',
+        COURSETYPE_ENGLISH => 'English',
+        COURSETYPE_SPANISH => 'Spanish',
+        COURSETYPE_TECH => 'Tech',
+        COURSETYPE_TIMED_SLIDES => 'Timed Slides',
+        COURSETYPE_OTHER => 'Other',
+	];
+
     public function user()
     {
     	return $this->belongsTo(User::class);
@@ -14,6 +31,11 @@ class Course extends Base
     public function lessons()
     {
     	return $this->hasMany('App\Lesson', 'parent_id', 'id');
+    }
+
+    public function isTimedSlides()
+    {
+        return($this->type_flag == COURSETYPE_TIMED_SLIDES);
     }
 
     public function getCardColor()
@@ -45,16 +67,8 @@ class Course extends Base
 	}
 
     static public function getTypes()
-    {
-		$types = [
-			'Not Set',
-			'English',
-			'Spanish',
-			'Tech',
-			'Other',
-		];
-
-		return $types;
+	{
+		return self::_typeFlags;
 	}
 
     static public function get($id)

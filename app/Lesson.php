@@ -21,12 +21,13 @@ define('LESSONTYPE_QUIZ_MC1', 40);
 define('LESSONTYPE_QUIZ_MC2', 41);
 define('LESSONTYPE_QUIZ_MC3', 42);
 define('LESSONTYPE_QUIZ_MC4', 43);
+define('LESSONTYPE_TIMED_SLIDES', 50);
 define('LESSONTYPE_OTHER', 99);
 define('LESSONTYPE_DEFAULT', LESSONTYPE_TEXT);
 
 class Lesson extends Base
 {
-    const _lessonTypeFlags = [
+    const _typeFlags = [
 		LESSONTYPE_NOTSET => 'Not Set',
 		LESSONTYPE_TEXT => 'Text',
 		LESSONTYPE_VOCAB => 'Vocabulary List',
@@ -35,6 +36,7 @@ class Lesson extends Base
 		LESSONTYPE_QUIZ_MC2 => 'Multiple Choice - Random Options (MC2)',
 		LESSONTYPE_QUIZ_MC3 => 'Multiple Choice - New Layout (MC3)',
 //todo: not used yet		LESSONTYPE_QUIZ_MC4 => 'Multiple Choice - Random Options New Layout (MC4)',
+		LESSONTYPE_TIMED_SLIDES => 'Timed Slides',
 		LESSONTYPE_OTHER => 'Other',
     ];
 
@@ -647,9 +649,9 @@ class Lesson extends Base
 		return $this->type_flag;
 	}
 
-    static public function getLessonTypes()
+    static public function getTypes()
 	{
-		return self::_lessonTypeFlags;
+		return self::_typeFlags;
 	}
 
     public function getChapterIndex()

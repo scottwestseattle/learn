@@ -25,18 +25,14 @@
 
 	<p>{{$record->description}}</p>
 
-    <a href="/lessons/view/{{$firstId}}">
-        <button type="button" style="text-align:center; font-size: 1.3em; color:white;" class="btn btn-info btn-lesson-index" {{$disabled}}>@LANG('content.Start at the beginning')</button>
-    </a>
-
-	<h1>@LANG('content.Lessons') ({{$displayCount}})
 	@if ($isAdmin)
+    	<h1>@LANG('content.Lessons') ({{$displayCount}})
 		<span><a href="/lessons/admin/{{$record->id}}"><span class="glyphCustom glyphicon glyphicon-admin"></span></a></span>
 		<span><a href="/lessons/add/{{$record->id}}"><span class="glyphCustom glyphicon glyphicon-add"></span></a></span>
 	@endif
 	</h1>
 
-<div class="accordion" id="accordionExample">
+<div style="max-width:600px;" class="">
 @foreach($records as $record)
 
 @if (count($records) == 1)
@@ -83,7 +79,6 @@
       </h3>
     </div>
 
-	<div id="collapse{{$record[0]->id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
 		<div style="" class="card-body">
 		@foreach($record as $rec)
 			<a href="/lessons/view/{{$rec->id}}">
@@ -100,7 +95,6 @@
 			</a>
 		@endforeach
 		</div>
-    </div>
   </div>
 
 @endif
