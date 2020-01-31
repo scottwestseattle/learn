@@ -437,7 +437,7 @@ class WordController extends Controller
 			Tools::flash('success', 'No changes were made');
 		}
 
-        $returnPath = $word->isVocabListWord() ? '/vocab-lists/view/' . $word->vocab_list_id : '/words/view/' . $word->id;
+        $returnPath = '/words/view/' . $word->id;
 
 		return redirect($returnPath);
 	}

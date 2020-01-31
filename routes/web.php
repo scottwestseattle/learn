@@ -93,8 +93,8 @@ Route::group(['prefix' => 'words'], function () {
 	Route::post('/create-vocab-word','WordController@createVocabListWord');
 
 	// edit/update
-	Route::get('/edit/{word}','WordController@edit');
-	Route::post('/update/{word}','WordController@update');
+	Route::get('/edit/{word}','WordController@edit')->middleware('is_owner');
+	Route::post('/update/{word}','WordController@update')->middleware('is_owner');
 	Route::get('/edit-user/{word}','WordController@editUser')->middleware('is_owner');
 	Route::post('/update-user/{word}','WordController@updateUser')->middleware('is_owner');
 
