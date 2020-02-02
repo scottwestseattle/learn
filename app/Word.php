@@ -51,12 +51,16 @@ class Word extends Model
 
     public function updateLastViewedTime()
     {
+        $rc = false;
+
 		try
 		{
 			// update the wod timestamp so it will move to the back of the list
 			$this->last_viewed_at = Tools::getTimestamp();
 			$this->view_count++;
 			$this->save();
+
+			$rc = true;
 		}
 		catch (\Exception $e)
 		{
@@ -64,6 +68,8 @@ class Word extends Model
 			Event::logException('word', LOG_ACTION_SELECT, 'id = ' . $this->id, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
+
+		return $rc;
     }
 
 	static public function search($search)

@@ -24,7 +24,8 @@ class WordController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser', 'confirmDeleteUser', 'deleteUser']);
+        $this->middleware('is_admin')->except(['index', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser'
+            , 'confirmDeleteUser', 'deleteUser', 'touch']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -686,5 +687,31 @@ class WordController extends Controller
 			'quizText' => null,
 			'isMc' => false,
 			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
+	public function touch(Word $word)
+    {
+        $rc = 'not touched';
+
+        if (User::isOwner($word->user_id))
+        {
+            // only touch the word for the owner
+            if ($word->updateLastViewedTime())
+            {
+                $rc = 'touched';
+            }
+            else
+            {
+                $rc = 'not touched: update failed';
+            }
+        }
+        else
+        {
+            $rc = 'not touched: not the owner';
+        }
+
+		Event::logInfo(LOG_MODEL, LOG_ACTION_TOUCH, 'touch ' . $word->title . ': ' . $rc);
+
+		return $rc;
     }
 }

@@ -24,13 +24,20 @@
 	data-quiztext-override-wrong="@LANG('content.Change to Wrong')"
 	data-quiztext-score-changed="@LANG('content.Score Changed')"
 	data-lessonid="{{$record->id}}"
+	data-touchpath="{{(isset($touchPath) ? $touchPath : '')}}"
 ></div>
 
 	<!-------------------------------------------------------->
 	<!-- Add the q and a records -->
 	<!-------------------------------------------------------->
 @foreach($records as $rec)
-	<div class="data-qna" data-question="{{$rec['q']}}" data-answer="{{$rec['a']}}" data-options="{{$rec['options']}}" data-id="{{$rec['id']}}" ></div>
+	<div class="data-qna"
+	    data-question="{{$rec['q']}}"
+	    data-answer="{{$rec['a']}}"
+	    data-options="{{$rec['options']}}"
+	    data-id="{{$rec['id']}}"
+	    data-ix="{{$rec['ix']}}" >
+	</div>
 @endforeach
 
 <div class="container">

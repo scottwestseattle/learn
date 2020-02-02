@@ -83,6 +83,7 @@ Route::group(['prefix' => 'words'], function () {
 	Route::get('/admin', 'WordController@admin');
 	Route::get('/view/{word}','WordController@view');
 	Route::get('/review', 'WordController@review');
+	Route::get('/touch/{word}', 'WordController@touch');
 
 	// add/create
 	Route::get('/add/{parent_id?}','WordController@add');

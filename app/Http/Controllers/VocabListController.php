@@ -301,6 +301,7 @@ class VocabListController extends Controller
 			'quizText' => $quizText,
 			'isMc' => true,
 			'returnPath' => PREFIX . '/view',
+			'touchPath' => 'words/touch',
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
@@ -313,7 +314,8 @@ class VocabListController extends Controller
 		    // flip the title and description so title will be the answer
             $qna[$cnt]['q'] = $record->description;
             $qna[$cnt]['a'] = $record->title;
-            $qna[$cnt]['id'] = $cnt;
+            $qna[$cnt]['id'] = $record->id;
+            $qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
             $qna[$cnt]['options'] = '';
 
 			$cnt++;

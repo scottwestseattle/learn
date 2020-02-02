@@ -461,9 +461,18 @@ function loadData()
 		var answer = container.data('answer');
 		var options = container.data('options'); // mc options
 		var id = container.data('id');
+		var wordId = container.data('wid');
 
 		// add the record
-		quiz.qna[i] = {q:question.toString(), a:answer.toString(), id:id.toString(), options:options.toString(), order:0, correct:false};
+		quiz.qna[i] = {
+		    q:question.toString(),
+		    a:answer.toString(),
+		    id:id.toString(),
+		    options:options.toString(),
+		    order:0,
+		    correct:false
+		};
+
 		//alert(quiz.qna[i].id);
 		//if (i == 0) alert(quiz.qna[i].q);
 
@@ -494,6 +503,7 @@ function loadData()
 		quiz.quizTextOverrideWrong = container.data('quiztext-override-wrong') + " (Alt+c)";
 		quiz.quizTextScoreChanged = container.data('quiztext-score-changed');
 		quiz.lessonId = container.data('lessonid');
+		quiz.touchPath = container.data('touchpath');
 
 		if (i == 0)
 			alert(quiz.qna[i].q);
@@ -883,6 +893,9 @@ function checkAnswer(checkOptions, attemptMc = null)
 			$("#question-right").show();
 			right++;
     		rightAnswer = true;
+
+    		// mark the question since it was answered correctly
+    		touch(quiz.qna[quiz.qna[curr].order]);
 		}
 		else
 		{
@@ -1048,4 +1061,16 @@ function accentFold (s)
 	}
 
 	return ret;
+}
+
+function touch(q)
+{
+    // if it's a word, update it's last display time
+    if (quiz.touchPath.length > 0) // if touchPath set
+    {
+        var path = '/' + quiz.touchPath + '/' + q.id;
+        ajaxexec(path);
+
+        //alert('id: ' + q.id + ', word: ' + q.a);
+    }
 }

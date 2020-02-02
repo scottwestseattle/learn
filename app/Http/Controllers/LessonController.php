@@ -474,8 +474,6 @@ class LessonController extends Controller
 		{
 		    // had to do this because html_entity_decode() wouldn't work in explode
 		    $line = mb_eregi_replace('&nbsp;', ' ', htmlentities($record[1]));
-		    $line = str_replace('[', '(', $line);
-		    $line = str_replace(']', ')', $line);
             $line = html_entity_decode($line); // decode it back
 
             // this doesn't work

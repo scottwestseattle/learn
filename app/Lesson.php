@@ -217,6 +217,7 @@ class Lesson extends Base
 				$quizNew[$cnt]['q'] = $record['q'];
 				$quizNew[$cnt]['a'] = $record['a'];
 				$quizNew[$cnt]['id'] = $record['id'];
+				$quizNew[$cnt]['ix'] = $record['id'];
 
 				//dump($quizNew[$cnt]);
 
@@ -306,6 +307,7 @@ class Lesson extends Base
 				$quizNew[$cnt]['q'] = $record['q'];
 				$quizNew[$cnt]['a'] = $record['a'];
 				$quizNew[$cnt]['id'] = $record['id'];
+				$quizNew[$cnt]['ix'] = $record['id'];
 				//dd($quiz[$i]);
 
 				$cnt++;
@@ -405,6 +407,7 @@ class Lesson extends Base
 						'a' => $a,
 						'options' => $buttons,
 						'id' => $record['id'],
+        				'ix' => $record['id'],
 					];
 				}
 				else
@@ -448,6 +451,7 @@ class Lesson extends Base
 							'q' => $q,
 							'a' => $a,
 							'id' => $record['id'],
+							'ix' => $record['id'],
 							'options' => $buttons,
 						];
 					}
@@ -485,6 +489,7 @@ class Lesson extends Base
 				'q' => $q,
 				'a' => $a,
 				'id' => $record['id'],
+				'ix' => $record['id'],
 				'options' => null,
 			];
 		}
