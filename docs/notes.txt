@@ -23,6 +23,12 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 
 Latest DB Changes:
 
+2/4/2020
+ALTER TABLE `lessons` ADD `completed_at` TIMESTAMP NULL COMMENT 'lesson completed by student at' AFTER `display_date`;
+
+2/3/2020
+ALTER TABLE `lessons` ADD `title_chapter` VARCHAR(100) NULL AFTER `title`;
+
 1/30/2020
 ALTER TABLE `words` ADD `vocab_list_id` INT NULL COMMENT 'parent vocab list' AFTER `parent_id`;
 ALTER TABLE `words` ADD `lesson_id` INT NULL COMMENT 'parent lesson' AFTER `parent_id`;

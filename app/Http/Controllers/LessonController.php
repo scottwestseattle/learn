@@ -24,7 +24,7 @@ class LessonController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'permalink', 'logQuiz']);
+        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'start', 'permalink', 'logQuiz']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -141,6 +141,7 @@ class LessonController extends Controller
 		$record->user_id 		= Auth::id();
 		$record->parent_id 		= $request->parent_id;
 		$record->title 			= $request->title;
+		$record->title_chapter 	= $request->title_chapter;
 		$record->description	= $request->description;
 		$record->text			= Tools::convertFromHtml($request->text);
 		$record->permalink		= Tools::createPermalink($request->title);
@@ -288,6 +289,7 @@ class LessonController extends Controller
 		$changes = '';
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
+		$record->title_chapter = Tools::copyDirty($record->title_chapter, $request->title_chapter, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->text = Tools::copyDirty($record->text, Tools::convertFromHtml(Tools::cleanHtml($request->text)), $isDirty, $changes);
 		$record->parent_id = Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
@@ -606,4 +608,18 @@ class LessonController extends Controller
 
 		return $rc;
 	}
+
+	public function start(Lesson $lesson)
+    {
+		Lesson::setCurrentLocation($lesson->id);
+
+		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
+        //dd($records);
+
+		return view(PREFIX . '.runtimed', $this->getViewData([
+			'record' => $lesson,
+			'records' => $records,
+			'returnPath' => 'courses/view',
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
 }

@@ -78,7 +78,7 @@
     <div style=""  class="card-header" id="headingOne">
       <h3 style=""  class="mb-0">
         <button style="text-decoration:none; text-align:left;" class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{$record[0]->id}}" aria-expanded="true" aria-controls="collapseOne">
-			@LANG('content.Lesson')&nbsp;{{$record[0]->lesson_number}}:&nbsp;{{$record[0]->title}}
+			@LANG('content.Lesson')&nbsp;{{$record[0]->lesson_number}}:&nbsp;{{isset($record[0]->title_chapter) ? $record[0]->title_chapter : 'Chapter ' . $record[0]->lesson_number}}
 		</button>
       </h3>
     </div>
@@ -91,7 +91,7 @@
 				<table>
 					<tr>
 						<td>
-							<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->finished_flag}} {{$rec->section_number}}.&nbsp;{{$rec->title}}</div>
+							<div style="font-size:1em; color:purple; padding-right:5px;">{{$rec->lesson_number}}.{{$rec->section_number}}&nbsp;{{$rec->title}}</div>
 							<span style="font-size:12px; color:#D64D32;">{{$rec->description}}</span>
 						</td>
 					</tr>

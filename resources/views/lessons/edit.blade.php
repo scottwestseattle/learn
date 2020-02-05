@@ -97,6 +97,12 @@
 			<label for="description" class="control-label">@LANG('gen.Description'):</label>
 			<textarea name="description" class="form-control">{{$record->description}}</textarea>
 
+			<!--------------------------------------------------------------------------->
+			<!-- Chapter Title - only used for the first lesson in a chapter -->
+			<!--------------------------------------------------------------------------->
+			<label for="title_chapter" class="control-label">@LANG('gen.Chapter Title'):</label>
+			<textarea name="title_chapter" class="form-control">{{$record->title_chapter}}</textarea>
+
 		</div>
 
 		<div id="tab-text">
