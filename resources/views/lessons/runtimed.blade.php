@@ -10,16 +10,21 @@
 	data-type="{{$record->type_flag}}"
 	data-lessonid="{{$record->id}}"
 	data-touchpath="{{(isset($touchPath) ? $touchPath : '')}}"
+	data-max="{{count($records)}}"
 ></div>
 
 	<!-------------------------------------------------------->
 	<!-- Add the q and a records -->
 	<!-------------------------------------------------------->
 @foreach($records as $r)
-	<div class="data-qna"
+	<div class="data-slides"
 	    data-title="{{$r->title}}"
 	    data-description="{{$r->description}}"
-	    data-id="{{$r->id}}">
+	    data-id="{{$r->id}}"
+	    data-photo="{{$r->main_photo}}"
+	    data-seconds="5"
+	    data-between="3"
+	>
 	</div>
 @endforeach
 
@@ -47,13 +52,15 @@
 	</div>
 
 	<!---------------------------------------------------------------------------------------------------------------->
-	<!-- Start Panel -->
+	<!-- Start Panel - Index -->
 	<!---------------------------------------------------------------------------------------------------------------->
-	<div id="panel-start" class="quiz-panel">
-	    <div style="text-align:center; class="">
-            <h2 class="mb-0">{{$records[0]->course->title}}</h2>
+	<div id="panel-start" class="slide-panel">
+
+	    <div class="text-center">
+            <p style="font-size:13px;" class="mb-0"><strong>{{$records[0]->course->title}}</strong></p>
             <h3 class="mt-2 mb-2">{{$records[0]->title_chapter}}</h3>
-            <h4 class="">{{count($records) * 2}} minutes - {{count($records)}} exercises</h4>
+            <p style="font-size:13px;" class="">{{count($records) * 2}} minutes - {{count($records)}} exercises</p>
+            <a onclick="event.preventDefault(); run()"  href="" class="btn btn-primary mb-3" role="button">Start</a>
         </div>
 
         <div class="card-deck">
@@ -66,10 +73,7 @@
                 <tbody>
                     <tr>
                         <td style="">
-                                <h5>
-                                    <a href="/lessons/view/{{$record->id}}">{{$record->title}}</a>
-                                </h5>
-
+                                <div><a href="/lessons/view/{{$record->id}}">{{$record->title}}</a></div>
                                 <div>
                                 @if (App\User::isOwner($record->user_id))
                                     <div>
@@ -77,11 +81,11 @@
                                         <a href='/lessons/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a>
                                     </div>
                                 @endif
-                                {{$record->description}}
+                                <div style="font-size:13px;">{{$record->description}}</div>
                                 </div>
                         </td>
                         <td>
-                                <img width="100" src="/img/plancha/figure-plancha.png" />
+                                <img width="100" src="/img/plancha/{{$record->main_photo}}" />
                         </td>
                     </tr>
                 </tbody>
@@ -91,22 +95,60 @@
         </div>
         @endforeach
         </div><!-- card deck -->
-	</div><!-- start panel -->
+
+	</div><!-- panel-start -->
+
+	<!---------------------------------------------------------------------------------------------------------------->
+	<!-- Countdown Panel -->
+	<!---------------------------------------------------------------------------------------------------------------->
+	<div id="panel-countdown" class="slide-panel text-center">
+	    <h1>Get Ready</h1>
+	    <h5>Coming up 1 of {{count($records)}}</h5>
+	    <div><img class="sliderPhoto" style="max-width:400px; width:90%;" src="/img/plancha/figure-plancha.png" /></div>
+	    <h5 class="slideTitle"></h5>
+	    <div class="slideDescription"></div>
+	</div><!-- panel-countdown -->
 
 	<!---------------------------------------------------------------------------------------------------------------->
 	<!-- Run Panel -->
 	<!---------------------------------------------------------------------------------------------------------------->
-	<div id="panel-run" class="quiz-panel text-center">
-	Run Panel
-	</div><!-- run panel -->
+	<div id="panel-run" class="slide-panel text-center">
+	    <h1>Do the Exercise</h1>
+	    <h5>Play Like a Champion Today</h5>
+	    <div><img class="sliderPhoto" style="max-width:400px; width:90%;" src="/img/plancha/figure-plancha.png" /></div>
+	    <h5 class="slideTitle"></h5>
+	    <div class="slideDescription"></div>
+	</div><!-- panel-run -->
 
 	<!---------------------------------------------------------------------------------------------------------------->
-	<!-- End of Panel -->
+	<!-- Between Panel -->
 	<!---------------------------------------------------------------------------------------------------------------->
-	<div id="panel-end" class="quiz-panel text-center">
-	End Panel
-	</div><!-- end panel -->
+	<div id="panel-between" class="slide-panel text-center">
+	    <h1>Take a Break</h1>
+	    <h5>Coming up next:</h5>
+	    <div><img class="sliderPhoto" style="max-width:400px; width:90%;" src="/img/plancha/figure-plancha.png" /></div>
+	    <h5 class="slideTitle"></h5>
+	    <div class="slideDescription"></div>
+	</div><!-- panel-between -->
 
+	<!---------------------------------------------------------------------------------------------------------------->
+	<!-- Pause Panel -->
+	<!---------------------------------------------------------------------------------------------------------------->
+	<div id="panel-pause" class="slide-panel text-center">
+	Pause Panel
+	</div><!-- panel-pause -->
+
+	<!---------------------------------------------------------------------------------------------------------------->
+	<!-- End Panel -->
+	<!---------------------------------------------------------------------------------------------------------------->
+	<div id="panel-end" class="slide-panel text-center">
+	    <h1>Congratulations!</h1>
+	    <h5>{{count($records)}} Exercises Completed</h5>
+	</div><!-- panel-end -->
+
+    <div class="text-center">
+        <h1 style="font-size:100px" id="debug"></h1>
+    </div>
 </div><!-- container -->
 
 @endsection
