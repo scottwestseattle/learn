@@ -56,6 +56,8 @@ function deck() {
 		reset();
 		this.setStates(RUNSTATE_COUNTDOWN);
 	    deck.showSlide();
+
+	    _countdownAudio = 3;
         startTimer(deck.slides[curr].countdown, this.runSlide);
 	}
 
@@ -66,11 +68,11 @@ function deck() {
         {
             loadSlide();
             var seconds = deck.slides[curr].seconds;
-            curr++;
 
-            if (curr < max)
+    	    _countdownAudio = 10;
+            if (curr < (max - 1)) // not last one
                 startTimer(seconds, deck.runBetween);
-            else
+            else    // last one
                 startTimer(seconds, stop);
         }
         else
@@ -82,8 +84,12 @@ function deck() {
 	this.runBetween = function() {
         clearTimer();
 	    deck.setStates(RUNSTATE_BETWEEN);
-	    deck.showSlide();
-        startTimer(deck.slides[curr].between, deck.runSlide);
+	    betweenSeconds = deck.slides[curr].between;
+        curr++; // do this here because we need the between seconds from the previous record
+	    deck.showSlide(); // show the upcoming slide during the break
+
+	    _countdownAudio = 3;
+        startTimer(betweenSeconds, deck.runSlide);
 	}
 
 	this.showPanel = function(id) {
@@ -139,7 +145,10 @@ function deck() {
 	}
 
 	this.showSlide = function() {
-        $(".slideTitle").text(deck.slides[curr].title);
+	    var slide = deck.slides[curr];
+        $(".slideCount").text(slide.number + " of " + deck.slides.length);
+        $(".slideTitle").text(slide.number + ". " + slide.title);
+        $(".slideSeconds").text("For " + slide.seconds + " seconds");
         $(".slideDescription").text(deck.slides[curr].description);
         $(".sliderPhoto").attr("src", "/img/plancha/" + deck.slides[curr].photo)
         //alert(deck.slides[curr].photo);
@@ -167,17 +176,19 @@ function loadData()
         var service = container.data('title');
 
 		var title = container.data('title');
+		var number = parseInt(container.data('number'));
 		var description = container.data('description');
 		var id = container.data('id');
         var seconds = parseInt(container.data('seconds'));
         var between = parseInt(container.data('between'));
-        var countdown = parseInt(10);
+        var countdown = parseInt(container.data('countdown'));
         var photo = container.data('photo');
         var reps = 0;
 
 		// add the record
 		deck.slides[i] = {
 		    title:title.toString(),
+		    number:number,
 		    description:description.toString(),
 		    id:id.toString(),
 		    order:0,
@@ -247,23 +258,28 @@ function startTimer(seconds, func)
     deckTimer = setTimeout(func, seconds * 1000);
     startInterval(seconds);
 
-    setDebug(seconds);
+    showSeconds(seconds);
 }
 
 var timerInterval = 0;
 var timerSeconds = 0;
 var countdownTimer = null;
+var _countdownAudio = 0;
+
 function startInterval(seconds)
 {
     timerInterval = seconds;
     countdownTimer = setInterval(updateTimer, 1000);
-    setDebug(timerInterval);
+    showSeconds(timerInterval);
 }
 
 function updateTimer()
 {
+    if (_countdownAudio > 0 && timerInterval <= (_countdownAudio + 1))
+        playAudio(timerInterval - 1);
+
     timerInterval--;
-    setDebug(timerInterval);
+    showSeconds(timerInterval);
 
     if (timerInterval <= 0)
        clearTimer();
@@ -273,12 +289,25 @@ function clearTimer()
 {
     clearInterval(countdownTimer);
     timerInterval = 0;
-    setDebug();
+    showSeconds();
+}
+
+function playAudio(seconds)
+{
+    var a = document.getElementById("audio");
+    var src = "/audio/" + seconds + ".mp3";
+    $("#audio").attr("src", src)
+    a.play();
 }
 
 function setDebug(text = null)
 {
     $("#debug").text(text);
+}
+
+function showSeconds(text = null)
+{
+    $(".showSeconds").text(text);
 }
 
 function run()

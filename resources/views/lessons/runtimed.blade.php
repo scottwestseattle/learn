@@ -19,11 +19,13 @@
 @foreach($records as $r)
 	<div class="data-slides"
 	    data-title="{{$r->title}}"
+	    data-number="{{$r->section_number}}"
 	    data-description="{{$r->description}}"
 	    data-id="{{$r->id}}"
 	    data-photo="{{$r->main_photo}}"
-	    data-seconds="5"
-	    data-between="3"
+	    data-seconds="{{isset($r->seconds) ? $r->seconds : 30}}"
+	    data-between="{{isset($r->break_seconds) ? $r->break_seconds : 30}}"
+	    data-countdown="10"
 	>
 	</div>
 @endforeach
@@ -73,7 +75,10 @@
                 <tbody>
                     <tr>
                         <td style="">
-                                <div><a href="/lessons/view/{{$record->id}}">{{$record->title}}</a></div>
+                                <div><a href="/lessons/view/{{$record->id}}">{{$record->section_number}}.&nbsp;{{$record->title}}</a></div>
+                                @if (isset($record->seconds))
+                                    <div>{{$record->seconds}} seconds</div>
+                                @endif
                                 <div>
                                 @if (App\User::isOwner($record->user_id))
                                     <div>
@@ -104,20 +109,22 @@
 	<div id="panel-countdown" class="slide-panel text-center">
 	    <h1>Get Ready</h1>
 	    <h5>Coming up 1 of {{count($records)}}</h5>
-	    <div><img class="sliderPhoto" style="max-width:400px; width:90%;" src="/img/plancha/figure-plancha.png" /></div>
+	    <div><img class="sliderPhoto" style="max-width:200px; width:70%;" src="/img/plancha/figure-plancha.png" /></div>
 	    <h5 class="slideTitle"></h5>
+	    <h5 class="slideSeconds"></h5>
 	    <div class="slideDescription"></div>
+        <div class="text-center"><h1 style="font-size:100px" class="showSeconds"></h1></div>
 	</div><!-- panel-countdown -->
 
 	<!---------------------------------------------------------------------------------------------------------------->
 	<!-- Run Panel -->
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-run" class="slide-panel text-center">
-	    <h1>Do the Exercise</h1>
-	    <h5>Play Like a Champion Today</h5>
-	    <div><img class="sliderPhoto" style="max-width:400px; width:90%;" src="/img/plancha/figure-plancha.png" /></div>
+	    <div><img class="sliderPhoto" style="max-width:400px; width:98%;" src="/img/plancha/figure-plancha.png" /></div>
+	    <div class="slideCount"></div>
 	    <h5 class="slideTitle"></h5>
 	    <div class="slideDescription"></div>
+        <div class="text-center"><h1 style="font-size:100px" class="showSeconds"></h1></div>
 	</div><!-- panel-run -->
 
 	<!---------------------------------------------------------------------------------------------------------------->
@@ -125,9 +132,12 @@
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-between" class="slide-panel text-center">
 	    <h1>Take a Break</h1>
+        <div class="text-center"><h1 style="font-size:100px" class="showSeconds"></h1></div>
 	    <h5>Coming up next:</h5>
-	    <div><img class="sliderPhoto" style="max-width:400px; width:90%;" src="/img/plancha/figure-plancha.png" /></div>
+	    <div class="slideCount"></div>
+	    <div><img class="sliderPhoto" style="max-width:200px; width:60%;" src="/img/plancha/figure-plancha.png" /></div>
 	    <h5 class="slideTitle"></h5>
+	    <h5 class="slideSeconds"></h5>
 	    <div class="slideDescription"></div>
 	</div><!-- panel-between -->
 
@@ -149,6 +159,12 @@
     <div class="text-center">
         <h1 style="font-size:100px" id="debug"></h1>
     </div>
+
+    <audio id="audio">
+        <source src="" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
 </div><!-- container -->
 
 @endsection

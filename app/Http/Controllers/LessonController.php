@@ -148,6 +148,10 @@ class LessonController extends Controller
 		$record->lesson_number	= intval($request->lesson_number);
 		$record->section_number	= intval($request->section_number);
         $record->type_flag      = LESSONTYPE_DEFAULT;
+        $record->main_photo     = $request->main_photo;
+        $record->seconds        = $request->seconds;
+        $record->break_seconds  = $request->break_seconds;
+        $record->reps           = $request->reps;
 
 		try
 		{
@@ -295,6 +299,10 @@ class LessonController extends Controller
 		$record->parent_id = Tools::copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
 		$record->type_flag = Tools::copyDirty($record->type_flag, $request->type_flag, $isDirty, $changes);
 		$record->options = Tools::copyDirty($record->options, $request->options, $isDirty, $changes);
+		$record->main_photo = Tools::copyDirty($record->main_photo, $request->main_photo, $isDirty, $changes);
+		$record->seconds = Tools::copyDirty($record->seconds, $request->seconds, $isDirty, $changes);
+		$record->break_seconds = Tools::copyDirty($record->break_seconds, $request->break_seconds, $isDirty, $changes);
+		$record->reps = Tools::copyDirty($record->reps, $request->reps, $isDirty, $changes);
 
 		// autoformat is currently just a checkbox but the db value is a flag
 		$format_flag = isset($request->autoformat) ? LESSON_FORMAT_AUTO : LESSON_FORMAT_DEFAULT;
