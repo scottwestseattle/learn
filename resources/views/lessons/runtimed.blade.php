@@ -66,7 +66,6 @@
         </div>
 
         <div class="card-deck">
-
         @foreach($records as $record)
         <div style="min-width:300px;" class="card mb-1">
             <div class="card-body">
@@ -108,12 +107,12 @@
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-countdown" class="slide-panel text-center">
 	    <h1>Get Ready</h1>
-	    <h5>Coming up 1 of {{count($records)}}</h5>
+        <div class="text-center"><h1 style="font-size:100px" class="showSeconds"></h1></div>
+	    <h5>Coming up 1 of {{count($records)}}:</h5>
 	    <div><img class="sliderPhoto" style="max-width:200px; width:70%;" src="/img/plancha/figure-plancha.png" /></div>
 	    <h5 class="slideTitle"></h5>
 	    <h5 class="slideSeconds"></h5>
 	    <div class="slideDescription"></div>
-        <div class="text-center"><h1 style="font-size:100px" class="showSeconds"></h1></div>
 	</div><!-- panel-countdown -->
 
 	<!---------------------------------------------------------------------------------------------------------------->
@@ -154,6 +153,43 @@
 	<div id="panel-end" class="slide-panel text-center">
 	    <h1>Congratulations!</h1>
 	    <h5>{{count($records)}} Exercises Completed</h5>
+
+        <div class="card-deck">
+        @foreach($records as $record)
+        <div style="min-width:300px;" class="card mb-1">
+            <div class="card-body">
+
+                <table style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td style="">
+                                <div><a href="/lessons/view/{{$record->id}}">{{$record->section_number}}.&nbsp;{{$record->title}}</a></div>
+                                @if (isset($record->seconds))
+                                    <div>{{$record->seconds}} seconds</div>
+                                @endif
+                                <div>
+                                @if (App\User::isOwner($record->user_id))
+                                    <div>
+                                        <a href='/lessons/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a>
+                                        <a href='/lessons/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a>
+                                    </div>
+                                @endif
+                                <div style="font-size:13px;">{{$record->description}}</div>
+                                </div>
+                        </td>
+                        <td>
+                                <img width="100" src="/img/plancha/{{$record->main_photo}}" />
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+
+            </div>
+        </div>
+        @endforeach
+        </div><!-- card deck -->
+
+
 	</div><!-- panel-end -->
 
     <div class="text-center">

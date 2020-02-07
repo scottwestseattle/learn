@@ -70,6 +70,7 @@ function deck() {
             var seconds = deck.slides[curr].seconds;
 
     	    _countdownAudio = 10;
+    	    _tensAudio = true;
             if (curr < (max - 1)) // not last one
                 startTimer(seconds, deck.runBetween);
             else    // last one
@@ -265,6 +266,7 @@ var timerInterval = 0;
 var timerSeconds = 0;
 var countdownTimer = null;
 var _countdownAudio = 0;
+var _tensAudio = false;
 
 function startInterval(seconds)
 {
@@ -275,6 +277,9 @@ function startInterval(seconds)
 
 function updateTimer()
 {
+    if (_tensAudio && ((timerInterval-1) % 10) == 0)
+        playAudio(timerInterval-1);
+
     if (_countdownAudio > 0 && timerInterval <= (_countdownAudio + 1))
         playAudio(timerInterval - 1);
 
@@ -290,6 +295,8 @@ function clearTimer()
     clearInterval(countdownTimer);
     timerInterval = 0;
     showSeconds();
+    _countdownAudio = 0;
+    _tensAudio = false;
 }
 
 function playAudio(seconds)
