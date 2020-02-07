@@ -7,7 +7,13 @@
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
 	<div class="page-nav-buttons">
-		<a class="btn btn-success btn-sm btn-nav-lesson-sm" role="button" href="/courses/view/{{$record->parent_id}}">@LANG('content.Back to')&nbsp;{{$courseTitle}}<span class="glyphicon glyphicon-button-back-to"></span></a>
+		<a class="btn btn-success btn-sm btn-nav-lesson-sm" role="button"
+            @if($record->isText())
+                href="/courses/view/{{$record->parent_id}}"
+            @else
+                href="/lessons/start/{{$record->id}}"
+		    @endif
+		>@LANG('content.Back to')&nbsp;{{$courseTitle}}<span class="glyphicon glyphicon-button-back-to"></span></a>
 		<a class="btn btn-success btn-sm btn-nav-lesson-sm {{isset($nextChapter) ? '' : 'hidden'}}" role="button" href="/lessons/view/{{$nextChapter}}">@LANG('content.Next Chapter')<span class="glyphicon glyphicon-button-next"></span></a>
 	</div>
 	<div class="page-nav-buttons">
@@ -40,10 +46,16 @@
 	</div>
 
 	@if ($isAdmin)
-	<h3 name="title" class="">
+	<h3 name="title" class="mb-2">
 	    {{$record->title }}
-        <div><a href="/lessons/convert-to-list/{{$record->id}}"><button class="btn btn-info btn-xs">Convert</button></a></div>
+	    @if ($record->isText())
+            <div><a href="/lessons/convert-to-list/{{$record->id}}"><button class="btn btn-info btn-xs">Convert</button></a></div>
+        @endif
     </h3>
+    @endif
+
+    @if (isset($record->main_photo))
+        <div><img src="{{$photoPath}}{{$record->main_photo}}" width="200"/></div>
     @endif
 
 	@if (strlen($record->description) > 0)
@@ -209,14 +221,16 @@
 		<!------------------------------------------------------------------------------->
 		<p>{!! $record->text !!}</p>
 
-<div class="input-group mb-3">
-  <div class="input-group-prepend">
-    <div class="input-group-text">
-      <input id="checkboxFinished" type="checkbox" onClick="setFinished()" aria-label="Checkbox for following text input">
-    </div>
-  </div>
-	<a class="btn btn-info btn-sm" role="button" onClick="setFinished()" href="#">@LANG('lesson.Finished')</a>
-</div>
+        @if ($record->isText())
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input id="checkboxFinished" type="checkbox" onClick="setFinished()" aria-label="Checkbox for following text input">
+                </div>
+              </div>
+                <a class="btn btn-info btn-sm" role="button" onClick="setFinished()" href="#">@LANG('lesson.Finished')</a>
+            </div>
+        @endif
 
 	@endif
 

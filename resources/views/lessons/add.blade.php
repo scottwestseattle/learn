@@ -20,6 +20,23 @@
 			</select>
 		</div>
 
+        <!--------------------------------------------------------------------------->
+        <!-- Lesson Type Dropdown -->
+        <!--------------------------------------------------------------------------->
+
+        <div class="form-group">
+        @component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix,
+            'isAdmin' => $isAdmin,
+            'prompt' => 'Lesson Type: ',
+            'empty' => 'Select Lesson Type',
+            'options' => App\Lesson::getTypes(),
+            'selected_option' => null,
+            'field_name' => 'type_flag',
+            'prompt_div' => true,
+            'select_class' => 'form-control',
+        ])@endcomponent
+        </div>
+
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('gen.Title'):</label>
 			<input type="text" name="title" class="form-control" />
@@ -45,10 +62,30 @@
 			<input type="text" name="title_chapter" class="form-control" />
 		<div>
 
-		<div class="form-group">
-			<label for="main_photo" class="control-label">@LANG('gen.Main Photo'):</label>
-			<input type="text" name="main_photo" class="form-control" />
-		<div>
+        <!--------------------------------------------------------------------------->
+        <!-- Main Photo -->
+        <!--------------------------------------------------------------------------->
+
+        <div class="form-group">
+        @component('components.control-dropdown-photos', [
+            'record' => $record,
+            'prefix' => $prefix,
+            'prompt' => 'Main Photo: ',
+            'empty' => 'Select Main Photo',
+            'options' => App\Tools::getPhotos($photoPath),
+            'selected_option' => $record->main_photo,
+            'field_name' => 'main_photo',
+            'prompt_div' => true,
+            'select_class' => 'form-control',
+            'onchange' => 'showMainPhoto()',
+            'noSelection' => 'none.png',
+        ])@endcomponent
+        </div>
+
+        <!-- Photo Preview -->
+        <div id="photo-div" class="form-group" style="">
+            <img id="photo" width="200" src="{{$photoPath}}{{$record->main_photo}}" />
+        </div>
 
 		<div class="form-group">
 			<label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
@@ -80,3 +117,25 @@
 </div>
 
 @endsection
+
+<script>
+
+function showMainPhoto()
+{
+    var selectedPhoto = $("#main_photo option:selected" ).val();
+    if (selectedPhoto == 0)
+    {
+        // no photo selected
+        $("#photo").hide();
+    }
+    else
+    {
+        var path = "{{$photoPath}}" + selectedPhoto;
+        $("#photo").attr("src", path);
+        $("#photo").show();
+        $("#photo-div").show();
+        $("#photo-div").attr("display", "block");
+    }
+}
+
+</script>

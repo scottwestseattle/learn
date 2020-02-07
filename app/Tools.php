@@ -509,10 +509,11 @@ class Tools
 
 			$rc = true;
 		}
-		catch (\Exception $e)
+		catch(\Exception $e)
 		{
 			dump('error writing file: ' . $filename);
 		}
+
 
 		return $rc;
 	}
@@ -523,4 +524,61 @@ class Tools
 
 		return $dt->format('Y-m-d H:i:s');
 	}
+
+	static public function getPhotos($path)
+	{
+	    $array = [];
+
+		try
+		{
+            // '/img/plancha'
+            $path = base_path() . '/public' . $path;
+            $files = scandir($path);
+            $i = 0;
+            foreach($files as $file)
+            {
+                try {
+                    //$file = strtolower($file);
+                    if (!is_dir($path . $file))
+                    {
+                        if (exif_imagetype($path . $file) !== FALSE)
+                            $array[$file] = $file;
+                    }
+                }
+                catch (\Exception $e)
+                {
+                    // ignore the read errors
+                    dd('file type: ' . $e);
+                }
+
+            }
+            //dd($array);
+        }
+		catch (\Exception $e)
+		{
+            //dd($e->getMessage());
+		    $msg = "Error reading directory: " . $path;
+			Event::logException(LOG_MODEL_LESSONS, LOG_ACTION_SCANDIR, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+	    return $array;
+	}
+
+	static public function secondsToTime($seconds)
+	{
+	    $seconds = intval($seconds);
+	    $time = '';
+
+        $hours = floor($seconds / 3600);
+        $mins = floor($seconds / 60 % 60);
+        $secs = floor($seconds % 60);
+
+        if ($hours > 0)
+            $time = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
+        else
+            $time = sprintf('%02d:%02d', $mins, $secs);
+
+        return $time;
+    }
 }

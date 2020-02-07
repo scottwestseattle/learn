@@ -497,6 +497,21 @@ class Lesson extends Base
 		return $quizNew;
 	}
 
+    public function isText()
+	{
+	    return !$this->isTimedSlides();
+    }
+
+    public function isTimedSlides()
+	{
+	    $rc = false;
+
+	    if ($this->type_flag == LESSONTYPE_TIMED_SLIDES)
+	        $rc = true;
+
+	    return $rc;
+    }
+
     public function isMc($reviewType = null)
 	{
 		$v = false;

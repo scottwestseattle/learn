@@ -23,8 +23,8 @@
 	    data-description="{{$r->description}}"
 	    data-id="{{$r->id}}"
 	    data-photo="{{$r->main_photo}}"
-	    data-seconds="{{isset($r->seconds) ? $r->seconds : 30}}"
-	    data-between="{{isset($r->break_seconds) ? $r->break_seconds : 30}}"
+	    data-seconds="{{isset($r->seconds) ? $r->seconds : TIMED_SLIDES_DEFAULT_SECONDS}}"
+	    data-between="{{isset($r->break_seconds) ? $r->break_seconds : TIMED_SLIDES_DEFAULT_SECONDS}}"
 	    data-countdown="10"
 	>
 	</div>
@@ -59,9 +59,14 @@
 	<div id="panel-start" class="slide-panel">
 
 	    <div class="text-center">
-            <p style="font-size:13px;" class="mb-0"><strong>{{$records[0]->course->title}}</strong></p>
+            <p style="font-size:13px;" class="mb-0">
+                <strong>{{$records[0]->course->title}}</strong>
+                @if (App\User::isOwner($records[0]->course->user_id))
+                <a href="/lessons/add/{{$record->parent_id}}" class="btn btn-success btn-xs ml-1" role="button">Add</a>
+                @endif
+            </p>
             <h3 class="mt-2 mb-2">{{$records[0]->title_chapter}}</h3>
-            <p style="font-size:13px;" class="">{{count($records) * 2}} minutes - {{count($records)}} exercises</p>
+            <p style="font-size:13px;" class="">{{count($records)}} exercises ({{$displayTime}})</p>
             <a onclick="event.preventDefault(); run()"  href="" class="btn btn-primary mb-3" role="button">Start</a>
         </div>
 
@@ -76,13 +81,16 @@
                         <td style="">
                                 <div><a href="/lessons/view/{{$record->id}}">{{$record->section_number}}.&nbsp;{{$record->title}}</a></div>
                                 @if (isset($record->seconds))
-                                    <div>{{$record->seconds}} seconds</div>
+                                    <div>{{$record->seconds}} seconds ({{isset($record->break_seconds) ? $record->break_seconds : 30}} rest)</div>
                                 @endif
                                 <div>
                                 @if (App\User::isOwner($record->user_id))
                                     <div>
                                         <a href='/lessons/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a>
                                         <a href='/lessons/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a>
+                                        @if ($record->isUnfinished())
+                                        <a href='/lessons/publish/{{$record->id}}'><strong><span style="color:red;" class="glyphCustom-sm glyphicon glyphicon-flash"></span></strong></a>
+                                        @endif
                                     </div>
                                 @endif
                                 <div style="font-size:13px;">{{$record->description}}</div>

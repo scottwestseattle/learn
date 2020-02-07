@@ -32,7 +32,7 @@
 		<div style="padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
 			<div class="drop-box" style="height:200px;  background-color: #4993FD; color:white;" ><!-- inner col div -->
                 <a style="height:100%; width:100%;" class="btn btn-success btn-lg" role="button" href="/lessons/start/{{$record[0]->id}}">
-                    {{$record[0]->title_chapter}}<br/>{{count($record)}} exercises
+                    {{$record[0]->title_chapter}}<br/>{{count($record)}} exercises ({{App\Tools::secondsToTime($record['seconds'])}})
                 </a>
 			</div><!-- inner col div -->
 		</div><!-- outer col div -->

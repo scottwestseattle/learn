@@ -52,8 +52,7 @@ define('LOG_ACTION_SELECT', 'select');
 define('LOG_ACTION_MOVE', 'move');
 define('LOG_ACTION_UPLOAD', 'upload');
 define('LOG_ACTION_MKDIR', 'mkdir');
-define('LOG_ACTION_RESIZE', 'resize');
-define('LOG_ACTION_OTHER', 'other');
+define('LOG_ACTION_SCANDIR', 'scandir');
 define('LOG_ACTION_INDEX', 'index');
 define('LOG_ACTION_PERMALINK', 'permalink');
 define('LOG_ACTION_UNDELETE', 'undelete');
@@ -65,6 +64,7 @@ define('LOG_ACTION_SEARCH', 'search');
 define('LOG_ACTION_EMAIL', 'email');
 define('LOG_ACTION_IMPORT', 'import');
 define('LOG_ACTION_TOUCH', 'touch');
+define('LOG_ACTION_OTHER', 'other');
 
 define('LOG_PAGE_INDEX', 'index');
 define('LOG_PAGE_VIEW', 'view');
@@ -92,6 +92,8 @@ define('WIP_DEV', 20);
 define('WIP_TEST', 30);
 define('WIP_FINISHED', 100);
 define('WIP_DEFAULT', WIP_DEV);
+
+define('TIMED_SLIDES_DEFAULT_SECONDS', 30);
 
 class Controller extends BaseController
 {

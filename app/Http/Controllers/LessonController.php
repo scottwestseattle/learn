@@ -131,6 +131,7 @@ class LessonController extends Controller
 			'chapter' => $chapter,
 			'section' => $section,
 			'lessons' => $lessons,
+			'photoPath' => '/img/plancha/',
 			]));
 	}
 
@@ -147,7 +148,7 @@ class LessonController extends Controller
 		$record->permalink		= Tools::createPermalink($request->title);
 		$record->lesson_number	= intval($request->lesson_number);
 		$record->section_number	= intval($request->section_number);
-        $record->type_flag      = LESSONTYPE_DEFAULT;
+        $record->type_flag      = intval($request->type_flag);
         $record->main_photo     = $request->main_photo;
         $record->seconds        = $request->seconds;
         $record->break_seconds  = $request->break_seconds;
@@ -170,7 +171,12 @@ class LessonController extends Controller
 		}
 
 		if (isset($record->id))
-			return redirect('/lessons/edit/' . $record->id);
+		{
+		    if ($record->isText())
+			    return redirect('/lessons/edit/' . $record->id);
+			else
+			    return redirect('/lessons/view/' . $record->id);
+		}
 		else
 			return redirect('/lessons/admin/' . $record->parent_id);
     }
@@ -254,6 +260,7 @@ class LessonController extends Controller
 			'lessons' => $lesson->getChapterIndex(),
 			'vocab' => $vocab['records'],
 			'hasDefinitions' => $vocab['hasDefinitions'], // if the user has already added one or more definitions
+			'photoPath' => '/img/plancha/',
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
@@ -276,6 +283,7 @@ class LessonController extends Controller
 			'record' => $lesson,
 			'courses' => LessonController::getCourses(LOG_ACTION_EDIT), // for the course dropdown
 			'tinymce' => true,
+			'photoPath' => '/img/plancha/',
 			]));
     }
 
@@ -348,7 +356,12 @@ class LessonController extends Controller
 			Tools::flash('success', 'No changes made to ' . TITLE_LC);
 		}
 
-		return redirect('/' . PREFIX . '/view/' . $record->id);
+        if ($record->isText())
+            $redirect = '/lessons/view/' . $record->id;
+        else
+            $redirect = '/lessons/start/' . $record->id;
+
+		return redirect($redirect);
 	}
 
 	public function edit2(Lesson $lesson)
@@ -622,12 +635,20 @@ class LessonController extends Controller
 		Lesson::setCurrentLocation($lesson->id);
 
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
+
+		$seconds = 0;
+		foreach($records as $record)
+		{
+            $s = intval($record->seconds);
+            $seconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
+		}
         //dd($records);
 
 		return view(PREFIX . '.runtimed', $this->getViewData([
 			'record' => $lesson,
 			'records' => $records,
 			'returnPath' => 'courses/view',
+			'displayTime' => Tools::secondsToTime($seconds),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 }

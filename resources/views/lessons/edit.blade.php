@@ -10,6 +10,7 @@
 
 	<form method="POST" id="form-edit" action="/{{$prefix}}/update/{{$record->id}}">
 
+    @if ($record->isText())
 		<ul class="nav nav-tabs">
 			<li class="nav-item">
 				<a id="nav-link-text" class="nav-link active" href="#" onclick="setTab(event, 1);">@LANG('gen.Text')</a>
@@ -27,8 +28,13 @@
 				@component('components.control-accent-chars-esp', ['target' => 'text', 'visible' => true, 'tinymce' => true, 'flat' => true])@endcomponent
 			</li>
 		</ul>
+	@else
+		<div class="submit-button mb-3">
+			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
+		</div>
+	@endif
 
-		<div style="display:none;" id="tab-title">
+		<div style="{{$record->isText() ? 'display:none;' : ''}}" id="tab-title">
 
 			<div class="form-group">
 				<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
@@ -88,41 +94,75 @@
 			<!--------------------------------------------------------------------------->
 			<!-- Options -->
 			<!--------------------------------------------------------------------------->
-			<label for="options" class="control-label">@LANG('content.Options'):</label>
-			<input type="text" name="options" class="form-control" value="{{$record->options}}" />
+			<div class="form-group">
+    			<label for="options" class="control-label">@LANG('content.Options'):</label>
+	    		<input type="text" name="options" class="form-control" value="{{$record->options}}" />
+            </div>
 
 			<!--------------------------------------------------------------------------->
 			<!-- Description -->
 			<!--------------------------------------------------------------------------->
-			<label for="description" class="control-label">@LANG('gen.Description'):</label>
-			<textarea name="description" class="form-control">{{$record->description}}</textarea>
+			<div class="form-group">
+		    	<label for="description" class="control-label">@LANG('gen.Description'):</label>
+			    <textarea name="description" class="form-control">{{$record->description}}</textarea>
+            </div>
 
 			<!--------------------------------------------------------------------------->
 			<!-- Chapter Title - only used for the first lesson in a chapter -->
 			<!--------------------------------------------------------------------------->
-			<label for="title_chapter" class="control-label">@LANG('gen.Chapter Title'):</label>
-			<input type="text" name="title_chapter" class="form-control" value="{{$record->title_chapter}}" />
+			<div class="form-group">
+    			<label for="title_chapter" class="control-label">@LANG('gen.Chapter Title'):</label>
+	    		<input type="text" name="title_chapter" class="form-control" value="{{$record->title_chapter}}" />
+            </div>
 
+        @if (true || $record->isTimedSlides())
 			<!--------------------------------------------------------------------------->
 			<!-- Main Photo -->
 			<!--------------------------------------------------------------------------->
-			<label for="main_photo" class="control-label">@LANG('gen.Main Photo'):</label>
-			<input type="text" name="main_photo" class="form-control" value="{{$record->main_photo}}" />
+
+			<div class="form-group">
+			@component('components.control-dropdown-photos', [
+			    'record' => $record,
+			    'prefix' => $prefix,
+				'prompt' => 'Main Photo: ',
+				'empty' => 'Select Main Photo',
+				'options' => App\Tools::getPhotos($photoPath),
+				'selected_option' => $record->main_photo,
+				'field_name' => 'main_photo',
+				'prompt_div' => true,
+				'select_class' => 'form-control',
+				'onchange' => 'showMainPhoto()',
+				'noSelection' => 'none.png',
+			])@endcomponent
+			</div>
+
+			<!-- Photo Preview -->
+			<div id="photo-div" class="form-group" style="">
+                <img id="photo" width="200" src="{{$photoPath}}{{$record->main_photo}}" />
+            </div>
 
 			<!-- Seconds -->
-            <label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
-            <input type="number" name="seconds" class="form-control"  value="{{$record->seconds}}" />
+			<div class="form-group">
+                <label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
+                <input type="number" name="seconds" class="form-control"  value="{{$record->seconds}}" />
+            </div>
 
 			<!-- Break Seconds -->
-            <label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
-            <input type="number" name="break_seconds" class="form-control"  value="{{$record->break_seconds}}" />
+			<div class="form-group">
+                <label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
+                <input type="number" min="0" max="1000" name="break_seconds" class="form-control"  value="{{$record->break_seconds}}" />
+            </div>
 
 			<!-- Reps -->
-            <label for="reps" class="control-label">@LANG('gen.Reps'):</label>
-            <input type="number" name="reps" class="form-control" value="{{$record->reps}}" />
+			<div class="form-group">
+                <label for="reps" class="control-label">@LANG('gen.Reps'):</label>
+                <input type="number" name="reps" class="form-control" value="{{$record->reps}}" />
+            </div>
+        @endif
 
 		</div>
 
+    @if ($record->isText())
 		<div id="tab-text">
 
 			<div id ="rich" style="clear:both;display:default;">
@@ -130,10 +170,12 @@
 			</div>
 
 		</div>
+    @endif
 
 		@if (false)
 			<button onclick="event.preventDefault(); saveAndStay();" name="update" class="btn btn-success">Save and Stay</button>
 		@endif
+
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
 		</div>
@@ -149,7 +191,26 @@
 
 @endsection
 
-@if (false)
-<script src="https://cdn.tiny.cloud/1/vft1qzd41vab0e8lnjogftv02qxpfv11j340z7i97o2poj6n/tinymce/5/tinymce.min.js"></script>
-@endif
+<script>
+
+function showMainPhoto()
+{
+    var selectedPhoto = $("#main_photo option:selected" ).val();
+    if (selectedPhoto == 0)
+    {
+        // no photo selected
+        $("#photo").hide();
+    }
+    else
+    {
+        var path = "{{$photoPath}}" + selectedPhoto;
+        $("#photo").attr("src", path);
+        $("#photo").show();
+        $("#photo-div").show();
+        $("#photo-div").attr("display", "block");
+    }
+}
+
+</script>
+
 

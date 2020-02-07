@@ -174,7 +174,7 @@ class CourseController extends Controller
 		// put some view helpers together
 		$disabled = (count($records) > 0) ? '' : 'disabled';
 
-		$firstId = (count($records) > 0) ? $records[1][0]->id : 0; // collection index starts at 1
+		$firstId = (count($records) > 0) ? $records->first()[0]->id : 0; // collection index starts at 1
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
@@ -225,7 +225,19 @@ class CourseController extends Controller
 
 		// put some view helpers together
 		$disabled = (count($records) > 0) ? '' : 'disabled';
-		$firstId = (count($records) > 0) ? $records[1][0]->id : 0; // collection index starts at 1
+		$firstId = (count($records) > 0) ? $records->first()[0]->id : 0; // collection index starts at 1
+
+        foreach($records as $chapter)
+        {
+            //dd($chapter);
+            $seconds = 0;
+            foreach($chapter as $lesson)
+            {
+                $s = intval($lesson->seconds);
+                $seconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
+            }
+            $chapter['seconds'] = $seconds;
+        }
 
 		return view(PREFIX . '.viewTimedSlides', $this->getViewData([
 			'record' => $record,
