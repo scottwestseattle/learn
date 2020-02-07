@@ -55,6 +55,10 @@
     @endif
 
     @if (isset($record->main_photo))
+        <div>
+            {{isset($record->seconds) ? $record->seconds : 30}} seconds
+            &nbsp;({{isset($record->break_seconds) ? $record->break_seconds : TIMED_SLIDES_DEFAULT_SECONDS}} break)
+        </div>
         <div><img src="{{$photoPath}}{{$record->main_photo}}" width="200"/></div>
     @endif
 
@@ -234,10 +238,12 @@
 
 	@endif
 
+    @if ($record->isText())
 	<div class="page-nav-buttons">
 		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$prev}}"><span class="glyphicon glyphicon-button-prev"></span>@LANG('ui.Prev')</a>
 		<a class="btn btn-primary btn-lg btn-nav-lesson {{isset($next) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{$next}}">@LANG('ui.Next')<span class="glyphicon glyphicon-button-next"></span></a>
 	</div>
+	@endif
 
 	@component('lessons.comp-lesson-list', ['records' => $lessons, 'tableClass' => 'table-lesson-list', 'selectedId' => $record->id])@endcomponent
 
