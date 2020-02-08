@@ -149,7 +149,7 @@ function deck() {
 	    var slide = deck.slides[curr];
         $(".slideCount").text(slide.number + " of " + deck.slides.length);
         $(".slideTitle").text(slide.number + ". " + slide.title);
-        $(".slideSeconds").text("For " + slide.seconds + " seconds");
+        $(".slideSeconds").text(slide.seconds + " seconds");
         $(".slideDescription").text(deck.slides[curr].description);
         $(".sliderPhoto").attr("src", "/img/plancha/" + deck.slides[curr].photo)
         //alert(deck.slides[curr].photo);

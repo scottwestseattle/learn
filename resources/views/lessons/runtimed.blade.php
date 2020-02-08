@@ -119,8 +119,8 @@
 	    <h5>Coming up 1 of {{count($records)}}:</h5>
 	    <div><img class="sliderPhoto" style="max-width:200px; width:70%;" src="/img/plancha/figure-plancha.png" /></div>
 	    <h5 class="slideTitle"></h5>
-	    <h5 class="slideSeconds"></h5>
 	    <div class="slideDescription"></div>
+	    <h5 class="slideSeconds mt-2"></h5>
 	</div><!-- panel-countdown -->
 
 	<!---------------------------------------------------------------------------------------------------------------->
@@ -131,6 +131,7 @@
 	    <div class="slideCount"></div>
 	    <h5 class="slideTitle"></h5>
 	    <div class="slideDescription"></div>
+	    <h5 class="slideSeconds mt-2"></h5>
         <div class="text-center"><h1 style="font-size:100px" class="showSeconds"></h1></div>
 	</div><!-- panel-run -->
 
@@ -144,8 +145,8 @@
 	    <div class="slideCount"></div>
 	    <div><img class="sliderPhoto" style="max-width:200px; width:60%;" src="/img/plancha/figure-plancha.png" /></div>
 	    <h5 class="slideTitle"></h5>
-	    <h5 class="slideSeconds"></h5>
 	    <div class="slideDescription"></div>
+	    <h5 class="slideSeconds mt-2"></h5>
 	</div><!-- panel-between -->
 
 	<!---------------------------------------------------------------------------------------------------------------->
@@ -160,8 +161,7 @@
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-end" class="slide-panel text-center">
 	    <h1>Congratulations!</h1>
-	    <h5>{{count($records)}} Exercises Completed</h5>
-
+	    <h5>{{count($records)}} Exercises completed in {{$displayTime}}</h5>
         <div class="card-deck">
         @foreach($records as $record)
         <div style="min-width:300px;" class="card mb-1">
@@ -176,13 +176,12 @@
                                     <div>{{$record->seconds}} seconds</div>
                                 @endif
                                 <div>
-                                @if (App\User::isOwner($record->user_id))
+                                    @if (App\User::isOwner($record->user_id))
                                     <div>
                                         <a href='/lessons/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a>
                                         <a href='/lessons/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a>
                                     </div>
-                                @endif
-                                <div style="font-size:13px;">{{$record->description}}</div>
+                                    @endif
                                 </div>
                         </td>
                         <td>
