@@ -18,8 +18,6 @@ var curr = 0;   // current slide
 var nbr = 0;
 var max = 0;    // number of slides
 
-var deckTimer = null;
-
 $( document ).ready(function() {
 	loadData();
 	deck.start();
@@ -57,7 +55,7 @@ function deck() {
 		this.setStates(RUNSTATE_COUNTDOWN);
 	    deck.showSlide();
 
-	    _countdownAudio = 3;
+	    _countdownAudioTotalSeconds = 3;
         startTimer(deck.slides[curr].countdown, this.runSlide);
 	}
 
@@ -69,7 +67,7 @@ function deck() {
             loadSlide();
             var seconds = deck.slides[curr].seconds;
 
-    	    _countdownAudio = 10;
+    	    _countdownAudioTotalSeconds = 10;
     	    _tensAudio = true;
             if (curr < (max - 1)) // not last one
                 startTimer(seconds, deck.runBetween);
@@ -89,7 +87,7 @@ function deck() {
         curr++; // do this here because we need the between seconds from the previous record
 	    deck.showSlide(); // show the upcoming slide during the break
 
-	    _countdownAudio = 3;
+	    _countdownAudioTotalSeconds = 3;
         startTimer(betweenSeconds, deck.runSlide);
 	}
 
@@ -253,50 +251,79 @@ function next()
 	loadSlide();
 }
 
+var _countdownTimer = null;
+var _deckTimer = null;
+var _timerIntervalCounter = 0;
+var _countdownAudioTotalSeconds = 0;
+var _tensAudio = false;
+var _timersPaused = false;
+
 function startTimer(seconds, func)
 {
-	clearTimeout(deckTimer);
-    deckTimer = setTimeout(func, seconds * 1000);
+	clearTimeout(_deckTimer);
+
+	// set the timer for the next panel
+    _deckTimer = setTimeout(func, seconds * 1000);
+
+    // start the second countdown timer
     startInterval(seconds);
 
     showSeconds(seconds);
 }
 
-var timerInterval = 0;
-var timerSeconds = 0;
-var countdownTimer = null;
-var _countdownAudio = 0;
-var _tensAudio = false;
+function clearTimer()
+{
+    clearInterval(_countdownTimer);
+    _timerIntervalCounter = 0;
+    showSeconds();
+    _countdownAudioTotalSeconds = 0;
+    _tensAudio = false;
+}
+
+function pause()
+{
+    if (_timersPaused)
+    {
+        //
+        // timers paused, restart them
+        //
+        startTimer(_timerIntervalCounter);
+    }
+    else
+    {
+        //
+        // timers running, pause them
+        //
+        clearInterval(_countdownTimer);
+        _countdownTimer = null;
+
+        clearTimeout(_deckTimer);
+        _deckTimer = null;
+    }
+
+    _timersPaused = !_timersPaused;
+}
 
 function startInterval(seconds)
 {
-    timerInterval = seconds;
-    countdownTimer = setInterval(updateTimer, 1000);
-    showSeconds(timerInterval);
+    _timerIntervalCounter = seconds;
+    _countdownTimer = setInterval(updateTimer, 1000);
+    showSeconds(_timerIntervalCounter);
 }
 
 function updateTimer()
 {
-    if (_tensAudio && ((timerInterval-1) % 10) == 0)
-        playAudio(timerInterval-1);
+    if (_tensAudio && ((_timerIntervalCounter-1) % 10) == 0)
+        playAudio(_timerIntervalCounter-1);
 
-    if (_countdownAudio > 0 && timerInterval <= (_countdownAudio + 1))
-        playAudio(timerInterval - 1);
+    if (_countdownAudioTotalSeconds > 0 && _timerIntervalCounter <= (_countdownAudioTotalSeconds + 1))
+        playAudio(_timerIntervalCounter - 1);
 
-    timerInterval--;
-    showSeconds(timerInterval);
+    _timerIntervalCounter--;
+    showSeconds(_timerIntervalCounter);
 
-    if (timerInterval <= 0)
+    if (_timerIntervalCounter <= 0)
        clearTimer();
-}
-
-function clearTimer()
-{
-    clearInterval(countdownTimer);
-    timerInterval = 0;
-    showSeconds();
-    _countdownAudio = 0;
-    _tensAudio = false;
 }
 
 function playAudio(seconds)

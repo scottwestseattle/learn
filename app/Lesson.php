@@ -1083,4 +1083,18 @@ class Lesson extends Base
 
 		return $color;
 	}
+
+	public function getTime()
+	{
+        $s = isset($this->seconds) ? $this->seconds : TIMED_SLIDES_DEFAULT_SECONDS;
+        $b = isset($this->break_seconds) ? $this->break_seconds : TIMED_SLIDES_DEFAULT_SECONDS;
+
+        $rc['runSeconds'] = $s;
+        $rc['runTime'] = Tools::secondsToTime($s);
+
+        $rc['breakSeconds'] = $b;
+        $rc['breakTime'] = Tools::secondsToTime($b);
+
+		return $rc;
+	}
 }

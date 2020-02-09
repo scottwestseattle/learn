@@ -23,8 +23,8 @@
 	    data-description="{{$r->description}}"
 	    data-id="{{$r->id}}"
 	    data-photo="{{$r->main_photo}}"
-	    data-seconds="{{isset($r->seconds) ? $r->seconds : TIMED_SLIDES_DEFAULT_SECONDS}}"
-	    data-between="{{isset($r->break_seconds) ? $r->break_seconds : TIMED_SLIDES_DEFAULT_SECONDS}}"
+	    data-seconds="{{$r->getTime()['runSeconds']}}"
+	    data-between="{{$r->getTime()['breakSeconds']}}"
 	    data-countdown="10"
 	>
 	</div>
@@ -42,6 +42,7 @@
 		<!-------------------------------------------------------->
 		<div style="float:left; margin: 0 5px 0 0;">
 			<span style="font-size:1.3em;" class=""><a class="" role="" href="/{{$returnPath}}/{{$record->parent_id}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
+			<span style="font-size:1.3em;" class=""><a onclick="event.preventDefault(); pause()" href=""><span class="glyphicon glyphicon-button-back-to"></span></a></span>
 		</div>
 
 		<!-------------------------------------------------------->
@@ -80,9 +81,7 @@
                     <tr>
                         <td style="">
                                 <div><a href="/lessons/view/{{$record->id}}">{{$record->section_number}}.&nbsp;{{$record->title}}</a></div>
-                                @if (isset($record->seconds))
-                                    <div>{{$record->seconds}} seconds ({{isset($record->break_seconds) ? $record->break_seconds : 30}} rest)</div>
-                                @endif
+                                <div>{{$record->getTime()['runSeconds']}} seconds ({{$record->getTime()['breakSeconds']}} rest)</div>
                                 <div>
                                 @if (App\User::isOwner($record->user_id))
                                     <div>
@@ -127,7 +126,9 @@
 	<!-- Run Panel -->
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-run" class="slide-panel text-center">
-	    <div><img class="sliderPhoto" style="max-width:400px; width:98%;" src="/img/plancha/figure-plancha.png" /></div>
+	    <div class="text-center" style="position: relative; height:300px; background-size: 100%; background-image:url('/img/backgrounds/field.png'); background-position:center bottom">
+	        <img class="sliderPhoto text-center" style="position: absolute; left: 0; bottom:0; max-width:400px; width:98%;" src="/img/plancha/figure-plancha.png" />
+	    </div>
 	    <div class="slideCount"></div>
 	    <h5 class="slideTitle"></h5>
 	    <div class="slideDescription"></div>
@@ -172,9 +173,7 @@
                     <tr>
                         <td style="">
                                 <div><a href="/lessons/view/{{$record->id}}">{{$record->section_number}}.&nbsp;{{$record->title}}</a></div>
-                                @if (isset($record->seconds))
-                                    <div>{{$record->seconds}} seconds</div>
-                                @endif
+                                <div>{{$record->getTime()['runTime']}}</div>
                                 <div>
                                     @if (App\User::isOwner($record->user_id))
                                     <div>

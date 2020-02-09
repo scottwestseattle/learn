@@ -56,8 +56,8 @@
 
     @if (isset($record->main_photo))
         <div>
-            {{isset($record->seconds) ? $record->seconds : 30}} seconds
-            &nbsp;({{isset($record->break_seconds) ? $record->break_seconds : TIMED_SLIDES_DEFAULT_SECONDS}} break)
+            {{$record->getTime()['runSeconds']}} seconds
+            &nbsp;({{$record->getTime()['breakSeconds']}} break)
         </div>
         <div><img src="{{$photoPath}}{{$record->main_photo}}" width="200"/></div>
     @endif

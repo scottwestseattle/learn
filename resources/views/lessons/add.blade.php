@@ -24,6 +24,9 @@
         <!-- Lesson Type Dropdown -->
         <!--------------------------------------------------------------------------->
 
+        @if ($course->isTimedSlides())
+            <input type="hidden" name="type_flag" id="type_flag" value="{{LESSONTYPE_TIMED_SLIDES}}" />
+        @else
         <div class="form-group">
         @component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix,
             'isAdmin' => $isAdmin,
@@ -36,6 +39,7 @@
             'select_class' => 'form-control',
         ])@endcomponent
         </div>
+        @endif
 
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('gen.Title'):</label>
