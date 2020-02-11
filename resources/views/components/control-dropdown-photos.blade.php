@@ -14,6 +14,7 @@
 
 	@endif
 
+@if (false)
 	@if (isset($onchange))
 		<select name="{{$field_name}}" id="{{$field_name}}" class="{{$select_class}}" onchange="{{$onchange}}">
 	@else
@@ -33,5 +34,10 @@
 	@endforeach
 
 	</select>
+@endif
+
+	@foreach ($options as $key => $value)
+	    <img id="{{$value}}" src="/img/plancha/{{$value}}" width="50" onclick="event.preventDefault(); {{$onchange}}('{{$value}}');" />
+    @endforeach
 
 @endif

@@ -168,27 +168,37 @@ var deck = new deck();
 function getRandomBackground()
 {
     var bgs = [
+
         'url(/img/backgrounds/rialto-beach.jpg)',
         'url(/img/backgrounds/hole-in-the-wall.jpg)',
         'url(/img/backgrounds/seattle-lincoln-park.jpg)',
         'url(/img/backgrounds/west-seattle.jpg)',
         'url(/img/backgrounds/pnw-beach.jpg)',
+
         'url(/img/backgrounds/seattle-troll.jpg)',
         'url(/img/backgrounds/seattle-lincoln-park-sunset.jpg)',
         'url(/img/backgrounds/seattle-sunset.jpg)',
-        'url(/img/backgrounds/bruges-canal.jpg)',
+
         'url(/img/backgrounds/austria-sailboat.jpg)',
+
+        'url(/img/backgrounds/bruges-canal.jpg)',
+        'url(/img/backgrounds/bruges-park.jpg)',
+
         'url(/img/backgrounds/brussels-square-night.jpg)',
         'url(/img/backgrounds/brussels-square.jpg)',
-        'url(/img/backgrounds/kotor-square-night.jpg)',
+
         'url(/img/backgrounds/dubrovnik-old-town.jpg)',
-        'url(/img/backgrounds/dubrovnik-street-night.jpg)',
-        'url(/img/backgrounds/kilimanjaro.jpg)',
+        'url(/img/backgrounds/dubrovnik-harbor.jpg)',
+        'url(/img/backgrounds/kotor-square-night.jpg)',
+
         'url(/img/backgrounds/amboseli-animals.jpg)',
         'url(/img/backgrounds/amboseli-elephant-march.jpg)',
+        'url(/img/backgrounds/amboseli-elephants.jpg)',
+
         'url(/img/backgrounds/kenya-giraffes.jpg)',
         'url(/img/backgrounds/kenya-giraffes2.jpg)',
         'url(/img/backgrounds/kenya-giraffes3.jpg)',
+
         'url(/img/backgrounds/kilimanjaro.jpg)'
 /*
         'url(/img/backgrounds/)',
@@ -198,7 +208,7 @@ function getRandomBackground()
     // get random background image
     var bg = bgs[Math.floor(Math.random() * bgs.length)];
 
-    //bg = 'url(/img/backgrounds/test.jpg)';
+    //bg = 'url(/img/backgrounds/rialto-beach.jpg)';
 
     return bg;
 }

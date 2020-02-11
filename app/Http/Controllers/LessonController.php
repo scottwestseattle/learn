@@ -154,6 +154,13 @@ class LessonController extends Controller
         $record->break_seconds  = $request->break_seconds;
         $record->reps           = $request->reps;
 
+        if ($record->isTimedSlides())
+        {
+            $record->published_flag = 1;
+            $record->approved_flag = 1;
+            $record->finished_flag = 1;
+		}
+
 		try
 		{
 			$record->save();

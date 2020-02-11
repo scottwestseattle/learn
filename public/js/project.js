@@ -816,3 +816,68 @@ function refreshView()
 		$("#rich").hide();
 	}
 }
+
+function setLessonMainPhoto(id, photoPath, photoId, photoDivId, mainPhotoId, titleId = 0)
+{
+    var path = photoPath + id;
+    photoId = "#" + photoId;
+    photoDivId = "#" + photoDivId;
+    mainPhotoId = "#" + mainPhotoId;
+
+    $(photoId).attr("src", path);
+    $(photoId).show();
+
+    $(photoDivId).show();
+    $(photoDivId).attr("display", "block");
+
+    $(mainPhotoId).val(id);
+
+    if (titleId != 0)
+    {
+        titleId = "#" + titleId;
+        $(titleId).val(makeTitle(id));
+    }
+
+    //alert($("#main_photo").val());
+}
+
+/* NOT USED
+function showMainPhoto2()
+{
+    var selectedPhoto = $("#main_photo option:selected" ).val();
+    if (selectedPhoto == 0)
+    {
+        // no photo selected
+        $("#photo").hide();
+    }
+    else
+    {
+        var path = "{{$photoPath}}" + selectedPhoto;
+        $("#photo").attr("src", path);
+        $("#photo").show();
+        $("#photo-div").show();
+        $("#photo-div").attr("display", "block");
+    }
+}
+NOT USED */
+
+function makeTitle(filename)
+{
+    var s = filename;
+
+    s = s.toLowerCase().replace(/.jpg/g, '');
+    s = s.toLowerCase().replace(/.png/g, '');
+    s = s.toLowerCase().replace(/.gif/g, '');
+
+    s = s.replace(/-/g, ' ');
+    s = s.replace(/_/g, '');
+
+    s = s.trim();
+
+    s = s.toLowerCase()
+        .split(' ')
+        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+        .join(' ');
+
+    return s;
+}

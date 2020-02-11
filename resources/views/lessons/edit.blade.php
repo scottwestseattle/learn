@@ -52,6 +52,44 @@
 			</div>
 
 			<!--------------------------------------------------------------------------->
+			<!-- Main Photo -->
+			<!--------------------------------------------------------------------------->
+
+			<div class="form-group">
+			@component('components.control-dropdown-photos', [
+			    'record' => $record,
+			    'prefix' => $prefix,
+				'prompt' => 'Main Photo: ',
+				'empty' => 'Select Main Photo',
+				'options' => App\Tools::getPhotos($photoPath),
+				'selected_option' => $record->main_photo,
+				'field_name' => 'main_photo',
+				'prompt_div' => true,
+				'select_class' => 'form-control',
+				'onchange' => 'showMainPhoto',
+				'noSelection' => 'none.png',
+			])@endcomponent
+			</div>
+
+			<!-- Photo Preview -->
+			<div id="photo-div" class="form-group" style="">
+                <img id="photo" width="200" src="{{$photoPath}}{{$record->main_photo}}" />
+                <input id="main_photo" name="main_photo" type="hidden" value="{{$record->main_photo}}" />
+            </div>
+
+			<!-- Seconds -->
+			<div class="form-group">
+                <label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
+                <input type="number" name="seconds" class="form-control"  value="{{$record->seconds}}" />
+            </div>
+
+			<!-- Break Seconds -->
+			<div class="form-group">
+                <label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
+                <input type="number" min="0" max="1000" name="break_seconds" class="form-control"  value="{{$record->break_seconds}}" />
+            </div>
+
+			<!--------------------------------------------------------------------------->
 			<!-- Lesson Type Dropdown -->
 			<!--------------------------------------------------------------------------->
 
@@ -115,50 +153,11 @@
 	    		<input type="text" name="title_chapter" class="form-control" value="{{$record->title_chapter}}" />
             </div>
 
-        @if (true || $record->isTimedSlides())
-			<!--------------------------------------------------------------------------->
-			<!-- Main Photo -->
-			<!--------------------------------------------------------------------------->
-
-			<div class="form-group">
-			@component('components.control-dropdown-photos', [
-			    'record' => $record,
-			    'prefix' => $prefix,
-				'prompt' => 'Main Photo: ',
-				'empty' => 'Select Main Photo',
-				'options' => App\Tools::getPhotos($photoPath),
-				'selected_option' => $record->main_photo,
-				'field_name' => 'main_photo',
-				'prompt_div' => true,
-				'select_class' => 'form-control',
-				'onchange' => 'showMainPhoto()',
-				'noSelection' => 'none.png',
-			])@endcomponent
-			</div>
-
-			<!-- Photo Preview -->
-			<div id="photo-div" class="form-group" style="">
-                <img id="photo" width="200" src="{{$photoPath}}{{$record->main_photo}}" />
-            </div>
-
-			<!-- Seconds -->
-			<div class="form-group">
-                <label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
-                <input type="number" name="seconds" class="form-control"  value="{{$record->seconds}}" />
-            </div>
-
-			<!-- Break Seconds -->
-			<div class="form-group">
-                <label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
-                <input type="number" min="0" max="1000" name="break_seconds" class="form-control"  value="{{$record->break_seconds}}" />
-            </div>
-
 			<!-- Reps -->
 			<div class="form-group">
                 <label for="reps" class="control-label">@LANG('gen.Reps'):</label>
                 <input type="number" name="reps" class="form-control" value="{{$record->reps}}" />
             </div>
-        @endif
 
 		</div>
 
@@ -193,24 +192,9 @@
 
 <script>
 
-function showMainPhoto()
+function showMainPhoto(id)
 {
-    var selectedPhoto = $("#main_photo option:selected" ).val();
-    if (selectedPhoto == 0)
-    {
-        // no photo selected
-        $("#photo").hide();
-    }
-    else
-    {
-        var path = "{{$photoPath}}" + selectedPhoto;
-        $("#photo").attr("src", path);
-        $("#photo").show();
-        $("#photo-div").show();
-        $("#photo-div").attr("display", "block");
-    }
+    setLessonMainPhoto(id, "{{$photoPath}}", "photo", "photo-div", "main_photo", "title");
 }
 
 </script>
-
-

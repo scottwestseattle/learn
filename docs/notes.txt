@@ -213,6 +213,12 @@ sudo apachectl stop
 Sudo apachectl start
 sudo apachectl restart
 
+// check apache errors:
+cat /var/log/apache2/error_log
+
+// find a file from root:
+find / filename 2>/dev/null | grep filename
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // create project
@@ -243,5 +249,13 @@ php artisan migrate:rollback --step=1
 
 // create Migration, Model and Controller (model name is singular!!)
 php artisan make:model Entry -m -c
+
+Course
+    lesson
+    exercise
+
+title
+description
+main_photo
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
