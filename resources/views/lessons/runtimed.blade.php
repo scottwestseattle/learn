@@ -49,9 +49,11 @@
 		<!-------------------------------------------------------->
 		<!-- Run-time Stats -->
 		<!-------------------------------------------------------->
+		@if (false)
 		<div style="font-size:.9em;" id="stats">
 			<span id="statsCount"></span>&nbsp;&nbsp;&nbsp;<span id="statsScore"></span>&nbsp;&nbsp;<span id="statsAlert"></span>
 		</div>
+		@endif
 
 	</div>
 

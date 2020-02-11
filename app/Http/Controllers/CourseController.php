@@ -187,20 +187,6 @@ class CourseController extends Controller
 
 	public function startTimedSlides(Course $course)
     {
-
-/*
-    Course - Plancha Principiante
-        Lesson - Dia 1
-            Paso - Slide 1
-            Paso - Slide 2
-            Paso - Slide 3
-        Lesson - Dia 2
-            Paso - Slide 1
-            Paso - Slide 2
-            Paso - Slide 3
-            Paso - Slide 4
-*/
-
 		$record = $course;
 		$count = 0;
 		$records = []; // make this countable so view will always work
@@ -231,12 +217,18 @@ class CourseController extends Controller
         {
             //dd($chapter);
             $seconds = 0;
+            $breakSeconds = 0;
             foreach($chapter as $lesson)
             {
                 $s = intval($lesson->seconds);
                 $seconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
+
+                $s = intval($lesson->breakSeconds);
+                $breakSeconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
             }
-            $chapter['seconds'] = $seconds;
+
+            $chapter['time'] = Tools::secondsToTime($seconds);
+            $chapter['totalTime'] = Tools::secondsToTime($seconds + $breakSeconds);
         }
 
 		return view(PREFIX . '.viewTimedSlides', $this->getViewData([

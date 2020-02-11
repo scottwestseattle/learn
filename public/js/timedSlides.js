@@ -72,7 +72,7 @@ function deck() {
             if (curr < (max - 1)) // not last one
                 startTimer(seconds, deck.runBetween);
             else    // last one
-                startTimer(seconds, stop);
+                startTimer(seconds, end);
         }
         else
         {
@@ -168,9 +168,14 @@ var deck = new deck();
 function getRandomBackground()
 {
     var bgs = [
-/*
-        'url(/img/backgrounds/)',
-*/
+        'url(/img/backgrounds/rialto-beach.jpg)',
+        'url(/img/backgrounds/hole-in-the-wall.jpg)',
+        'url(/img/backgrounds/seattle-lincoln-park.jpg)',
+        'url(/img/backgrounds/west-seattle.jpg)',
+        'url(/img/backgrounds/pnw-beach.jpg)',
+        'url(/img/backgrounds/seattle-troll.jpg)',
+        'url(/img/backgrounds/seattle-lincoln-park-sunset.jpg)',
+        'url(/img/backgrounds/seattle-sunset.jpg)',
         'url(/img/backgrounds/bruges-canal.jpg)',
         'url(/img/backgrounds/austria-sailboat.jpg)',
         'url(/img/backgrounds/brussels-square-night.jpg)',
@@ -185,9 +190,15 @@ function getRandomBackground()
         'url(/img/backgrounds/kenya-giraffes2.jpg)',
         'url(/img/backgrounds/kenya-giraffes3.jpg)',
         'url(/img/backgrounds/kilimanjaro.jpg)'
+/*
+        'url(/img/backgrounds/)',
+*/
     ];
 
+    // get random background image
     var bg = bgs[Math.floor(Math.random() * bgs.length)];
+
+    //bg = 'url(/img/backgrounds/test.jpg)';
 
     return bg;
 }
@@ -360,26 +371,24 @@ function updateTimer()
 
 function playAudio(seconds)
 {
-    if (true)
+    if (seconds <= 10)
     {
-        if (seconds <= 10)
-        {
-            text = seconds.toString();
-        }
-        else
-        {
-            text = seconds.toString() + " seconds remaining";
-        }
-
-        tts(text);
+        text = seconds.toString();
     }
     else
     {
-        var a = document.getElementById("audio");
-        var src = "/audio/" + seconds + ".mp3";
-        $("#audio").attr("src", src)
-        a.play();
+        text = seconds.toString() + " seconds remaining";
     }
+
+    tts(text);
+}
+
+function playAudioFile(file)
+{
+    var a = document.getElementById("audio");
+    var src = "/audio/" + file;
+    $("#audio").attr("src", src)
+    a.play();
 }
 
 function tts(text)
@@ -411,6 +420,12 @@ function stop()
 {
 	deck.setStates(RUNSTATE_END);
     clearTimer();
+}
+
+function end()
+{
+    stop();
+    playAudioFile("small-crowd-applause.mp3");
 }
 
 function reset()

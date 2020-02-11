@@ -637,10 +637,14 @@ class LessonController extends Controller
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
 
 		$seconds = 0;
+		$breakSeconds = 0;
 		foreach($records as $record)
 		{
             $s = intval($record->seconds);
             $seconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
+
+            $s = intval($lesson->breakSeconds);
+            $breakSeconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
 		}
         //dd($records);
 
@@ -648,7 +652,7 @@ class LessonController extends Controller
 			'record' => $lesson,
 			'records' => $records,
 			'returnPath' => 'courses/view',
-			'displayTime' => Tools::secondsToTime($seconds),
+			'displayTime' => Tools::secondsToTime($seconds + $breakSeconds),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 }
