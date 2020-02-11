@@ -1,4 +1,5 @@
-======= HARDWARE ======
+
+======= GEAR ======
 ** Watch: Timex Expedition / battery: CR 2016
 
 HUMAN DIMENSIONS
@@ -206,10 +207,11 @@ sudo mysqladmin password [newPassword]
 
 sudo vi /etc/apache2/httpd.conf
 look for DocumentRoot and <Directory ...>
-
+DocumentRoot "/Users/scottwilkinson/Documents/GitHub/learn/public"
 Restart apache webserver:
 sudo apachectl stop
 Sudo apachectl start
+sudo apachectl restart
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 

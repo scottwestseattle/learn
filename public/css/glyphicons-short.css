@@ -238,6 +238,18 @@
     content: "\E225"
 }
 
+.glyphicon-play:before {
+    content: "\E072"
+}
+
+.glyphicon-pause:before {
+    content: "\E073"
+}
+
+.glyphicon-stop:before {
+    content: "\E074"
+}
+
 .glyphicon-plus:before {
     content: "+"
 }
@@ -328,6 +340,18 @@
 
 .glyphicon-user:before {
     content: "\E008"
+}
+
+.glyphicon-volume-off:before {
+    content: "\E036"
+}
+
+.glyphicon-volume-down:before {
+    content: "\E037"
+}
+
+.glyphicon-volume-up:before {
+    content: "\E038"
 }
 
 .glyphicon-zoom-in:before {

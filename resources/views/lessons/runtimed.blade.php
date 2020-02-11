@@ -25,7 +25,7 @@
 	    data-photo="{{$r->main_photo}}"
 	    data-seconds="{{$r->getTime()['runSeconds']}}"
 	    data-between="{{$r->getTime()['breakSeconds']}}"
-	    data-countdown="10"
+	    data-countdown="{{App\Tools::isLocalhost() ? '1' : '10'}}"
 	>
 	</div>
 @endforeach
@@ -40,9 +40,10 @@
 		<!-------------------------------------------------------->
 		<!-- Top Return Button -->
 		<!-------------------------------------------------------->
-		<div style="float:left; margin: 0 5px 0 0;">
-			<span style="font-size:1.3em;" class=""><a class="" role="" href="/{{$returnPath}}/{{$record->parent_id}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
-			<span style="font-size:1.3em;" class=""><a onclick="event.preventDefault(); pause()" href=""><span class="glyphicon glyphicon-button-back-to"></span></a></span>
+		<div style="margin: 0 5px 0 0;">
+			<span style="font-size:1.3em; margin-right:10px;" class=""><a class="" role="" href="/{{$returnPath}}/{{$record->parent_id}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
+			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); pause()" href=""><span id="button-pause" class="glyphicon glyphicon-pause"></span></a></span>
+			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); mute()" href=""><span id="button-mute" class="glyphicon glyphicon-volume-up"></span></a></span>
 		</div>
 
 		<!-------------------------------------------------------->
@@ -126,9 +127,19 @@
 	<!-- Run Panel -->
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-run" class="slide-panel text-center">
-	    <div class="text-center" style="position: relative; height:300px; background-size: 100%; background-image:url('/img/backgrounds/field.png'); background-position:center bottom">
-	        <img class="sliderPhoto text-center" style="position: absolute; left: 0; bottom:0; max-width:400px; width:98%;" src="/img/plancha/figure-plancha.png" />
+
+	    <div id="bg" class="text-center" style="
+	        height:300px;
+	        line-height:300px;
+	        background-size: 500px;
+	        background-repeat:no-repeat;
+	        background-image:url('/* set randomly by js */');
+	        background-position:center bottom;
+	        "
+	    >
+	        <img class="sliderPhoto" style="vertical-align: bottom; max-width:400px; width:100%;" src="/* set by js */" />
 	    </div>
+
 	    <div class="slideCount"></div>
 	    <h5 class="slideTitle"></h5>
 	    <div class="slideDescription"></div>

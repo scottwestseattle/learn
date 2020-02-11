@@ -152,6 +152,8 @@ function deck() {
         $(".sliderPhoto").attr("src", "/img/plancha/" + deck.slides[curr].photo)
         //alert(deck.slides[curr].photo);
         //$(".slidePhoto").text();
+
+        $("#bg").css("background-image", getRandomBackground());
 	}
 
 	this.setAlertPrompt = function(text, color, bold = false) {
@@ -162,6 +164,33 @@ function deck() {
 }
 
 var deck = new deck();
+
+function getRandomBackground()
+{
+    var bgs = [
+/*
+        'url(/img/backgrounds/)',
+*/
+        'url(/img/backgrounds/bruges-canal.jpg)',
+        'url(/img/backgrounds/austria-sailboat.jpg)',
+        'url(/img/backgrounds/brussels-square-night.jpg)',
+        'url(/img/backgrounds/brussels-square.jpg)',
+        'url(/img/backgrounds/kotor-square-night.jpg)',
+        'url(/img/backgrounds/dubrovnik-old-town.jpg)',
+        'url(/img/backgrounds/dubrovnik-street-night.jpg)',
+        'url(/img/backgrounds/kilimanjaro.jpg)',
+        'url(/img/backgrounds/amboseli-animals.jpg)',
+        'url(/img/backgrounds/amboseli-elephant-march.jpg)',
+        'url(/img/backgrounds/kenya-giraffes.jpg)',
+        'url(/img/backgrounds/kenya-giraffes2.jpg)',
+        'url(/img/backgrounds/kenya-giraffes3.jpg)',
+        'url(/img/backgrounds/kilimanjaro.jpg)'
+    ];
+
+    var bg = bgs[Math.floor(Math.random() * bgs.length)];
+
+    return bg;
+}
 
 function loadData()
 {
@@ -313,8 +342,11 @@ function startInterval(seconds)
 
 function updateTimer()
 {
-    if (_tensAudio && ((_timerIntervalCounter-1) % 10) == 0)
+    // if speaking on the 10s like "50 seconds remaining" AND it's on a 10 multiple AND the 10 multiple is more than 10
+    if (_tensAudio && ((_timerIntervalCounter-1) % 10) == 0 && (_timerIntervalCounter-1) > 10)
+    {
         playAudio(_timerIntervalCounter-1);
+    }
 
     if (_countdownAudioTotalSeconds > 0 && _timerIntervalCounter <= (_countdownAudioTotalSeconds + 1))
         playAudio(_timerIntervalCounter - 1);
@@ -328,10 +360,36 @@ function updateTimer()
 
 function playAudio(seconds)
 {
-    var a = document.getElementById("audio");
-    var src = "/audio/" + seconds + ".mp3";
-    $("#audio").attr("src", src)
-    a.play();
+    if (true)
+    {
+        if (seconds <= 10)
+        {
+            text = seconds.toString();
+        }
+        else
+        {
+            text = seconds.toString() + " seconds remaining";
+        }
+
+        tts(text);
+    }
+    else
+    {
+        var a = document.getElementById("audio");
+        var src = "/audio/" + seconds + ".mp3";
+        $("#audio").attr("src", src)
+        a.play();
+    }
+}
+
+function tts(text)
+{
+    var utter = new SpeechSynthesisUtterance();
+
+    //var myLang = utter.lang;
+    utter.lang = 'en-US';
+    utter.text = text;
+    window.speechSynthesis.speak(utter);
 }
 
 function setDebug(text = null)

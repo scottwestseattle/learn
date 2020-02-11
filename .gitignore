@@ -8,6 +8,7 @@
 /.idea
 /.vagrant
 /public/img/raw
+/public/img/backgrounds
 /docs/raw
 Homestead.json
 Homestead.yaml
