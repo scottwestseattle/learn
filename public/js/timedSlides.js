@@ -28,7 +28,8 @@ $( document ).ready(function() {
 //
 function deck() {
 
-	this.slides = [];
+	this.slides = [];   // slides
+    this.bgs = [];      // slide background image
 
 	// options
 	this.runState = RUNSTATE_START;
@@ -64,6 +65,7 @@ function deck() {
         clearTimer();
         if (curr < max)
         {
+            $("#bg").css("background-image", getRandomBackground());
             loadSlide();
             var seconds = deck.slides[curr].seconds;
 
@@ -152,8 +154,6 @@ function deck() {
         $(".sliderPhoto").attr("src", "/img/plancha/" + deck.slides[curr].photo)
         //alert(deck.slides[curr].photo);
         //$(".slidePhoto").text();
-
-        $("#bg").css("background-image", getRandomBackground());
 	}
 
 	this.setAlertPrompt = function(text, color, bold = false) {
@@ -167,48 +167,29 @@ var deck = new deck();
 
 function getRandomBackground()
 {
-    var bgs = [
-
-        'url(/img/backgrounds/rialto-beach.jpg)',
-        'url(/img/backgrounds/hole-in-the-wall.jpg)',
-        'url(/img/backgrounds/seattle-lincoln-park.jpg)',
-        'url(/img/backgrounds/west-seattle.jpg)',
-        'url(/img/backgrounds/pnw-beach.jpg)',
-
-        'url(/img/backgrounds/seattle-troll.jpg)',
-        'url(/img/backgrounds/seattle-lincoln-park-sunset.jpg)',
-        'url(/img/backgrounds/seattle-sunset.jpg)',
-
-        'url(/img/backgrounds/austria-sailboat.jpg)',
-
-        'url(/img/backgrounds/bruges-canal.jpg)',
-        'url(/img/backgrounds/bruges-park.jpg)',
-
-        'url(/img/backgrounds/brussels-square-night.jpg)',
-        'url(/img/backgrounds/brussels-square.jpg)',
-
-        'url(/img/backgrounds/dubrovnik-old-town.jpg)',
-        'url(/img/backgrounds/dubrovnik-harbor.jpg)',
-        'url(/img/backgrounds/kotor-square-night.jpg)',
-
-        'url(/img/backgrounds/amboseli-animals.jpg)',
-        'url(/img/backgrounds/amboseli-elephant-march.jpg)',
-        'url(/img/backgrounds/amboseli-elephants.jpg)',
-
-        'url(/img/backgrounds/kenya-giraffes.jpg)',
-        'url(/img/backgrounds/kenya-giraffes2.jpg)',
-        'url(/img/backgrounds/kenya-giraffes3.jpg)',
-
-        'url(/img/backgrounds/kilimanjaro.jpg)'
-/*
-        'url(/img/backgrounds/)',
-*/
-    ];
-
     // get random background image
-    var bg = bgs[Math.floor(Math.random() * bgs.length)];
+    var ix = Math.floor(Math.random() * deck.bgs.length);
+    var bg = deck.bgs[ix];
+    var i = 0;
+    var maxLoops = deck.bgs.length;
+    while (bg['shown'] && i < maxLoops)
+    {
+        ix++;
+        if (ix >= deck.bgs.length)
+            ix = 0;
 
-    //bg = 'url(/img/backgrounds/rialto-beach.jpg)';
+        bg = deck.bgs[ix];
+        i++; // make sure it's not infinite
+        //console.log('looping...');
+    }
+
+    if (i >= maxLoops)
+        console.log('ran out of unused bg images')
+
+    //console.log('showing: ' + bg['filename']);
+    deck.bgs[ix]['shown'] = true;
+
+    bg = 'url(/img/backgrounds/' + bg['filename'] + ')';
 
     return bg;
 }
@@ -267,13 +248,26 @@ function loadData()
 		deck.quizTextDone = container.data('quiztext-done');
 		deck.lessonId = container.data('lessonid');
 		deck.touchPath = container.data('touchpath');
+    });
 
-		if (i == 0)
-			alert(deck.slides[i].title);
+	//
+	// load bg images
+	//
+	i = 0;
+	$('.data-bgs').each(function() {
+
+        var container = $(this);
+
+		var filename = container.data('filename');
+
+		// add the record
+		deck.bgs[i] = {
+		    filename:filename,
+		    shown:false
+		};
 
 		i++;
     });
-
 	//alert("max=" + max);
 }
 

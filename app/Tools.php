@@ -534,6 +534,7 @@ class Tools
             // '/img/plancha'
             $path = base_path() . '/public' . $path;
             $files = scandir($path);
+//dd($files);
             $i = 0;
             foreach($files as $file)
             {

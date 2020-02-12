@@ -30,6 +30,16 @@
 	</div>
 @endforeach
 
+	<!-------------------------------------------------------->
+	<!-- Add the bg photos -->
+	<!-------------------------------------------------------->
+@foreach($bgs as $key => $value)
+	<div class="data-bgs"
+	    data-filename="{{$key}}"
+	>
+	</div>
+@endforeach
+
 <div class="container">
 
 	<!-------------------------------------------------------->

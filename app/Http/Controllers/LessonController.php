@@ -655,11 +655,19 @@ class LessonController extends Controller
 		}
         //dd($records);
 
+        $bgs = Tools::getPhotos('/img/backgrounds/');
+        foreach($bgs as $key => $value)
+        {
+            $bgs[$key] = 0;
+        }
+        //dd($bgs);
+
 		return view(PREFIX . '.runtimed', $this->getViewData([
 			'record' => $lesson,
 			'records' => $records,
 			'returnPath' => 'courses/view',
 			'displayTime' => Tools::secondsToTime($seconds + $breakSeconds),
+			'bgs' => $bgs,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 }
