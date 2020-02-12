@@ -302,6 +302,10 @@
     content: "\E185"
 }
 
+.glyphicon-step-forward:before {
+    content: "\E077"
+}
+
 .glyphicon-sunglasses:before {
     content: "\E240"
 }

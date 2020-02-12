@@ -18,6 +18,15 @@ var curr = 0;   // current slide
 var nbr = 0;
 var max = 0;    // number of slides
 
+var _debug = true;
+var _mute = false;
+
+function debug(text)
+{
+    if (_debug)
+        console.log(text);
+}
+
 $( document ).ready(function() {
 	loadData();
 	deck.start();
@@ -51,21 +60,24 @@ function deck() {
         this.setStates(RUNSTATE_START);
 	}
 
+    // this shows the beginning count down and then starts the first slide
 	this.run = function() {
 		reset();
 		this.setStates(RUNSTATE_COUNTDOWN);
 	    deck.showSlide();
-
+	    deck.setBackgroundImage(); // do this here so bg image will be preloaded with no delay
 	    _countdownAudioTotalSeconds = 3;
         startTimer(deck.slides[curr].countdown, this.runSlide);
 	}
 
+    // this shows the current slide
 	this.runSlide = function() {
+
+        debug("run slide: " + deck.slides[curr].title);
 
         clearTimer();
         if (curr < max)
         {
-            $("#bg").css("background-image", getRandomBackground());
             loadSlide();
             var seconds = deck.slides[curr].seconds;
 
@@ -82,15 +94,44 @@ function deck() {
         }
 	}
 
+    // this shows the between slide
 	this.runBetween = function() {
         clearTimer();
 	    deck.setStates(RUNSTATE_BETWEEN);
 	    betweenSeconds = deck.slides[curr].between;
         curr++; // do this here because we need the between seconds from the previous record
 	    deck.showSlide(); // show the upcoming slide during the break
-
+	    deck.setBackgroundImage(); // do this here so bg image will be preloaded with no delay
 	    _countdownAudioTotalSeconds = 3;
         startTimer(betweenSeconds, deck.runSlide);
+	}
+
+	this.skipSlide = function() {
+
+		switch(this.runState)
+		{
+			case RUNSTATE_COUNTDOWN:
+			    this.runSlide();
+				break;
+
+			case RUNSTATE_BETWEEN:
+			    this.runSlide();
+				break;
+
+			case RUNSTATE_RUN:
+
+                if (curr < (max - 1)) // not last one
+    			    this.runBetween();
+                else    // last one
+                    end();
+				break;
+
+			default:
+			    // for everything else reload the page
+			    reload();
+				break;
+		}
+
 	}
 
 	this.showPanel = function(id) {
@@ -110,6 +151,8 @@ function deck() {
 	}
 
 	this.setStates = function(state) {
+
+        debug("setting state to " + state);
 
 		this.runState = state;
 
@@ -156,6 +199,10 @@ function deck() {
         //$(".slidePhoto").text();
 	}
 
+	this.setBackgroundImage = function() {
+        $("#bg").css("background-image", getRandomBackground());
+	}
+
 	this.setAlertPrompt = function(text, color, bold = false) {
 		//$("#alertPrompt").html(text);
 		//$("#alertPrompt").css('color', color);
@@ -180,13 +227,13 @@ function getRandomBackground()
 
         bg = deck.bgs[ix];
         i++; // make sure it's not infinite
-        //console.log('looping...');
+        debug('looping...');
     }
 
     if (i >= maxLoops)
-        console.log('ran out of unused bg images')
+        debug('ran out of unused bg images')
 
-    //console.log('showing: ' + bg['filename']);
+    debug('showing: ' + bg['filename']);
     deck.bgs[ix]['shown'] = true;
 
     bg = 'url(/img/backgrounds/' + bg['filename'] + ')';
@@ -324,14 +371,28 @@ function clearTimer()
     _tensAudio = false;
 }
 
+// skip the current countdown, slide, or between break
+function skip()
+{
+    deck.skipSlide();
+}
+
+// reload the page
+function reload()
+{
+    location.reload();
+}
+
 function pause()
 {
+    debug("pause hit, _timersPaused = " + _timersPaused.toString());
+
     if (_timersPaused)
     {
         //
         // timers paused, restart them
         //
-        startTimer(_timerIntervalCounter);
+        resume();
     }
     else
     {
@@ -346,6 +407,64 @@ function pause()
     }
 
     _timersPaused = !_timersPaused;
+
+    if (_timersPaused)
+    {
+        $("#button-pause").removeClass("glyphicon-pause");
+        $("#button-pause").addClass("glyphicon-play");
+    }
+    else
+    {
+        $("#button-pause").removeClass("glyphicon-play");
+        $("#button-pause").addClass("glyphicon-pause");
+    }
+}
+
+function resume()
+{
+    debug("resume: time left on countdown timer = " + _timerIntervalCounter);
+
+    if (_timerIntervalCounter <= 0)
+    {
+        debug("nothing to resume");
+        return; // nothing to do
+    }
+
+    // reset to the remaining time on the counter
+    seconds = _timerIntervalCounter;
+
+    // restart the deck timer according to the current state
+    switch(deck.runState)
+    {
+        case RUNSTATE_COUNTDOWN:
+            debug("resuming countdown");
+            startTimer(seconds, deck.runSlide);
+            break;
+
+        case RUNSTATE_BETWEEN:
+            debug("resuming between break");
+            startTimer(seconds, deck.runSlide);
+            break;
+
+        case RUNSTATE_RUN:
+            if (curr < (max - 1)) // not last one
+            {
+                debug("resuming slide");
+                startTimer(seconds, deck.runBetween);
+            }
+            else    // last one
+            {
+                debug("resuming last slide");
+                startTimer(seconds, end);
+            }
+            break;
+
+        default:
+            // nothing to do
+            debug("nothing to resume");
+            break;
+    }
+
 }
 
 function startInterval(seconds)
@@ -387,22 +506,46 @@ function playAudio(seconds)
     tts(text);
 }
 
+function mute()
+{
+    _mute = !_mute;
+
+    if (_mute)
+    {
+        $("#button-mute").removeClass("glyphicon-volume-up");
+        $("#button-mute").addClass("glyphicon-volume-off");
+    }
+    else
+    {
+        $("#button-mute").removeClass("glyphicon-volume-off");
+        $("#button-mute").addClass("glyphicon-volume-up");
+    }
+
+    debug("mute set to " + _mute.toString());
+}
+
 function playAudioFile(file)
 {
-    var a = document.getElementById("audio");
-    var src = "/audio/" + file;
-    $("#audio").attr("src", src)
-    a.play();
+    if (!_mute)
+    {
+        var a = document.getElementById("audio");
+        var src = "/audio/" + file;
+        $("#audio").attr("src", src)
+        a.play();
+    }
 }
 
 function tts(text)
 {
-    var utter = new SpeechSynthesisUtterance();
+    if (!_mute)
+    {
+        var utter = new SpeechSynthesisUtterance();
 
-    //var myLang = utter.lang;
-    utter.lang = 'en-US';
-    utter.text = text;
-    window.speechSynthesis.speak(utter);
+        //var myLang = utter.lang;
+        utter.lang = 'en-US';
+        utter.text = text;
+        window.speechSynthesis.speak(utter);
+    }
 }
 
 function setDebug(text = null)
@@ -436,8 +579,15 @@ function reset()
 {
 	clear();
 
-	for (var i = 0; i < max; i++)
-		deck.slides[i].done = false;
+    // clear slides
+	deck.slides.forEach(function(slide, index){
+	    slide.done = false;
+	});
+
+    // clear bg images
+    deck.bgs.forEach(function(bg, index){
+        bg.shown = false;
+    });
 
 	curr = 0;
 	nbr = 0;
