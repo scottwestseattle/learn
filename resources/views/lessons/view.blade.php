@@ -54,7 +54,7 @@
     </h3>
     @endif
 
-    @if (isset($record->main_photo))
+    @if ($record->isTimedSlides() && isset($record->main_photo))
         <div>
             {{$record->getTime()['runSeconds']}} seconds
             &nbsp;({{$record->getTime()['breakSeconds']}} break)

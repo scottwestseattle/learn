@@ -51,6 +51,7 @@
 				<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}"></input>
 			</div>
 
+            @if ($record->isTimedSlides())
 			<!--------------------------------------------------------------------------->
 			<!-- Main Photo -->
 			<!--------------------------------------------------------------------------->
@@ -88,6 +89,12 @@
                 <label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
                 <input type="number" min="0" max="1000" name="break_seconds" class="form-control"  value="{{$record->break_seconds}}" />
             </div>
+
+            <div class="submit-button mb-3">
+                <button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
+            </div>
+
+            @endif
 
 			<!--------------------------------------------------------------------------->
 			<!-- Lesson Type Dropdown -->
@@ -153,11 +160,13 @@
 	    		<input type="text" name="title_chapter" class="form-control" value="{{$record->title_chapter}}" />
             </div>
 
+            @if ($record->isTimedSlides())
 			<!-- Reps -->
 			<div class="form-group">
                 <label for="reps" class="control-label">@LANG('gen.Reps'):</label>
                 <input type="number" name="reps" class="form-control" value="{{$record->reps}}" />
             </div>
+            @endif
 
 		</div>
 

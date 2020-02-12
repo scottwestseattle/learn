@@ -31,18 +31,18 @@
         @if ($course->isTimedSlides())
             <input type="hidden" name="type_flag" id="type_flag" value="{{LESSONTYPE_TIMED_SLIDES}}" />
         @else
-        <div class="form-group">
-        @component('components.control-dropdown-menu', ['record' => $course, 'prefix' => $prefix,
-            'isAdmin' => $isAdmin,
-            'prompt' => 'Lesson Type: ',
-            'empty' => 'Select Lesson Type',
-            'options' => App\Lesson::getTypes(),
-            'selected_option' => null,
-            'field_name' => 'type_flag',
-            'prompt_div' => true,
-            'select_class' => 'form-control',
-        ])@endcomponent
-        </div>
+            <div class="form-group">
+            @component('components.control-dropdown-menu', ['record' => $course, 'prefix' => $prefix,
+                'isAdmin' => $isAdmin,
+                'prompt' => 'Lesson Type: ',
+                'empty' => 'Select Lesson Type',
+                'options' => App\Lesson::getTypes(),
+                'selected_option' => null,
+                'field_name' => 'type_flag',
+                'prompt_div' => true,
+                'select_class' => 'form-control',
+            ])@endcomponent
+            </div>
         @endif
 
         <!--------------------------------------------------------------------------->
@@ -85,6 +85,14 @@
 			<label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
 			<input type="number" name="break_seconds" class="form-control" />
 		<div>
+
+        @if ($course->isTimedSlides())
+            <div class="form-group">
+                <div class="submit-button">
+                    <button type="submit" name="update" class="btn btn-primary">@LANG('ui.Add')</button>
+                </div>
+            </div>
+        @endif
 
 		<div class="form-group">
 			<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
