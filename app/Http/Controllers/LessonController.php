@@ -107,6 +107,12 @@ class LessonController extends Controller
 		return $records;
 	}
 
+    //todo: add canned descriptions somewhere
+    private $_timedSlideDescriptions = [
+        'cobra' => 'Estiramiento de Cobra',
+        'leg-lift' => 'Lay flat on your back with arms by your sides and lift both legs about one foot into the air while keeping them straight.',
+    ];
+
     public function add(Course $course)
     {
 		$lessons = null;
