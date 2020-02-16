@@ -59,7 +59,7 @@
             {{$record->getTime()['runSeconds']}} seconds
             &nbsp;({{$record->getTime()['breakSeconds']}} break)
         </div>
-        <div><img src="{{$photoPath}}{{$record->main_photo}}" width="98%" max-width="400"/></div>
+        <div><img src="{{$photoPath}}{{$record->main_photo}}" style="width: 100%; max-width: 400px;"/></div>
     @endif
 
 	@if (strlen($record->description) > 0)

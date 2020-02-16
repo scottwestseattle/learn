@@ -94,7 +94,7 @@
                 <table style="width:100%;">
                 <tbody>
                     <tr>
-                        <td style="">
+                        <td style="width:100%;">
                                 <div><a href="/lessons/view/{{$record->id}}">{{$record->section_number}}.&nbsp;{{$record->title}}</a></div>
                                 <div>{{$record->getTime()['runSeconds']}} seconds ({{$record->getTime()['breakSeconds']}} rest)</div>
                                 <div>

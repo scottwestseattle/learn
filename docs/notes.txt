@@ -1,7 +1,3 @@
-
-======= GEAR ======
-** Watch: Timex Expedition / battery: CR 2016
-
 HUMAN DIMENSIONS
 Torso = 3 heads
 Leg Upper = 1.75 heads

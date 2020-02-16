@@ -37,7 +37,7 @@
 @endif
 
 	@foreach ($options as $key => $value)
-	    <img id="{{$value}}" src="/img/plancha/{{$value}}" width="50"
+	    <img id="{{$value}}" src="/img/plancha/{{$value}}" width="75"
 	        onclick="event.preventDefault(); {{$onchange}}('{{$value}}');"
 	        title="{{$value}}"
 	        alt="{{$value}}" />
