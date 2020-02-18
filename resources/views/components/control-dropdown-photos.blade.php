@@ -6,7 +6,7 @@
 			<div>
 		@endif
 
-		<label for="{{$field_name}}">{{$prompt}}</label>
+		<label for="{{$field_name}}">{{$prompt}} ({{count($options)}}):</label>
 
 		@if (isset($prompt_div))
 			</div>

@@ -656,10 +656,9 @@ class LessonController extends Controller
             $s = intval($record->seconds);
             $seconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
 
-            $s = intval($lesson->breakSeconds);
+            $s = intval($record->break_seconds);
             $breakSeconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
 		}
-        //dd($records);
 
         $bgs = Tools::getPhotos('/img/backgrounds/');
         foreach($bgs as $key => $value)

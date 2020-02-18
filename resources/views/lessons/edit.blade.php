@@ -36,21 +36,6 @@
 
 		<div style="{{$record->isText() ? 'display:none;' : ''}}" id="tab-title">
 
-			<div class="form-group">
-				<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
-				<select name="parent_id" class="form-control">
-					<option value="0">(@LANG('content.Select Course'))</option>
-					@foreach ($courses as $course)
-						<option value="{{$course->id}}" {{ $course->id == $record->parent_id ? 'selected' : ''}}>{{$course->title}}</option>
-					@endforeach
-				</select>
-			</div>
-
-			<div class="form-group">
-				<label for="title" class="control-label">@LANG('gen.Title'):</label>
-				<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}"></input>
-			</div>
-
             @if ($record->isTimedSlides())
 			<!--------------------------------------------------------------------------->
 			<!-- Main Photo -->
@@ -60,7 +45,7 @@
 			@component('components.control-dropdown-photos', [
 			    'record' => $record,
 			    'prefix' => $prefix,
-				'prompt' => 'Main Photo: ',
+				'prompt' => 'Select Exercise',
 				'empty' => 'Select Main Photo',
 				'options' => App\Tools::getPhotos($photoPath),
 				'selected_option' => $record->main_photo,
@@ -78,6 +63,11 @@
                 <input id="main_photo" name="main_photo" type="hidden" value="{{$record->main_photo}}" />
             </div>
 
+			<div class="form-group">
+				<label for="title" class="control-label">@LANG('gen.Title'):</label>
+				<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}"></input>
+			</div>
+
 			<!-- Seconds -->
 			<div class="form-group">
                 <label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
@@ -90,28 +80,36 @@
                 <input type="number" min="0" max="1000" name="break_seconds" class="form-control"  value="{{$record->break_seconds}}" />
             </div>
 
+            @if (false)
+			<!-- Reps -->
+			<div class="form-group">
+                <label for="reps" class="control-label">@LANG('gen.Reps'):</label>
+                <input type="number" name="reps" class="form-control" value="{{$record->reps}}" />
+            </div>
+            @endif
+
             <div class="submit-button mb-3">
                 <button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
             </div>
 
-            @endif
-
-			<!--------------------------------------------------------------------------->
-			<!-- Lesson Type Dropdown -->
-			<!--------------------------------------------------------------------------->
+            @else
 
 			<div class="form-group">
-			@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix,
-				'isAdmin' => $isAdmin,
-				'prompt' => 'Lesson Type: ',
-				'empty' => 'Select Lesson Type',
-				'options' => App\Lesson::getTypes(),
-				'selected_option' => $record->type_flag,
-				'field_name' => 'type_flag',
-				'prompt_div' => true,
-				'select_class' => 'form-control',
-			])@endcomponent
+				<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
+				<select name="parent_id" class="form-control">
+					<option value="0">(@LANG('content.Select Course'))</option>
+					@foreach ($courses as $course)
+						<option value="{{$course->id}}" {{ $course->id == $record->parent_id ? 'selected' : ''}}>{{$course->title}}</option>
+					@endforeach
+				</select>
 			</div>
+
+			<div class="form-group">
+				<label for="title" class="control-label">@LANG('gen.Title'):</label>
+				<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}"></input>
+			</div>
+
+            @endif
 
 			<!--------------------------------------------------------------------------->
 			<!-- Chapter / Section -->
@@ -137,11 +135,11 @@
 			</div>
 
 			<!--------------------------------------------------------------------------->
-			<!-- Options -->
+			<!-- Chapter Title - only used for the first lesson in a chapter -->
 			<!--------------------------------------------------------------------------->
 			<div class="form-group">
-    			<label for="options" class="control-label">@LANG('content.Options'):</label>
-	    		<input type="text" name="options" class="form-control" value="{{$record->options}}" />
+    			<label for="title_chapter" class="control-label">@LANG('gen.Chapter Title'):</label>
+	    		<input type="text" name="title_chapter" class="form-control" value="{{$record->title_chapter}}" />
             </div>
 
 			<!--------------------------------------------------------------------------->
@@ -153,20 +151,44 @@
             </div>
 
 			<!--------------------------------------------------------------------------->
-			<!-- Chapter Title - only used for the first lesson in a chapter -->
+			<!-- Options -->
 			<!--------------------------------------------------------------------------->
 			<div class="form-group">
-    			<label for="title_chapter" class="control-label">@LANG('gen.Chapter Title'):</label>
-	    		<input type="text" name="title_chapter" class="form-control" value="{{$record->title_chapter}}" />
+    			<label for="options" class="control-label">@LANG('content.Options'):</label>
+	    		<input type="text" name="options" class="form-control" value="{{$record->options}}" />
             </div>
 
+
             @if ($record->isTimedSlides())
-			<!-- Reps -->
+
 			<div class="form-group">
-                <label for="reps" class="control-label">@LANG('gen.Reps'):</label>
-                <input type="number" name="reps" class="form-control" value="{{$record->reps}}" />
-            </div>
+				<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
+				<select name="parent_id" class="form-control">
+					<option value="0">(@LANG('content.Select Course'))</option>
+					@foreach ($courses as $course)
+						<option value="{{$course->id}}" {{ $course->id == $record->parent_id ? 'selected' : ''}}>{{$course->title}}</option>
+					@endforeach
+				</select>
+			</div>
+
             @endif
+
+			<!--------------------------------------------------------------------------->
+			<!-- Lesson Type Dropdown -->
+			<!--------------------------------------------------------------------------->
+
+			<div class="form-group">
+			@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix,
+				'isAdmin' => $isAdmin,
+				'prompt' => 'Lesson Type: ',
+				'empty' => 'Select Lesson Type',
+				'options' => App\Lesson::getTypes(),
+				'selected_option' => $record->type_flag,
+				'field_name' => 'type_flag',
+				'prompt_div' => true,
+				'select_class' => 'form-control',
+			])@endcomponent
+			</div>
 
 		</div>
 

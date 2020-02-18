@@ -53,7 +53,7 @@
         @component('components.control-dropdown-photos', [
             'record' => $record,
             'prefix' => $prefix,
-            'prompt' => 'Main Photo: ',
+            'prompt' => 'Select Exercise',
             'empty' => 'Select Main Photo',
             'options' => App\Tools::getPhotos($photoPath),
             'selected_option' => $record->main_photo,

@@ -223,7 +223,7 @@ class CourseController extends Controller
                 $s = intval($lesson->seconds);
                 $seconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
 
-                $s = intval($lesson->breakSeconds);
+                $s = intval($lesson->break_seconds);
                 $breakSeconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
             }
 
