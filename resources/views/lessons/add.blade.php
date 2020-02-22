@@ -10,7 +10,7 @@
 
 	<form method="POST" action="/{{$prefix}}/create">
 
-        @if (false && $course->isTimedSlides())
+        @if ($course->isTimedSlides())
             <input type="hidden" name="parent_id" id="parent_id" value="{{$course->id}}" />
         @else
             <div class="form-group">
@@ -49,26 +49,24 @@
         <!-- Main Photo -->
         <!--------------------------------------------------------------------------->
 
+        <!-- Photo Preview -->
+        <div id="photo-div" class="form-group" style="">
+            <img id="photo" width="150" src="{{$photoPath}}/none.png" />
+            <input id="main_photo" name="main_photo" type="hidden" value="default" />
+        </div>
+
         <div class="form-group">
         @component('components.control-dropdown-photos', [
-            'record' => $record,
-            'prefix' => $prefix,
             'prompt' => 'Select Exercise',
             'empty' => 'Select Main Photo',
             'options' => App\Tools::getPhotos($photoPath),
-            'selected_option' => $record->main_photo,
+            'selected_option' => null,
             'field_name' => 'main_photo',
             'prompt_div' => true,
             'select_class' => 'form-control',
             'onchange' => 'showMainPhoto',
             'noSelection' => 'none.png',
         ])@endcomponent
-        </div>
-
-        <!-- Photo Preview -->
-        <div id="photo-div" class="form-group" style="">
-            <img id="photo" width="200" src="" />
-            <input id="main_photo" name="main_photo" type="hidden" value="default" />
         </div>
 
 		<div class="form-group">
@@ -83,7 +81,7 @@
 
 		<div class="form-group">
 			<label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
-			<input type="number" name="break_seconds" class="form-control" />
+			<input type="number" name="break_seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_SECONDS}}" />
 		<div>
 
         @if ($course->isTimedSlides())

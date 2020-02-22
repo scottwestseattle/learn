@@ -111,7 +111,7 @@
                                 </div>
                         </td>
                         <td>
-                                <img width="100" src="/img/plancha/{{$record->main_photo}}" />
+                            <img width="100" src="/img/plancha/{{$record->main_photo}}" />
                         </td>
                     </tr>
                 </tbody>
@@ -142,6 +142,7 @@
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-run" class="slide-panel text-center">
 
+    @if (true)
 	    <div id="bg" class="text-center" style="
 	        height:300px;
 	        line-height:300px;
@@ -151,6 +152,18 @@
 	        background-position:center bottom;
 	        "
 	    >
+    @else
+	    <div id="bgTest" class="text-center" style="
+	        height:300px;
+	        line-height:300px;
+	        background-size: 500px;
+	        background-repeat:no-repeat;
+	        background-image:url('/img/backgrounds/test2.jpg');
+	        background-position:center bottom;
+	        "
+	    >
+    @endif
+
 	        <img class="sliderPhoto" style="vertical-align: bottom; max-width:400px; width:100%;" src="/* set by js */" />
 	    </div>
 
@@ -185,9 +198,11 @@
 	<!---------------------------------------------------------------------------------------------------------------->
 	<!-- End Panel -->
 	<!---------------------------------------------------------------------------------------------------------------->
-	<div id="panel-end" class="slide-panel text-center">
-	    <h1>Congratulations!</h1>
-	    <h5>{{count($records)}} Exercises completed in {{$displayTime}}</h5>
+	<div id="panel-end" class="slide-panel ">
+	    <div class="text-center">
+            <h1>Congratulations!</h1>
+            <h5 class="mb-3">{{count($records)}} Exercises completed in {{$displayTime}}</h5>
+	    </div>
         <div class="card-deck">
         @foreach($records as $record)
         <div style="min-width:300px;" class="card mb-1">
@@ -208,7 +223,7 @@
                                     @endif
                                 </div>
                         </td>
-                        <td>
+                        <td style="width:10px;">
                                 <img width="100" src="/img/plancha/{{$record->main_photo}}" />
                         </td>
                     </tr>
