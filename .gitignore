@@ -23,7 +23,6 @@ sitemap-*.txt
 *.lock
 *.xsd
 public/error_log
-/docs/graphics
 /docs/install
 *.zip
 public/appeventlog.txt

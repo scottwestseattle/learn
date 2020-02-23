@@ -1,16 +1,3 @@
-HUMAN DIMENSIONS
-Torso = 3 heads
-Leg Upper = 1.75 heads
-leg lower = 1.5 heads
-arm upper =
-arm lower =
-hand = .5 heads
-foot = .75 heads
-
-2d Animation
-- Blender - 2d animation
-- Inkscape for drawing, then import into Blender
-
 SAMPLES
 -------
 
