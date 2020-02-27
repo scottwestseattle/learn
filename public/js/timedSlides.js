@@ -200,7 +200,8 @@ function deck() {
 	}
 
 	this.setBackgroundImage = function() {
-        $("#bg").css("background-image", getRandomBackground());
+	    var bg = getRandomBackground();
+        $("#bg").css("background-image", bg);
 	}
 
 	this.setAlertPrompt = function(text, color, bold = false) {
@@ -216,6 +217,35 @@ function getRandomBackground()
 {
     // get random background image
     var ix = Math.floor(Math.random() * deck.bgs.length);
+    var bg = deck.bgs[ix];
+    var i = 0;
+    var maxLoops = deck.bgs.length;
+    while (bg['shown'] && i < maxLoops)
+    {
+        ix++;
+        if (ix >= deck.bgs.length)
+            ix = 0;
+
+        bg = deck.bgs[ix];
+        i++; // make sure it's not infinite
+        debug('looping...');
+    }
+
+    if (i >= maxLoops)
+        debug('ran out of unused bg images')
+
+    debug('showing: ' + bg['filename']);
+    deck.bgs[ix]['shown'] = true;
+
+    bg = 'url(/img/backgrounds/' + bg['filename'] + ')';
+
+    return bg;
+}
+
+function getBackground()
+{
+    // get unused bg image
+    var ix = 0;
     var bg = deck.bgs[ix];
     var i = 0;
     var maxLoops = deck.bgs.length;
@@ -374,7 +404,20 @@ function clearTimer()
 // skip the current countdown, slide, or between break
 function skip()
 {
-    deck.skipSlide();
+    if (true)
+        deck.skipSlide();
+    else
+        switchBackgroundPhoto(); // tester to cycle through all background images
+}
+
+function switchBackgroundPhoto()
+{
+    clearTimer();
+
+    // loop thru the bg images
+    var bg = getBackground();
+    $("#bg").css("background-image", bg);
+    $("#bg-photo-name").text(bg);
 }
 
 // reload the page

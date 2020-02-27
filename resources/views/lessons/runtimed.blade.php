@@ -240,6 +240,7 @@
 
     <div class="text-center">
         <h1 style="font-size:100px" id="debug"></h1>
+        <p id="bg-photo-name"></p>
     </div>
 
     <audio id="audio">
