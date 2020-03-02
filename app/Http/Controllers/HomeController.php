@@ -165,7 +165,7 @@ class HomeController extends Controller
 		$hash = trim($request->get('hash'));
 		$hashed = Tools::getHash($hash);
 
-		if (Tools::startsWith($hash, 'First'))
+		if (Tools::startsWith($hash, 'F'))
 			$hashed .= '!';
 		else
 			$hashed .= '#';
