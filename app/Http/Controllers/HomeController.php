@@ -165,6 +165,11 @@ class HomeController extends Controller
 		$hash = trim($request->get('hash'));
 		$hashed = Tools::getHash($hash);
 
+		if (Tools::startsWith($hash, 'First'))
+			$hashed .= '!';
+		else
+			$hashed .= '#';
+
 		return view('home.hash', $this->getViewData([
 			'hash' => $hash,
 			'hashed' => $hashed,

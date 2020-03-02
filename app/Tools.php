@@ -171,9 +171,6 @@ class Tools
 		// add last 2 chars
 		$final .= substr($s, 6, 2);
 
-        // add special character
-        $final .= '!';
-
 		//echo $final;
 
 		return $final;
