@@ -262,6 +262,10 @@ class LessonController extends Controller
 
 		// only vocab pages may have vocab
 		$vocab = $lesson->getVocab();
+		
+		// get course time to show
+		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
+		$times = Lesson::getTimes($records);		
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $lesson,
@@ -274,6 +278,7 @@ class LessonController extends Controller
 			'vocab' => $vocab['records'],
 			'hasDefinitions' => $vocab['hasDefinitions'], // if the user has already added one or more definitions
 			'photoPath' => '/img/plancha/',
+			'times' => $times,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
@@ -648,17 +653,7 @@ class LessonController extends Controller
 		Lesson::setCurrentLocation($lesson->id);
 
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
-
-		$seconds = 0;
-		$breakSeconds = 0;
-		foreach($records as $record)
-		{
-            $s = intval($record->seconds);
-            $seconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
-
-            $s = intval($record->break_seconds);
-            $breakSeconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
-		}
+		$times = Lesson::getTimes($records);
 
         $bgs = Tools::getPhotos('/img/backgrounds/');
         foreach($bgs as $key => $value)
@@ -671,7 +666,7 @@ class LessonController extends Controller
 			'record' => $lesson,
 			'records' => $records,
 			'returnPath' => 'courses/view',
-			'displayTime' => Tools::secondsToTime($seconds + $breakSeconds),
+			'displayTime' => $times['timeTotal'],
 			'bgs' => $bgs,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
