@@ -237,7 +237,7 @@ function getRandomBackground()
     debug('showing: ' + bg['filename']);
     deck.bgs[ix]['shown'] = true;
 
-    bg = 'url(/img/backgrounds/' + bg['filename'] + ')';
+    bg = 'url(/img/backgrounds/' + deck.bgAlbum + '/' + bg['filename'] + ')';
 
     return bg;
 }
@@ -266,7 +266,7 @@ function getBackground()
     debug('showing: ' + bg['filename']);
     deck.bgs[ix]['shown'] = true;
 
-    bg = 'url(/img/backgrounds/' + bg['filename'] + ')';
+    bg = 'url(/img/backgrounds/' + deck.bgAlbum + '/' + bg['filename'] + ')';
 
     return bg;
 }
@@ -325,6 +325,7 @@ function loadData()
 		deck.quizTextDone = container.data('quiztext-done');
 		deck.lessonId = container.data('lessonid');
 		deck.touchPath = container.data('touchpath');
+		deck.bgAlbum = container.data('bgalbum');
     });
 
 	//

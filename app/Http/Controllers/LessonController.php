@@ -655,7 +655,15 @@ class LessonController extends Controller
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
 		$times = Lesson::getTimes($records);
 
-        $bgs = Tools::getPhotos('/img/backgrounds/');
+		// get background images by random album
+		$bgAlbums = [
+			'pnw', 'europe', 'africa', 'uk'
+		];
+		$ix = rand(1, count($bgAlbums)) - 1;
+		$album = $bgAlbums[$ix];
+        $bgs = Tools::getPhotos('/img/backgrounds/' . $album . '/');
+		//dump($album);
+		
         foreach($bgs as $key => $value)
         {
             $bgs[$key] = 0;
@@ -668,6 +676,7 @@ class LessonController extends Controller
 			'returnPath' => 'courses/view',
 			'displayTime' => $times['timeTotal'],
 			'bgs' => $bgs,
+			'bgAlbum' => $album,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 }
