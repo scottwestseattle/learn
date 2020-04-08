@@ -93,7 +93,8 @@ define('WIP_TEST', 30);
 define('WIP_FINISHED', 100);
 define('WIP_DEFAULT', WIP_DEV);
 
-define('TIMED_SLIDES_DEFAULT_SECONDS', 20);
+define('TIMED_SLIDES_DEFAULT_BREAK_SECONDS', 20);
+define('TIMED_SLIDES_DEFAULT_SECONDS', 50);
 
 class Controller extends BaseController
 {

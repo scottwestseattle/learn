@@ -215,20 +215,10 @@ class CourseController extends Controller
 
         foreach($records as $chapter)
         {
-            //dd($chapter);
-            $seconds = 0;
-            $breakSeconds = 0;
-            foreach($chapter as $lesson)
-            {
-                $s = intval($lesson->seconds);
-                $seconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
+			$times = Lesson::getTimes($chapter);
 
-                $s = intval($lesson->break_seconds);
-                $breakSeconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
-            }
-
-            $chapter['time'] = Tools::secondsToTime($seconds);
-            $chapter['totalTime'] = Tools::secondsToTime($seconds + $breakSeconds);
+            $chapter['time'] = $times['timeSeconds'];
+            $chapter['totalTime'] = $times['timeTotal'];
         }
 
 		return view(PREFIX . '.viewTimedSlides', $this->getViewData([

@@ -71,13 +71,15 @@
 			<!-- Seconds -->
 			<div class="form-group">
                 <label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
-                <input type="number" name="seconds" class="form-control"  value="{{$record->seconds}}" />
+                <input type="number" min="0" step="5" name="seconds" id="seconds" class="form-control form-control-100"  value="{{$record->seconds}}" />
+				@component('components.control-numinc', ['id' => 'seconds', 'multiple' => 5])@endcomponent
             </div>
 
 			<!-- Break Seconds -->
 			<div class="form-group">
-                <label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
-                <input type="number" min="0" max="1000" name="break_seconds" class="form-control"  value="{{$record->break_seconds}}" />
+				<label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
+				<input type="number" min="0" step="5" name="break_seconds" id="break_seconds" class="form-control form-control-100"  value="{{$record->break_seconds}}" />
+				@component('components.control-numinc', ['id' => 'break_seconds', 'multiple' => 5])@endcomponent
             </div>
 
             @if (false)
@@ -117,12 +119,14 @@
 
 			<div class="form-group">
 				<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
-				<input type="number"  min="1" max="1000" step="1" name="lesson_number" class="form-control form-control-100" value="{{$record->lesson_number}}" />
+				<input type="number" min="1" name="lesson_number" id="lesson_number" class="form-control form-control-100" value="{{$record->lesson_number}}" />
+				@component('components.control-numinc', ['id' => 'lesson_number', 'multiple' => 1])@endcomponent
 			</div>
 
 			<div class="form-group">
 				<label for="section_number" class="control-label">@LANG('content.Section'):</label>
-				<input type="number"  min="0" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$record->section_number}}" />
+				<input type="number" min="0" name="section_number" id="section_number" class="form-control form-control-100" value="{{$record->section_number}}" />
+				@component('components.control-numinc', ['id' => 'section_number', 'multiple' => 1])@endcomponent
 			</div>
 
 			<div class="form-group">
