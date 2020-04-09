@@ -881,10 +881,3 @@ function makeTitle(filename)
 
     return s;
 }
-
-function numInc(id, amount)
-{
-	var input = $("#" + id);
-	var value = Number(input.val()) + amount;
-	input.val(Number(value) < 0 ? 0 : Number(value));
-}

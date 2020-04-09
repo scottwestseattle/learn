@@ -28,12 +28,8 @@
 	</div>
 
     <div style="font-size:.8em;">
-		@if ($record->isTimedSlides())
-			{{$courseTitle}}&nbsp;Slide&nbsp;{{$record->section_number}}, Course Time: {{$times['timeTotal']}}
-		@else
-			{{$courseTitle}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
-		@endif
-		
+		{{$courseTitle}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
+
 		@if ($isAdmin)
 			@if ($record->isVocab())
 				&nbsp;<a href="/words/add/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>

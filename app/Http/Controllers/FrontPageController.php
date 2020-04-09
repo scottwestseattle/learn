@@ -34,16 +34,12 @@ class FrontPageController extends Controller
     public function index()
     {
 		$courses = []; // make this countable so view will always work
-		$vocabLists = [];
 
         // get word of the day
         $wod = Word::getWod(User::getSuperAdminUserId());
 
-		if (isset($wod))
-		{
-			// format the examples to display as separate sentences
-			$wod->examples = Tools::splitSentences($wod->examples);
-		}
+		// format the examples to display as separate sentences
+		$wod->examples = Tools::splitSentences($wod->examples);
 
 		try
 		{

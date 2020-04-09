@@ -1085,36 +1085,16 @@ class Lesson extends Base
 	}
 
 	public function getTime()
-	{		
-		$seconds = isset($this->seconds) ? intval($this->seconds) : TIMED_SLIDES_DEFAULT_SECONDS;
-		$breakSeconds = isset($this->break_seconds) ? intval($this->break_seconds) : TIMED_SLIDES_DEFAULT_BREAK_SECONDS;
-
-        $rc['runSeconds'] = $seconds;
-        $rc['runTime'] = Tools::secondsToTime($seconds);
-
-        $rc['breakSeconds'] = $breakSeconds;
-        $rc['breakTime'] = Tools::secondsToTime($breakSeconds);
-
-		return $rc;
-	}
-	
-	static public function getTimes($records)
 	{
-		$seconds = 0;
-		$breakSeconds = 0;
-		
-		foreach($records as $record)
-		{
-			$seconds += isset($record->seconds) ? intval($record->seconds) : TIMED_SLIDES_DEFAULT_SECONDS;
-			$breakSeconds += isset($record->break_seconds) ? intval($record->break_seconds) : TIMED_SLIDES_DEFAULT_BREAK_SECONDS;
-		}
-		
-		$rc['seconds'] = $seconds;
-		$rc['breakSeconds'] = $breakSeconds;
-		
-		$rc['timeSeconds'] = Tools::secondsToTime($seconds);
-		$rc['timeTotal'] = Tools::secondsToTime($seconds + $breakSeconds);
-		
+        $s = isset($this->seconds) ? $this->seconds : TIMED_SLIDES_DEFAULT_SECONDS;
+        $b = isset($this->break_seconds) ? $this->break_seconds : TIMED_SLIDES_DEFAULT_SECONDS;
+
+        $rc['runSeconds'] = $s;
+        $rc['runTime'] = Tools::secondsToTime($s);
+
+        $rc['breakSeconds'] = $b;
+        $rc['breakTime'] = Tools::secondsToTime($b);
+
 		return $rc;
 	}
 }

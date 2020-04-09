@@ -11,7 +11,6 @@
 	data-lessonid="{{$record->id}}"
 	data-touchpath="{{(isset($touchPath) ? $touchPath : '')}}"
 	data-max="{{count($records)}}"
-	data-bgalbum="{{$bgAlbum}}"
 ></div>
 
 	<!-------------------------------------------------------->

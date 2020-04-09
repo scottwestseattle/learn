@@ -50,7 +50,7 @@
         <!--------------------------------------------------------------------------->
 
         <!-- Photo Preview -->
-        <div id="photo-div" class="form-group" style="display:none;">
+        <div id="photo-div" class="form-group" style="">
             <img id="photo" width="150" src="{{$photoPath}}/none.png" />
             <input id="main_photo" name="main_photo" type="hidden" value="default" />
         </div>
@@ -76,15 +76,13 @@
 
 		<div class="form-group">
 			<label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
-			<input type="number" name="seconds" id="seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_SECONDS}}" />
-            @component('components.control-numinc', ['id' => 'seconds', 'multiple' => 5])@endcomponent			
+			<input type="number" name="seconds" class="form-control" />
 		<div>
 
 		<div class="form-group">
 			<label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
-			<input type="number" name="break_seconds" id="break_seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_BREAK_SECONDS}}" />
-            @component('components.control-numinc', ['id' => 'break_seconds', 'multiple' => 5])@endcomponent
-		<div>			
+			<input type="number" name="break_seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_SECONDS}}" />
+		<div>
 
         @if ($course->isTimedSlides())
             <div class="form-group">
@@ -96,15 +94,14 @@
 
 		<div class="form-group">
 			<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
-			<input type="number"  min="1" max="1000" step="1" name="lesson_number" id="lesson_number" class="form-control form-control-100" value="{{$chapter}}" />
-            @component('components.control-numinc', ['id' => 'lesson_number', 'multiple' => 1])@endcomponent
+			<input type="number"  min="1" max="1000" step="1" name="lesson_number" class="form-control form-control-100" value="{{$chapter}}" />
 		</div>
 
 		<div class="form-group">
 			<label for="section_number" class="control-label">@LANG('content.Section'):</label>
-			<input type="number"  min="0" max="1000" step="1" name="section_number" id="section_number" class="form-control form-control-100" value="{{$section}}" />
-            @component('components.control-numinc', ['id' => 'section_number', 'multiple' => 1])@endcomponent
+			<input type="number"  min="0" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$section}}" />
 		</div>
+
 
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('gen.Description'):</label>

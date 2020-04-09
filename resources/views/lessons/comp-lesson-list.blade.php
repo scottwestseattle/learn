@@ -6,30 +6,14 @@
 		<ul class="list-group list-group-flush">
 			@foreach($records as $record)
 			<li style="padding:10px;" class="list-group-item">
-				@if ($record->isTimedSlides())
-					<table>
-					<tr>
-						<td>
-							<img width="50" src="/img/plancha/{{$record->main_photo}}" />
-						</td>
-						<td>
-							@if (isset($selectedId) && $selectedId == $record->id)
-								<span class="glyphicon glyphicon-button-next bright-blue-fg"></span>&nbsp;
-								<span style="xfont-weight:bold;">{{$record->section_number}}.&nbsp;<a style="text-decoration:none;" href="/lessons/view/{{$record->id}}">{{$record->title}}</a></span>
-							@else
-								{{$record->section_number}}.&nbsp;<a style="text-decoration:none;" href="/lessons/view/{{$record->id}}">{{$record->title}}</a>
-							@endif						
-						</td>
-					</tr>
-					</table>
+				@if (isset($selectedId) && $selectedId == $record->id)
+					<!-- span style="font-size:1.5em; font-weight:bold;">&raquo;&nbsp;</span -->
+					<span class="glyphicon glyphicon-button-next bright-blue-fg"></span>&nbsp;
+					<span style="xfont-weight:bold;">{{$record->section_number}}.&nbsp;<a style="text-decoration:none;" href="/lessons/view/{{$record->id}}">{{$record->title}}</a></span>
+					<!-- span style="font-size:1.5em; font-weight:bold;">&nbsp;&laquo</span -->
 				@else
-					@if (isset($selectedId) && $selectedId == $record->id)
-						<span class="glyphicon glyphicon-button-next bright-blue-fg"></span>&nbsp;
-						<span style="xfont-weight:bold;">{{$record->section_number}}.&nbsp;<a style="text-decoration:none;" href="/lessons/view/{{$record->id}}">{{$record->title}}</a></span>
-					@else
-						{{$record->section_number}}.&nbsp;<a style="text-decoration:none;" href="/lessons/view/{{$record->id}}">{{$record->title}}</a>
-					@endif
-				@endif				
+					{{$record->section_number}}.&nbsp;<a style="text-decoration:none;" href="/lessons/view/{{$record->id}}">{{$record->title}}</a>
+				@endif
 			</li>
 			@endforeach
 		</ul>
