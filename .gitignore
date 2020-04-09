@@ -11,6 +11,7 @@
 /public/img/backgrounds
 /public/img/plancha
 /docs/raw
+/docs/install
 Homestead.json
 Homestead.yaml
 npm-debug.log
@@ -23,6 +24,5 @@ sitemap-*.txt
 *.lock
 *.xsd
 public/error_log
-/docs/install
 *.zip
 public/appeventlog.txt
