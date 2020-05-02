@@ -870,7 +870,7 @@ function makeTitle(filename)
     s = s.toLowerCase().replace(/.gif/g, '');
 
     s = s.replace(/-/g, ' ');
-    s = s.replace(/_/g, '');
+    s = s.replace(/_/g, ' ');
 
     s = s.trim();
 
