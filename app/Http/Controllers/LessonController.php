@@ -24,7 +24,7 @@ class LessonController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'start', 'permalink', 'logQuiz']);
+        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'start', 'permalink', 'logQuiz', 'rss']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -265,6 +265,7 @@ class LessonController extends Controller
 		
 		// get course time to show
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
+				
 		$times = Lesson::getTimes($records);		
 
 		return view(PREFIX . '.view', $this->getViewData([
@@ -317,7 +318,7 @@ class LessonController extends Controller
 
 		$isDirty = false;
 		$changes = '';
-
+		
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->title_chapter = Tools::copyDirty($record->title_chapter, $request->title_chapter, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
@@ -653,6 +654,23 @@ class LessonController extends Controller
 		Lesson::setCurrentLocation($lesson->id);
 
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
+		
+		if (false) // one time fix for file namespace
+		{
+			foreach($records as $record)
+			{
+				$photo = str_replace('-', '_', $record->main_photo);
+				$photo = str_replace(' ', '_', $photo);
+				
+				if ($photo != $record->main_photo)
+				{
+					//dump($photo);
+					$record->main_photo = $photo;
+					$record->save();
+				}
+			}
+		}
+		
 		$times = Lesson::getTimes($records);
 
 		// get background images by random album
@@ -679,4 +697,15 @@ class LessonController extends Controller
 			'bgAlbum' => $album,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
+	
+	public function rss(Lesson $lesson)
+    {
+		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
+
+		return view(PREFIX . '.rss', $this->getViewData([
+			'record' => $lesson,
+			'records' => $records,
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+	
 }

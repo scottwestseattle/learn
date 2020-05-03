@@ -58,6 +58,9 @@ class Course extends Base
 				case 4: // other
 					$cardClass = 'card-course-type4';
 					break;
+				case 40: // exercise
+					$cardClass = 'card-course-type40';
+					break;
 				default:
 					break;
 			}

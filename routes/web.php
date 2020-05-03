@@ -147,6 +147,7 @@ Route::group(['prefix' => 'lessons'], function () {
 	Route::get('/reviewmc/{lesson}/{reviewType?}','LessonController@reviewmc');
 	Route::get('/log-quiz/{lessonId}/{score}', 'LessonController@logQuiz');
 	Route::get('/start/{lesson}/', 'LessonController@start');
+	Route::get('/rss/{lesson}/', 'LessonController@rss');
 
 	// add/create
 	Route::get('/add','LessonController@add');

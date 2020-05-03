@@ -407,6 +407,10 @@ body {
 	background-color: #f5746f; /* reddish */
 }
 
+.card-course-type40 { /* Exercise */
+	background-color: #f5746f; /* reddish */
+}
+
 .card-course .card-header {
 	font-size:1.1em;
 }

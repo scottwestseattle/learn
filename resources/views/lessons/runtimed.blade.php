@@ -49,7 +49,7 @@
 	<div style="margin-top: 5px;">
 
 		<!-------------------------------------------------------->
-		<!-- Top Return Button -->
+		<!-- Top Row Buttons -->
 		<!-------------------------------------------------------->
 		<div style="margin: 0 5px 0 0;">
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a class="" role="" href="/{{$returnPath}}/{{$record->parent_id}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
@@ -58,15 +58,6 @@
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); skip()" href=""><span id="button-skip" class="glyphicon glyphicon-step-forward"></span></a></span>
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); mute()" href=""><span id="button-mute" class="glyphicon glyphicon-volume-up"></span></a></span>
 		</div>
-
-		<!-------------------------------------------------------->
-		<!-- Run-time Stats -->
-		<!-------------------------------------------------------->
-		@if (false)
-		<div style="font-size:.9em;" id="stats">
-			<span id="statsCount"></span>&nbsp;&nbsp;&nbsp;<span id="statsScore"></span>&nbsp;&nbsp;<span id="statsAlert"></span>
-		</div>
-		@endif
 
 	</div>
 
