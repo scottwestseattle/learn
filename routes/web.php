@@ -119,6 +119,7 @@ Route::group(['prefix' => 'courses'], function () {
 	Route::get('/', 'CourseController@index');
 	Route::get('/admin', 'CourseController@admin');
 	Route::get('/view/{course}','CourseController@view');
+	Route::get('/rss', 'CourseController@rss');
 
 	// add/create
 	Route::get('/add','CourseController@add');

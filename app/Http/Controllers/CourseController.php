@@ -25,7 +25,7 @@ class CourseController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'permalink']);
+        $this->middleware('is_admin')->except(['index', 'view', 'permalink', 'rss']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -363,4 +363,23 @@ class CourseController extends Controller
 
 		return redirect(REDIRECT_ADMIN);
     }
+	
+    public function rss()
+    {
+		$records = []; // make this countable so view will always work
+
+		try
+		{
+			$records = Course::getRss();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting ' . TITLE_LC . ' rss';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+		}
+
+		return view(PREFIX . '.rss', $this->getViewData([
+			'records' => $records,
+		]));
+    }	
 }

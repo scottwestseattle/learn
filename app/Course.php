@@ -30,7 +30,7 @@ class Course extends Base
 
     public function lessons()
     {
-    	return $this->hasMany('App\Lesson', 'parent_id', 'id');
+    	return $this->hasMany('App\Lesson', 'parent_id', 'id')->orderBy('lesson_number');
     }
 
     public function isTimedSlides()
@@ -135,8 +135,8 @@ class Course extends Base
 		}
 		else
 		{
+			// get public
 			$records = Course::select()
-//				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->where('release_flag', '>=', RELEASE_PUBLISHED)
 				->orderBy('type_flag')
@@ -146,6 +146,39 @@ class Course extends Base
 
 		return $records;
 	}
+
+    static public function getRss()
+    {
+		$records = Course::select()
+			->where('deleted_flag', 0)
+			->where('release_flag', '>=', RELEASE_PUBLISHED)
+			->where('type_flag', '=', COURSETYPE_TIMED_SLIDES)
+			->orderBy('display_order')
+			->get();
+		
+		return $records;
+	}
+	
+    static public function getRssFlat()
+    {
+		$records = Course::select(
+				'courses.id as courseId', 'courses.title as courseName', 'courses.description as courseDescription',
+				'lessons.id as lessonId', 'lessons.title_chapter as lessonName'
+				)
+			->join('lessons', 'courses.id', '=', 'lessons.parent_id')
+			->where('courses.type_flag', '=', COURSETYPE_TIMED_SLIDES)
+			->where('courses.deleted_flag', 0)
+			->where('lessons.deleted_flag', 0)
+			->where('lessons.section_number', 1)
+			->where('courses.release_flag', '>=', RELEASE_PUBLISHED)
+			->orderBy('courses.id')
+			->orderBy('lessons.section_number')
+			->get();
+
+		//dd($records);
+		
+		return $records;
+	}	
 
     public function getStatus()
     {
