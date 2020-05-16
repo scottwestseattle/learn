@@ -371,9 +371,54 @@ class CourseController extends Controller
 		try
 		{
 			$records = Course::getRss();
+			
+			foreach($records as $course)
+			{
+				$sessions = [];
+				
+				foreach($course->lessons as $lesson)
+				{	
+					//if ($lesson->lesson_number == 2) // test
+					{
+						if ($lesson->deleted_flag == 0)
+						{		
+							if ($lesson->section_number == 1)
+							{
+								$sessions[$lesson->lesson_number]['title'] = isset($lesson->title_chapter) ? $lesson->title_chapter : 'No Title';
+								$sessions[$lesson->lesson_number]['description'] = $lesson->description;
+								$sessions[$lesson->lesson_number]['id'] = $lesson->id;
+								$sessions[$lesson->lesson_number]['number'] = $lesson->lesson_number;						
+								$sessions[$lesson->lesson_number]['course'] = $course->title;
+							}
+							
+							$breakSeconds = isset($lesson->break_seconds) ? $lesson->break_seconds : TIMED_SLIDES_DEFAULT_BREAK_SECONDS;
+							$runSeconds = isset($lesson->seconds) ? $lesson->seconds : TIMED_SLIDES_DEFAULT_SECONDS;
+							$seconds = $breakSeconds + $runSeconds;
+							if (array_key_exists($lesson->lesson_number, $sessions) && array_key_exists('exercise_count', $sessions[$lesson->lesson_number]))
+							{
+								$sessions[$lesson->lesson_number]['exercise_count'] += 1;
+								$sessions[$lesson->lesson_number]['seconds'] += $seconds;
+							}
+							else
+							{
+								$sessions[$lesson->lesson_number]['exercise_count'] = 1;
+								$sessions[$lesson->lesson_number]['seconds'] = $seconds;
+							}
+							
+							//dump($lesson->title . ': ' . $lesson->section_number . ", " . $runSeconds . ', ' . $breakSeconds . ', ' . $seconds);
+
+						}
+					}
+				}
+				
+				$course['sessions'] = $sessions;
+				
+				//dd($course);
+			}
 		}
 		catch (\Exception $e)
 		{
+			dd($e);
 			$msg = 'Error getting ' . TITLE_LC . ' rss';
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 		}

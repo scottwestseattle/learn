@@ -32,7 +32,7 @@
 		<div style="padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
 			<div class="drop-box" style="height:200px;  background-color: #4993FD; color:white;" ><!-- inner col div -->
                 <a style="height:100%; width:100%;" class="btn btn-success btn-lg" role="button" href="/lessons/start/{{$record[0]->id}}">
-                    {{$record[0]->title_chapter}}<br/>{{count($record) - 2 /* remove 2 time items */}} exercises ({{$record['time']}})
+                    {{isset($record[0]->title_chapter) ? $record[0]->title_chapter : 'Day ' . $record[0]->lesson_number	}}<br/>{{count($record) - 2 /* remove 2 time items */}} exercises ({{$record['time']}})
                 <p>Total Time: {{$record['totalTime']}}</p>
                 </a>
 			</div><!-- inner col div -->
