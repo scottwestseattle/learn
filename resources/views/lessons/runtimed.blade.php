@@ -73,7 +73,7 @@
                 <a href="/lessons/add/{{$record->parent_id}}" class="btn btn-success btn-xs ml-1" role="button">Add</a>
                 @endif
             </p>
-            <h3 class="mt-2 mb-2">{{$records[0]->title_chapter}}</h3>
+            <h3 class="mt-2 mb-2">{{isset($records[0]->title_chapter) ? $records[0]->title_chapter : 'Day ' . $record->lesson_number}}</h3>
             <p style="font-size:13px;" class="">{{count($records)}} exercises ({{$displayTime}})</p>
             <a onclick="event.preventDefault(); run()"  href="" class="btn btn-primary mb-3" role="button">Start</a>
         </div>

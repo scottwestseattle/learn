@@ -384,7 +384,7 @@ class CourseController extends Controller
 						{		
 							if ($lesson->section_number == 1)
 							{
-								$sessions[$lesson->lesson_number]['title'] = isset($lesson->title_chapter) ? $lesson->title_chapter : 'No Title';
+								$sessions[$lesson->lesson_number]['title'] = isset($lesson->title_chapter) ? $lesson->title_chapter : 'Day ' . $lesson->lesson_number;
 								$sessions[$lesson->lesson_number]['description'] = $lesson->description;
 								$sessions[$lesson->lesson_number]['id'] = $lesson->id;
 								$sessions[$lesson->lesson_number]['number'] = $lesson->lesson_number;						

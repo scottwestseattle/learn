@@ -27,3 +27,4 @@ public/error_log
 *.zip
 public/appeventlog.txt
 public/appeventlog.txt
+*.psd
