@@ -689,14 +689,12 @@ class LessonController extends Controller
         }
         //dd($bgs);
 
-		// add to history
-		History::add($lesson->course->title, $lesson->course->id, isset($lesson->title_chapter) ? $lesson->title_chapter : 'Day ' . $lesson->lesson_number, $lesson->id, $times['seconds']);
-
 		return view(PREFIX . '.runtimed', $this->getViewData([
 			'record' => $lesson,
 			'records' => $records,
 			'returnPath' => 'courses/view',
 			'displayTime' => $times['timeTotal'],
+			'totalSeconds' => $times['seconds'],
 			'bgs' => $bgs,
 			'bgAlbum' => $album,
 			], LOG_MODEL, LOG_PAGE_VIEW));

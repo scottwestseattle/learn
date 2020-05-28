@@ -194,6 +194,7 @@
 	    <div class="text-center">
             <h1>Congratulations!</h1>
             <h5 class="mb-3">{{count($records)}} Exercises completed in {{$displayTime}}</h5>
+			<h5><a href="/history/add/{{urlencode($record->course->title)}}/{{$record->course->id}}/{{isset($record->title_chapter) ? urlencode($record->title_chapter) : urlencode('Day ' . $record->lesson_number)}}/{{$record->id}}/{{$totalSeconds}}">Add to History</h5>
 	    </div>
         <div class="card-deck">
         @foreach($records as $record)

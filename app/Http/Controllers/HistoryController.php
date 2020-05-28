@@ -28,6 +28,8 @@ class HistoryController extends Controller
 		parent::__construct();
 	}    
 	
+	// sample url:
+	// http://localhost/history/add/Plancha/14/Day+4/4/750
     public function add($programName, $programId, $sessionName, $sessionId, $seconds)
     {
 		History::add(urldecode($programName), $programId, urldecode($sessionName), $sessionId, $seconds);
