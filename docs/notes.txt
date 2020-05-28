@@ -193,7 +193,7 @@ look for DocumentRoot and <Directory ...>
 DocumentRoot "/Users/scottwilkinson/Documents/GitHub/learn/public"
 Restart apache webserver:
 sudo apachectl stop
-Sudo apachectl start
+sudo apachectl start
 sudo apachectl restart
 
 // check apache errors:

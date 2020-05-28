@@ -276,7 +276,7 @@ class Tools
 	}
 
 	// if string has non-whitespace chars, then it gets trimmed, otherwise gets set to null
-	static protected function trimNull($text, $alphanum = false)
+	static public function trimNull($text, $alphanum = false)
 	{
 		if (isset($text))
 		{

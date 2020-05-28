@@ -48,6 +48,16 @@ Route::post('/hasher', 'HomeController@hasher');
 Route::get('/send/email', 'HomeController@wod');
 Route::get('/send/wod', 'HomeController@wod');
 
+// History
+Route::group(['prefix' => 'history'], function () {
+	Route::get('/', 'HistoryController@index');
+	Route::get('/rss', 'HistoryController@rss');
+
+	// add/create
+	Route::get('/add/{programName}/{programId}/{sessionName}/{sessionId}/{seconds}','HistoryController@add');
+	Route::post('/create','HistoryController@create');
+});
+
 // Vocabulary Lists
 Route::group(['prefix' => 'vocab-lists'], function () {
 

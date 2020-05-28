@@ -11,6 +11,7 @@ use App\Lesson;
 use App\Tools;
 use App\Course;
 use App\VocabList;
+use App\History;
 
 define('PREFIX', 'lessons');
 define('LOG_MODEL', 'lessons');
@@ -650,7 +651,7 @@ class LessonController extends Controller
 	}
 
 	public function start(Lesson $lesson)
-    {
+    {		
 		Lesson::setCurrentLocation($lesson->id);
 
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
@@ -687,6 +688,9 @@ class LessonController extends Controller
             $bgs[$key] = 0;
         }
         //dd($bgs);
+
+		// add to history
+		History::add($lesson->course->title, $lesson->course->id, isset($lesson->title_chapter) ? $lesson->title_chapter : 'Day ' . $lesson->lesson_number, $lesson->id, $times['seconds']);
 
 		return view(PREFIX . '.runtimed', $this->getViewData([
 			'record' => $lesson,
