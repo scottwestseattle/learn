@@ -56,6 +56,11 @@ Route::group(['prefix' => 'history'], function () {
 	// add/create
 	Route::get('/add/{programName}/{programId}/{sessionName}/{sessionId}/{seconds}','HistoryController@add');
 	Route::post('/create','HistoryController@create');
+	
+	// delete
+	Route::get('/confirmdelete/{history}','HistoryController@confirmdelete');
+	Route::post('/delete/{history}','HistoryController@delete');
+	Route::get('/delete/{history}','HistoryController@delete');	
 });
 
 // Vocabulary Lists

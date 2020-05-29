@@ -75,6 +75,7 @@
             </p>
             <h3 class="mt-2 mb-2">{{isset($records[0]->title_chapter) ? $records[0]->title_chapter : 'Day ' . $record->lesson_number}}</h3>
             <p style="font-size:13px;" class="">{{count($records)}} exercises ({{$displayTime}})</p>
+			<p style="font-size:13px;"><a href="/history/add/{{urlencode($record->course->title)}}/{{$record->course->id}}/{{isset($record->title_chapter) ? urlencode($record->title_chapter) : urlencode('Day ' . $record->lesson_number)}}/{{$record->id}}/{{$totalSeconds}}">Add to History</p>
             <a onclick="event.preventDefault(); run()"  href="" class="btn btn-primary mb-3" role="button">Start</a>
         </div>
 
