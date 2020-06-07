@@ -55,7 +55,12 @@ Route::group(['prefix' => 'history'], function () {
 
 	// add/create
 	Route::get('/add/{programName}/{programId}/{sessionName}/{sessionId}/{seconds}','HistoryController@add');
+	Route::get('/add-public/{programName}/{programId}/{sessionName}/{sessionId}/{seconds}','HistoryController@addPublic');
 	Route::post('/create','HistoryController@create');
+
+	// edit/update
+	Route::get('/edit/{history}','HistoryController@edit');
+	Route::post('/update/{history}','HistoryController@update');
 	
 	// delete
 	Route::get('/confirmdelete/{history}','HistoryController@confirmdelete');

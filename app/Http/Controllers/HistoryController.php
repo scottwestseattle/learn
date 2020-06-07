@@ -19,7 +19,7 @@ class HistoryController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['add', 'rss']);
+        $this->middleware('is_admin')->except(['addPublic', 'rss']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -30,7 +30,7 @@ class HistoryController extends Controller
 	
 	// sample url:
 	// http://localhost/history/add/Plancha/14/Day+4/4/750
-    public function add($programName, $programId, $sessionName, $sessionId, $seconds)
+    public function addPublic($programName, $programId, $sessionName, $sessionId, $seconds)
     {
 		History::add(urldecode($programName), $programId, urldecode($sessionName), $sessionId, $seconds);
 		
@@ -83,6 +83,46 @@ class HistoryController extends Controller
 		]));
     }	
 
+	public function edit(Lesson $lesson)
+    {
+		return view(PREFIX . '.edit', $this->getViewData([
+			'record' => $lesson,
+			]));
+    }
+
+    public function update(Request $request, Lesson $lesson)
+    {
+		$record = $lesson;
+		$isDirty = false;
+		$changes = '';
+		
+		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
+		$format_flag = isset($request->autoformat) ? LESSON_FORMAT_AUTO : LESSON_FORMAT_DEFAULT;
+
+		if ($isDirty)
+		{
+			try
+			{
+				$record->save();
+
+				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
+				Tools::flash('success', $this->title . ' has been updated');
+			}
+			catch (\Exception $e)
+			{
+			    $msg = "Error updating record";
+				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'title = ' . $record->title, null, $e->getMessage());
+				Tools::flash('danger', $msg);
+			}
+		}
+		else
+		{
+			Tools::flash('success', 'No changes made to ' . TITLE_LC);
+		}
+
+		return redirect('/history');
+	}
+
     public function confirmdelete(History $history)
     {
 		$record = $history;
@@ -104,7 +144,7 @@ class HistoryController extends Controller
 		{
 			$record->deleteSafe();
 			Event::logDelete(LOG_MODEL, $title, $record->id);
-			Tools::flash('success', 'Hisotry record has been deleted');
+			Tools::flash('success', 'History record has been deleted');
 		}
 		catch (\Exception $e)
 		{

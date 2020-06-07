@@ -14,6 +14,7 @@
 		<tbody>
 		@foreach($records as $record)
 			<tr>
+				<td><a href="/history/edit/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
 				<td><a href="/history/delete/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-trash"></span></a></td>
 				<td>{{$record->created_at}}</td>
 				<td>{{$record->program_name}}</td>
