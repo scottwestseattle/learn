@@ -25,7 +25,7 @@ class LessonController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'start', 'permalink', 'logQuiz', 'rss']);
+        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'start', 'permalink', 'logQuiz', 'rss', 'rssReader']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -699,6 +699,47 @@ class LessonController extends Controller
 			'bgAlbum' => $album,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
+	
+    public function rssReader(Lesson $lesson)
+    {
+		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
+
+		$qna = [];
+		
+		foreach ($records as $record)
+		{
+			$lines = explode("\r\n", strip_tags(html_entity_decode($record->text)));
+			//dd($lines);
+			
+			$cnt = 0;
+			foreach($lines as $line)
+			{
+				$line = trim($line);
+				if (strlen($line) > 0)
+				{
+					$parts = explode(" - ", $line);
+
+					$qna[$cnt]['q'] = null;
+					$qna[$cnt]['a'] = null;
+
+					if (count($parts) > 0)
+						$qna[$cnt]['q'] = $parts[0];
+						
+					if (count($parts) > 1)
+						$qna[$cnt]['a'] = $parts[1];
+					
+					$cnt++;
+				}
+			}
+			
+			$record['qna'] = $qna;
+		}
+
+		return view(PREFIX . '.rss-reader', $this->getViewData([
+			'record' => $lesson,
+			'records' => $records,
+			], LOG_MODEL, LOG_PAGE_VIEW));
+	}
 	
 	public function rss(Lesson $lesson)
     {

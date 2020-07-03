@@ -25,7 +25,7 @@ class CourseController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'permalink', 'rss']);
+        $this->middleware('is_admin')->except(['index', 'view', 'permalink', 'rss', 'rssReader']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -363,6 +363,64 @@ class CourseController extends Controller
 
 		return redirect(REDIRECT_ADMIN);
     }
+	
+    public function rssReader()
+    {
+		$records = []; // make this countable so view will always work
+
+		try
+		{
+			$records = Course::getRssReader();
+			
+			foreach($records as $course)
+			{
+				$sessions = [];
+				
+				foreach($course->lessons as $lesson)
+				{	
+					if ($lesson->deleted_flag == 0)
+					{		
+						if ($lesson->section_number == 1) // lesson 1 holds the chapter info
+						{
+							$sessions[$lesson->lesson_number]['title'] = isset($lesson->title_chapter) ? $lesson->title_chapter : 'Chapter ' . $lesson->lesson_number;
+							$sessions[$lesson->lesson_number]['description'] = $lesson->description;
+							$sessions[$lesson->lesson_number]['id'] = $lesson->id;
+							$sessions[$lesson->lesson_number]['number'] = $lesson->lesson_number;						
+							$sessions[$lesson->lesson_number]['course'] = $course->title;
+						}
+						
+						if (array_key_exists($lesson->lesson_number, $sessions) && array_key_exists('exercise_count', $sessions[$lesson->lesson_number]))
+						{
+							$sessions[$lesson->lesson_number]['exercise_count'] += 1;
+						}
+						else
+						{
+							$sessions[$lesson->lesson_number]['exercise_count'] = 1;
+						}
+						
+						//dump($lesson->title . ': ' . $lesson->section_number);
+
+					}
+				}
+				
+				$course['sessions'] = $sessions;
+				
+				//dd($course);
+			}
+		}
+		catch (\Exception $e)
+		{
+			dd($e);
+			$msg = 'Error getting ' . TITLE_LC . ' rss';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+		}
+
+		//dd($records);
+		
+		return view(PREFIX . '.rss-reader', $this->getViewData([
+			'records' => $records,
+		]));
+	}
 	
     public function rss()
     {

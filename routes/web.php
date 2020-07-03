@@ -48,6 +48,11 @@ Route::post('/hasher', 'HomeController@hasher');
 Route::get('/send/email', 'HomeController@wod');
 Route::get('/send/wod', 'HomeController@wod');
 
+// Reader RSS
+Route::get('/lessons/rss-reader/{lesson}/', 'LessonController@rssReader');
+Route::get('/courses/rss-reader', 'CourseController@rssReader');
+
+
 // History
 Route::group(['prefix' => 'history'], function () {
 	Route::get('/', 'HistoryController@index');

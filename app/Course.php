@@ -158,6 +158,18 @@ class Course extends Base
 		
 		return $records;
 	}
+
+    static public function getRssReader()
+    {
+		$records = Course::select()
+			->where('deleted_flag', 0)
+			->where('release_flag', '>=', RELEASE_PUBLISHED)
+			->where('type_flag', '=', COURSETYPE_SPANISH)
+			->orderBy('display_order')
+			->get();
+			
+		return $records;
+	}
 	
     static public function getRssFlat()
     {
