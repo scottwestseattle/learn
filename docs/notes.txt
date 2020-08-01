@@ -1,3 +1,4 @@
+
 SAMPLES
 -------
 
@@ -209,7 +210,8 @@ cd /wamp3.1.9/www
 laravel new projectname
 
 // artisan folder
-cd /wamp3.1.9/www/[project]/
+Mac: 			cd /wamp3.1.9/www/[project]/
+Windows10 PC:	cd /dev/[project name]
 
 // create auth
 php artisan make:auth

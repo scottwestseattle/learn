@@ -17,6 +17,24 @@
 
 <div class="container page-normal">
 
+    <!-- SHOW ARTICLES -->
+    <h3>@LANG('content.Latest Articles')</h3>
+    <div style=" margin-bottom:50px;">
+		@if (isset($articles) && count($articles) > 0)
+			@foreach($articles as $record)
+			<div class=""><h4>{{$record->title}}</h4></div>
+			<div class="">
+				<p class="">
+					<p>{{$record->description_short}}</p>
+				</p>
+			</div>
+			@endforeach
+		@else
+			<div class=""><h4>@LANG('content.No articles')</h4></div>
+		@endif
+	</div>
+    <!-- END OF ARTICLES -->
+
     <!-- SHOW WORD OF THE DAY -->
     @if (isset($wod))
         <h3>@LANG('content.Word of the Day')</h3>
@@ -57,6 +75,7 @@
 	</div>
     <!-- END OF VOCAB LISTS -->
 
+	@if (false)
     <!-- SHOW COURSES -->
 	<h3>@LANG('content.Courses') ({{count($courses)}})</h3>
 
@@ -73,6 +92,7 @@
 		@endforeach
 	</div>
     <!-- END OF COURSES -->
+	@endif
 
 </div>
 

@@ -113,4 +113,5 @@ return [
 'Quit' => 'Quit',
 'by clicking here' => 'by clicking here',
 'Search' => 'Search',
+'views' => 'views',
 ];

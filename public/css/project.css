@@ -99,6 +99,7 @@ body {
 /* this is the wrapper around the page yield */
 .page-layout {
     margin-top: 14px;	/* this adjust for the fixed nav bar height */
+	min-height:500px;
 }
 
 /* spacing for normal, non-front pages */
@@ -462,6 +463,10 @@ body {
 	margin:0 5px;
 	font-size: 14px;
 	color: #286090;
+}
+
+.glyphRed {
+	color: red;
 }
 
 .drop-box {
@@ -828,4 +833,15 @@ body {
 }
 .bs-callout-info h4 {
     color: #5bc0de;
+}
+
+.article-source {
+	margin: 20px 0;
+	font-size:12px;
+	font-weight:bold;
+}
+
+td.article-extra {
+	font-size:12px;
+	padding:0 10px;
 }

@@ -132,4 +132,8 @@ return [
 'Back to Vocabulary Lists' => 'Back to Vocabulary Lists',
 'Add New Word' => 'Add New Word',
 'Review' => 'Review',
+'Latest Articles' => 'Latest Articles',
+'No articles' => 'No articles',
+'Articles' => 'Articles',
+'Back to Article List' => 'Back to Article List',
 ];

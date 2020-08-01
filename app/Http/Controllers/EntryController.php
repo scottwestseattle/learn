@@ -1,0 +1,569 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use DB;
+use Auth;
+use App;
+use App\Entry;
+use App\Event;
+use App\Translation;
+use App\Tools;
+use App\User;
+use App\Geo;
+
+define('BODYSTYLE', '<span style="color:green;">');
+define('ENDBODYSTYLE', '</span>');
+define('EMPTYBODY', 'Empty Body');
+define('BODY', 'Body');
+define('INTNOTSET', -1);
+
+define('PREFIX', 'entries');
+define('LOG_MODEL', 'entries');
+define('TITLE', 'Entries');
+
+class EntryController extends Controller
+{
+	public function __construct ()
+	{
+        $this->middleware('is_admin')->except(['articles', 'index', 'view', 'permalink', 'rss']);
+
+		$this->prefix = 'entries';
+		$this->title = 'Entry';
+		$this->titlePlural = 'Entries';
+
+		parent::__construct();
+	}
+	
+    public function indexAdmin()
+    {				
+		$entries = Entry::select()
+			->where('site_id', SITE_ID)
+			//->where('type_flag', '<>', ENTRY_TYPE_TOUR)
+			->where('deleted_flag', 0)
+			->orderByRaw('entries.id DESC')
+			->get();
+			
+		$vdata = $this->getViewData([
+			'records' => $entries,
+		]);
+			
+    	return view('entries.index', $vdata);
+    }
+	
+    public function articles()
+    {		
+		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
+
+		$records = Entry::getArticles();
+		//dd($records);
+		
+		$vdata = $this->getViewData([
+			'records' => $records,
+			'page_title' => 'List of Articles',
+		]);
+			
+    	return view('entries.articles', $vdata);
+    }
+ 
+    public function index($type_flag = null)
+    {				
+		$entries = $this->getEntriesByType($type_flag, false, 0, null, false, ORDERBY_DATE);
+
+		$vdata = $this->getViewData([
+			'records' => $entries,
+			'redirect' => '/entries/indexadmin',
+			'entryTypes' => Controller::getEntryTypes(),
+		]);
+		
+    	return view('entries.indexadmin', $vdata);
+    }
+	
+    public function add(Request $request)
+    {			
+		$vdata = $this->getViewData([
+			'entryTypes' => Entry::getEntryTypes(),
+			'dates' => Controller::getDateControlDates(),
+			'filter' => Controller::getFilter($request, /* today = */ true),
+		]);
+		
+		return view('entries.add', $vdata);
+	}
+	
+    public function create(Request $request)
+    {		
+		$entry = new Entry();
+		
+		if (true) // new way
+			$entry->site_id = isset($request->site_id) ? $request->site_id : SITE_ID;
+		else // old way
+			$entry->site_id = SITE_ID;
+		
+		$entry->user_id = Auth::id();
+		$entry->type_flag = $request->type_flag;
+
+		$entry->parent_id 			= $request->parent_id;		
+		$entry->title 				= Tools::trimNull($request->title);
+		$entry->description_short	= Tools::trimNull($request->description_short);
+		$entry->description			= Tools::trimNull($request->description);
+		$entry->source_credit		= Tools::trimNull($request->source_credit);
+		$entry->source_link			= Tools::trimNull($request->source_link);
+		$entry->display_date 		= Controller::getSelectedDate($request);
+
+		$entry->permalink			= Tools::trimNull($request->permalink);
+		if (!isset($entry->permalink))
+			$entry->permalink = Tools::createPermalink($entry->title, $entry->display_date);
+		
+		try
+		{
+			//dd($entry);
+			
+			if ($entry->type_flag <= 0)
+				throw new \Exception('Entry type not set');
+			if (!isset($entry->title))
+				throw new \Exception('Title not set');
+			if (!isset($entry->display_date))
+				throw new \Exception('Date not set');
+			
+			$entry->save();
+
+			$msg = 'Entry has been added';
+			Event::logAdd(LOG_MODEL_ENTRIES, $msg . ': ' . $entry->title, $entry->description, $entry->id);
+				
+			$request->session()->flash('message.level', 'success');
+			$request->session()->flash('message.content', $msg);
+			
+			return redirect('/articles');
+		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, Tools::getTextOrShowEmpty($entry->title), null, $e->getMessage());
+				
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());		
+
+			return back(); 
+		}						
+    }
+	
+    public function permalink(Request $request, $permalink)
+    {		
+		$next = null;
+		$prev = null;
+		$isRobot = false;
+		
+		// get the entry the mysql way so we can have all the main photo and location info
+		//$entry = Entry::getEntry($permalink);
+		$entry = Entry::get($permalink); // new way with translation included
+
+		$id = isset($entry) ? $entry->id : null;
+		$visitor = $this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
+		$isRobot = isset($visitor) && $visitor->robot_flag;
+
+		if (isset($entry))
+		{
+			Entry::countView($entry);
+			$entry->description = nl2br($entry->description);
+		}
+		else
+		{        
+			$msg = 'Page Not Found (404) for permalink: ' . $permalink;
+			
+			//$request->session()->flash('message.level', 'danger');
+			//$request->session()->flash('message.content', $msg);
+			
+			$geo = new Geo;
+			$desc = $geo->visitorInfoDebug();
+			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg, $desc);			
+		
+			$data['title'] = '404';
+			$data['name'] = 'Page not found';
+			return response()->view('errors.404', $data, 404);
+		}
+		
+		$page_title = $entry->title;
+		$backLink = null;
+		$backLinkText = null;
+		if ($entry->type_flag == ENTRY_TYPE_ARTICLE)
+		{
+			$backLink = '/articles';
+			$backLinkText = __('content.Back to Article List');
+			$page_title = __('ui.Article') . ' - ' . $page_title;
+			
+			$next = Entry::getNextPrevEntry($entry);
+			$prev = Entry::getNextPrevEntry($entry, /* next = */ false);
+		}		
+
+		$vdata = $this->getViewData([
+			'record' => $entry, 
+			'next' => $next,
+			'prev' => $prev,
+			'backLink' => $backLink,
+			'backLinkText' => $backLinkText,
+			'page_title' => $page_title,
+			'display_date' => $entry->display_date,
+			'isRobot' => false, // $isRobot, //todo: not yet because ome spam robot is coming from fikirandroy page (don't want them to switch pages)
+		]);
+		
+		return view('entries.view', $vdata);
+	}
+	
+    public function view($title, $id)
+    {
+		$id = intval($id);
+		
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $id);
+	
+		$entry = Entry::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', '<>', 1)
+			->where('id', $id)
+			->first();
+		
+		$photos = Photo::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', '<>', 1)
+			->where('parent_id', '=', $entry->id)
+			->orderByRaw('created_at ASC')
+			->get();
+		
+		$comments = Comment::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
+			->where('parent_id', $entry->id)
+			->get();
+			
+		$vdata = $this->getViewData([
+			'record' => $entry, 
+			'photos' => $photos,
+			'comments' => $comments,
+		]);
+		
+		return view('entries.view', $vdata);
+	}
+
+    public function show(Request $request, $id)
+    {				
+		$id = intval($id);
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SHOW, $id);
+		
+		$next = null;
+		$prev = null;
+		$photos = null;
+		
+		try 
+		{
+			$entry = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('id', $id)
+				->first();
+								
+			if (isset($entry))
+			{
+				$entry->description = nl2br($entry->description);
+				$entry->description = $this->formatLinks($entry->description);		
+			}
+				
+			if (!isset($entry))
+			{
+				$msg = 'Record not found, ID: ' . $entry->id;
+				Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
+						
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);
+			}
+			else if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+			{						
+				if (isset($entry->display_date))
+				{
+					$next = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id);
+					$prev = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id, /* next = */ false);
+				}
+				else
+				{
+					$msg = 'Missing Display Date to show record: ' . $entry->id;
+					Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
+						
+					$request->session()->flash('message.level', 'danger');
+					$request->session()->flash('message.content', $msg);
+				}
+				
+				$photos = Photo::select()
+					//->where('site_id', SITE_ID)
+					->where('deleted_flag', 0)
+					->where('parent_id', $entry->id)
+					->orderByRaw('id ASC')
+					->get();
+			}
+							
+			$vdata = $this->getViewData([
+				'record' => $entry, 
+				'next' => $next,
+				'prev' => $prev,
+				'photos' => $photos,
+			]);
+			
+			return view('entries.view', $vdata);
+		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_SELECT, Tools::getTextOrShowEmpty(isset($entry) ? $entry->title : 'record not found'), null, $e->getMessage());
+				
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());		
+		}			
+		
+        return redirect('/error');
+	}
+	
+    public function home()
+    {
+		return $this->index();
+	}
+	
+    public function edit(Request $request, Entry $entry)
+    {				
+		$dates = null;
+		if (isset($entry->display_date))
+			$dates = Controller::getDateControlSelectedDate($entry->display_date);
+		
+		$translations = Translation::select()
+			->where('parent_id', $entry->id)
+			->where('parent_table', 'entries')
+			->get();
+
+//dd($translations);			
+		$languages = [];
+		$languages[] = 'es';
+		$languages[] = 'zh';
+//dd($entry);		
+		$vdata = $this->getViewData([
+			'record' => $entry,
+			'entryTypes' => Controller::getEntryTypes(),
+			'dates' => Controller::getDateControlDates(),
+			'filter' => $dates,
+			'translations' => $translations,
+			'languages' => $languages,
+		]);
+		
+		return view('entries.edit', $vdata);
+    }
+	
+    public function update(Request $request, Entry $entry)
+    {
+		$record = $entry;
+
+    	if ($this->isOwnerOrAdmin($entry->user_id))
+        {	
+			if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY && $record->type_flag != $request->type_flag)
+				$record->parent_id = null; // changing from blog entry to something else, remove the parent id 
+			
+			$record->type_flag 			= $request->type_flag;
+			
+			$prevTitle = $record->title;
+			$record->title 				= Tools::trimNull($request->title);
+			$record->permalink			= Tools::trimNull($request->permalink);
+			$record->description_short	= Tools::trimNull($request->description_short);
+			$record->description		= Tools::trimNull($request->description);
+			$record->display_date 		= Controller::getSelectedDate($request);
+			
+			//todo: finish the colors
+			if (false && isset($request->color_foreground) && isset($request->colors))
+				$record->color_foreground = EntryController::getColorCode($request->color_foreground, $request->colors);
+			if (false && isset($request->color_background) && isset($request->colors))
+				$record->color_background = EntryController::getColorCode($request->color_background, $request->colors);
+				
+			//$record->color_background = $request->color_background;
+			
+			//todo: turned off for now: $record->approved_flag = 0;
+			
+			//
+			// write translation records
+			//
+			if (isset($request->translations))
+			{
+				foreach($request->translations as $key => $value)
+				{
+					$rc = Translation::updateEntry(
+						$entry->id
+						, 'entries'
+						, $value						// language
+						, $request->medium_col1[$key]	// title
+						, $request->permalink			// permalink
+						, $request->large_col1[$key]	// description
+						, $request->large_col2[$key]	// description_short
+					);
+				
+					if ($rc['saved'])
+					{
+						Event::logEdit(LOG_MODEL_TRANSLATIONS, $entry->title, $entry->id);			
+					
+						$request->session()->flash('message.level', 'success');
+						$request->session()->flash('message.content', $rc['logMessage']);
+					}
+					else
+					{
+						Event::logException(LOG_MODEL_TRANSLATIONS, $rc['logAction'], Tools::getTextOrShowEmpty($entry->title), null, $rc['exception']);
+					
+						$request->session()->flash('message.level', 'danger');
+						$request->session()->flash('message.content', $rc['exception']);
+					}			
+				}
+			}			
+			
+			try
+			{
+				$record->save();
+
+				Event::logEdit(LOG_MODEL_ENTRIES, $record->title, $record->id, $prevTitle . '  ' . $record->title);			
+				
+				$request->session()->flash('message.level', 'success');
+				$request->session()->flash('message.content', 'Entry has been updated');
+			}
+			catch (\Exception $e) 
+			{
+				Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_EDIT, Tools::getTextOrShowEmpty($record->title), null, $e->getMessage());
+				
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $e->getMessage());		
+			}			
+
+			return redirect($this->getReferer($request, '/entries/indexadmin')); 
+		}
+		else
+		{
+			return redirect('/');
+		}
+    }
+
+    public function confirmdelete(Request $request, Entry $entry)
+    {	
+    	if ($this->isOwnerOrAdmin($entry->user_id))
+        {
+			$entry->description = nl2br(trim($entry->description));
+			
+			if ($entry->type_flag === ENTRY_TYPE_TOUR)
+			{
+				$vdata = $this->getViewData([
+					'record' => $entry,
+				]);
+
+				return view('tours.confirmdelete', $vdata);
+			}
+			else
+			{
+				$vdata = $this->getViewData([
+					'entry' => $entry,
+				]);
+				
+				return view('entries.confirmdelete', $vdata);
+			}
+        }           
+        else 
+		{
+             return redirect('/');
+		}            	
+    }
+	
+    public function delete(Request $request, Entry $entry)
+    {	
+    	if ($this->isOwnerOrAdmin($entry->user_id))
+        {			
+			$entry->deleteSafe();
+			
+			return redirect($this->getReferer($request, '/entries/index')); 
+		}
+		
+		return redirect('/');
+    }
+	
+    public function viewcount(Entry $entry)
+    {		
+		$this->countView($entry);
+		
+    	return view('entries.viewcount');
+	}
+
+    public function publish(Request $request, Entry $entry)
+    {	
+    	if (!$this->isOwnerOrAdmin($entry->user_id))
+             return redirect('/');
+
+		$vdata = $this->getViewData([
+			'record' => $entry,
+		]);
+		
+		return view('entries.publish', $vdata);
+    }
+	
+    public function publishupdate(Request $request, Entry $entry)
+    {	
+    	if ($this->isOwnerOrAdmin($entry->user_id))
+        {			
+			$entry->published_flag = isset($request->published_flag) ? 1 : 0;
+			$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
+			$entry->finished_flag = isset($request->finished_flag) ? 1 : 0;
+			$entry->parent_id = $request->parent_id;
+			$entry->view_count = intval($request->view_count);
+
+			$entry->save();
+			
+			return redirect($this->getReferer($request, '/entries/' . $entry->permalink)); 
+		}
+		else
+		{
+			return redirect('/');
+		}
+    }
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// Privates
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+    private function fixEmpty(string $text, string $show)
+    {	
+		if (mb_strlen($text) === 0)
+		{
+			$text = BODYSTYLE 
+			. '(' . strtoupper(__($show)) . ')'
+			. ENDBODYSTYLE;			
+
+		}
+		
+		return $text;
+	}
+	
+	private function merge($layout, $text, $style = false)
+	{
+		$body = trim($text);
+		if (mb_strlen($body) == 0)
+		{
+			if ($style === true)
+			{
+				// only show empty in the view version
+				$body = '(' . strtoupper(__(EMPTYBODY)) . ')';
+			}
+			else
+			{
+				// leave a space for the copy version
+				$body = ' ';
+			}
+		}
+		
+		if (mb_strlen($layout) > 0)
+		{
+			if ($style)
+				$body = BODYSTYLE . $body . ENDBODYSTYLE;
+				
+			$text = nl2br(str_replace(BODY_PLACEHODER, $body, trim($layout))) . '<br/>';
+		}
+		else
+		{
+			$text = nl2br($body) . '<br/>';
+		}
+	
+		return $text;
+	}		
+}

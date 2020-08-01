@@ -132,4 +132,8 @@ return [
 'Back to Vocabulary Lists' => 'Volver a las Listas de Vocabulario',
 'Add New Word' => 'Agregar Nueva Palabra',
 'Review' => 'Revisar',
+'Latest Articles' => 'Últimos Artículos',
+'No articles' => 'No hay articulos',
+'Articles' => 'Artículos',
+'Back to Article List' => 'Back to Article List',
 ];

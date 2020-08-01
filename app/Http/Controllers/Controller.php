@@ -42,6 +42,7 @@ define('LOG_MODEL_USERS', 'users');
 define('LOG_MODEL_TRANSLATIONS', 'translations');
 define('LOG_MODEL_VISITORS', 'visitors');
 define('LOG_MODEL_WORDS', 'words');
+define('LOG_MODEL_ENTRIES', 'entries');
 
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');
@@ -95,6 +96,18 @@ define('WIP_DEFAULT', WIP_DEV);
 
 define('TIMED_SLIDES_DEFAULT_BREAK_SECONDS', 20);
 define('TIMED_SLIDES_DEFAULT_SECONDS', 50);
+
+// entries
+define('ENTRY_TYPE_NOTSET', 	-1);
+define('ENTRY_TYPE_ENTRY', 		1);
+define('ENTRY_TYPE_ARTICLE', 	2);
+define('ENTRY_TYPE_OTHER',		99);
+
+// query sorting
+define('ORDERBY_APPROVED', 0);
+define('ORDERBY_TITLE', 1);
+define('ORDERBY_DATE', 2);
+define('ORDERBY_VIEWS', 3);
 
 class Controller extends BaseController
 {
@@ -264,7 +277,7 @@ class Controller extends BaseController
     {
 		$filter = Controller::getFilter($request);
 
-		$date = Controller::trimNullStatic($filter['from_date']);
+		$date = Tools::trimNull($filter['from_date']);
 
 		return $date;
 	}

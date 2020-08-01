@@ -11,6 +11,7 @@ use App\Course;
 use App\VocabList;
 use App\Word;
 use App\User;
+use App\Entry;
 
 define('LOG_MODEL', 'frontpage');
 
@@ -35,6 +36,7 @@ class FrontPageController extends Controller
     {
 		$courses = []; // make this countable so view will always work
 		$vocabLists = [];
+		$articles = [];
 
         // get word of the day
         $wod = Word::getWod(User::getSuperAdminUserId());
@@ -67,10 +69,23 @@ class FrontPageController extends Controller
 			Tools::flash('danger', $msg);
 		}
 
+		try
+		{
+			$articles = Entry::getArticles();
+		}
+		catch (\Exception $e)
+		{
+			//dump($e);
+			$msg = 'Error getting Articles';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
 		return view('frontpage.index', $this->getViewData([
 			'courses' => $courses,
 			'vocabLists' => $vocabLists,
 			'wod' => $wod,
+			'articles' => $articles,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

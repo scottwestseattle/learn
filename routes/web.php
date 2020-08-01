@@ -31,6 +31,7 @@ Route::get('/eunoticeaccept/', 'FrontPageController@eunoticeaccept');
 Route::get('/eunoticereset/', 'FrontPageController@eunoticereset');
 Route::get('/sample/', 'FrontPageController@sample');
 Route::get('/authenticated', 'HomeController@authenticated');
+Route::get('/articles', 'EntryController@articles');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
@@ -51,6 +52,35 @@ Route::get('/send/wod', 'HomeController@wod');
 // Reader RSS
 Route::get('/lessons/rss-reader/{lesson}/', 'LessonController@rssReader');
 Route::get('/courses/rss-reader', 'CourseController@rssReader');
+
+// Entries
+Route::group(['prefix' => 'entries'], function () {
+	
+	Route::get('/', 'EntryController@index');
+	Route::get('/index/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
+	Route::get('/show/{id}', 'EntryController@show');
+
+	// publish
+	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
+	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
+		
+	// add/create
+	Route::get('/add','EntryController@add')->middleware('auth');
+	Route::post('/create','EntryController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{entry}','EntryController@edit')->middleware('auth');
+	Route::post('/update/{entry}','EntryController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');	
+	
+	// permalink catch alls
+	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);
+	Route::get('/{permalink}', ['as' => 'entry.permalink', 'uses' => 'EntryController@permalink']);
+	Route::resource('entry', 'EntryController');		
+});
 
 
 // History
