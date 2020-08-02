@@ -58,7 +58,7 @@
 
 		<div>
 		<p class="article-source"><i>
-			{{$display_date}}&nbsp;&nbsp;{{$record->view_count}} views&nbsp;&nbsp;{{$wordCount}} words
+			{{$display_date}}&nbsp;&nbsp;{{$record->view_count}} @LANG('content.views')&nbsp;&nbsp;{{$wordCount}} @LANG('content.words')
 		</i></p>
 		
 		<h1 name="title" class="">{{$record->title}}</h1>

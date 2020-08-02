@@ -56,7 +56,7 @@ class EntryController extends Controller
     {		
 		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
 
-		$records = Entry::getArticles();
+		$records = Entry::getArticles(9999);
 		//dd($records);
 		
 		$vdata = $this->getViewData([
@@ -192,7 +192,7 @@ class EntryController extends Controller
 		if ($entry->type_flag == ENTRY_TYPE_ARTICLE)
 		{
 			$backLink = '/articles';
-			$backLinkText = __('content.Back to Article List');
+			$backLinkText = __('content.Back to List');
 			$page_title = __('ui.Article') . ' - ' . $page_title;
 			
 			$next = Entry::getNextPrevEntry($entry);

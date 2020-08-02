@@ -26,8 +26,23 @@ Super Light Green: #eff7f0
 }
 
 .data-accent-chars {
-	display:none;
+	font-size:.6em;
 }
+
+.accent-button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 1px 3px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 11px;
+  margin: 4px 0px;
+  cursor: pointer;
+  min-width:20px;
+}
+
 
 h1,h3 {
 	xmargin:10px 0 15px 0;
@@ -473,6 +488,10 @@ body {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
 }
 
+.drop-box-articles {
+	box-shadow: 1px 1px 10px 1px #e0e0e0;
+}
+
 /* spacing for the lesson prev/next buttons */
 .page-nav-buttons {
 	margin: 10px 0;
@@ -844,4 +863,9 @@ body {
 td.article-extra {
 	font-size:12px;
 	padding:0 10px;
+}
+
+label.tiny {
+	font-size:.6em;
+	margin-bottom:2px;
 }

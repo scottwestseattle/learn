@@ -74,9 +74,9 @@ class Entry extends Base
 		return $records;
 	}
 	
-	static public function getArticles()
+	static public function getArticles($limit = 10)
 	{
-		$records = self::getEntriesByType(ENTRY_TYPE_ARTICLE, !User::isAdmin(), 50);
+		$records = self::getEntriesByType(ENTRY_TYPE_ARTICLE, !User::isAdmin(), $limit);
 		
 		//dd($records);
 		

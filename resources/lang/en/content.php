@@ -135,5 +135,6 @@ return [
 'Latest Articles' => 'Latest Articles',
 'No articles' => 'No articles',
 'Articles' => 'Articles',
-'Back to Article List' => 'Back to Article List',
+'Back to List' => 'Back to List',
+'Show All Articles' => 'Show All Articles',
 ];

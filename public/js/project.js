@@ -38,7 +38,8 @@ function clipboardCopy(event, idFlash, id)
 	// do the flash affect (only included in full jquery / we are using jquery slim for the moment
 //	$("#" + idFlash + ' p').fadeTo('fast', 0.1).fadeTo('slow', 1.0);
 //	$("#" + idFlash).fadeTo('fast', 0.1).fadeTo('slow', 1.0);
-    $("#status").text('copied');
+	$("#" + idFlash).css("color", "red");
+    $("#status").text("copied");
 
 	// remove the <br>'s and <p>'s and <span>'s
 	text = text.replace(/(\r\n|\n|\r)/gm, "");
@@ -102,12 +103,30 @@ function urlEncode(fromId, toId)
 	var toElem = document.getElementById(toId);
 	if (fromElem && toElem)
 	{
-		toElem.value = encodeURI(fromElem.value.replace(/[\W_]+/g, "-").toLowerCase());
+		text = convertAccentChars(fromElem.value);
+		toElem.value = encodeURI(text.replace(/[\W_]+/g, "-").toLowerCase());
 	}
 	else
 	{
 		alert('Error creating permalink');
 	}
+}
+
+function convertAccentChars(text)
+{
+	//
+	// replace accent / special characters one by one
+	//
+	text = text.replace(/ñ/g, "n");
+	text = text.replace(/ç/g, "c");
+	text = text.replace(/[ÀÁÄÂàáâäã]+/g, "a");
+	text = text.replace(/[ÉÈËÊèéêë]+/g, "e");
+	text = text.replace(/[ÍÌÏÎìíîï]+/g, "i");
+	text = text.replace(/[ÓÒÖÔòóôöõ]+/g, "o");
+	text = text.replace(/[ÙÚÜÛùúûü]+/g, "u");
+	text = text.replace(/Ÿÿ/g, "y");
+	
+	return text;
 }
 
 function urlEncodeWithDate(fromId, fromYearId, fromMonthId, fromDayId, toId)
