@@ -18,16 +18,45 @@
 <div class="container page-normal">
 
     <!-- SHOW ARTICLES -->
-    <h3>@LANG('content.Latest Articles')</h3>
-    <div style=" margin-bottom:50px;">
-		@if (isset($articles) && count($articles) > 0)
+	<h3>@LANG('content.Latest Articles')</h3>
+	<div class="text-center" style="margin-top: 50px;">		
+		@if (isset($articles) && count($articles) > 0)		
+		<div style="display: inline-block; width: 95%;">
+			<table>
+			<?php $count = 0; ?>
 			@foreach($articles as $record)
-			<div class=""><h4><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></h4></div>
+			
+			<tr class="drop-box" style="vertical-align:middle; box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);">
+				<td style="min-width:100px; font-size: 1.5em; padding:10px; color: white; background-color: #74b567; margin-bottom:10px;" >
+					<div style="margin:0; padding:0; line-height:100%;">
+						<div style="font-family:impact; font-size:1.7em; margin:10px 0 10px 0;">{{++$count}}</div>
+					</div>
+				</td>
+				<td style="color:default; padding: 0 10px; text-align:left; padding:15px;">
+					<table>
+					<tbody>
+						<tr><td style="padding-bottom:10px; font-size:1.3em; font-weight:normal;"><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
+						<tr><td style="padding-bottom:10px; font-size:.8em; font-weight:10;">
+							<div style="float:left; margin-right:15px;">{{$record->display_date}}</div>
+							<div style="float:left;">
+								<div style="margin-right:15px; float:left;">{{$record->view_count}} views</div>
+								<div style="margin-right:0px; float:left;">{{str_word_count($record->description)}} words</div>
+							<div>
+						</td></tr>
+					</tbody>
+					</table>
+				</td>
+			</tr>
+			
+			<tr><td>&nbsp;</td><td></td></tr>
+			
 			@endforeach
+			</table>
+		</div>
 		@else
 			<div class=""><h4>@LANG('content.No articles')</h4></div>
 		@endif
-	</div>
+	</div>	
     <!-- END OF ARTICLES -->
 
     <!-- SHOW WORD OF THE DAY -->

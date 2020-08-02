@@ -93,8 +93,7 @@ class Entry extends Base
 		$site_id = isset($site_id) && $site_id != false ? $site_id : SITE_ID;
 		
 		$q = '
-			SELECT entries.id as id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.description_short, entries.published_flag
-				, entries.approved_flag, entries.updated_at, entries.permalink, entries.display_date, entries.site_id  
+			SELECT *
 			FROM entries
 			WHERE 1=1
 			AND entries.deleted_flag = 0

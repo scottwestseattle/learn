@@ -156,10 +156,9 @@ class EntryController extends Controller
 		$next = null;
 		$prev = null;
 		$isRobot = false;
+		$wordCount = null;
 		
-		// get the entry the mysql way so we can have all the main photo and location info
-		//$entry = Entry::getEntry($permalink);
-		$entry = Entry::get($permalink); // new way with translation included
+		$entry = Entry::get($permalink);
 
 		$id = isset($entry) ? $entry->id : null;
 		$visitor = $this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
@@ -168,6 +167,7 @@ class EntryController extends Controller
 		if (isset($entry))
 		{
 			Entry::countView($entry);
+			$wordCount = str_word_count($entry->description); // count it before <br/>'s are added
 			$entry->description = nl2br($entry->description);
 		}
 		else
@@ -208,6 +208,7 @@ class EntryController extends Controller
 			'page_title' => $page_title,
 			'display_date' => $entry->display_date,
 			'isRobot' => false, // $isRobot, //todo: not yet because ome spam robot is coming from fikirandroy page (don't want them to switch pages)
+			'wordCount' => $wordCount,
 		]);
 		
 		return view('entries.view', $vdata);
