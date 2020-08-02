@@ -22,12 +22,7 @@
     <div style=" margin-bottom:50px;">
 		@if (isset($articles) && count($articles) > 0)
 			@foreach($articles as $record)
-			<div class=""><h4>{{$record->title}}</h4></div>
-			<div class="">
-				<p class="">
-					<p>{{$record->description_short}}</p>
-				</p>
-			</div>
+			<div class=""><h4><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></h4></div>
 			@endforeach
 		@else
 			<div class=""><h4>@LANG('content.No articles')</h4></div>

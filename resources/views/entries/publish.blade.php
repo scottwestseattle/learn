@@ -4,7 +4,7 @@
 
 <div class="page-size container">
 
-	@component($record->type_flag === ENTRY_TYPE_TOUR ? 'menu-submenu-tours' : 'entries.menu-submenu', ['record' => $record])@endcomponent
+	@component('entries.menu-submenu', ['record' => $record])@endcomponent
 	
 	<h1>@LANG('ui.Publish')</h1>
 
@@ -31,15 +31,6 @@
 			<label for="approved_flag" class="checkbox-big-label">@LANG('ui.Approved')</label>
 		</div>
 		
-		@if ($record->type_flag === ENTRY_TYPE_BLOG_ENTRY && !isset($record->parent_id))
-			<div class="form-group">
-				<label for="distance">Parent ID:</label>
-				<input type="text" name="parent_id" class="form-control"  />
-			</div>
-		@else
-			<input type="hidden" name="parent_id" value="{{$record->parent_id}}">			
-		@endif
-
 		<div class="form-group">
 			<label for="distance">@LANG('ui.View Count'):</label>
 			<input type="text" name="view_count" class="form-control" value="{{ $record->view_count }}"  />		

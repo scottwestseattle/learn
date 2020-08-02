@@ -74,7 +74,7 @@ class EntryController extends Controller
 		$vdata = $this->getViewData([
 			'records' => $entries,
 			'redirect' => '/entries/indexadmin',
-			'entryTypes' => Controller::getEntryTypes(),
+			'entryTypes' => Entry::getEntryTypes(),
 		]);
 		
     	return view('entries.indexadmin', $vdata);
@@ -110,6 +110,10 @@ class EntryController extends Controller
 		$entry->source_credit		= Tools::trimNull($request->source_credit);
 		$entry->source_link			= Tools::trimNull($request->source_link);
 		$entry->display_date 		= Controller::getSelectedDate($request);
+		$entry->published_flag 		= 1;
+		$entry->approved_flag 		= 1;
+		$entry->finished_flag 		= 1;
+
 
 		$entry->permalink			= Tools::trimNull($request->permalink);
 		if (!isset($entry->permalink))
@@ -328,24 +332,12 @@ class EntryController extends Controller
 		$dates = null;
 		if (isset($entry->display_date))
 			$dates = Controller::getDateControlSelectedDate($entry->display_date);
-		
-		$translations = Translation::select()
-			->where('parent_id', $entry->id)
-			->where('parent_table', 'entries')
-			->get();
-
-//dd($translations);			
-		$languages = [];
-		$languages[] = 'es';
-		$languages[] = 'zh';
-//dd($entry);		
+			
 		$vdata = $this->getViewData([
 			'record' => $entry,
-			'entryTypes' => Controller::getEntryTypes(),
+			'entryTypes' => Entry::getEntryTypes(),
 			'dates' => Controller::getDateControlDates(),
 			'filter' => $dates,
-			'translations' => $translations,
-			'languages' => $languages,
 		]);
 		
 		return view('entries.edit', $vdata);
@@ -355,11 +347,8 @@ class EntryController extends Controller
     {
 		$record = $entry;
 
-    	if ($this->isOwnerOrAdmin($entry->user_id))
+    	if (User::isAdmin())
         {	
-			if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY && $record->type_flag != $request->type_flag)
-				$record->parent_id = null; // changing from blog entry to something else, remove the parent id 
-			
 			$record->type_flag 			= $request->type_flag;
 			
 			$prevTitle = $record->title;
@@ -367,51 +356,9 @@ class EntryController extends Controller
 			$record->permalink			= Tools::trimNull($request->permalink);
 			$record->description_short	= Tools::trimNull($request->description_short);
 			$record->description		= Tools::trimNull($request->description);
-			$record->display_date 		= Controller::getSelectedDate($request);
-			
-			//todo: finish the colors
-			if (false && isset($request->color_foreground) && isset($request->colors))
-				$record->color_foreground = EntryController::getColorCode($request->color_foreground, $request->colors);
-			if (false && isset($request->color_background) && isset($request->colors))
-				$record->color_background = EntryController::getColorCode($request->color_background, $request->colors);
-				
-			//$record->color_background = $request->color_background;
-			
-			//todo: turned off for now: $record->approved_flag = 0;
-			
-			//
-			// write translation records
-			//
-			if (isset($request->translations))
-			{
-				foreach($request->translations as $key => $value)
-				{
-					$rc = Translation::updateEntry(
-						$entry->id
-						, 'entries'
-						, $value						// language
-						, $request->medium_col1[$key]	// title
-						, $request->permalink			// permalink
-						, $request->large_col1[$key]	// description
-						, $request->large_col2[$key]	// description_short
-					);
-				
-					if ($rc['saved'])
-					{
-						Event::logEdit(LOG_MODEL_TRANSLATIONS, $entry->title, $entry->id);			
-					
-						$request->session()->flash('message.level', 'success');
-						$request->session()->flash('message.content', $rc['logMessage']);
-					}
-					else
-					{
-						Event::logException(LOG_MODEL_TRANSLATIONS, $rc['logAction'], Tools::getTextOrShowEmpty($entry->title), null, $rc['exception']);
-					
-						$request->session()->flash('message.level', 'danger');
-						$request->session()->flash('message.content', $rc['exception']);
-					}			
-				}
-			}			
+			$record->source_credit		= Tools::trimNull($request->source_credit);
+			$record->source_link		= Tools::trimNull($request->source_link);
+			$record->display_date 		= Controller::getSelectedDate($request);		
 			
 			try
 			{
@@ -430,11 +377,11 @@ class EntryController extends Controller
 				$request->session()->flash('message.content', $e->getMessage());		
 			}			
 
-			return redirect($this->getReferer($request, '/entries/indexadmin')); 
+			return redirect('/entries/' . $record->permalink);
 		}
 		else
 		{
-			return redirect('/');
+			return redirect('/articles');
 		}
     }
 
@@ -488,9 +435,6 @@ class EntryController extends Controller
 
     public function publish(Request $request, Entry $entry)
     {	
-    	if (!$this->isOwnerOrAdmin($entry->user_id))
-             return redirect('/');
-
 		$vdata = $this->getViewData([
 			'record' => $entry,
 		]);
@@ -500,22 +444,15 @@ class EntryController extends Controller
 	
     public function publishupdate(Request $request, Entry $entry)
     {	
-    	if ($this->isOwnerOrAdmin($entry->user_id))
-        {			
-			$entry->published_flag = isset($request->published_flag) ? 1 : 0;
-			$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
-			$entry->finished_flag = isset($request->finished_flag) ? 1 : 0;
-			$entry->parent_id = $request->parent_id;
-			$entry->view_count = intval($request->view_count);
+		$entry->published_flag = isset($request->published_flag) ? 1 : 0;
+		$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
+		$entry->finished_flag = isset($request->finished_flag) ? 1 : 0;
+		$entry->parent_id = $request->parent_id;
+		$entry->view_count = intval($request->view_count);
 
-			$entry->save();
-			
-			return redirect($this->getReferer($request, '/entries/' . $entry->permalink)); 
-		}
-		else
-		{
-			return redirect('/');
-		}
+		$entry->save();
+		
+		return redirect('/articles'); 
     }
 
 	//////////////////////////////////////////////////////////////////////////////////////////

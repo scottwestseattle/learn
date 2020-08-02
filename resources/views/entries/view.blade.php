@@ -64,12 +64,12 @@
 		<h1 name="title" class="">{{$record->title}}</h1>
 		
 		@if (strlen(trim($record->description_short)) > 0)
-			<div class="entry" style="margin-bottom:20px;">
+			<div class="entry" style="margin-bottom:20px; font-size:1.3em;">
 				<div><i>{{$record->description_short}}</i></div>
 			</div>
 		@endif
 
-		<div class="entry-div" style="margin-top:20px;width:100%;">
+		<div class="entry-div" style="margin-top:20px; width:100%; font-size:1.1em;">
 			<div class="entry" style="width:100%;">
 				<span name="description" class="">{!! $record->description !!}</span>		
 			</div>

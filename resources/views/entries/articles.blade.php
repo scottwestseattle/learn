@@ -21,7 +21,7 @@
 						<td class="article-extra">{{$record->display_date}}</td>
 						<td class="article-extra">{{$record->view_count}} @LANG('ui.views')</td>
 						
-						@if (Auth::user()->isAdmin())
+						@if (Auth::user() != null && Auth::user()->isAdmin())
 							<?php $glyphRed = (($record->approved_flag != 1 || $record->published_flag !=1)) ? 'glyphRed' : ''; ?>				
 							<td><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom-sm {{$glyphRed}} glyphicon glyphicon-flash"></span></a></td>						
 							<td><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
