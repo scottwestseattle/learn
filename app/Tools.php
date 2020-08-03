@@ -346,7 +346,7 @@ class Tools
 
 		if (array_key_exists("SERVER_NAME", $_SERVER))
 		{
-			$v = $_SERVER["SERVER_NAME"];
+			$v = strtolower($_SERVER["SERVER_NAME"]);
 
 			// trim the duba duba duba
 			if (Tools::startsWith($v, 'www.'))
@@ -354,6 +354,31 @@ class Tools
 		}
 
 		return $v;
+	}
+
+	static public function getSiteId()
+	{
+		$siteId = -1;
+		$domain = self::getDomainName();
+		if (array_key_exists($domain, self::$_sites))
+		{
+			$siteId = self::$_sites[$domain];
+		}
+		//dump($domain . " " . $siteId);
+		
+		return $siteId;
+	}
+
+	static private $_sites = [
+		'localhost' => 0,
+		'learn.codefast.us' => 1,
+		'english50.com' => 2,
+		'spanish50.com' => 3,
+	];
+	
+	static public function getSites()
+	{		
+		return self::$_sites;
 	}
 
 	static public function getSiteTitle($withDomainName = true)

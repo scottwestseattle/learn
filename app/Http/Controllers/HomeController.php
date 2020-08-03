@@ -234,17 +234,7 @@ class HomeController extends Controller
 		//
 		// get Sites
 		//
-		$sites = null;
-		if (User::isSuperAdmin())
-		{
-			$sites = [
-				'English50.com',
-				'Spanish50.com',
-				'VirtualEnglish.xyz',
-				'Conversar.xyz',
-				'LearnFast.xyz',
-			];
-		}
+		$sites = Tools::getSites();
 
 		//
 		// get unapproved comments
@@ -288,6 +278,7 @@ class HomeController extends Controller
 			'courses' => $courses,
 			'ip' => $ip,
 			'new_visitor' => Visitor::isNew($ip),
+			'domain' => Tools::getDomainName(),
 		]));
     }
 

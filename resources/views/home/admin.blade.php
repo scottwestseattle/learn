@@ -14,9 +14,9 @@
 			@if (false)
 			<li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
 			@endif
-			<li>My IP:&nbsp;{{$ip}}</li>
+			<li>{{$domain}} ({{$ip}})</li>
 			<li>{{substr(base_path(), 0, 28)}}...</li>
-			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}, SITE_ID: {{SITE_ID}}</li>
+			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}, SITE_ID: {{SITE_ID}}, Site: {{\App\Tools::getSiteId()}}</li>
 			<li>Life:&nbsp;{{env('SESSION_LIFETIME', 0)}}, New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</li>
 			@if ($isSuperAdmin)
 				<li>Size:

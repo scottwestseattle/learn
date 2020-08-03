@@ -143,6 +143,7 @@ class Controller extends BaseController
 			return $next($request);
 		});
 
+		$id = Tools::getSiteId();
 	}
 
 	static private function showPrivacyNotice()

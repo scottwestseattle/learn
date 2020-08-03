@@ -47,7 +47,7 @@ class Entry extends Base
 			AND (entries.published_flag = 0 OR entries.approved_flag = 0 OR entries.location_id = null)
 		';
 		
-		$records = DB::select($q, [SITE_ID, ENTRY_TYPE_TOUR]);
+		$records = DB::select($q, [Tools::getSiteId(), ENTRY_TYPE_TOUR]);
 		
 		return $records;
 	}
@@ -69,7 +69,7 @@ class Entry extends Base
 			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date ASC, entries.id DESC
 		';
 				
-		$records = DB::select($q, [SITE_ID, ENTRY_TYPE_TOUR]);
+		$records = DB::select($q, [Tools::getSiteId(), ENTRY_TYPE_TOUR]);
 		
 		return $records;
 	}
@@ -89,8 +89,8 @@ class Entry extends Base
 		if (!isset($type_flag))
 			return(Entry::getEntries($approved_flag));
 		
-		// if site_id is set use it, otherwise use the old SITE_ID constant for backwards compatibility
-		$site_id = isset($site_id) && $site_id != false ? $site_id : SITE_ID;
+		// if site_id is set use it, otherwise use the old Tools::getSiteId() constant for backwards compatibility
+		$site_id = isset($site_id) && $site_id != false ? $site_id : Tools::getSiteId();
 		
 		$q = '
 			SELECT *
@@ -148,7 +148,7 @@ class Entry extends Base
 		if (User::isAdmin())
 		{
 			$record = Entry::select()
-				->where('site_id', SITE_ID)
+				->where('site_id', Tools::getSiteId())
 				->where('deleted_flag', 0)
 				->where('permalink', $permalink)
 				->first();
@@ -156,7 +156,7 @@ class Entry extends Base
 		else
 		{
 			$record = Entry::select()
-				->where('site_id', SITE_ID)
+				->where('site_id', Tools::getSiteId())
 				->where('published_flag', 1)
 				->where('approved_flag', 1)
 				->where('deleted_flag', 0)
@@ -269,7 +269,7 @@ class Entry extends Base
 			$type_flag = $entry->type_flag;
 		
 			$record = Entry::select() 
-				->where('entries.site_id', SITE_ID)
+				->where('entries.site_id', Tools::getSiteId())
 				->where('entries.deleted_flag', 0)
 				//->where('entries.published_flag', 1)
 				//->where('entries.approved_flag', 1)
@@ -295,7 +295,7 @@ class Entry extends Base
 				AND entries.type_flag = ?
 		';
 		
-		$q .= $allSites ? '' : ' AND entries.site_id = ' . SITE_ID . ' ';
+		$q .= $allSites ? '' : ' AND entries.site_id = ' . Tools::getSiteId() . ' ';
 		
 		// get the list with the location included
 		$record = DB::select($q, [$entry_type]);

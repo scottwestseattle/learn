@@ -39,7 +39,7 @@ class EntryController extends Controller
     public function indexAdmin()
     {				
 		$entries = Entry::select()
-			->where('site_id', SITE_ID)
+			->where('site_id', Tools::getSiteId())
 			//->where('type_flag', '<>', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', 0)
 			->orderByRaw('entries.id DESC')
@@ -95,11 +95,7 @@ class EntryController extends Controller
     {		
 		$entry = new Entry();
 		
-		if (true) // new way
-			$entry->site_id = isset($request->site_id) ? $request->site_id : SITE_ID;
-		else // old way
-			$entry->site_id = SITE_ID;
-		
+		$entry->site_id = Tools::getSiteId();		
 		$entry->user_id = Auth::id();
 		$entry->type_flag = $request->type_flag;
 
@@ -221,20 +217,20 @@ class EntryController extends Controller
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $id);
 	
 		$entry = Entry::select()
-			->where('site_id', SITE_ID)
+			->where('site_id', Tools::getSiteId())
 			->where('deleted_flag', '<>', 1)
 			->where('id', $id)
 			->first();
 		
 		$photos = Photo::select()
-			->where('site_id', SITE_ID)
+			->where('site_id', Tools::getSiteId())
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();
 		
 		$comments = Comment::select()
-			->where('site_id', SITE_ID)
+			->where('site_id', Tools::getSiteId())
 			->where('deleted_flag', 0)
 			->where('parent_id', $entry->id)
 			->get();
@@ -260,7 +256,7 @@ class EntryController extends Controller
 		try 
 		{
 			$entry = Entry::select()
-				->where('site_id', SITE_ID)
+				->where('site_id', Tools::getSiteId())
 				->where('deleted_flag', 0)
 				->where('id', $id)
 				->first();
@@ -296,7 +292,7 @@ class EntryController extends Controller
 				}
 				
 				$photos = Photo::select()
-					//->where('site_id', SITE_ID)
+					//->where('site_id', Tools::getSiteId())
 					->where('deleted_flag', 0)
 					->where('parent_id', $entry->id)
 					->orderByRaw('id ASC')
@@ -347,43 +343,36 @@ class EntryController extends Controller
     public function update(Request $request, Entry $entry)
     {
 		$record = $entry;
-
-    	if (User::isAdmin())
-        {	
-			$record->type_flag 			= $request->type_flag;
-			
-			$prevTitle = $record->title;
-			$record->title 				= Tools::trimNull($request->title);
-			$record->permalink			= Tools::trimNull($request->permalink);
-			$record->description_short	= Tools::trimNull($request->description_short);
-			$record->description		= Tools::trimNull($request->description);
-			$record->source_credit		= Tools::trimNull($request->source_credit);
-			$record->source_link		= Tools::trimNull($request->source_link);
-			$record->display_date 		= Controller::getSelectedDate($request);		
-			
-			try
-			{
-				$record->save();
-
-				Event::logEdit(LOG_MODEL_ENTRIES, $record->title, $record->id, $prevTitle . '  ' . $record->title);			
-				
-				$request->session()->flash('message.level', 'success');
-				$request->session()->flash('message.content', 'Entry has been updated');
-			}
-			catch (\Exception $e) 
-			{
-				Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_EDIT, Tools::getTextOrShowEmpty($record->title), null, $e->getMessage());
-				
-				$request->session()->flash('message.level', 'danger');
-				$request->session()->flash('message.content', $e->getMessage());		
-			}			
-
-			return redirect('/entries/' . $record->permalink);
-		}
-		else
+		$prevTitle = $record->title;
+		
+		$record->site_id 			= Tools::getSiteId();
+		$record->type_flag 			= $request->type_flag;
+		$record->title 				= Tools::trimNull($request->title);
+		$record->permalink			= Tools::trimNull($request->permalink);
+		$record->description_short	= Tools::trimNull($request->description_short);
+		$record->description		= Tools::trimNull($request->description);
+		$record->source_credit		= Tools::trimNull($request->source_credit);
+		$record->source_link		= Tools::trimNull($request->source_link);
+		$record->display_date 		= Controller::getSelectedDate($request);		
+		
+		try
 		{
-			return redirect('/articles');
+			$record->save();
+
+			Event::logEdit(LOG_MODEL_ENTRIES, $record->title, $record->id, $prevTitle . '  ' . $record->title);			
+			
+			$request->session()->flash('message.level', 'success');
+			$request->session()->flash('message.content', 'Entry has been updated');
 		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_EDIT, Tools::getTextOrShowEmpty($record->title), null, $e->getMessage());
+			
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());		
+		}			
+
+		return redirect('/entries/' . $record->permalink);
     }
 
     public function confirmdelete(Request $request, Entry $entry)
