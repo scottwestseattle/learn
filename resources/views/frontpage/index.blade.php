@@ -11,15 +11,15 @@
 	<div class="container text-center">
 	  <h1 class="">@LANG('fp.Frontpage Header Title')</h1>
 	  <p>@LANG('fp.Frontpage Header Body')</p>
-	  <p><a class="btn btn-primary btn-lg" href="/courses" role="button">@LANG('fp.Start Learning') &raquo;</a></p>
+	  <p><a class="btn btn-primary btn-lg" href="/articles" role="button">@LANG('fp.Start') &raquo;</a></p>
 	</div>
 </div>
 
-<div class="container page-normal">
+<div class="container xpage-normal">
 
     <!-- SHOW ARTICLES -->
-	<h3>@LANG('content.Latest Articles')</h3>
-	<div class="text-center" style="margin-top: 50px;">		
+	<h3 class="mt-0">@LANG('content.Latest Articles')</h3>
+	<div class="text-center mt-3">		
 		@if (isset($articles) && count($articles) > 0)		
 		<div style="display: inline-block; width: 95%;">
 			<table>
@@ -40,8 +40,14 @@
 							<div style="float:left; margin-right:15px;">{{$record->display_date}}</div>
 							<div style="float:left;">
 								<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
-								<div style="margin-right:0px; float:left;">{{str_word_count($record->description)}} @LANG('content.words')</div>
-							<div>
+								<div style="margin-right:15px; margin-bottom:5px; float:left;">{{str_word_count($record->description)}} @LANG('content.words')</div>
+							</div>
+							@if (App\User::isAdmin())
+							<div style="float:left;">
+								<div style="margin-right:5px; float:left;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
+								<div style="margin-right:0px; float:left;"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
+							</div>
+							@endif
 						</td></tr>
 					</tbody>
 					</table>
@@ -57,7 +63,7 @@
 			<div class=""><h4>@LANG('content.No articles')</h4></div>
 		@endif
 		
-		<div class=""><a href="/articles">@LANG('content.Show All Articles')</a></div>
+		<div class="mb-4"><a href="/articles">@LANG('content.Show All Articles')</a></div>
 				
 	</div>	
     <!-- END OF ARTICLES -->

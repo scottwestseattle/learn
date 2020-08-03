@@ -45,7 +45,7 @@ Super Light Green: #eff7f0
 
 
 h1,h3 {
-	xmargin:10px 0 15px 0;
+	margin:10px 0 15px 0;
 }
 
 .size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
@@ -119,7 +119,7 @@ body {
 
 /* spacing for normal, non-front pages */
 .page-normal {
-    padding-top: 15px;
+    padding-top: 10px;
     margin-bottom: 3rem;
 	min-height: 500px;
 }
@@ -472,6 +472,11 @@ body {
 	margin:0 5px;
 	font-size: 22px;
 	color: #286090;
+}
+
+.glyphCustom-lt {
+	font-size:13px; 
+	color:#acacac;	
 }
 
 .glyphCustom-sm {
@@ -868,4 +873,9 @@ td.article-extra {
 label.tiny {
 	font-size:.6em;
 	margin-bottom:2px;
+}
+
+.submenu-view {
+	margin: 20px 0;
+	font-size:20px;	
 }

@@ -1,27 +1,12 @@
-<script>
-
-function xshow(event, id)
-{
-	event.preventDefault();
-	
-	document.getElementById("en").style.display = "none";
-	document.getElementById("es").style.display = "none";
-	document.getElementById("zh").style.display = "none";
-	
-	document.getElementById(id).style.display = "initial";		
-}
-
-</script>
-
 @extends('layouts.app')
 
 @section('content')
 
-<div class="container page-size">
+<div class="container page-normal">
 
 	@component('entries.menu-submenu', ['record' => $record])@endcomponent	
 
-	<h1>Edit Entry</h1>
+	<h1>Edit</h1>
 
 	<form method="POST" action="/entries/update/{{ $record->id }}">
 		<div class="form-group form-control-big">

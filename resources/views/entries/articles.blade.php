@@ -2,11 +2,11 @@
 
 @section('content')
 
-<div class="container">
+<div class="container page-normal">
 
 	@component('entries.menu-submenu')@endcomponent	
 
-	<h1 style="font-size:1.3em;">@LANG('ui.Articles') ({{ count($records) }})</h1>
+	<h1>@LANG('ui.Articles') ({{ count($records) }})</h1>
 
 	<div>
 		@foreach($records as $record)			
@@ -15,15 +15,19 @@
 				<a href="/entries/{{$record->permalink}}">{{$record->title}}</a>
 			</div>
 
-			@if (true)
 			<div style="padding-bottom:10px; font-size:.8em; font-weight:10;">
 				<div style="float:left; margin-right:15px;">{{$record->display_date}}</div>
 				<div style="float:left;">
 					<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
-					<div style="margin-right:0px; float:left;">{{str_word_count($record->description)}} @LANG('content.words')</div>
+					<div style="margin-right:15px; float:left;">{{str_word_count($record->description)}} @LANG('content.words')</div>
 				</div>
+				@if (App\User::isAdmin())
+				<div style="float:left;">
+					<div style="margin-right:5px; float:left;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
+					<div style="margin-right:0px; float:left;"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
+				</div>
+				@endif				
 			</div>
-			@endif
 		</div>
 		@endforeach
 	</div>

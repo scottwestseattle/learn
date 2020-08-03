@@ -122,7 +122,7 @@ function convertAccentChars(text)
 	text = text.replace(/[ÀÁÄÂàáâäã]+/g, "a");
 	text = text.replace(/[ÉÈËÊèéêë]+/g, "e");
 	text = text.replace(/[ÍÌÏÎìíîï]+/g, "i");
-	text = text.replace(/[ÓÒÖÔòóôöõ]+/g, "o");
+	text = text.replace(/[ÓÒÖÔòóôöõø]+/g, "o");
 	text = text.replace(/[ÙÚÜÛùúûü]+/g, "u");
 	text = text.replace(/Ÿÿ/g, "y");
 	

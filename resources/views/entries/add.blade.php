@@ -2,15 +2,11 @@
 
 @section('content')
 
-<div class="container page-size">
+<div class="container page-normal">
 
 	@component('entries.menu-submenu')@endcomponent	
-
-	@if (isset($title))
-		<h3>{{$title}}</h3>
-	@endif
 	
-	<h1>Add Entry</h1>
+	<h1>Add</h1>
                
 	<form method="POST" action="/entries/create">
 		<div class="form-control-big">	

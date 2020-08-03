@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="page-size container">
+<div class="container page-normal">
 
 	@component('entries.menu-submenu', ['record' => $record])@endcomponent
 	
@@ -13,7 +13,7 @@
 		@if (isset($referer))<input type="hidden" name="referer" value="{{$referer}}">@endif
 
 		<div class="form-group">
-			<h3 name="title" class="">{{$record->title }}</h3>
+			<h4 name="title" class="">{{$record->title }}</h4>
 		</div>
 
 		<div class="form-group">

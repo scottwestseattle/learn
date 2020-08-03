@@ -388,43 +388,19 @@ class EntryController extends Controller
 
     public function confirmdelete(Request $request, Entry $entry)
     {	
-    	if ($this->isOwnerOrAdmin($entry->user_id))
-        {
-			$entry->description = nl2br(trim($entry->description));
-			
-			if ($entry->type_flag === ENTRY_TYPE_TOUR)
-			{
-				$vdata = $this->getViewData([
-					'record' => $entry,
-				]);
-
-				return view('tours.confirmdelete', $vdata);
-			}
-			else
-			{
-				$vdata = $this->getViewData([
-					'entry' => $entry,
-				]);
-				
-				return view('entries.confirmdelete', $vdata);
-			}
-        }           
-        else 
-		{
-             return redirect('/');
-		}            	
+		$entry->description = nl2br(trim($entry->description));
+		
+		$vdata = $this->getViewData([
+			'entry' => $entry,
+		]);
+		
+		return view('entries.confirmdelete', $vdata);        	
     }
 	
     public function delete(Request $request, Entry $entry)
     {	
-    	if ($this->isOwnerOrAdmin($entry->user_id))
-        {			
-			$entry->deleteSafe();
-			
-			return redirect($this->getReferer($request, '/entries/index')); 
-		}
-		
-		return redirect('/');
+		$entry->deleteSafe();
+		return redirect('/articles');
     }
 	
     public function viewcount(Entry $entry)
