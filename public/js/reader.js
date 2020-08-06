@@ -20,14 +20,12 @@ var max = 0;    // number of slides
 
 var _debug = true;
 var _mute = false;
-
-function debug(text)
-{
-    if (_debug)
-        console.log(text);
-}
+var _voices = null;
+var _voicesLoadAttempts = 0;
 
 $( document ).ready(function() {
+	window.speechSynthesis.cancel();	
+	setTimeout(loadVoices, 500);
 	loadData();
 	deck.start();
 });
@@ -38,7 +36,6 @@ $( document ).ready(function() {
 function deck() {
 
 	this.slides = [];   // slides
-    this.bgs = [];      // slide background image
 
 	// options
 	this.runState = RUNSTATE_START;
@@ -65,45 +62,24 @@ function deck() {
 		reset();
 		this.setStates(RUNSTATE_COUNTDOWN);
 	    deck.showSlide();
-	    deck.setBackgroundImage(); // do this here so bg image will be preloaded with no delay
-	    _countdownAudioTotalSeconds = 3;
-        startTimer(deck.slides[curr].countdown, this.runSlide);
+		this.runSlide();
 	}
 
     // this shows the current slide
 	this.runSlide = function() {
 
-        debug("run slide: " + deck.slides[curr].title);
+		//debug("read next: " + curr);
 
-        clearTimer();
         if (curr < max)
         {
+			//debug("run slide: " + deck.slides[curr].title);
             loadSlide();
-            var seconds = deck.slides[curr].seconds;
-
-    	    _countdownAudioTotalSeconds = 10;
-    	    _tensAudio = true;
-            if (curr < (max - 1)) // not last one
-                startTimer(seconds, deck.runBetween);
-            else    // last one
-                startTimer(seconds, end);
+			deck.readSlide();
         }
         else
         {
     		stop();
         }
-	}
-
-    // this shows the between slide
-	this.runBetween = function() {
-        clearTimer();
-	    deck.setStates(RUNSTATE_BETWEEN);
-	    betweenSeconds = deck.slides[curr].between;
-        curr++; // do this here because we need the between seconds from the previous record
-	    deck.showSlide(); // show the upcoming slide during the break
-	    deck.setBackgroundImage(); // do this here so bg image will be preloaded with no delay
-	    _countdownAudioTotalSeconds = 3;
-        startTimer(betweenSeconds, deck.runSlide);
 	}
 
 	this.skipSlide = function() {
@@ -119,11 +95,6 @@ function deck() {
 				break;
 
 			case RUNSTATE_RUN:
-
-                if (curr < (max - 1)) // not last one
-    			    this.runBetween();
-                else    // last one
-                    end();
 				break;
 
 			default:
@@ -152,7 +123,7 @@ function deck() {
 
 	this.setStates = function(state) {
 
-        debug("setting state to " + state);
+        //debug("setting state to " + state);
 
 		this.runState = state;
 
@@ -190,18 +161,17 @@ function deck() {
 
 	this.showSlide = function() {
 	    var slide = deck.slides[curr];
-        $(".slideCount").text(slide.number + " of " + deck.slides.length);
-        $(".slideTitle").text(slide.number + ". " + slide.title);
-        $(".slideSeconds").text(slide.seconds + " seconds");
-        $(".slideDescription").text(deck.slides[curr].description);
-        $(".sliderPhoto").attr("src", "/img/plancha/" + deck.slides[curr].photo)
-        //alert(deck.slides[curr].photo);
-        //$(".slidePhoto").text();
+        $(".slideCount").text((curr+1) + " of " + deck.slides.length);
+        $(".slideDescription").text(deck.slides[curr].description);		
 	}
 
-	this.setBackgroundImage = function() {
-	    var bg = getRandomBackground();
-        $("#bg").css("background-image", bg);
+	this.readSlide = function() {
+	    var slide = deck.slides[curr];
+        debug("read slide " + (curr+1) + ": " + slide.description);
+		read(slide.description);
+		
+        //$(".slideCount").text(slide.number + " of " + deck.slides.length);
+        //$(".slideDescription").text(deck.slides[curr].description);
 	}
 
 	this.setAlertPrompt = function(text, color, bold = false) {
@@ -212,64 +182,6 @@ function deck() {
 }
 
 var deck = new deck();
-
-function getRandomBackground()
-{
-    // get random background image
-    var ix = Math.floor(Math.random() * deck.bgs.length);
-    var bg = deck.bgs[ix];
-    var i = 0;
-    var maxLoops = deck.bgs.length;
-    while (bg['shown'] && i < maxLoops)
-    {
-        ix++;
-        if (ix >= deck.bgs.length)
-            ix = 0;
-
-        bg = deck.bgs[ix];
-        i++; // make sure it's not infinite
-        debug('looping...');
-    }
-
-    if (i >= maxLoops)
-        debug('ran out of unused bg images')
-
-    debug('showing: ' + bg['filename']);
-    deck.bgs[ix]['shown'] = true;
-
-    bg = 'url(/img/backgrounds/' + deck.bgAlbum + '/' + bg['filename'] + ')';
-
-    return bg;
-}
-
-function getBackground()
-{
-    // get unused bg image
-    var ix = 0;
-    var bg = deck.bgs[ix];
-    var i = 0;
-    var maxLoops = deck.bgs.length;
-    while (bg['shown'] && i < maxLoops)
-    {
-        ix++;
-        if (ix >= deck.bgs.length)
-            ix = 0;
-
-        bg = deck.bgs[ix];
-        i++; // make sure it's not infinite
-        debug('looping...');
-    }
-
-    if (i >= maxLoops)
-        debug('ran out of unused bg images')
-
-    debug('showing: ' + bg['filename']);
-    deck.bgs[ix]['shown'] = true;
-
-    bg = 'url(/img/backgrounds/' + deck.bgAlbum + '/' + bg['filename'] + ')';
-
-    return bg;
-}
 
 function loadData()
 {
@@ -283,13 +195,12 @@ function loadData()
         var service = container.data('title');
 
 		var title = container.data('title');
-		var number = parseInt(container.data('number'));
+		var number = 1;
 		var description = container.data('description');
 		var id = container.data('id');
         var seconds = parseInt(container.data('seconds'));
         var between = parseInt(container.data('between'));
         var countdown = parseInt(container.data('countdown'));
-        var photo = container.data('photo');
         var reps = 0;
 
 		// add the record
@@ -302,7 +213,6 @@ function loadData()
 		    seconds:seconds,
 		    between:between,
 		    countdown:countdown,
-		    photo:photo,
 		    reps:reps,
 		    done:false
 		};
@@ -325,28 +235,8 @@ function loadData()
 		deck.quizTextDone = container.data('quiztext-done');
 		deck.lessonId = container.data('lessonid');
 		deck.touchPath = container.data('touchpath');
-		deck.bgAlbum = container.data('bgalbum');
-    });
-
-	//
-	// load bg images
-	//
-	i = 0;
-	$('.data-bgs').each(function() {
-
-        var container = $(this);
-
-		var filename = container.data('filename');
-
-		// add the record
-		deck.bgs[i] = {
-		    filename:filename,
-		    shown:false
-		};
-
-		i++;
-    });
-	//alert("max=" + max);
+		deck.language = container.data('language');
+    });	
 }
 
 function first()
@@ -368,38 +258,12 @@ function next()
 	{
 		curr = 0;
 		nbr = 0;
+        end();		
 	}
-
-	loadSlide();
-}
-
-var _countdownTimer = null;
-var _deckTimer = null;
-var _timerIntervalCounter = 0;
-var _countdownAudioTotalSeconds = 0;
-var _tensAudio = false;
-var _timersPaused = false;
-
-function startTimer(seconds, func)
-{
-	clearTimeout(_deckTimer);
-
-	// set the timer for the next panel
-    _deckTimer = setTimeout(func, seconds * 1000);
-
-    // start the second countdown timer
-    startInterval(seconds);
-
-    showSeconds(seconds);
-}
-
-function clearTimer()
-{
-    clearInterval(_countdownTimer);
-    _timerIntervalCounter = 0;
-    showSeconds();
-    _countdownAudioTotalSeconds = 0;
-    _tensAudio = false;
+	else
+	{
+		loadSlide();
+	}
 }
 
 // skip the current countdown, slide, or between break
@@ -407,18 +271,6 @@ function skip()
 {
     if (true)
         deck.skipSlide();
-    else
-        switchBackgroundPhoto(); // tester to cycle through all background images
-}
-
-function switchBackgroundPhoto()
-{
-    clearTimer();
-
-    // loop thru the bg images
-    var bg = getBackground();
-    $("#bg").css("background-image", bg);
-    $("#bg-photo-name").text(bg);
 }
 
 // reload the page
@@ -429,125 +281,10 @@ function reload()
 
 function pause()
 {
-    debug("pause hit, _timersPaused = " + _timersPaused.toString());
-
-    if (_timersPaused)
-    {
-        //
-        // timers paused, restart them
-        //
-        resume();
-    }
-    else
-    {
-        //
-        // timers running, pause them
-        //
-        clearInterval(_countdownTimer);
-        _countdownTimer = null;
-
-        clearTimeout(_deckTimer);
-        _deckTimer = null;
-    }
-
-    _timersPaused = !_timersPaused;
-
-    if (_timersPaused)
-    {
-        $("#button-pause").removeClass("glyphicon-pause");
-        $("#button-pause").addClass("glyphicon-play");
-    }
-    else
-    {
-        $("#button-pause").removeClass("glyphicon-play");
-        $("#button-pause").addClass("glyphicon-pause");
-    }
 }
 
 function resume()
 {
-    debug("resume: time left on countdown timer = " + _timerIntervalCounter);
-
-    if (_timerIntervalCounter <= 0)
-    {
-        debug("nothing to resume");
-        return; // nothing to do
-    }
-
-    // reset to the remaining time on the counter
-    seconds = _timerIntervalCounter;
-
-    // restart the deck timer according to the current state
-    switch(deck.runState)
-    {
-        case RUNSTATE_COUNTDOWN:
-            debug("resuming countdown");
-            startTimer(seconds, deck.runSlide);
-            break;
-
-        case RUNSTATE_BETWEEN:
-            debug("resuming between break");
-            startTimer(seconds, deck.runSlide);
-            break;
-
-        case RUNSTATE_RUN:
-            if (curr < (max - 1)) // not last one
-            {
-                debug("resuming slide");
-                startTimer(seconds, deck.runBetween);
-            }
-            else    // last one
-            {
-                debug("resuming last slide");
-                startTimer(seconds, end);
-            }
-            break;
-
-        default:
-            // nothing to do
-            debug("nothing to resume");
-            break;
-    }
-
-}
-
-function startInterval(seconds)
-{
-    _timerIntervalCounter = seconds;
-    _countdownTimer = setInterval(updateTimer, 1000);
-    showSeconds(_timerIntervalCounter);
-}
-
-function updateTimer()
-{
-    // if speaking on the 10s like "50 seconds remaining" AND it's on a 10 multiple AND the 10 multiple is more than 10
-    if (_tensAudio && ((_timerIntervalCounter-1) % 10) == 0 && (_timerIntervalCounter-1) > 10)
-    {
-        playAudio(_timerIntervalCounter-1);
-    }
-
-    if (_countdownAudioTotalSeconds > 0 && _timerIntervalCounter <= (_countdownAudioTotalSeconds + 1))
-        playAudio(_timerIntervalCounter - 1);
-
-    _timerIntervalCounter--;
-    showSeconds(_timerIntervalCounter);
-
-    if (_timerIntervalCounter <= 0)
-       clearTimer();
-}
-
-function playAudio(seconds)
-{
-    if (seconds <= 10)
-    {
-        text = seconds.toString();
-    }
-    else
-    {
-        text = seconds.toString() + " seconds remaining";
-    }
-
-    tts(text);
 }
 
 function mute()
@@ -579,17 +316,155 @@ function playAudioFile(file)
     }
 }
 
+var _speechTimerId = null;
+function read(text)
+{
+	clearTimeout(_speechTimerId);
+	var utter = new SpeechSynthesisUtterance();
+
+	utter.lang = deck.language;
+	debug("voices: " + _voices.length);
+	utter.text = text;
+	utter.onend = function(event) {
+		readNext();
+	}
+	
+	window.speechSynthesis.speak(utter);
+	_speechTimerId = setTimeout(speechBugWorkaround, 10000);		
+}
+
+function speechBugWorkaround()
+{		
+	debug("reset speech");
+	window.speechSynthesis.pause();
+	window.speechSynthesis.resume();
+	
+	if (window.speechSynthesis.speaking)
+	{
+		clearTimeout(_speechTimerId);
+		_speechTimerId = setTimeout(speechBugWorkaround, 10000);		
+	}
+}
+
+function readNext()
+{	
+	curr++;
+	
+	if (curr >= max)
+	{
+		curr = 0;
+		nbr = 0;
+        end();		
+	}
+	else
+	{
+		deck.runSlide();
+	}
+}
+
 function tts(text)
 {
     if (!_mute)
     {
         var utter = new SpeechSynthesisUtterance();
 
-        //var myLang = utter.lang;
-        utter.lang = 'en-US';
+        utter.lang = 'es-US';
         utter.text = text;
+		
         window.speechSynthesis.speak(utter);
+		
     }
+}
+
+function loadVoices()
+{
+	_voices = speechSynthesis.getVoices();	
+
+	if (_voices.length == 0 && _voicesLoadAttempts++ < 10)
+	{
+		debug("loading voices...not ready");
+		setTimeout(loadVoices, 500);
+		return;
+	}
+	
+	//tts('ready');	
+	
+	var voiceSelect = document.querySelector('select');	
+	var found = 0;
+	var languageAlt = "";
+	var languageAltIndex = -1;
+	
+	if (_voices.length > 0)
+	{
+		for(i = 0; i < _voices.length ; i++) 
+		{
+			var option = document.createElement('option');
+			option.textContent = _voices[i].name + ' (' + _voices[i].lang + ')';
+			option.value = _voices[i].lang;
+
+			if(_voices[i].default) {
+			  option.textContent += ' (default)';
+			}
+
+			option.setAttribute('data-lang', _voices[i].lang);
+			option.setAttribute('data-name', _voices[i].name);
+			voiceSelect.appendChild(option);
+			
+			if (deck.language == _voices[i].lang)
+			{
+				found++;
+				languageAltIndex = i;
+			}
+			
+			if (deck.language == "es-ES" && _voices[i].name.startsWith("esp"))
+			{
+				languageAlt = _voices[i].lang;
+				languageAltIndex = i;
+			}
+			else if (deck.language == "en-EN" && _voices[i].name.startsWith("ing"))
+			{
+				languageAlt = _voices[i].lang;
+				languageAltIndex = i;
+			}
+		}		
+	}
+	else
+	{
+		var option = document.createElement('option');
+		option.textContent = "Default voice set: " + deck.language;
+		voiceSelect.appendChild(option);
+	}
+	
+	if (found == 0)
+	{
+		if (languageAlt.length > 0)
+		{
+			msg = "language not found: " + deck.language + ", using: " + languageAlt;
+			deck.language = languageAlt;
+			$("#language").text("Language: " + deck.language);
+			voiceSelect.index = languageAltIndex;
+		}
+		else
+		{
+			msg = "Language not found: " + deck.language + ", text can't be read correctly.";
+			$("#language").text(msg);
+			$("#languages").show();
+		}
+		
+		debug(msg);
+	}
+	else
+	{
+		$("#language").text("Language: " + deck.language);
+	}
+
+	voiceSelect.selectedIndex = languageAltIndex;
+}
+
+function changeLanguage()
+{
+	deck.language = $("select").val();
+	$("#language").text("Language: " + deck.language);
 }
 
 function setDebug(text = null)
@@ -604,19 +479,20 @@ function showSeconds(text = null)
 
 function run()
 {
-    deck.run();
+    deck.run();	
 }
 
 function stop()
 {
 	deck.setStates(RUNSTATE_END);
-    clearTimer();
 }
 
 function end()
 {
+	clearTimeout(_speechTimerId);
     stop();
-    playAudioFile("small-crowd-applause.mp3");
+    //playAudioFile("small-crowd-applause.mp3");
+	tts("Terminado");
 }
 
 function reset()
@@ -627,11 +503,6 @@ function reset()
 	deck.slides.forEach(function(slide, index){
 	    slide.done = false;
 	});
-
-    // clear bg images
-    deck.bgs.forEach(function(bg, index){
-        bg.shown = false;
-    });
 
 	curr = 0;
 	nbr = 0;
@@ -706,4 +577,10 @@ function touch(q)
 
         //alert('id: ' + q.id + ', word: ' + q.a);
     }
+}
+
+function debug(text)
+{
+    if (_debug)
+        console.log(text);
 }

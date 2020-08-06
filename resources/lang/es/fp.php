@@ -8,7 +8,7 @@ return [
 'Frontpage Section 3 Body' => 'Una vez que haya completado las lecciones gratuitas que están disponibles en línea, tenemos instructores en vivo disponibles para ayudarlo a dominar la gramática y la pronunciación a través de la conversación en línea. Nuestros instructores brindan comentarios constantes para ayudarlo a ser fluido lo más rápido posible. Trabajar con un instructor en vivo es opcional y están disponibles por una módica tarifa por hora.',
 'Frontpage Subfooter Title' => 'La Declaración de la Misión',
 'Frontpage Subfooter Body' => 'Creemos que hablar inglés es cada vez más importante en el mundo moderno y la capacitación virtual en línea es el futuro de la educación.',
-'Start Learning' => 'Aprenda Ya',
+'Start' => 'Empezar ahora',
 'Frontpage Header Title' => 'Comienza a Aprender Rápido',
 'Frontpage Header Body' => 'Aprenda y practique cualquier tema desde la comodidad de su dispositivo. Nuestras lecciones están científicamente diseñadas para acelerar el proceso de aprendizaje y maximizar la retención.',
 'privacy-p1' => 'Al acceder o utilizar este sitio web, usted acepta estar sujeto a esta Política y a nuestro',

@@ -53,8 +53,12 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link" href="/articles">@LANG('content.Articles')</a></li>
+					@if (App\Tools::siteUses(LOG_MODEL_WORDS))
 					<li class="nav-item"><a class="nav-link" href="/vocab-lists">@LANG('content.Lists')</a></li>
+					@endif
+					@if (App\Tools::siteUses(LOG_MODEL_COURSES))
 					<li class="nav-item"><a class="nav-link" href="/courses">@LANG('content.Courses')</a></li>
+					@endif
 					<li class="nav-item"><a class="nav-link" href="/contact">@LANG('ui.Contact')</a></li>
 					<li class="nav-item"><a class="nav-link" href="/about">@LANG('ui.About')</a></li>
 
@@ -82,7 +86,9 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
                                 <a class="dropdown-item" href="/events">@LANG('ui.Events')</a>
 								<div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
-                                <a class="dropdown-item" href="/courses/admin">@LANG('content.Courses')</a>
+								@if (App\Tools::siteUses(LOG_MODEL_COURSES))
+									<a class="dropdown-item" href="/courses/admin">@LANG('content.Courses')</a>
+								@endif
 
 								<div class="dropdown-divider"></div>
 

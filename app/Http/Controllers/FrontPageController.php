@@ -37,36 +37,43 @@ class FrontPageController extends Controller
 		$courses = []; // make this countable so view will always work
 		$vocabLists = [];
 		$articles = [];
+		$wod = null;
 
         // get word of the day
-        $wod = Word::getWod(User::getSuperAdminUserId());
+		if (Tools::siteUses(LOG_MODEL_WORDS))
+		{
+			$wod = Word::getWod(User::getSuperAdminUserId());
 
-		if (isset($wod))
-		{
-			// format the examples to display as separate sentences
-			$wod->examples = Tools::splitSentences($wod->examples);
+			if (isset($wod))
+			{
+				// format the examples to display as separate sentences
+				$wod->examples = Tools::splitSentences($wod->examples);
+			}
+			
+			try
+			{
+				$vocabLists = VocabList::getIndex();
+			}
+			catch (\Exception $e)
+			{
+				$msg = 'Error getting Vocab Lists';
+				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+				Tools::flash('danger', $msg);
+			}			
 		}
 
-		try
+		if (Tools::siteUses(LOG_MODEL_COURSES))
 		{
-			$courses = Course::getIndex(['public']);
-		}
-		catch (\Exception $e)
-		{
-			$msg = 'Error getting courses';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);
-		}
-
-		try
-		{
-			$vocabLists = VocabList::getIndex();
-		}
-		catch (\Exception $e)
-		{
-			$msg = 'Error getting Vocab Lists';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);
+			try
+			{
+				$courses = Course::getIndex(['public']);
+			}
+			catch (\Exception $e)
+			{
+				$msg = 'Error getting courses';
+				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+				Tools::flash('danger', $msg);
+			}
 		}
 
 		try

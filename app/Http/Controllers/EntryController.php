@@ -27,7 +27,7 @@ class EntryController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['articles', 'index', 'view', 'permalink', 'rss']);
+        $this->middleware('is_admin')->except(['read', 'articles', 'index', 'view', 'permalink', 'rss']);
 
 		$this->prefix = 'entries';
 		$this->title = 'Entry';
@@ -109,7 +109,6 @@ class EntryController extends Controller
 		$entry->published_flag 		= 1;
 		$entry->approved_flag 		= 1;
 		$entry->finished_flag 		= 1;
-
 
 		$entry->permalink			= Tools::trimNull($request->permalink);
 		if (!isset($entry->permalink))
@@ -420,6 +419,32 @@ class EntryController extends Controller
 		
 		return redirect('/articles'); 
     }
+	
+    public function read(Request $request, Entry $entry)
+    {				
+		$record = $entry;
+		$text = [];
+		
+		$paragraphs = explode("\r\n", strip_tags(html_entity_decode($record->description)));
+		foreach($paragraphs as $p)
+		{		
+			$lines = explode(". ", trim($p));
+			foreach($lines as $line)
+			{
+				$line = trim($line);
+				if (strlen($line) > 0)
+					$text[] = $line;
+			}
+		}
+		//dd($text);
+		
+		$record['lines'] = $text;
+				
+    	return view('entries.reader', $this->getViewData([
+			'record' => $record,
+			'language' => Tools::getLanguage(),
+		]));
+    }	
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates

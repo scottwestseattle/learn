@@ -135,6 +135,7 @@ return [
 'Latest Articles' => 'Últimos Artículos',
 'No articles' => 'No hay articulos',
 'Articles' => 'Artículos',
-'Back to List' => 'Volver a la lista',
 'Show All Articles' => 'Mostrar todos los artículos',
+'views' => 'visitas',
+'words' => 'palabras',
 ];

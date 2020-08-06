@@ -135,6 +135,7 @@ return [
 'Latest Articles' => '最新的文章',
 'No articles' => '没有文章',
 'Articles' => '文章',
-'Back to List' => '返回目录',
 'Show All Articles' => '显示所有文章',
+'views' => '查看次数',
+'words' => '字数',
 ];

@@ -375,12 +375,40 @@ class Tools
 		'english50.com' => 2,
 		'spanish50.com' => 3,
 	];
+
+	static private $_sitesLanguages = [
+		'localhost' => 'es-ES',
+		'learn.codefast.us' => 'es-ES',
+		'english50.com' => 'en-EN',
+		'spanish50.com' => 'es-ES',
+	];
 	
 	static public function getSites()
 	{		
 		return self::$_sites;
 	}
 
+	static public function getLanguage()
+	{		
+		$rc = 'en-US';
+		
+		$domain = self::getDomainName();
+		if (array_key_exists($domain, self::$_sitesLanguages))
+		{
+			$rc = self::$_sitesLanguages[$domain];
+		}
+	
+		return $rc;
+	}
+
+	static public function siteUses($model)
+	{
+		// for now only english50 is limited
+		$rc = (self::getSiteId() != 2);
+
+		return $rc;
+	}
+	
 	static public function getSiteTitle($withDomainName = true)
 	{
 		$d = self::getDomainName();

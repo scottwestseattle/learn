@@ -59,6 +59,7 @@
 		<div>
 		<p class="article-source"><i>
 			{{$display_date}}&nbsp;&nbsp;{{$record->view_count}} @LANG('content.views')&nbsp;&nbsp;{{$wordCount}} @LANG('content.words')
+			<div style="margin-right:5px;"><a href='/entries/read/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-volume-up"></span></a></div>			
 		</i></p>
 		
 		<h1 name="title" class="">{{$record->title}}</h1>

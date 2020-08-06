@@ -8,7 +8,7 @@ return [
 'Frontpage Section 3 Body' => '完成在线免费课程后，我们会有现场讲师帮助您通过在线对话掌握语法和发音。 我们的教练提供持续的反馈，帮助您尽快流利。 与现场讲师一起工作是可选的，他们每小时收费一次。',
 'Frontpage Subfooter Title' => '使命宣言',
 'Frontpage Subfooter Body' => '我们认为说英语在现代世界中越来越重要，在线虚拟培训是教育的未来。',
-'Start Learning' => '开始学习',
+'Start' => '现在开始',
 'Frontpage Header Title' => '快速开始学习',
 'Frontpage Header Body' => '通过舒适的设备学习和练习任何主题。 我们的课程经过科学设计，可加快学习过程并最大程度地提高保留率。',
 'privacy-p1' => '访问或使用本网站即表示您同意遵守本政策和我们的政策',

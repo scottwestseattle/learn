@@ -42,12 +42,13 @@
 									<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
 									<div style="margin-right:15px; margin-bottom:5px; float:left;">{{str_word_count($record->description)}} @LANG('content.words')</div>
 								</div>
-								@if (App\User::isAdmin())
 								<div style="float:left;">
+									<div style="margin-right:5px; float:left;"><a href='/entries/read/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-volume-up"></span></a></div>
+									@if (App\User::isAdmin())
 									<div style="margin-right:5px; float:left;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
 									<div style="margin-right:0px; float:left;"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
+									@endif
 								</div>
-								@endif
 							</td></tr>
 						</tbody>
 						</table>
@@ -90,6 +91,7 @@
     @endif
     <!-- END OF WORD OF THE DAY -->
 
+	@if (isset($vocabLists) && count($vocabLists) > 0)
     <!-- SHOW VOCAB LISTS -->
 	<h3>@LANG('content.Vocabulary') ({{count($vocabLists)}})</h3>
 
@@ -106,7 +108,8 @@
 		@endforeach
 	</div>
     <!-- END OF VOCAB LISTS -->
-
+	@endif
+	
 	@if (false)
     <!-- SHOW COURSES -->
 	<h3>@LANG('content.Courses') ({{count($courses)}})</h3>

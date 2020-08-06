@@ -8,7 +8,7 @@ return [
 'Frontpage Section 3 Body' => 'Once you have completed the free lessons that are available online, we have live instructors available to help you master grammar and pronuciation through online conversation.  Our instructors provide constant feedback to help you become fluent as fast as possible.  Working with a live instructor is optional and they are available at a modest hourly fee.',
 'Frontpage Subfooter Title' => 'Mission Statement',
 'Frontpage Subfooter Body' => 'We believe that learning a new language requires constant exposure to new words and grammer.  With that in mind, this web site was created to provide new curated content daily.',
-'Start Learning' => 'Start Learning',
+'Start' => 'Start',
 'Frontpage Header Title' => 'Spanish Daily Reading and Listening Portal',
 'Frontpage Header Body' => 'We provide new and interesting news articles curated from news sources around the world for Spanish enthusiasts to read and listen to.',
 'privacy-p1' => 'By accessing or using this web site, you agree to be bound by this Policy and our',

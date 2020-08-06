@@ -56,9 +56,11 @@ Route::get('/courses/rss-reader', 'CourseController@rssReader');
 // Entries
 Route::group(['prefix' => 'entries'], function () {
 	
+	// misc
 	Route::get('/', 'EntryController@index');
 	Route::get('/index/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
 	Route::get('/show/{id}', 'EntryController@show');
+	Route::get('/read/{entry}', 'EntryController@read');
 
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
