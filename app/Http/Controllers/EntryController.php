@@ -425,17 +425,9 @@ class EntryController extends Controller
 		$record = $entry;
 		$text = [];
 		
-		$paragraphs = explode("\r\n", strip_tags(html_entity_decode($record->description)));
-		foreach($paragraphs as $p)
-		{		
-			$lines = explode(". ", trim($p));
-			foreach($lines as $line)
-			{
-				$line = trim($line);
-				if (strlen($line) > 0)
-					$text[] = $line;
-			}
-		}
+		$text = Tools::getSentences($record->title);
+		$text = array_merge($text, Tools::getSentences($record->description_short));
+		$text = array_merge($text, Tools::getSentences($record->description));
 		//dd($text);
 		
 		$record['lines'] = $text;

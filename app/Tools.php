@@ -382,6 +382,25 @@ class Tools
 		'english50.com' => 'en-EN',
 		'spanish50.com' => 'es-ES',
 	];
+
+	static public function getSentences($text)
+	{		
+		$lines = [];
+		
+		$paragraphs = explode("\r\n", strip_tags(html_entity_decode($text)));
+		foreach($paragraphs as $p)
+		{		
+			$sentences = explode(". ", trim($p));
+			foreach($sentences as $s)
+			{
+				$s = trim($s);
+				if (strlen($s) > 0)
+					$lines[] = $s;
+			}
+		}	
+		
+		return $lines;
+	}
 	
 	static public function getSites()
 	{		

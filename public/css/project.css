@@ -862,12 +862,22 @@ body {
 .article-source {
 	margin: 20px 0;
 	font-size:12px;
-	font-weight:bold;
+	font-weight:100;
+}
+
+.small-thin-text {
+	font-size:12px;
+	font-weight:200;
 }
 
 td.article-extra {
 	font-size:12px;
 	padding:0 10px;
+}
+
+.vertical-align {
+	line-height:20px; 
+	valign:middle;
 }
 
 label.tiny {

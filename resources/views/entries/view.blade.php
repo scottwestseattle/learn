@@ -57,32 +57,36 @@
 		<!------------------------------------>
 
 		<div>
-		<p class="article-source"><i>
-			{{$display_date}}&nbsp;&nbsp;{{$record->view_count}} @LANG('content.views')&nbsp;&nbsp;{{$wordCount}} @LANG('content.words')
-			<div style="margin-right:5px;"><a href='/entries/read/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-volume-up"></span></a></div>			
-		</i></p>
-		
-		<h1 name="title" class="">{{$record->title}}</h1>
-		
-		@if (strlen(trim($record->description_short)) > 0)
-			<div class="entry" style="margin-bottom:20px; font-size:1.3em;">
-				<div><i>{{$record->description_short}}</i></div>
+			<!-- Stats -->
+			<div style="" class="vertical-align">
+				@if (false){{$display_date}}&nbsp;&nbsp;@endif
+				<div style="margin-right:10px; float:left;"><a href='/entries/read/{{$record->id}}'><span style="font-size:20px;" class="glyphCustom glyphicon glyphicon-volume-up"></span></a></div>			
+				<div class="article-source">{{$record->view_count}} @LANG('content.views')&nbsp;&nbsp;{{$wordCount}} @LANG('content.words')</div>
 			</div>
-		@endif
+			
+			<!-- Title -->
+			<h1 name="title" class="">{{$record->title}}</h1>
+			
+			<!-- Summary -->
+			@if (strlen(trim($record->description_short)) > 0)
+				<div class="entry" style="margin-bottom:20px; font-size:1.3em;">
+					<div><i>{{$record->description_short}}</i></div>
+				</div>
+			@endif
 
-		<div class="entry-div" style="margin-top:20px; width:100%; font-size:1.1em;">
-			<div class="entry" style="width:100%;">
-				<span name="description" class="">{!! $record->description !!}</span>		
+			<div class="entry-div" style="margin-top:20px; width:100%; font-size:1.1em;">
+				<div class="entry" style="width:100%;">
+					<span name="description" class="">{!! $record->description !!}</span>		
+				</div>
 			</div>
-		</div>
 
-		@if (strlen(trim($record->source_credit)) > 0)
-			<i><p class="article-source">{{$record->source_credit}}</p></i>
-		@endif
-		
-		@if (strlen(trim($record->source_link)) > 0)
-			<p class="article-source"><a target="_blank" href="{{$record->source_link}}">{{$record->source_link}}</a></p>
-		@endif
+			@if (strlen(trim($record->source_credit)) > 0)
+				<p class="article-source">{{$record->source_credit}}</p>
+			@endif
+			
+			@if (strlen(trim($record->source_link)) > 0)
+				<p class="article-source"><a target="_blank" href="{{$record->source_link}}">{{$record->source_link}}</a></p>
+			@endif
 		</div>
 
 	<!------------------------------------>

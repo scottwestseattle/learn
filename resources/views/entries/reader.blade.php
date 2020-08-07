@@ -47,6 +47,10 @@
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); skip()" href=""><span id="button-skip" class="glyphicon glyphicon-step-forward"></span></a></span>
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); mute()" href=""><span id="button-mute" class="glyphicon glyphicon-volume-up"></span></a></span>
 		</div>
+		<div class="text-center">
+			<div><span class="small-thin-text" id="language"></span></div>
+			<div id="languages" class="mt-2 mb-2" style="display:default; font-size:10px;"><select onchange="changeLanguage();" name="select" id="select"></select></div>
+		</div>
 
 	</div>
 
@@ -54,15 +58,10 @@
 	<!-- Start Panel - Index -->
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-start" class="slide-panel">
-
-		<div class="text-center">
-		<div><span style="" id="language"></span></div>
-			<div id="languages" class="mt-2 mb-2" style="display:default; font-size:10px;"><select onchange="changeLanguage();" name="select" id="select"></select></div>
-		</div>
 		
 	    <div class="text-center">
             <h3 class="mt-2 mb-2">{{$record->title}}</h3>
-            <p style="font-size:13px;" class="">{{count($record['lines'])}} lines</p>
+            <p class="small-thin-text">{{count($record['lines'])}} lines</p>
             <a onclick="event.preventDefault(); run()"  href="" class="btn btn-primary mb-3" role="button">Start Reading</a>
         </div>
 

@@ -37,7 +37,9 @@
 						<tbody>
 							<tr><td style="padding-bottom:10px; font-size:1.3em; font-weight:normal;"><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
 							<tr><td style="padding-bottom:10px; font-size:.8em; font-weight:10;">
+								@if (false)
 								<div style="float:left; margin-right:15px;">{{$record->display_date}}</div>
+								@endif
 								<div style="float:left;">
 									<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
 									<div style="margin-right:15px; margin-bottom:5px; float:left;">{{str_word_count($record->description)}} @LANG('content.words')</div>

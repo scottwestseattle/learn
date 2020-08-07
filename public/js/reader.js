@@ -36,6 +36,8 @@ $( document ).ready(function() {
 function deck() {
 
 	this.slides = [];   // slides
+	this.speech = null;
+	this.language = "";
 
 	// options
 	this.runState = RUNSTATE_START;
@@ -235,7 +237,7 @@ function loadData()
 		deck.quizTextDone = container.data('quiztext-done');
 		deck.lessonId = container.data('lessonid');
 		deck.touchPath = container.data('touchpath');
-		deck.language = container.data('language');
+		deck.language = container.data('language'); // this is the language that the web site is in
     });	
 }
 
@@ -322,8 +324,11 @@ function read(text)
 	clearTimeout(_speechTimerId);
 	var utter = new SpeechSynthesisUtterance();
 
-	utter.lang = deck.language;
-	debug("voices: " + _voices.length);
+	if (deck.voice != null)
+		utter.voice = deck.voice;  // if voices for language were found, then use the one we saved on start-up
+	else
+		utter.lang = deck.language; // if voice not found, try to the language from the web site
+	
 	utter.text = text;
 	utter.onend = function(event) {
 		readNext();
@@ -336,8 +341,7 @@ function read(text)
 function speechBugWorkaround()
 {		
 	debug("reset speech");
-	window.speechSynthesis.pause();
-	window.speechSynthesis.resume();
+	window.speechSynthesis.resume(); // fix to keep speech from stopping
 	
 	if (window.speechSynthesis.speaking)
 	{
@@ -391,8 +395,7 @@ function loadVoices()
 	
 	var voiceSelect = document.querySelector('select');	
 	var found = 0;
-	var languageAlt = "";
-	var languageAltIndex = -1;
+	var languageIndex = -1;
 	
 	if (_voices.length > 0)
 	{
@@ -410,21 +413,19 @@ function loadVoices()
 			option.setAttribute('data-name', _voices[i].name);
 			voiceSelect.appendChild(option);
 			
-			if (deck.language == _voices[i].lang)
-			{
-				found++;
-				languageAltIndex = i;
-			}
-			
-			if (deck.language == "es-ES" && _voices[i].name.startsWith("esp"))
-			{
-				languageAlt = _voices[i].lang;
-				languageAltIndex = i;
-			}
-			else if (deck.language == "en-EN" && _voices[i].name.startsWith("ing"))
-			{
-				languageAlt = _voices[i].lang;
-				languageAltIndex = i;
+			if (found == 0)
+			{			
+				// look for voices which map the language we are looking for and save the first one
+				if (deck.language.startsWith("es") && (_voices[i].lang.startsWith("es") || _voices[i].lang.startsWith("spa")))
+				{
+					found++;
+					languageIndex = i;
+				}
+				else if (deck.language.startsWith("en") && _voices[i].lang.startsWith("en"))
+				{
+					found++;
+					languageIndex = i;
+				}
 			}
 		}		
 	}
@@ -437,12 +438,12 @@ function loadVoices()
 	
 	if (found == 0)
 	{
-		if (languageAlt.length > 0)
+		if (languageIndex >= 0)
 		{
-			msg = "language not found: " + deck.language + ", using: " + languageAlt;
-			deck.language = languageAlt;
-			$("#language").text("Language: " + deck.language);
-			voiceSelect.index = languageAltIndex;
+			msg = "language not found: " + deck.language + ", using: " + _voices[languageIndex].lang + ", voice: " + _voices[languageIndex].name;
+			deck.voice 		= _voices[languageIndex];
+			$("#language").text("Language: " + deck.voice.lang);
+			voiceSelect.index = languageIndex;
 		}
 		else
 		{
@@ -455,16 +456,19 @@ function loadVoices()
 	}
 	else
 	{
-		$("#language").text("Language: " + deck.language);
+		deck.voice = _voices[languageIndex];
+		$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
 	}
 
-	voiceSelect.selectedIndex = languageAltIndex;
+	voiceSelect.selectedIndex = languageIndex;
 }
 
 function changeLanguage()
 {
-	deck.language = $("select").val();
-	$("#language").text("Language: " + deck.language);
+	var index = $("select")[0].selectedIndex;
+	deck.voice = _voices[index];
+
+	$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
 }
 
 function setDebug(text = null)
@@ -484,15 +488,19 @@ function run()
 
 function stop()
 {
-	deck.setStates(RUNSTATE_END);
+	//deck.setStates(RUNSTATE_END);
 }
 
 function end()
 {
 	clearTimeout(_speechTimerId);
     stop();
+	reset();
+	loadData();
+	deck.start();
+
     //playAudioFile("small-crowd-applause.mp3");
-	tts("Terminado");
+	//tts("Terminado");
 }
 
 function reset()
