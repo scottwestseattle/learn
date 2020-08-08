@@ -889,3 +889,9 @@ label.tiny {
 	margin: 20px 0;
 	font-size:20px;	
 }
+
+.highlight-word {
+	background-color: yellow;
+	border-radius: 25px;
+	padding: 5px 0;
+}

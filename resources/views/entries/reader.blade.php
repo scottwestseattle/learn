@@ -72,8 +72,8 @@
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-run" class="slide-panel text-center">
 	    <div class="slideCount"></div>
-	    <h5 class="slideTitle"></h5>
-	    <div class="slideDescription"></div>
+	    <div id="debug"></div>
+	    <div id="slideDescription" class="slideDescription"></div>
 	    <h5 class="slideSeconds mt-2"></h5>
         <div class="text-center"><h1 style="font-size:100px" class="showSeconds"></h1></div>
 	</div><!-- panel-run -->

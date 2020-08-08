@@ -20,6 +20,7 @@ var max = 0;    // number of slides
 
 var _debug = true;
 var _mute = false;
+var _paused = false;
 var _voices = null;
 var _voicesLoadAttempts = 0;
 
@@ -164,12 +165,12 @@ function deck() {
 	this.showSlide = function() {
 	    var slide = deck.slides[curr];
         $(".slideCount").text((curr+1) + " of " + deck.slides.length);
-        $(".slideDescription").text(deck.slides[curr].description);		
+        $(".slideDescription").text(deck.slides[curr].description);
 	}
 
 	this.readSlide = function() {
 	    var slide = deck.slides[curr];
-        debug("read slide " + (curr+1) + ": " + slide.description);
+        //debug("read slide " + (curr+1) + ": " + slide.description);
 		read(slide.description);
 		
         //$(".slideCount").text(slide.number + " of " + deck.slides.length);
@@ -283,6 +284,12 @@ function reload()
 
 function pause()
 {
+	_paused = !_paused;
+	
+	if (_paused)
+		window.speechSynthesis.cancel();
+	else
+		deck.runSlide();	
 }
 
 function resume()
@@ -331,8 +338,26 @@ function read(text)
 	
 	utter.text = text;
 	utter.onend = function(event) {
-		readNext();
+		if (!_paused)
+			readNext();
 	}
+	
+	var wordIndex = -1;
+	var charIndexPrev = -1;
+	utter.onboundary = function(event) {
+		
+		if (event.name == "word")
+		{
+			//debug(event.name + ': ' + word + ', index:' + event.charIndex + ", charLength: " + event.charLength);
+			//setDebug(event.charLength + ' / ' + event.wordLength);
+			var start = event.charIndex;
+			var end = event.charIndex + event.charLength;
+			var word = text.substring(start, end);
+			var before = (start > 0) ? text.substring(0, start) : "";
+			var after = text.substring(end);
+			$("#slideDescription").html(before + '<span class="highlight-word">' + word + '</span>' + after);
+		}
+	}	
 	
 	window.speechSynthesis.speak(utter);
 	_speechTimerId = setTimeout(speechBugWorkaround, 10000);		
@@ -403,7 +428,7 @@ function loadVoices()
 		{
 			var option = document.createElement('option');
 			option.textContent = _voices[i].name + ' (' + _voices[i].lang + ')';
-			option.value = _voices[i].lang;
+			option.value = i; //_voices[i].lang;
 
 			if(_voices[i].default) {
 			  option.textContent += ' (default)';
@@ -411,21 +436,27 @@ function loadVoices()
 
 			option.setAttribute('data-lang', _voices[i].lang);
 			option.setAttribute('data-name', _voices[i].name);
-			voiceSelect.appendChild(option);
 			
-			if (found == 0)
-			{			
-				// look for voices which map the language we are looking for and save the first one
-				if (deck.language.startsWith("es") && (_voices[i].lang.startsWith("es") || _voices[i].lang.startsWith("spa")))
-				{
+			// look for voices which map the language we are looking for and save the first one
+			if (deck.language.startsWith("es") && (_voices[i].lang.startsWith("es") || _voices[i].lang.startsWith("spa")))
+			{
+				if (found == 0)
+				{								
 					found++;
 					languageIndex = i;
 				}
-				else if (deck.language.startsWith("en") && _voices[i].lang.startsWith("en"))
-				{
+				
+				voiceSelect.appendChild(option);
+			}
+			else if (deck.language.startsWith("en") && _voices[i].lang.startsWith("en"))
+			{
+				if (found == 0)
+				{								
 					found++;
 					languageIndex = i;
 				}
+				
+				voiceSelect.appendChild(option);
 			}
 		}		
 	}
@@ -460,12 +491,13 @@ function loadVoices()
 		$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
 	}
 
-	voiceSelect.selectedIndex = languageIndex;
+	voiceSelect.selectedIndex = 0;
 }
 
 function changeLanguage()
 {
 	var index = $("select")[0].selectedIndex;
+	index = $("select").children("option:selected").val();
 	deck.voice = _voices[index];
 
 	$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
