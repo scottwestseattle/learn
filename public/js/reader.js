@@ -15,7 +15,6 @@ const RUNSTATE_END          = 5;
 // numbers
 //
 var curr = 0;   // current slide
-var nbr = 0;
 var max = 0;    // number of slides
 
 var _debug = true;
@@ -23,8 +22,18 @@ var _mute = false;
 var _paused = false;
 var _voices = null;
 var _voicesLoadAttempts = 0;
+var _cancelled = false;
+var _readFontSize = 18;
 
 $( document ).ready(function() {
+
+	var fontSize = localStorage['readFontSize'];
+	if (!fontSize)
+		localStorage['readFontSize'] = _readFontSize;
+	else
+		_readFontSize = parseInt(fontSize);
+	setFontSize();
+		
 	window.speechSynthesis.cancel();	
 	setTimeout(loadVoices, 500);
 	loadData();
@@ -254,19 +263,28 @@ function last()
 	loadSlide();
 }
 
+function prev()
+{
+	window.speechSynthesis.cancel();
+	_cancelled = true;
+	
+	curr--;
+	if (curr < 0)
+		curr = max - 1;
+
+	loadSlide();
+}
+
 function next()
 {
+	window.speechSynthesis.cancel();
+	_cancelled = true;
+	
 	curr++;
 	if (curr >= max)
-	{
 		curr = 0;
-		nbr = 0;
-        end();		
-	}
-	else
-	{
-		loadSlide();
-	}
+
+	loadSlide();
 }
 
 // skip the current countdown, slide, or between break
@@ -284,16 +302,21 @@ function reload()
 
 function pause()
 {
-	_paused = !_paused;
-	
-	if (_paused)
-		window.speechSynthesis.cancel();
-	else
-		deck.runSlide();	
+	_paused = true;
+	window.speechSynthesis.pause();
+	$("#pause").hide();
+	$("#resume").show();
 }
 
 function resume()
 {
+	_paused = false;
+	window.speechSynthesis.resume();		
+	if (!(window.speechSynthesis.speaking || window.speechSynthesis.pending))
+		readNext();		
+	
+	$("#pause").show();
+	$("#resume").hide();
 }
 
 function mute()
@@ -326,40 +349,100 @@ function playAudioFile(file)
 }
 
 var _speechTimerId = null;
+var _utter = null;
 function read(text)
 {
+	_cancelled = false;
 	clearTimeout(_speechTimerId);
-	var utter = new SpeechSynthesisUtterance();
+	_utter = new SpeechSynthesisUtterance();
 
 	if (deck.voice != null)
-		utter.voice = deck.voice;  // if voices for language were found, then use the one we saved on start-up
+		_utter.voice = deck.voice;  // if voices for language were found, then use the one we saved on start-up
 	else
-		utter.lang = deck.language; // if voice not found, try to the language from the web site
+		_utter.lang = deck.language; // if voice not found, try to the language from the web site
 	
-	utter.text = text;
-	utter.onend = function(event) {
-		if (!_paused)
+	_utter.text = text;
+	_utter.onend = function(event) {
+		if (!_paused && !_cancelled)
 			readNext();
+		
+		_cancelled = false;
 	}
 	
 	var wordIndex = -1;
 	var charIndexPrev = -1;
-	utter.onboundary = function(event) {
+	_utter.onboundary = function(event) {
+		
+		// Highlight browser support
+		// Windows 10 - Edge
+		// Windows 10 - Chrome (Microsoft voices only)
+		// Windows 10 - Firefox
+
+		// Android - Edge (case 2)
+		// Android - Firefox
+		// Android - Firefox Focus
+
+		// MacBook - Safari
+		// MacBook - Chrome
+		// MacBook - Firefox
+		
+		// Not Supported:
+		// Windows 10 - Chrome - Google Voices
+		// Android - Chrome (only has Google voices, need to install more)
+		// Android - TOR (no voices)```````````````````````````````````````````
+		// Android - Opera (no voices)```````````````````````````````````````````
 		
 		if (event.name == "word")
 		{
-			//debug(event.name + ': ' + word + ', index:' + event.charIndex + ", charLength: " + event.charLength);
 			//setDebug(event.charLength + ' / ' + event.wordLength);
-			var start = event.charIndex;
-			var end = event.charIndex + event.charLength;
-			var word = text.substring(start, end);
-			var before = (start > 0) ? text.substring(0, start) : "";
-			var after = text.substring(end);
-			$("#slideDescription").html(before + '<span class="highlight-word">' + word + '</span>' + after);
+
+			var cases = -1; 
+			if (typeof event.charLength !== 'undefined')
+			{
+				if (event.charLength < text.length)
+				{
+					//case 1: charLength implemented correctly in browser
+					cases = 1;
+					var start = event.charIndex;
+					var end = event.charIndex + event.charLength;
+					var word = text.substring(start, end);
+					var before = (start > 0) ? text.substring(0, start) : "";
+					var after = text.substring(end);
+					$("#slideDescription").html(before + '<span class="highlight-word">' + word + '</span>' + after);
+				}
+				else
+				{
+					//case 2: charLength exists but it's always set to length of the full text being read (Edge on Mobile)
+					cases = 2;
+				}
+			}
+			else
+			{
+				//case 3: charLength not implemented in browser
+				cases = 2;
+			}
+
+			//setDebug("Case " + cases);
+			if (cases != 1) // do it the hard way
+			{
+				var start = event.charIndex;
+				var word = text.substring(start);
+				debug(event.name + ': ' + word + ', index:' + event.charIndex + ", charLength: " + event.charLength);
+				var words = word.split(" ");
+				if (words.length > 0)
+				{
+					word = words[0];
+					var before = (start > 0) ? text.substring(0, start) : "";
+					var after = text.substring(start + word.length);
+					$("#slideDescription").html(before + '<span class="highlight-word">' + word + '</span>' + after);					
+				}
+			}
+			
+			// case 4: onBoundary not implemented so highlighting isn't possible
 		}
 	}	
 	
-	window.speechSynthesis.speak(utter);
+	window.speechSynthesis.speak(_utter);
 	_speechTimerId = setTimeout(speechBugWorkaround, 10000);		
 }
 
@@ -382,7 +465,6 @@ function readNext()
 	if (curr >= max)
 	{
 		curr = 0;
-		nbr = 0;
         end();		
 	}
 	else
@@ -488,17 +570,24 @@ function loadVoices()
 	else
 	{
 		deck.voice = _voices[languageIndex];
-		$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
+		//$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
 	}
 
 	voiceSelect.selectedIndex = 0;
 }
 
-function changeLanguage()
+function changeVoice()
 {
 	var index = $("select")[0].selectedIndex;
 	index = $("select").children("option:selected").val();
 	deck.voice = _voices[index];
+	if (_utter != null)
+	{
+		_utter.voice = deck.voice;
+		//setDebug(deck.voice.name);
+		//window.speechSynthesis.pause();
+		//window.speechSynthesis.resume();
+	}
 
 	$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
 }
@@ -530,6 +619,8 @@ function end()
 	reset();
 	loadData();
 	deck.start();
+	$("#pause").show();
+	$("#resume").hide();
 
     //playAudioFile("small-crowd-applause.mp3");
 	//tts("Terminado");
@@ -545,7 +636,6 @@ function reset()
 	});
 
 	curr = 0;
-	nbr = 0;
 
 	//$("#stats").hide();
 	//$("#panelEndofquizFinished").show();
@@ -623,4 +713,44 @@ function debug(text)
 {
     if (_debug)
         console.log(text);
+}
+
+var _dictionary = "_blank";
+function getSelectedText() 
+{
+    var text = "";
+    if (window.getSelection) {
+        text = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+        text = document.selection.createRange().text;
+    }
+
+	//setDebug(text);
+	// copy selected text
+    var succeed;
+    try
+	{
+		succeed = document.execCommand("copy");
+    }
+	catch(e)
+	{
+        succeed = false;
+	}
+
+    return text;
+}
+		
+function zoom(amount)
+{
+	//var size = $("#slideDescription").css("font-size");
+	_readFontSize += amount;
+	localStorage['readFontSize'] = _readFontSize;
+	setFontSize();
+}
+
+function setFontSize()
+{
+	$("#slideDescription").css("font-size", _readFontSize + "px");
+	$("#slideTitle").css("font-size", _readFontSize + "px");
+	$("#readFontSize").text("Size: " + _readFontSize);
 }

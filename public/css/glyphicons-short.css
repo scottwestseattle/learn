@@ -44,6 +44,10 @@
     content: "\E132"
 }
 
+.glyphicon-backward:before {
+    content: "\E071"
+}
+
 .glyphicon-button-back-to:before { /* circle-arrow-up */
     content: "\E133"
 }
@@ -62,6 +66,10 @@
 
 .glyphicon-delete:before { /* -trash */
     content: "\E020"
+}
+
+.glyphicon-forward:before {
+    content: "\E075"
 }
 
 .glyphicon-index:before { /* -list */

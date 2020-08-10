@@ -188,31 +188,41 @@ class HomeController extends Controller
             return redirect('/');
 
         $words = null;
+		$course = null;
+		$lesson = null;
+		$quizes = null;
+		$vocabLists = null;
+		$stats['lessonDate'] = null;
+		
+		if (Tools::siteUses(LOG_MODEL_WORDS))
+		{
+			//
+			// user's vocab lists
+			//
+			$vocabLists = VocabList::getIndex(['owned']);
+		}
 
-		//
-		// user's vocab lists
-		//
-		$vocabLists = VocabList::getIndex(['owned']);
+		if (Tools::siteUses(LOG_MODEL_LESSONS))
+		{
+			//
+			// get user's last viewed lesson so he can resume where he left off
+			//
+			$record = Lesson::getCurrentLocation();
+			$lesson = $record['lesson'];
+			$course = isset($lesson) ? $lesson->course : null;
+			$stats['lessonDate'] = $record['date'];
 
-		//
-		// get user's last viewed lesson so he can resume where he left off
-		//
-		$record = Lesson::getCurrentLocation();
-		$lesson = $record['lesson'];
-		$course = isset($lesson) ? $lesson->course : null;
-		$stats['lessonDate'] = $record['date'];
-
+			//
+			// get quiz results
+			//
+			$quizes = Lesson::getQuizScores(5);
+		}
 		//
 		// get some user stats
 		//
 		$lastLogin = Event::getLast(LOG_TYPE_TRACKING, LOG_MODEL_USERS, LOG_ACTION_LOGIN);
 		$stats['lastLogin'] = isset($lastLogin) ? $lastLogin->created_at : Lang::get('content.none');
 		$stats['accountCreated'] = Auth::check() ? Auth::user()->created_at : Lang::get('content.none');
-
-		//
-		// get quiz results
-		//
-		$quizes = Lesson::getQuizScores(5);
 
         return view('home.index', $this->getViewData([
 			'course' => $course,
@@ -309,11 +319,23 @@ class HomeController extends Controller
 						throw new \Exception("dangerous search characters");
 					}
 
-					$lessons = Lesson::search($search);
-					$count += (isset($lessons) ? count($lessons) : 0);
+					if (Tools::siteUses(LOG_MODEL_ARTICLES))
+					{
+						//$lessons = Lesson::search($search);
+						//$count += (isset($lessons) ? count($lessons) : 0);
+					}
 
-					$words = Word::search($search);
-					$count += (isset($words) ? count($words) : 0);
+					if (Tools::siteUses(LOG_MODEL_LESSONS))
+					{
+						$lessons = Lesson::search($search);
+						$count += (isset($lessons) ? count($lessons) : 0);
+					}
+
+					if (Tools::siteUses(LOG_MODEL_WORDS))
+					{
+						$words = Word::search($search);
+						$count += (isset($words) ? count($words) : 0);
+					}
 				}
 				catch (\Exception $e)
 				{

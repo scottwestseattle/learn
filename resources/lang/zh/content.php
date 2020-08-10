@@ -111,7 +111,7 @@ return [
 'No lessons viewed yet' => '还没有看过课程',
 'Your Current Location' => '您当前的位置',
 'Last viewed on' => '上次查看',
-'Your Stats' => '你的统计数据',
+'Stats' => '你的统计数据',
 'Last Login' => '上次登录',
 'none' => '没有',
 'Account Created' => '帐户已创建',

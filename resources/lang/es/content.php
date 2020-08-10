@@ -111,7 +111,7 @@ return [
 'No lessons viewed yet' => 'No hay lecciones vistas todavía',
 'Your Current Location' => 'Su Ubicación Actual',
 'Last viewed on' => 'Visto por última vez en',
-'Your Stats' => 'Sus Estadísticas',
+'Stats' => 'Estadísticas',
 'Last Login' => 'Último Acceso',
 'none' => 'ninguno',
 'Account Created' => 'Cuenta Creada',

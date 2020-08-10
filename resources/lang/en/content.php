@@ -111,7 +111,7 @@ return [
 'No lessons viewed yet' => 'No lessons viewed yet',
 'Your Current Location' => 'Your Current Location',
 'Last viewed on' => 'Last viewed on',
-'Your Stats' => 'Your Stats',
+'Stats' => 'Stats',
 'Last Login' => 'Last Login',
 'none' => 'none',
 'Account Created' => 'Account Created',

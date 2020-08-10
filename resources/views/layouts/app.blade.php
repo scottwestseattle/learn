@@ -80,18 +80,20 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                <a class="dropdown-item" href="/admin">@LANG('ui.Admin')</a>
-                                <a class="dropdown-item" href="/users">@LANG('ui.Users')</a>
-                                <a class="dropdown-item" href="/visitors">@LANG('ui.Visitors')</a>
-                                <a class="dropdown-item" href="/events">@LANG('ui.Events')</a>
+								@if (Auth::user()->isAdmin())
+									<a class="dropdown-item" href="/admin">@LANG('ui.Admin')</a>
+									<a class="dropdown-item" href="/users">@LANG('ui.Users')</a>
+									<a class="dropdown-item" href="/visitors">@LANG('ui.Visitors')</a>
+									<a class="dropdown-item" href="/events">@LANG('ui.Events')</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
+									@if (App\Tools::siteUses(LOG_MODEL_COURSES))
+										<a class="dropdown-item" href="/courses/admin">@LANG('content.Courses')</a>
+									@endif
+
 								<div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
-								@if (App\Tools::siteUses(LOG_MODEL_COURSES))
-									<a class="dropdown-item" href="/courses/admin">@LANG('content.Courses')</a>
 								@endif
-
-								<div class="dropdown-divider"></div>
-
+								
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">

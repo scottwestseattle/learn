@@ -4,6 +4,7 @@
 
 <div class="container page-normal">
 
+	@if (isset($vocabLists))
 	<div class="mb-5">
 		<div class="">
             <!-- SHOW VOCAB LISTS -->
@@ -47,7 +48,9 @@
 	</div>
 
 	<hr />
+	@endif
 
+	@if (isset($course))
 	<div class="mb-5">
 		<div class="">
 			<h3>@LANG('content.Your Current Location')</h3>
@@ -74,9 +77,10 @@
 
 		</div>
 	</div>
-
 	<hr />
+	@endif
 
+	@if (isset($quizes))
 	<div class="mb-5">
 		<h3>@LANG('content.Latest Quiz Results')</h3>
 
@@ -101,10 +105,11 @@
 
 		</div>
 	</div>
+	@endif
 
 	<div class="mb-5">
 		<div class="">
-			<h3>@LANG('content.Your Stats')</h3>
+			<h3>@LANG('content.Stats')</h3>
 		</div>
 		<div class="">
 			<div class="alert alert-primary" role="alert">
@@ -122,8 +127,6 @@
 			@endguest
 		</div>
 	</div>
-
-	<hr />
 
 </div>
 

@@ -356,6 +356,21 @@ class Tools
 		return $v;
 	}
 
+	static private $_sites = [
+		'localhost' => 0,
+		'learn.codespace.us' => 1,
+		'english50.com' => 2,
+		'spanish50.com' => 3,
+	];
+	
+	static private $_sitesLanguages = [
+		'localhost' => 'es-ES',
+		//'localhost' => 'en-EN',
+		'learn.codespace.us' => 'en-EN',
+		'english50.com' => 'en-EN',
+		'spanish50.com' => 'es-ES',
+	];	
+
 	static public function getSiteId()
 	{
 		$siteId = -1;
@@ -368,34 +383,65 @@ class Tools
 		
 		return $siteId;
 	}
+	
+	static public function siteUses($model)
+	{
+		$rc = false;
+		$siteId = self::getSiteId();
+		switch($siteId)
+		{
+			case 0: // localhost
+				$rc = true; // use everything
+				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
+				break;
+			case 1: // learn.codespace.us
+				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
+				break;
+			case 2: // english50
+				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
+				break;
+			case 3: // spanish50
+				$rc = true; // use everything
+				break;
+			default:
+				break;
+		}
 
-	static private $_sites = [
-		'localhost' => 0,
-		'learn.codefast.us' => 1,
-		'english50.com' => 2,
-		'spanish50.com' => 3,
-	];
-
-	static private $_sitesLanguages = [
-		'localhost' => 'es-ES',
-		'learn.codefast.us' => 'es-ES',
-		'english50.com' => 'en-EN',
-		'spanish50.com' => 'es-ES',
-	];
+		return $rc;
+	}
 
 	static public function getSentences($text)
 	{		
 		$lines = [];
+		$eos = '. ';
 		
 		$paragraphs = explode("\r\n", strip_tags(html_entity_decode($text)));
 		foreach($paragraphs as $p)
 		{		
-			$sentences = explode(". ", trim($p));
-			foreach($sentences as $s)
+			$p = trim($p);
+			$pos = strpos($p, $eos);
+			if ($pos === false) 
 			{
-				$s = trim($s);
-				if (strlen($s) > 0)
-					$lines[] = $s;
+				// only one sentence or phrase
+				$p;
+				if (strlen($p) > 0)
+				{
+					$lines[] = $p;
+				}			
+			}
+			else
+			{
+				// has more than one sentence
+				$sentences = explode($eos, $p);
+				foreach($sentences as $s)
+				{
+					$s = trim($s);
+					if (strlen($s) > 0)
+					{
+						$s = self::appendIfMissing($s, '.');
+						$lines[] = $s;
+					}			
+				}
 			}
 		}	
 		
@@ -417,14 +463,6 @@ class Tools
 			$rc = self::$_sitesLanguages[$domain];
 		}
 	
-		return $rc;
-	}
-
-	static public function siteUses($model)
-	{
-		// for now only english50 is limited
-		$rc = (self::getSiteId() != 2);
-
 		return $rc;
 	}
 	
