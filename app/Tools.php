@@ -392,7 +392,7 @@ class Tools
 		{
 			case 0: // localhost
 				$rc = true; // use everything
-				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
+				//$rc = ($model == LOG_MODEL_ARTICLES); // only articles
 				break;
 			case 1: // learn.codespace.us
 				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
@@ -413,39 +413,45 @@ class Tools
 	static public function getSentences($text)
 	{		
 		$lines = [];
-		$eos = '. ';
 		
 		$paragraphs = explode("\r\n", strip_tags(html_entity_decode($text)));
 		foreach($paragraphs as $p)
 		{		
 			$p = trim($p);
-			$pos = strpos($p, $eos);
-			if ($pos === false) 
+			// sentences end with: ". " or "'. " or "\". "
+			// doesn't work for: "Mr. Tambourine Man"
+			$sentences = preg_split('/(\. |\.\' |\.\" )/', $p, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+			//$sentences = explode($eos, $p);
+			for($i = 0; $i < count($sentences); $i++)
 			{
-				// only one sentence or phrase
-				$p;
-				if (strlen($p) > 0)
+				// get the sentence text
+				$s = self::formatForReading($sentences[$i]);
+				
+				// get the delimiter which is stored in the next array entry				
+				$i++;
+				if (count($sentences) > $i)
 				{
-					$lines[] = $p;
-				}			
-			}
-			else
-			{
-				// has more than one sentence
-				$sentences = explode($eos, $p);
-				foreach($sentences as $s)
-				{
-					$s = trim($s);
-					if (strlen($s) > 0)
-					{
-						$s = self::appendIfMissing($s, '.');
-						$lines[] = $s;
-					}			
+					$s .= trim($sentences[$i]);
 				}
+				
+				// save the sentence
+				if (strlen($s) > 0)
+				{
+					$lines[] = $s;
+				}			
 			}
 		}	
 		
+		//dump($lines);
 		return $lines;
+	}
+	
+	static public function formatForReading($text)
+	{
+		// change dash to long dash so it won't be read as 'minus'
+		$text = str_replace('- ', '– ', trim($text));
+		
+		return $text;
 	}
 	
 	static public function getSites()

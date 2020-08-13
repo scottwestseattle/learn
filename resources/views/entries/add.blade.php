@@ -27,7 +27,7 @@
 			@endif
 			
 			<div class="entry-title-div mb-3 mt-2">			
-				<input onblur="javascript:urlEncode('title', 'permalink')" type="text" id="title" name="title" placeholder="Title" class="form-control" autofocus />
+				<input onblur="javascript:urlEncode('title', 'permalink')" type="text" id="title" name="title" placeholder="Title" onfocus="setFocus($(this))" class="form-control" autofocus />
 			</div>
 
 			<div class="entry-title-div mb-3">
@@ -35,8 +35,8 @@
 			</div>			
 
 			<div class="entry-title-div mb-3">
-				@component('components.data-accent-chars-esp')@endcomponent	
-				<input type="text" id="source_credit" name="source_credit" placeholder="Source Credit" class="form-control" />
+				@component('components.control-accent-chars-esp', ['visible' => true, 'flat' => true])@endcomponent																						
+				<input type="text" id="source_credit" name="source_credit" placeholder="Source Credit" onfocus="setFocus($(this))" class="form-control" />
 			</div>
 
 			<div class="entry-title-div mb-3">
@@ -44,7 +44,7 @@
 			</div>
 
 			<div class="entry-description-div mb-3">
-				<textarea rows="3" name="description_short" class="form-control" placeholder="Summary"></textarea>	
+				<textarea rows="3" id="description_short" name="description_short" class="form-control" placeholder="Summary" onfocus="setFocus($(this))"></textarea>	
 			</div>
 			
 			<div class="mt-3 mb-3">
@@ -52,7 +52,7 @@
 			</div>	
 			
 			<div class="entry-description-div mb-3">
-				<textarea rows="12" name="description" class="form-control" placeholder="Description"></textarea>	
+				<textarea rows="12" id="description" name="description" class="form-control" placeholder="Description" onfocus="setFocus($(this))"></textarea>	
 			</div>
 			
 			<div style="margin:20px 0;">

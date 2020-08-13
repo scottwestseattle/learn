@@ -26,7 +26,7 @@
 																		
 				<div class="mb-1">
 					<label class="tiny">Title</label>
-					<input onblur="javascript:urlEncode('title', 'permalink')" type="text" id="title" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />
+					<input onblur="javascript:urlEncode('title', 'permalink')" type="text" id="title" name="title" class="form-control" onfocus="setFocus($(this))" value="{{ $record->title }}"  placeholder="Title" />
 				</div>
 
 				<div class="mb-1" style="font-size:.6em;">
@@ -38,11 +38,11 @@
 				<div class="entry-title-div mb-3">
 					<input tabindex="-1" type="text" id="permalink" name="permalink" class="form-control" value="{{ $record->permalink }}"  placeholder="Permalink" />
 				</div>
-			
+						
 				<div class="entry-title-div mb-3">
 					<label class="tiny">Credit</label>
-					@component('components.data-accent-chars-esp')@endcomponent					
-					<input type="text" id="source_credit" name="source_credit" placeholder="Source Credit" class="form-control" value="{{$record->source_credit}}" />
+					@component('components.control-accent-chars-esp', ['visible' => true, 'flat' => true])@endcomponent																		
+					<input type="text" id="source_credit" name="source_credit" placeholder="Source Credit" class="form-control" onfocus="setFocus($(this))" value="{{$record->source_credit}}" />
 				</div>
 
 				<div class="entry-title-div mb-3">
@@ -52,12 +52,12 @@
 
 				<div class="entry-description-div mb-3">
 					<label class="tiny">Tag Line</label>
-					<textarea id="description_short" name="description_short" class="form-control entry-description-text" placeholder="Highlights" >{{ $record->description_short }}</textarea>
+					<textarea id="description_short" name="description_short" class="form-control entry-description-text" placeholder="Highlights" onfocus="setFocus($(this))" >{{ $record->description_short }}</textarea>
 				</div>
 						
 				<div class="entry-description-div mb-3">
 					<label class="tiny">Main Text</label>
-					<textarea id="description" name="description" rows="12" class="form-control" placeholder="Description" >{{ $record->description }}</textarea>
+					<textarea id="description" name="description" rows="12" class="form-control" placeholder="Description" onfocus="setFocus($(this))" >{{ $record->description }}</textarea>
 				</div>
 								
 			</div>
