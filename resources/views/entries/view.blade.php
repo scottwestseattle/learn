@@ -12,13 +12,11 @@
 	@else
 	
 		@component('entries.menu-submenu', ['record' => $record])@endcomponent
-		
-		@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
+				
+		@if (false && Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
 			<div>
 			@if ($record->published_flag == 0)
 				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a>
-			@elseif ($record->approved_flag == 0)
-				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a>
 			@endif
 			</div>
 		@endif
@@ -61,7 +59,12 @@
 			<div style="" class="vertical-align">
 				@if (false){{$display_date}}&nbsp;&nbsp;@endif
 				<div style="margin-right:10px; float:left;"><a href='/entries/read/{{$record->id}}'><span style="font-size:20px;" class="glyphCustom glyphicon glyphicon-volume-up"></span></a></div>			
-				<div class="article-source">{{$record->view_count}} @LANG('content.views')&nbsp;&nbsp;{{$wordCount}} @LANG('content.words')</div>
+				<div class="article-source">
+					{{$record->view_count}} @LANG('content.views')&nbsp;&nbsp;{{$wordCount}} @LANG('content.words')
+					<span style="margin-left:10px;">
+					@component('components.control-button-publish', ['record' => $record, 'prefix' => $prefix])@endcomponent					
+					</span>
+				</div>
 			</div>
 			
 			<!-- Title -->

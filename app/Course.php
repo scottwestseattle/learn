@@ -118,7 +118,7 @@ class Course extends Base
 				$records = Course::select()
 					->where('deleted_flag', 0)
 					->where('wip_flag', '!=', WIP_INACTIVE)
-					->where('release_flag', '!=', RELEASE_PUBLISHED)
+					->where('release_flag', '!=', RELEASE_PUBLIC)
 					->orderBy('type_flag')
 					->orderBy('display_order')
 					->get();
@@ -138,7 +138,7 @@ class Course extends Base
 			// get public
 			$records = Course::select()
 				->where('deleted_flag', 0)
-				->where('release_flag', '>=', RELEASE_PUBLISHED)
+				->where('release_flag', '>=', RELEASE_PUBLIC)
 				->orderBy('type_flag')
 				->orderBy('display_order')
 				->get();
@@ -151,7 +151,7 @@ class Course extends Base
     {
 		$records = Course::select()
 			->where('deleted_flag', 0)
-			->where('release_flag', '>=', RELEASE_PUBLISHED)
+			->where('release_flag', '>=', RELEASE_PUBLIC)
 			->where('type_flag', '=', COURSETYPE_TIMED_SLIDES)
 			->orderBy('display_order')
 			->get();
@@ -163,7 +163,7 @@ class Course extends Base
     {
 		$records = Course::select()
 			->where('deleted_flag', 0)
-			->where('release_flag', '>=', RELEASE_PUBLISHED)
+			->where('release_flag', '>=', RELEASE_PUBLIC)
 			->where('type_flag', '=', COURSETYPE_SPANISH)
 			->orderBy('display_order')
 			->get();
@@ -182,7 +182,7 @@ class Course extends Base
 			->where('courses.deleted_flag', 0)
 			->where('lessons.deleted_flag', 0)
 			->where('lessons.section_number', 1)
-			->where('courses.release_flag', '>=', RELEASE_PUBLISHED)
+			->where('courses.release_flag', '>=', RELEASE_PUBLIC)
 			->orderBy('courses.id')
 			->orderBy('lessons.section_number')
 			->get();

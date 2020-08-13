@@ -11,7 +11,7 @@
 	data-lessonid="{{$record->id}}"
 	data-touchpath="{{(isset($touchPath) ? $touchPath : '')}}"
 	data-max="{{count($record['lines'])}}"
-	data-language="{{$language}}"
+	data-language="{{$record->getSpeechLanguage()}}"
 ></div>
 
 	<!-------------------------------------------------------->

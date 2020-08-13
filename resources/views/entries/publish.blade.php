@@ -17,6 +17,14 @@
 		</div>
 
 		<div class="form-group">
+			@component('components.control-dropdown-menu', ['record' => $record, 'prompt' => 'Work Status:', 'field_name' => 'wip_flag', 'options' => $wip_flags, 'selected_option' => $record->wip_flag, 'select_class' => 'form-control'])@endcomponent
+		</div>
+		<div class="form-group">
+			@component('components.control-dropdown-menu', ['record' => $record, 'prompt' => 'Release Status:', 'field_name' => 'release_flag', 'options' => $release_flags, 'selected_option' => $record->release_flag, 'select_class' => 'form-control'])@endcomponent
+		</div>
+
+		@if (false)
+		<div class="form-group">
 			<input type="checkbox" name="finished_flag" id="finished_flag" class="" value="{{$record->finished_flag }}" {{ ($record->finished_flag) ? 'checked' : '' }} />
 			<label for="finished_flag" class="checkbox-big-label">@LANG('ui.Finished')</label>
 		</div>
@@ -30,6 +38,7 @@
 			<input type="checkbox" name="approved_flag" id="approved_flag" class="" value="{{$record->approved_flag }}" {{ ($record->approved_flag) ? 'checked' : '' }} />
 			<label for="approved_flag" class="checkbox-big-label">@LANG('ui.Approved')</label>
 		</div>
+		@endif
 		
 		<div class="form-group">
 			<label for="distance">@LANG('ui.View Count'):</label>

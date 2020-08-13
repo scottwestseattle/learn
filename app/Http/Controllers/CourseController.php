@@ -125,7 +125,7 @@ class CourseController extends Controller
 			$record = Course::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
-				->where('release_flag', '>=', RELEASE_PUBLISHED)
+				->where('release_flag', '>=', RELEASE_PUBLIC)
 				->where('permalink', $permalink)
 				->first();
 		}

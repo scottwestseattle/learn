@@ -8,6 +8,7 @@ use Auth;
 use DateTime;
 use App;
 use App\Tools;
+use App\Status;
 
 class Entry extends Base
 {
@@ -27,6 +28,11 @@ class Entry extends Base
     {
     	return $this->belongsTo(User::class);
     }
+
+    public function getSpeechLanguage()
+    {
+    	return Tools::getSpeechLanguage($this->language_flag);
+    }
 	
     protected function countView(Entry $entry)
     {		
@@ -44,7 +50,7 @@ class Entry extends Base
 			AND entries.site_id = ?
 			AND entries.type_flag = ?
 			AND entries.deleted_flag = 0
-			AND (entries.published_flag = 0 OR entries.approved_flag = 0 OR entries.location_id = null)
+			AND (entries.release_flag = 0 OR entries.location_id = null)
 		';
 		
 		$records = DB::select($q, [Tools::getSiteId(), ENTRY_TYPE_TOUR]);
@@ -56,7 +62,7 @@ class Entry extends Base
 	static public function getEntries($approved_flag = false)
 	{
 		$q = '
-			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink,
+			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.release_flag, entries.wip_flag, entries.updated_at, entries.permalink,
 				count(photos.id) as photo_count
 			FROM entries
 			LEFT JOIN photos
@@ -65,8 +71,8 @@ class Entry extends Base
 			AND entries.site_id = ?
 			AND entries.deleted_flag = 0
 			AND entries.type_flag <> ?
-			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink
-			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date ASC, entries.id DESC
+			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.release_flag, entries.wip_flag, entries.updated_at, entries.permalink
+			ORDER BY entries.release_flag ASC, entries.wip_flag ASC, entries.display_date ASC, entries.id DESC
 		';
 				
 		$records = DB::select($q, [Tools::getSiteId(), ENTRY_TYPE_TOUR]);
@@ -76,7 +82,7 @@ class Entry extends Base
 	
 	static public function getArticles($limit = 10)
 	{
-		$records = self::getEntriesByType(ENTRY_TYPE_ARTICLE, !User::isAdmin(), $limit);
+		$records = self::getEntriesByType(ENTRY_TYPE_ARTICLE, $limit);
 		
 		//dd($records);
 		
@@ -84,27 +90,19 @@ class Entry extends Base
 	}
 	
 	// get all entries for specified type
-	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $site_id = null, $orderBy = ORDERBY_APPROVED)
-	{
-		if (!isset($type_flag))
-			return(Entry::getEntries($approved_flag));
-		
-		// if site_id is set use it, otherwise use the old Tools::getSiteId() constant for backwards compatibility
-		$site_id = isset($site_id) && $site_id != false ? $site_id : Tools::getSiteId();
-		
+	static public function getEntriesByType($type_flag, $limit = 0, $orderBy = ORDERBY_APPROVED)
+	{		
 		$q = '
 			SELECT *
 			FROM entries
 			WHERE 1=1
 			AND entries.deleted_flag = 0
 			AND entries.type_flag = ?
+			AND entries.release_flag >= ?
 			AND entries.site_id = ?
 		';
 				
-		if ($approved_flag)
-			$q .= ' AND entries.published_flag = 1 AND entries.approved_flag = 1 ';
-		
-		$orderByPhrase = 'ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date DESC, entries.id DESC';
+		$orderByPhrase = 'ORDER BY entries.display_date DESC, entries.id DESC';
 		
 		switch($orderBy)
 		{
@@ -132,9 +130,31 @@ class Entry extends Base
 
 		//dd($q);
 		
-		$records = DB::select($q, [$type_flag, $site_id]);
+		$releaseFlag = self::getReleaseFlag();
+		
+		$records = DB::select($q, [$type_flag, $releaseFlag, Tools::getSiteId()]);
 		
 		return $records;
+	}
+
+	static public function getReleaseFlag()
+	{
+		$rc = RELEASE_PUBLIC;
+		
+		if (Tools::isAdmin()) // admin sees all
+		{
+			$rc = RELEASE_NOTSET;
+		}
+		else if (Tools::isPaid()) // paid member
+		{
+			$rc = RELEASE_PAID;			
+		}
+		else if (Auth::check()) // member logged in_array
+		{
+			$rc = RELEASE_MEMBER;
+		}
+
+		return $rc;
 	}
 	
 	static public function get($permalink, $id = null, $site_id = null)
@@ -144,25 +164,11 @@ class Entry extends Base
 		
 		$id = intval($id); // clean the id
 		
-		$record = null;
-		if (User::isAdmin())
-		{
-			$record = Entry::select()
-				->where('site_id', Tools::getSiteId())
+		$record = $record = Entry::select()
 				->where('deleted_flag', 0)
+				->where('release_flag', '>=', self::getReleaseFlag())
 				->where('permalink', $permalink)
 				->first();
-		}
-		else
-		{
-			$record = Entry::select()
-				->where('site_id', Tools::getSiteId())
-				->where('published_flag', 1)
-				->where('approved_flag', 1)
-				->where('deleted_flag', 0)
-				->where('permalink', $permalink)
-				->first();
-		}
 
 		//dd($record);	
 		return $record;
@@ -171,7 +177,7 @@ class Entry extends Base
 	static public function getEntry($permalink)
 	{		
 		$q = '
-			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id 
+			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description, entries.description_short, entries.release_flag, entries.wip_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id 
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
@@ -197,7 +203,7 @@ class Entry extends Base
 			AND entries.deleted_flag = 0
 			AND entries.permalink = ?
 
-			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id
+			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description, entries.description_short, entries.release_flag, entries.wip_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id
 				, photo, photo_title, photo_path
 				, photo_gallery, photo_gallery_title, photo_gallery_path
 				, location, location_parent, location_type 
@@ -215,7 +221,7 @@ class Entry extends Base
 	static public function getEntryNEW($permalink)
 	{		
 		$q = '
-			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id, entries.site_id
+			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description, entries.description_short, entries.release_flag, entries.wip_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id, entries.site_id
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
@@ -243,7 +249,7 @@ class Entry extends Base
 			AND entries.deleted_flag = 0
 			AND entries.permalink = ?
 
-			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id, entries.site_id
+			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description, entries.description_short, entries.release_flag, entries.wip_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id, entries.site_id
 				, photo, photo_title, photo_path
 				, photo_gallery, photo_title_gallery, photo_path_gallery
 				, location, location_parent
@@ -271,8 +277,8 @@ class Entry extends Base
 			$record = Entry::select() 
 				->where('entries.site_id', Tools::getSiteId())
 				->where('entries.deleted_flag', 0)
-				//->where('entries.published_flag', 1)
-				//->where('entries.approved_flag', 1)
+				//->where('entries.release_flag', 1)
+				//->where('entries.wip_flag', 1)
 				->where('entries.type_flag', $type_flag)
 				->where('entries.display_date', $next ? '=' : '=', $display_date)
 				->where('entries.id', $next ? '>' : '<', $id)
@@ -290,8 +296,7 @@ class Entry extends Base
 			FROM entries
 			WHERE 1=1
 				AND entries.deleted_flag = 0
-				AND entries.published_flag = 1 
-				AND entries.approved_flag = 1
+				AND entries.release_flag = 1 
 				AND entries.type_flag = ?
 		';
 		
@@ -361,8 +366,7 @@ LEFT JOIN locations as country
 WHERE 1=1
 AND e.type_flag = 4
 AND e.deleted_flag = 0
-AND e.approved_flag = 1
-AND e.published_flag = 1
+AND e.release_flag = 1
 AND city.name IS NOT NULL
 AND country.name IS NOT NULL
 AND YEAR(e.display_date) >= 2018
@@ -448,8 +452,7 @@ LEFT JOIN photos
 WHERE 1=1
 AND e.type_flag = 4
 AND e.deleted_flag = 0
-AND e.approved_flag = 1
-AND e.published_flag = 1
+AND e.release_flag = 1
 AND city.name IS NOT NULL
 AND country.name IS NOT NULL
 ORDER BY e.display_date DESC

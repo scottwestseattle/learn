@@ -80,7 +80,7 @@ class Lesson extends Base
 					->leftJoin('words', 'lessons.id', '=', 'words.lesson_id')
 					->select('lessons.id', 'lessons.lesson_number', 'lessons.section_number', 'lessons.title', 'courses.title as courseTitle')
 					->where('lessons.deleted_flag', 0)
-					->where('courses.release_flag', RELEASE_PUBLISHED)
+					->where('courses.release_flag', RELEASE_PUBLIC)
 					->where(function ($query) use ($search){$query
 						->where('lessons.title', 'LIKE', $search)
 						->orWhere('lessons.text', 'LIKE', $search)

@@ -12,6 +12,7 @@ use App\Translation;
 use App\Tools;
 use App\User;
 use App\Geo;
+use App\Status;
 
 define('BODYSTYLE', '<span style="color:green;">');
 define('ENDBODYSTYLE', '</span>');
@@ -106,9 +107,9 @@ class EntryController extends Controller
 		$entry->source_credit		= Tools::trimNull($request->source_credit);
 		$entry->source_link			= Tools::trimNull($request->source_link);
 		$entry->display_date 		= Controller::getSelectedDate($request);
-		$entry->published_flag 		= 1;
-		$entry->approved_flag 		= 1;
-		$entry->finished_flag 		= 1;
+		$entry->release_flag 		= RELEASE_PUBLIC;
+		$entry->wip_flag 			= WIP_FINISHED;
+		$entry->language_flag		= Tools::getLanguageFlag();
 
 		$entry->permalink			= Tools::trimNull($request->permalink);
 		if (!isset($entry->permalink))
@@ -353,7 +354,8 @@ class EntryController extends Controller
 		$record->source_credit		= Tools::trimNull($request->source_credit);
 		$record->source_link		= Tools::trimNull($request->source_link);
 		$record->display_date 		= Controller::getSelectedDate($request);		
-		
+		$entry->language_flag		= Tools::getLanguageFlag();
+
 		try
 		{
 			$record->save();
@@ -402,6 +404,8 @@ class EntryController extends Controller
     {	
 		$vdata = $this->getViewData([
 			'record' => $entry,
+			'release_flags' => Status::getReleaseFlags(),
+			'wip_flags' => Status::getWipFlags(),
 		]);
 		
 		return view('entries.publish', $vdata);
@@ -409,13 +413,14 @@ class EntryController extends Controller
 	
     public function publishupdate(Request $request, Entry $entry)
     {	
-		$entry->published_flag = isset($request->published_flag) ? 1 : 0;
-		$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
-		$entry->finished_flag = isset($request->finished_flag) ? 1 : 0;
-		$entry->parent_id = $request->parent_id;
-		$entry->view_count = intval($request->view_count);
+		$record = $entry;
+		
+		$record->release_flag = intval($request->release_flag);
+		$record->wip_flag = intval($request->wip_flag);
+		$record->parent_id = intval($request->parent_id);
+		$record->view_count = intval($request->view_count);
 
-		$entry->save();
+		$record->save();
 		
 		return redirect('/articles'); 
     }
@@ -434,7 +439,6 @@ class EntryController extends Controller
 				
     	return view('entries.reader', $this->getViewData([
 			'record' => $record,
-			'language' => Tools::getLanguage(),
 		]));
     }	
 

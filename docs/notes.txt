@@ -24,6 +24,10 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 
 Latest DB Changes:
 
+8/13/2020
+ALTER TABLE `entries` ADD `language_flag` TINYINT NOT NULL DEFAULT '0' COMMENT 'see \'LANGUAGE_*\' for values' AFTER `source_link`; 
+ALTER TABLE `entries` CHANGE `finished_flag` `wip_flag` TINYINT(4) NULL DEFAULT '0' COMMENT 'see \'WIP_*\' for values ';
+
 2/6/2020
 ALTER TABLE `lessons` ADD `reps` SMALLINT NULL AFTER `main_photo`;
 ALTER TABLE `lessons` ADD `seconds` SMALLINT NULL AFTER `reps`;

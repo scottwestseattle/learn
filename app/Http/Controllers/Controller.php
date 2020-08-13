@@ -76,25 +76,29 @@ define('LOG_PAGE_PERMALINK', 'permalink');
 // translations
 define('TRANSLATIONS_FOLDER', '../resources/lang/');
 
-// word types
-define('WORDTYPE_LESSONLIST', 1);
-define('WORDTYPE_LESSONLIST_USERCOPY', 2);
-define('WORDTYPE_USERLIST', 3);
-define('WORDTYPE_VOCABLIST', 4);
-define('WORDTYPE_USERLIST_LIMIT', 20);
-
+// Release Status
 define('RELEASE_NOTSET', 0);
-define('RELEASE_PRIVATE', 10);
-define('RELEASE_APPROVED', 90);
-define('RELEASE_PUBLISHED', 100);
+define('RELEASE_PRIVATE', 10);	// visible for owner only and can't be promoted until approved
+define('RELEASE_APPROVED', 20);	// visible for owner only and can be promoted
+define('RELEASE_PAID', 50); 	// visible for logged-in paid members
+define('RELEASE_MEMBER', 80); // visible for logged-in members
+define('RELEASE_PUBLIC', 100);	// visible for all
 define('RELEASE_DEFAULT', RELEASE_PRIVATE);
 
+// Work in progress
 define('WIP_NOTSET', 0);
 define('WIP_INACTIVE', 10);
 define('WIP_DEV', 20);
 define('WIP_TEST', 30);
 define('WIP_FINISHED', 100);
 define('WIP_DEFAULT', WIP_DEV);
+
+// word types
+define('WORDTYPE_LESSONLIST', 1);
+define('WORDTYPE_LESSONLIST_USERCOPY', 2);
+define('WORDTYPE_USERLIST', 3);
+define('WORDTYPE_VOCABLIST', 4);
+define('WORDTYPE_USERLIST_LIMIT', 20);
 
 define('TIMED_SLIDES_DEFAULT_BREAK_SECONDS', 20);
 define('TIMED_SLIDES_DEFAULT_SECONDS', 50);
@@ -110,6 +114,10 @@ define('ORDERBY_APPROVED', 0);
 define('ORDERBY_TITLE', 1);
 define('ORDERBY_DATE', 2);
 define('ORDERBY_VIEWS', 3);
+
+// Languages
+define('LANGUAGE_ENGLISH', 0);
+define('LANGUAGE_SPANISH', 1);
 
 class Controller extends BaseController
 {

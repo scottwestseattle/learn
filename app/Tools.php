@@ -182,6 +182,11 @@ class Tools
 		return (Auth::user() && Auth::user()->isAdmin());
 	}
 
+    static public function isPaid()
+    {
+		return (Auth::user() && false); // not implemented yet
+	}
+
 	// shortcut
     static public function isSuperAdmin()
     {
@@ -371,6 +376,14 @@ class Tools
 		'spanish50.com' => 'es-ES',
 	];	
 
+	static private $_sitesLanguageFlags = [
+		//'localhost' => LANGUAGE_ENGLISH,
+		'localhost' => LANGUAGE_SPANISH,
+		'learn.codespace.us' => LANGUAGE_ENGLISH,
+		'english50.com' => LANGUAGE_ENGLISH,
+		'spanish50.com' => LANGUAGE_SPANISH,
+	];	
+
 	static public function getSiteId()
 	{
 		$siteId = -1;
@@ -459,6 +472,16 @@ class Tools
 		return self::$_sites;
 	}
 
+	static public function getSpeechLanguage($language_flag)
+	{
+		if ($language_flag == LANGUAGE_ENGLISH)
+			return 'en-EN';
+		else if ($language_flag == LANGUAGE_SPANISH)
+			return 'es-ES';
+		else
+			return 'en-EN';	
+	}
+	
 	static public function getLanguage()
 	{		
 		$rc = 'en-US';
@@ -467,6 +490,19 @@ class Tools
 		if (array_key_exists($domain, self::$_sitesLanguages))
 		{
 			$rc = self::$_sitesLanguages[$domain];
+		}
+	
+		return $rc;
+	}
+
+	static public function getLanguageFlag()
+	{		
+		$rc = LANGUAGE_ENGLISH;
+		
+		$domain = self::getDomainName();
+		if (array_key_exists($domain, self::$_sitesLanguageFlags))
+		{
+			$rc = self::$_sitesLanguageFlags[$domain];
 		}
 	
 		return $rc;

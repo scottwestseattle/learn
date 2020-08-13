@@ -13,7 +13,9 @@ class Status
 		RELEASE_NOTSET => 'Not Set',
 		RELEASE_PRIVATE => 'Private',
 		RELEASE_APPROVED => 'Approved',
-		RELEASE_PUBLISHED => 'Published',
+		RELEASE_PAID => 'Paid',
+		RELEASE_MEMBER => 'Member',
+		RELEASE_PUBLIC => 'Public',
     ];
 
 	const _wipFlags = [
@@ -30,7 +32,7 @@ class Status
 	}
     static public function isPublished($release_flag)
     {
-		return ($release_flag == RELEASE_PUBLISHED);
+		return ($release_flag == RELEASE_PUBLIC);
 	}
 
     static public function getReleaseFlags()
@@ -60,7 +62,13 @@ class Status
 			case RELEASE_APPROVED:
 				$btn = 'btn-success';
 				break;
-			case RELEASE_PUBLISHED:
+			case RELEASE_PAID:
+				$btn = 'btn-success';
+				break;
+			case RELEASE_MEMBER:
+				$btn = 'btn-success';
+				break;
+			case RELEASE_PUBLIC:
 				// don't show anything for published records
 				$btn = '';
 				$text = '';
