@@ -20,24 +20,38 @@ var max = 0;    // number of slides
 var _debug = true;
 var _mute = false;
 var _paused = false;
+var _lastCharIndex = 0;
 var _voices = null;
 var _voicesLoadAttempts = 0;
 var _cancelled = false;
 var _readFontSize = 18;
+var _maxFontSize = 99;
 
-$( document ).ready(function() {
+$(document).ready(function() {
 
 	var fontSize = localStorage['readFontSize'];
 	if (!fontSize)
 		localStorage['readFontSize'] = _readFontSize;
 	else
+	{
 		_readFontSize = parseInt(fontSize);
+		if (_readFontSize > _maxFontSize)
+			_readFontSize = _maxFontsize;
+	}
 	setFontSize();
 		
 	window.speechSynthesis.cancel();	
 	setTimeout(loadVoices, 500);
 	loadData();
 	deck.start();
+	
+	$("#pause").hide();
+	$("#resume").show();
+	
+});
+
+$(window).on('unload', function() {
+	window.speechSynthesis.cancel();	
 });
 
 //
@@ -177,10 +191,15 @@ function deck() {
         $(".slideDescription").text(deck.slides[curr].description);
 	}
 
+	this.readSlideResume = function() {
+	    var slide = deck.slides[curr];
+		read(slide.description, _lastCharIndex);
+	}
+	
 	this.readSlide = function() {
 	    var slide = deck.slides[curr];
         //debug("read slide " + (curr+1) + ": " + slide.description);
-		read(slide.description);
+		read(slide.description, 0);
 		
         //$(".slideCount").text(slide.number + " of " + deck.slides.length);
         //$(".slideDescription").text(deck.slides[curr].description);
@@ -265,8 +284,9 @@ function last()
 
 function prev()
 {
-	window.speechSynthesis.cancel();
+	pause();
 	_cancelled = true;
+	_lastCharIndex = 0;
 	
 	curr--;
 	if (curr < 0)
@@ -277,8 +297,9 @@ function prev()
 
 function next()
 {
-	window.speechSynthesis.cancel();
+	pause();
 	_cancelled = true;
+	_lastCharIndex = 0;
 	
 	curr++;
 	if (curr >= max)
@@ -300,20 +321,35 @@ function reload()
     location.reload();
 }
 
+function run()
+{
+	resume();
+}
+
+function stop()
+{
+	//deck.setStates(RUNSTATE_END);
+}
+
 function pause()
 {
 	_paused = true;
-	window.speechSynthesis.pause();
+	window.speechSynthesis.cancel();
 	$("#pause").hide();
 	$("#resume").show();
 }
 
 function resume()
 {
-	_paused = false;
-	window.speechSynthesis.resume();		
-	if (!(window.speechSynthesis.speaking || window.speechSynthesis.pending))
-		readNext();		
+	if (_paused)
+	{
+		_paused = false;
+		deck.readSlideResume(); // picks up at curr	+ _lastCharIndex
+	}
+	else
+	{
+		deck.run();	
+	}
 	
 	$("#pause").show();
 	$("#resume").hide();
@@ -350,18 +386,23 @@ function playAudioFile(file)
 
 var _speechTimerId = null;
 var _utter = null;
-function read(text)
+function read(text, charIndex)
 {
 	_cancelled = false;
 	clearTimeout(_speechTimerId);
 	_utter = new SpeechSynthesisUtterance();
 
 	if (deck.voice != null)
+	{
 		_utter.voice = deck.voice;  // if voices for language were found, then use the one we saved on start-up
+		_utter.lang = deck.voice.lang;
+	}
 	else
+	{
 		_utter.lang = deck.language; // if voice not found, try to the language from the web site
+	}
 	
-	_utter.text = text;
+	_utter.text = text.substring(charIndex);
 	_utter.onend = function(event) {
 		if (!_paused && !_cancelled)
 			readNext();
@@ -403,8 +444,9 @@ function read(text)
 				{
 					//case 1: charLength implemented correctly in browser
 					cases = 1;
-					var start = event.charIndex;
-					var end = event.charIndex + event.charLength;
+					var start = event.charIndex + charIndex;
+					_lastCharIndex = start;
+					var end = start + event.charLength;
 					var word = text.substring(start, end);
 					var before = (start > 0) ? text.substring(0, start) : "";
 					var after = text.substring(end);
@@ -426,6 +468,7 @@ function read(text)
 			if (cases != 1) // do it the hard way
 			{
 				var start = event.charIndex;
+				_lastCharIndex = start;
 				var word = text.substring(start);
 				debug(event.name + ': ' + word + ', index:' + event.charIndex + ", charLength: " + event.charLength);
 				var words = word.split(" ");
@@ -519,25 +562,35 @@ function loadVoices()
 			option.setAttribute('data-lang', _voices[i].lang);
 			option.setAttribute('data-name', _voices[i].name);
 			
-			// look for voices which map the language we are looking for and save the first one
-			if (deck.language.startsWith("es") && (_voices[i].lang.startsWith("es") || _voices[i].lang.startsWith("spa")))
+			if (true) // normal path
 			{
-				if (found == 0)
-				{								
-					found++;
-					languageIndex = i;
+				// look for voices which map the language we are looking for and save the first one
+				if (deck.language.startsWith("es") && (_voices[i].lang.startsWith("es") || _voices[i].lang.startsWith("spa")))
+				{
+					if (found == 0)
+					{								
+						found++;
+						languageIndex = i;
+					}
+					
+					voiceSelect.appendChild(option);
 				}
-				
-				voiceSelect.appendChild(option);
+				else if (deck.language.startsWith("en") && _voices[i].lang.startsWith("en"))
+				{
+					if (found == 0)
+					{								
+						found++;
+						languageIndex = i;
+					}
+					
+					voiceSelect.appendChild(option);
+				}
 			}
-			else if (deck.language.startsWith("en") && _voices[i].lang.startsWith("en"))
+			else
 			{
-				if (found == 0)
-				{								
-					found++;
-					languageIndex = i;
-				}
-				
+				// load all languages for testing
+				found++;
+				languageIndex = i;					
 				voiceSelect.appendChild(option);
 			}
 		}		
@@ -555,6 +608,7 @@ function loadVoices()
 		{
 			msg = "language not found: " + deck.language + ", using: " + _voices[languageIndex].lang + ", voice: " + _voices[languageIndex].name;
 			deck.voice 		= _voices[languageIndex];
+			deck.lang		=  _voices[languageIndex].lang;
 			$("#language").text("Language: " + deck.voice.lang);
 			voiceSelect.index = languageIndex;
 		}
@@ -589,7 +643,7 @@ function changeVoice()
 		//window.speechSynthesis.resume();
 	}
 
-	$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
+	//$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
 }
 
 function setDebug(text = null)
@@ -600,16 +654,6 @@ function setDebug(text = null)
 function showSeconds(text = null)
 {
     $(".showSeconds").text(text);
-}
-
-function run()
-{
-    deck.run();	
-}
-
-function stop()
-{
-	//deck.setStates(RUNSTATE_END);
 }
 
 function end()
@@ -744,6 +788,10 @@ function zoom(amount)
 {
 	//var size = $("#slideDescription").css("font-size");
 	_readFontSize += amount;
+	
+	if (_readFontSize > _maxFontSize) // don't go crazy
+		_readFontSize = _maxFontSize;
+		
 	localStorage['readFontSize'] = _readFontSize;
 	setFontSize();
 }

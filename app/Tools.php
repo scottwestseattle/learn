@@ -372,23 +372,26 @@ class Tools
 
 	static private $_sites = [
 		'localhost' => 0,
-		'learn.codespace.us' => 1,
+		'english.codespace.us' => 1,
 		'english50.com' => 2,
 		'spanish50.com' => 3,
+		'spanish.codespace.us' => 4,
 	];
 	
 	static private $_sitesLanguages = [
 		'localhost' => 'es-ES',
 		//'localhost' => 'en-EN',
-		'learn.codespace.us' => 'en-EN',
+		'english.codespace.us' => 'en-EN',
 		'english50.com' => 'en-EN',
+		'spanish.codespace.us' => 'es-ES',
 		'spanish50.com' => 'es-ES',
 	];	
 
 	static private $_sitesLanguageFlags = [
 		//'localhost' => LANGUAGE_ENGLISH,
 		'localhost' => LANGUAGE_SPANISH,
-		'learn.codespace.us' => LANGUAGE_ENGLISH,
+		'english.codespace.us' => LANGUAGE_ENGLISH,
+		'spanish.codespace.us' => LANGUAGE_SPANISH,
 		'english50.com' => LANGUAGE_ENGLISH,
 		'spanish50.com' => LANGUAGE_SPANISH,
 	];	
@@ -471,7 +474,7 @@ class Tools
 	static public function formatForReading($text)
 	{
 		// change dash to long dash so it won't be read as 'minus'
-		$text = str_replace('- ', '– ', trim($text));
+		$text = str_replace('-', '–', trim($text));
 		
 		return $text;
 	}

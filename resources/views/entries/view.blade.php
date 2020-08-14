@@ -9,18 +9,8 @@
 <div class="page-size container">
                
 	@guest
-	@else
-	
-		@component('entries.menu-submenu', ['record' => $record])@endcomponent
-				
-		@if (false && Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
-			<div>
-			@if ($record->published_flag == 0)
-				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a>
-			@endif
-			</div>
-		@endif
-				
+	@else	
+		@component('entries.menu-submenu', ['record' => $record])@endcomponent		
 	@endguest
 			
 		<!------------------------------------>
@@ -62,7 +52,7 @@
 				<div class="article-source">
 					{{$record->view_count}} @LANG('content.views')&nbsp;&nbsp;{{$wordCount}} @LANG('content.words')
 					<span style="margin-left:10px;">
-					@component('components.control-button-publish', ['record' => $record, 'prefix' => $prefix])@endcomponent					
+						@component('components.control-button-publish', ['record' => $record, 'prefix' => $prefix, 'showPublic' => true])@endcomponent					
 					</span>
 				</div>
 			</div>

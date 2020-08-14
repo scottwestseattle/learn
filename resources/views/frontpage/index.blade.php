@@ -45,6 +45,13 @@
 							<div style="float:left;">
 								<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
 								<div style="margin-right:15px; margin-bottom:5px; float:left;">{{str_word_count($record->description)}} @LANG('content.words')</div>
+								
+								@if (App\User::isAdmin())
+									<div style="margin-right:15px; float:left;">
+										@component('components.control-button-publish', ['record' => $record, 'btnStyle' => 'btn-xxs', 'prefix' => 'entries', 'showPublic' => true])@endcomponent					
+									</div>
+								@endif
+																
 							</div>
 							<div style="float:left;">
 								<div style="margin-right:5px; float:left;"><a href='/entries/read/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-volume-up"></span></a></div>

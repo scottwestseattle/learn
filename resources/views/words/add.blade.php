@@ -35,7 +35,7 @@
 
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('content.Word or Phrase'):</label>
-			<input type="text" id="title" name="title" class="form-control" autocomplete="off" autofocus />
+			<input type="text" id="title" name="title" class="form-control" autocomplete="off"  onfocus="setFocus($(this))" autofocus />
 		<div>
 
 		@if (!isset($lesson) || !$lesson)
@@ -43,7 +43,7 @@
 			<label for="description" class="control-label">@LANG('content.Translation, Definition, or Hint'):</label>
 			<textarea rows="3" name="description" id="description" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
 			<label for="examples" class="control-label">@LANG('content.Examples'):</label>
-			<textarea rows="3" name="examples" class="form-control" autocomplete="off" ></textarea>
+			<textarea rows="3" name="examples" id="examples" class="form-control" autocomplete="off" onfocus="setFocus($(this))"></textarea>
 		<div>
 		@endif
 

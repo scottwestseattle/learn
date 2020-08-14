@@ -27,7 +27,7 @@
 			<textarea rows="3" name="description" id="description" class="form-control" autocomplete="off" onfocus="setFocus($(this))" >{{$record->description}}</textarea>
 			
 			<label for="examples" class="control-label">@LANG('content.Examples'):</label>
-			<textarea rows="3" name="examples" class="form-control" autocomplete="off" onfocus="setFocus($(this))">{{$record->examples}}</textarea>
+			<textarea rows="3" name="examples" id="examples" class="form-control" autocomplete="off" onfocus="setFocus($(this))">{{$record->examples}}</textarea>
 		<div>
 		@endif
 

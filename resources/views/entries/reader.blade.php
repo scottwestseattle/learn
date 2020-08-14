@@ -51,6 +51,7 @@
 		</div>
 		<div class="text-center">
 			<div><span class="small-thin-text" id="language"></span></div>
+			<div><span class="small-thin-text" id="title">{{$record->title}}</span></div>
 			<div id="languages" class="mt-2 mb-2" style="display:default; font-size:10px;"><select onchange="changeVoice();" name="select" id="select"></select></div>
 			<div style="line-height: 18px;">
 			<a onclick="event.preventDefault(); zoom(3)" href=""><span id="button-increase-text-size" class="glyphicon glyphicon-zoom-in"></span></a>
