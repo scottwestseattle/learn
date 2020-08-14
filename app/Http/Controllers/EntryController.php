@@ -103,7 +103,7 @@ class EntryController extends Controller
 		$entry->parent_id 			= $request->parent_id;		
 		$entry->title 				= Tools::trimNull($request->title);
 		$entry->description_short	= Tools::trimNull($request->description_short);
-		$entry->description			= Tools::trimNull($request->description);
+		$entry->description			= Tools::getMaxText($request->description);
 		$entry->source_credit		= Tools::trimNull($request->source_credit);
 		$entry->source_link			= Tools::trimNull($request->source_link);
 		$entry->display_date 		= Controller::getSelectedDate($request);
@@ -127,12 +127,19 @@ class EntryController extends Controller
 				throw new \Exception('Date not set');
 			
 			$entry->save();
-
+			
 			$msg = 'Entry has been added';
-			Event::logAdd(LOG_MODEL_ENTRIES, $msg . ': ' . $entry->title, $entry->description, $entry->id);
-				
-			$request->session()->flash('message.level', 'success');
+			$status = 'success';
+			if (strlen($request->description) > MAX_DB_TEXT_COLUMN_LENGTH)
+			{
+				$msg .= ' - DESCRIPTION TOO LONG, TRUNCATED';
+				$status = 'danger';
+			}
+			
+			$request->session()->flash('message.level', $status);
 			$request->session()->flash('message.content', $msg);
+			
+			Event::logAdd(LOG_MODEL_ENTRIES, $msg . ': ' . $entry->title, $entry->description, $entry->id);
 			
 			return redirect('/articles');
 		}
@@ -141,7 +148,7 @@ class EntryController extends Controller
 			Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, Tools::getTextOrShowEmpty($entry->title), null, $e->getMessage());
 				
 			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $e->getMessage());		
+			$request->session()->flash('message.content', "Error adding record, check Events");		
 
 			return back(); 
 		}						
@@ -350,7 +357,7 @@ class EntryController extends Controller
 		$record->title 				= Tools::trimNull($request->title);
 		$record->permalink			= Tools::trimNull($request->permalink);
 		$record->description_short	= Tools::trimNull($request->description_short);
-		$record->description		= Tools::trimNull($request->description);
+		$record->description		= Tools::getMaxText($request->description);
 		$record->source_credit		= Tools::trimNull($request->source_credit);
 		$record->source_link		= Tools::trimNull($request->source_link);
 		$record->display_date 		= Controller::getSelectedDate($request);		
@@ -362,8 +369,16 @@ class EntryController extends Controller
 
 			Event::logEdit(LOG_MODEL_ENTRIES, $record->title, $record->id, $prevTitle . '  ' . $record->title);			
 			
-			$request->session()->flash('message.level', 'success');
-			$request->session()->flash('message.content', 'Entry has been updated');
+			$msg = 'Entry has been updated';
+			$status = 'success';
+			if (strlen($request->description) > MAX_DB_TEXT_COLUMN_LENGTH)
+			{
+				$msg .= ' - DESCRIPTION TOO LONG, TRUNCATED';
+				$status = 'danger';
+			}
+			
+			$request->session()->flash('message.level', $status);
+			$request->session()->flash('message.content', $msg);
 		}
 		catch (\Exception $e) 
 		{

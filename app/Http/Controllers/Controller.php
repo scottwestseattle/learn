@@ -20,6 +20,8 @@ use App\Tools;
 
 define('SITE_ID', intval(env('SITE_ID')));
 
+define('MAX_DB_TEXT_COLUMN_LENGTH', 65535 - 2); // 2 byetes for db overhead
+
 define('SHOW_NON_XS', 'd-none d-sm-block-tablecell');
 define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
 define('VISITOR_MAX_LENGTH', 200);

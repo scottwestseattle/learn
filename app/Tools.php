@@ -280,6 +280,15 @@ class Tools
 		return $from;
 	}
 
+	static public function getMaxText($text)
+	{
+		$text = self::trimNull($text);
+		
+		$text = substr($text, 0, MAX_DB_TEXT_COLUMN_LENGTH);
+		
+		return $text;
+	}
+
 	// if string has non-whitespace chars, then it gets trimmed, otherwise gets set to null
 	static public function trimNull($text, $alphanum = false)
 	{
