@@ -99,8 +99,16 @@ class Entry extends Base
 			AND entries.deleted_flag = 0
 			AND entries.type_flag = ?
 			AND entries.release_flag >= ?
-			AND entries.site_id = ?
 		';
+
+		if (Tools::isSuperAdmin())
+		{
+			// super admins can see everything
+		}
+		else
+		{
+			$q .= '	AND entries.site_id = ' . Tools::getSiteId() . ' ';
+		}
 				
 		$orderByPhrase = 'ORDER BY entries.display_date DESC, entries.id DESC';
 		
@@ -132,7 +140,7 @@ class Entry extends Base
 		
 		$releaseFlag = self::getReleaseFlag();
 		
-		$records = DB::select($q, [$type_flag, $releaseFlag, Tools::getSiteId()]);
+		$records = DB::select($q, [$type_flag, $releaseFlag, ]);
 		
 		return $records;
 	}

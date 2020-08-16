@@ -903,3 +903,12 @@ label.tiny {
 	border-radius: 25px;
 	padding: 5px 0;
 }
+
+/* doesn't work for the checkbox, just the label */
+.checkbox-xs {
+	color:gray;
+	font-size:11px;
+	line-height: 12px;
+	vertical-align: middle;
+}
+

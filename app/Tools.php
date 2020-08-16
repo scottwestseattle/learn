@@ -408,6 +408,20 @@ class Tools
 		
 		return $siteId;
 	}
+
+	static public function getSiteName($id)
+	{
+		$id = intval($id);
+		$rc = "not found";
+		
+		$sites = array_flip(self::$_sites);
+		if (array_key_exists($id, $sites))
+		{
+			$rc = $sites[$id];
+		}
+			
+		return $rc;
+	}
 	
 	static public function siteUses($model)
 	{

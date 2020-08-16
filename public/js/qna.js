@@ -328,6 +328,18 @@ function quiz() {
 		$("#prompt").html(q);
 
 		// get button options
+		if ($("#checkbox-hide-options").prop('checked'))
+		{
+			$("#optionButtons").hide();
+			$("#button-show-options").show();
+			$("#button-show-answer").hide();
+		}
+		else
+		{
+			$("#button-show-options").hide();
+			$("#button-show-answer").show();
+		}
+		
 		o = quiz.qna[quiz.qna[curr].order].options;
 		if (o && o.length > 0)
 			$("#optionButtons").html(o);	// show the option buttons
@@ -686,6 +698,38 @@ function stopQuiz()
 	quiz.showPanel();
 }
 
+function showAnswer()
+{
+	$("#button-show-answer").hide();
+	
+	var id = $(".btn-right").attr('id');
+	var text = $(".btn-right").text();
+	checkAnswerMc1(id, text, true);
+}
+
+function showAnswerOptionButtons()
+{
+	$("#optionButtons").show();
+	$("#button-show-options").hide();
+	$("#button-show-answer").show();	
+}
+
+function hideOptionsClick()
+{
+	if ($("#checkbox-hide-options").prop('checked'))
+	{
+		$("#optionButtons").hide();
+		$("#button-show-options").show();
+		$("#button-show-answer").hide();
+	}
+	else
+	{
+		$("#optionButtons").show();
+		$("#button-show-options").hide();
+		$("#button-show-answer").show();
+	}
+}
+
 function resetQuiz()
 {
 	clear();
@@ -802,7 +846,7 @@ function cleanUpSpecialChars(str)
     return str;
 }
 
-function checkAnswerMc1(id, answer)
+function checkAnswerMc1(id, answer, showOnly = false)
 {
 	if (quiz.runState == RUNSTATE_ASKING)
 	{
@@ -811,7 +855,7 @@ function checkAnswerMc1(id, answer)
 
 		//alert(answer);
 		var timerSeconds = 2;
-		if (!checkAnswer(CHECKANSWER_MC1, answer))
+		if (!checkAnswer(CHECKANSWER_MC1, answer, showOnly))
 		    timerSeconds *= 2; // add extra time for wrong answer
 
 		// load next question on a timer
@@ -823,7 +867,7 @@ function checkAnswerMc1(id, answer)
 	}
 }
 
-function checkAnswer(checkOptions, attemptMc = null)
+function checkAnswer(checkOptions, attemptMc = null, showOnly = false)
 {
 	quiz.setButtonStates(RUNSTATE_CHECKING);
 	$("#question-prompt").hide();
@@ -884,18 +928,36 @@ function checkAnswer(checkOptions, attemptMc = null)
 
 		if ((answer != null && attempt != null) && cleanAnswer == cleanAttempt)
 		{
-			result = quiz.quizTextCorrectAnswer;
-			answerColor = 'green';
-			quiz.qna[quiz.qna[curr].order].correct = true;
+			if (showOnly)
+			{
+				result = "Showing Correct Answer";
+				answerColor = 'green';
+				quiz.qna[quiz.qna[curr].order].correct = false;
+			}
+			else
+			{
+				result = quiz.quizTextCorrectAnswer;
+				answerColor = 'green';
+				quiz.qna[quiz.qna[curr].order].correct = true;
+			}
+			
 			$("#button-next-attempt").focus();
 			quiz.showOverrideButton(false, quiz.quizTextOverrideWrong);
 			quiz.lastScore = SCORE_WRONG;
 			$("#question-right").show();
-			right++;
-    		rightAnswer = true;
+			
+			if (showOnly)
+			{
+				wrong++;
+			}
+			else
+			{
+				right++;
+				rightAnswer = true;
 
-    		// mark the question since it was answered correctly
-    		touch(quiz.qna[quiz.qna[curr].order]);
+				// mark the question since it was answered correctly
+				touch(quiz.qna[quiz.qna[curr].order]);
+			}
 		}
 		else
 		{

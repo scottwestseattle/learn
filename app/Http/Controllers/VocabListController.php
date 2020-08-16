@@ -292,7 +292,7 @@ class VocabListController extends Controller
 			'of' => 'of',
 		];
 
-		return view('lessons.reviewmc', $this->getViewData([
+		return view('vocab-lists.review', $this->getViewData([
 			'record' => $vocabList,
 			'sentenceCount' => count($quiz),
 			'records' => $quiz,

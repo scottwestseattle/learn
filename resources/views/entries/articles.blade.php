@@ -35,6 +35,14 @@
 					<div style="margin-right:0px; float:left;"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
 					@endif				
 				</div>
+				<div style="clear:both;"></div>
+				@if (App\User::isSuperAdmin())
+				<div class="mt-1">
+					@if (App\User::isAdmin())
+						<span><a target="_blank" href="https://{{App\Tools::getSiteName($record->site_id)}}">{{App\Tools::getSiteName($record->site_id)}}</a></span>
+					@endif				
+				</div>
+				@endif
 			</div>
 		</div>
 		@endforeach

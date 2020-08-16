@@ -13,7 +13,7 @@ class Status
 		RELEASE_NOTSET => 'Not Set',
 		RELEASE_PRIVATE => 'Private',
 		RELEASE_APPROVED => 'Approved',
-		RELEASE_PAID => 'Paid',
+		RELEASE_PAID => 'Premium',
 		RELEASE_MEMBER => 'Member',
 		RELEASE_PUBLIC => 'Public',
     ];
