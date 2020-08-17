@@ -70,7 +70,15 @@
 	    <div class="text-center">
             <div class="small-thin-text">{{count($record['lines'])}} lines</div>
             <div id="slideTitle" style="font-size:18px" class="mb-2">{{$record->title}}</div>
-            <a onclick="event.preventDefault(); run()"  href="" class="btn btn-primary mb-3" role="button">Start Reading</a>
+            <a onclick="event.preventDefault(); run()"  href="" class="btn btn-primary mb-3"  id="button-start-reading" role="button">Start Reading</a>
+            <div>
+				<a onclick="event.preventDefault(); runContinue()"  href="" class="btn btn-success mb-3" id="button-continue-reading" style="display:none;" role="button">Continue reading from line</a>
+			</div>
+			<div style="line-height: 24px; vertical-align:middle;">
+				<a onclick="event.preventDefault(); incLine(-50)" href=""><span id="button-decrement-line" class="glyphicon glyphicon-minus-sign"></span></a>
+				<span id="readCurrLine" class="" style="margin:10px;">Line: </span>
+				<a onclick="event.preventDefault(); incLine(50)" href=""><span id="button-increment-line" class="glyphicon glyphicon-plus-sign"></span></a>
+			</div>
         </div>
 
 	</div><!-- panel-start -->
@@ -82,8 +90,8 @@
         <div class="small-thin-text slideCount"></div>
 	    <div id="debug"></div>
 	    <div id="slideDescription" class="slideDescription" style="font-size: 18px;" ondrag="getSelectedText();" ondblclick="getSelectedText();"></div>
-	    <h5 class="slideSeconds mt-2"></h5>
-        <div class="text-center"><h1 style="font-size:100px" class="showSeconds"></h1></div>
+        <div class="" id="selected-word"></div>
+        <div class="" id="selected-word-definition"></div>
 	</div><!-- panel-run -->
 
     <audio id="audio">

@@ -158,6 +158,8 @@ Route::group(['prefix' => 'words'], function () {
 
 	Route::post('/updateajax/{word}','WordController@updateajax');
 	Route::get('/updateajax/{word}','WordController@updateajax');
+	Route::get('/get/{text}','WordController@getajax');
+	Route::get('/translate/{text}','WordController@translate');
 
 	// delete
 	Route::get('/confirmdelete/{word}','WordController@confirmdelete');

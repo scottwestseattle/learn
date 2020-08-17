@@ -96,6 +96,26 @@ class Word extends Model
 		return $records;
 	}
 
+	static public function searchWord($search)
+    {
+		$record = null;
+
+		try
+		{
+            $record = Word::select()
+                ->where('words.title', $search)
+                ->first();
+		}
+		catch(\Exception $e)
+		{
+		    $msg = "Search Word Error";
+			Event::logException(LOG_MODEL_WORDS, LOG_ACTION_SEARCH, 'search = ' . $search, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $record;
+	}
+	
     static public function addList($parent_id, $words)
     {
 		$parent_id = intval($parent_id);

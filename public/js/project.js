@@ -642,7 +642,7 @@ function onCategoryChange(id)
 	xhttp.send();
 }
 
-function ajaxexec(url)
+function ajaxexec(url, resultsId = '')
 {
 	var xhttp = new XMLHttpRequest();
 
@@ -650,21 +650,39 @@ function ajaxexec(url)
 	{
 		//alert(this.status);
 
-		if (this.status == 200)
+		if (this.status == 404) // page not found?
 		{
-			//alert(this.responseText);
-		}
-		else if (this.status == 404)
-		{
-			//alert(this.responseText);
+			//debug(this.responseText);
+			if (resultsId.length > 0)
+				$(resultsId).text('Server Error 404');
 		}
 
-		if (this.readyState == 4 && this.status == 200)
+		if (this.readyState == 4)
 		{
-			//
-			// results
-			//
-			//alert(this.requestText);
+			if (this.status == 200)
+			{
+				//
+				// results
+				//
+				if (resultsId.length > 0)
+				{
+					//$(resultsId).text('definition: ' + this.responseText);
+					if (this.responseText.startsWith('<'))
+					{
+						$(resultsId).html(this.responseText);
+					}
+					else
+					{
+						$(resultsId).text(this.responseText);
+					}
+				}
+				//debug(this.responseText);
+			}
+			else
+			{
+				if (resultsId.length > 0)
+					$(resultsId).text('Server Error ' + this.status);
+			}
 		}
 	};
 

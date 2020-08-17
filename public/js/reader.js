@@ -39,10 +39,11 @@ $(document).ready(function() {
 			_readFontSize = _maxFontsize;
 	}
 	setFontSize();
-		
+	
 	window.speechSynthesis.cancel();	
 	setTimeout(loadVoices, 500);
 	loadData();
+	setReadLocation();
 	deck.start();
 	
 	$("#pause").hide();
@@ -52,6 +53,21 @@ $(document).ready(function() {
 
 $(window).on('unload', function() {
 	window.speechSynthesis.cancel();	
+});
+
+$(document).keyup(function(event) {
+    if(event.keyCode == 32)		// spacebar
+	{
+		togglePause();
+    }
+    else if(event.keyCode == 37) // left arrow
+	{
+		prev();
+    }
+    else if(event.keyCode == 39) // right arrow
+	{
+		next();
+    }
 });
 
 //
@@ -84,13 +100,14 @@ function deck() {
 	}
 
     // this shows the beginning count down and then starts the first slide
-	this.run = function() {
-		reset();
+	this.run = function(fromBeginning = true) {
+		if (fromBeginning)
+			reset();
 		this.setStates(RUNSTATE_COUNTDOWN);
 	    deck.showSlide();
 		this.runSlide();
-	}
-
+	}	
+	
     // this shows the current slide
 	this.runSlide = function() {
 
@@ -101,10 +118,6 @@ function deck() {
 			//debug("run slide: " + deck.slides[curr].title);
             loadSlide();
 			deck.readSlide();
-        }
-        else
-        {
-    		stop();
         }
 	}
 
@@ -189,6 +202,8 @@ function deck() {
 	    var slide = deck.slides[curr];
         $(".slideCount").text((curr+1) + " of " + deck.slides.length);
         $(".slideDescription").text(deck.slides[curr].description);
+		$('#selected-word').text('');
+		$('#selected-word-definition').text('');
 	}
 
 	this.readSlideResume = function() {
@@ -295,6 +310,24 @@ function prev()
 	loadSlide();
 }
 
+function incLine(count)
+{	
+	curr += count;
+	mod = curr % 50;
+	curr -= (mod);
+	
+	if (curr < 0)
+		curr = 0;
+	else if (curr >= max)
+		curr = 0;
+	
+	$('#button-start-reading').text("Start reading from the beginning");
+	$('#readCurrLine').text("Line: " + (curr + 1));
+	$('#button-continue-reading').show();
+	$('#button-continue-reading').text("Continue reading from line " + (curr + 1));
+	
+}
+
 function next()
 {
 	pause();
@@ -326,9 +359,19 @@ function run()
 	resume();
 }
 
-function stop()
+function runContinue() 
 {
-	//deck.setStates(RUNSTATE_END);
+	$("#pause").show();
+	$("#resume").hide();	
+	deck.run(/* fromBeginning = */ false);
+}
+
+function togglePause()
+{
+	if (_paused)
+		resume();
+	else
+		pause();
 }
 
 function pause()
@@ -545,7 +588,6 @@ function loadVoices()
 	
 	var voiceSelect = document.querySelector('select');	
 	var found = 0;
-	var languageIndex = -1;
 	
 	if (_voices.length > 0)
 	{
@@ -570,7 +612,6 @@ function loadVoices()
 					if (found == 0)
 					{								
 						found++;
-						languageIndex = i;
 					}
 					
 					voiceSelect.appendChild(option);
@@ -580,7 +621,6 @@ function loadVoices()
 					if (found == 0)
 					{								
 						found++;
-						languageIndex = i;
 					}
 					
 					voiceSelect.appendChild(option);
@@ -590,7 +630,6 @@ function loadVoices()
 			{
 				// load all languages for testing
 				found++;
-				languageIndex = i;					
 				voiceSelect.appendChild(option);
 			}
 		}		
@@ -601,40 +640,49 @@ function loadVoices()
 		option.textContent = "Default voice set: " + deck.language;
 		voiceSelect.appendChild(option);
 	}
-	
-	if (found == 0)
+
+	//
+	// set the active voice from the select dropdown
+	//
+	if (found)
 	{
-		if (languageIndex >= 0)
-		{
-			msg = "language not found: " + deck.language + ", using: " + _voices[languageIndex].lang + ", voice: " + _voices[languageIndex].name;
-			deck.voice 		= _voices[languageIndex];
-			deck.lang		=  _voices[languageIndex].lang;
-			$("#language").text("Language: " + deck.voice.lang);
-			voiceSelect.index = languageIndex;
-		}
-		else
-		{
-			msg = "Language not found: " + deck.language + ", text can't be read correctly.";
-			$("#language").text(msg);
-			$("#languages").show();
-		}
-		
-		debug(msg);
+		setSelectedVoice(voiceSelect);
+		changeVoice();
 	}
 	else
 	{
-		deck.voice = _voices[languageIndex];
-		//$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
+		msg = "Language not found: " + deck.language + ", text can't be read correctly.";
+		$("#language").text(msg);
+		$("#languages").show();
+	}
+}
+
+function saveSelectedVoice(voiceIndex)
+{
+	localStorage['readVoiceIndex'] = voiceIndex;
+	//debug("set readVoiceIndex: " + voiceIndex);
+}
+
+function setSelectedVoice(voiceSelect)
+{
+	var voiceIndex = localStorage['readVoiceIndex'];
+	if (!voiceIndex)
+	{
+		localStorage['readVoiceIndex'] = 0;
+		voiceIndex = 0;
 	}
 
-	voiceSelect.selectedIndex = 0;
+	voiceSelect.selectedIndex = voiceIndex;
+	//debug("get: readVoiceIndex: " + voiceIndex);
 }
 
 function changeVoice()
 {
 	var index = $("select")[0].selectedIndex;
-	index = $("select").children("option:selected").val();
-	deck.voice = _voices[index];
+	saveSelectedVoice(index);
+	
+	var voice = $("select").children("option:selected").val();
+	deck.voice = _voices[voice];
 	if (_utter != null)
 	{
 		_utter.voice = deck.voice;
@@ -658,44 +706,32 @@ function showSeconds(text = null)
 
 function end()
 {
+	saveReadLocation(0);
 	clearTimeout(_speechTimerId);
-    stop();
 	reset();
 	loadData();
 	deck.start();
 	$("#pause").show();
 	$("#resume").hide();
-
-    //playAudioFile("small-crowd-applause.mp3");
-	//tts("Terminado");
 }
 
 function reset()
 {
 	clear();
-
-    // clear slides
-	deck.slides.forEach(function(slide, index){
-	    slide.done = false;
-	});
-
 	curr = 0;
-
-	//$("#stats").hide();
-	//$("#panelEndofquizFinished").show();
-	//$("#panelEndofquizStopped").hide();
 }
 
 function clear()
 {
-	//$("#promptQuestion").val('');
-	//$("#promptQuestion").text('');
-	//$("#prompt").val('');
-	//$("#prompt").text('');
+    // clear slides
+	deck.slides.forEach(function(slide, index){
+	    slide.done = false;
+	});
 }
 
 function loadSlide()
 {
+	saveReadLocation(curr);
 	deck.setStates(RUNSTATE_RUN);
 	deck.showSlide();
 	updateStatus();
@@ -762,12 +798,15 @@ function debug(text)
 var _dictionary = "_blank";
 function getSelectedText() 
 {
+	pause();
+	
     var text = "";
     if (window.getSelection) {
         text = window.getSelection().toString();
     } else if (document.selection && document.selection.type != "Control") {
         text = document.selection.createRange().text;
     }
+	text = text.trim();
 
 	//setDebug(text);
 	// copy selected text
@@ -781,7 +820,23 @@ function getSelectedText()
         succeed = false;
 	}
 
+	// https://www.spanishdict.com/translate/comulgar
+	var html = "<div style='margin-bottom:10px;'><span style='font-size:1.2em;'>" + text + "</span>"
+		+ "&nbsp;<a target='_blank' href='https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "'>(Google)</a>"
+		+ "&nbsp;<a target='_blank' href='/words/add-vocab-word/28'>(add)</a><div>"
+		//+ "&nbsp;<a href='' onclick='event.preventDefault(); translate(\"" + text + "\")'>(xlate)</a>"
+		;
+	$('#selected-word').html(html);
+	$('#selected-word-definition').text('');
+	ajaxexec('/words/get/' + text, '#selected-word-definition');	
+	
     return text;
+}
+
+function translate(text) 
+{
+	$('#selected-word-definition').text('translating...');
+	ajaxexec('/words/translate/' + text, '#selected-word-definition');	
 }
 		
 function zoom(amount)
@@ -801,4 +856,36 @@ function setFontSize()
 	$("#slideDescription").css("font-size", _readFontSize + "px");
 	$("#slideTitle").css("font-size", _readFontSize + "px");
 	$("#readFontSize").text("Size: " + _readFontSize);
+}
+
+function saveReadLocation(location)
+{
+	var tag = 'readLocation' + deck.lessonId;
+	
+	localStorage[tag] = location;
+	if (location == 0)
+	{
+		$('#button-continue-reading').hide();
+		$('#button-start-reading').text("Start Reading");
+	}
+
+	//debug("saveReadLocation: " + location);
+}
+
+function setReadLocation()
+{
+	var tag = 'readLocation' + deck.lessonId;
+	var location = localStorage[tag];
+	location = parseInt(location);
+	if (location > 0 && location < max)
+	{
+		$('#button-continue-reading').show();
+		$('#button-continue-reading').text("Continue reading from line " + (location + 1));
+		$('#button-start-reading').text("Start reading from the beginning");
+		
+		curr = location;
+	}
+	
+	$('#readCurrLine').text("Line: " + (curr + 1));
+	//debug("setReadLocation: " + location);
 }

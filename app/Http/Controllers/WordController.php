@@ -24,7 +24,7 @@ class WordController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser'
+        $this->middleware('is_admin')->except(['index', 'translate', 'getajax', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser'
             , 'confirmDeleteUser', 'deleteUser', 'view', 'touch']);
 
 		$this->prefix = PREFIX;
@@ -521,6 +521,128 @@ class WordController extends Controller
 		}
 
 		return $rc;
+	}
+
+    public function getajax(Request $request, $text)
+    {	
+		// 1. see if it's in our lists
+		$rc = Word::searchWord($text);
+		if (isset($rc))
+		{
+			$rc = $rc->description;
+		}
+		else
+		{
+			$rc = 'not found';
+			$rc = "<a href='' onclick='event.preventDefault(); translate(\"" . $text . "\")'>Translate: " . $text . "</a>";
+			$rc = "<a href='' onclick='event.preventDefault(); translate(\"" . $text . "\")'>Translate</a>";
+		}
+
+		return $rc;
+	}
+
+    public function translate(Request $request, $text)
+    {	
+		$rc = $this->translateMicrosoft($text);
+		
+		return $rc;
+	}
+	
+    public function translateMicrosoft($text)
+    {
+		$rc = 'empty search text';
+		$text = trim($text);
+		if (strlen($text) == 0)
+			return $rc;
+		
+		// NOTE: Be sure to uncomment the following line in your php.ini file.
+		// ;extension=php_openssl.dll
+		// You might need to set the full path, for example:
+		// extension="C:\Program Files\Php\ext\php_openssl.dll"
+		
+		// Prepare variables
+		//$text = 'comulgar';
+		$path = "/translate?api-version=3.0";
+		$params = "&to=en";
+		$result = 'not found';
+		
+		// Prepare cURL command
+		$key = env('MICROSOFT_API_KEY', '');
+		$host = 'api-apc.cognitive.microsofttranslator.com';
+		$region = 'australiaeast';
+
+///////////////////////////////////////////////////////////////////////////
+
+		$guid = sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0x0fff ) | 0x4000,
+			mt_rand( 0, 0x3fff ) | 0x8000,
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+		);
+				
+		$requestBody = array (
+			array (
+				'Text' => $text,
+			),
+		);
+		
+		$content = json_encode($requestBody);
+		//dd($content);
+
+		$headers = "Content-type: application/json\r\n" .
+			"Content-length: " . strlen($content) . "\r\n" .
+			"Ocp-Apim-Subscription-Key: $key\r\n" .
+			"Ocp-Apim-Subscription-Region: " . $region . "\r\n" .
+			"X-ClientTraceId: " . $guid . "\r\n";
+		//dd($headers);
+
+		// NOTE: Use the key 'http' even if you are making an HTTPS request. See:
+		// http://php.net/manual/en/function.stream-context-create.php
+		$options = array (
+			'http' => array (
+				'header' => $headers,
+				'method' => 'POST',
+				'content' => $content
+			)
+		);
+		//dd($options);
+		
+		$context  = stream_context_create($options);
+		
+		$url = 'https://' . $host . $path . $params;
+		//dd($url);
+		
+		try {
+			$json = file_get_contents($url, false, $context);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error Translating: ' . $text;
+			
+			if (strpos($e->getMessage(), '401') !== FALSE)
+			{
+				$msg .= ' - 401 Unauthorized';
+			}
+			
+			Event::logException(LOG_MODEL, LOG_ACTION_TRANSLATE, $msg, null, $e->getMessage());
+			$result = $msg;
+			return $result;
+		}
+		//dd($result);
+
+		$json = json_decode($json);
+		if (count($json) > 0)
+		{
+			$json = $json[0]->translations;
+			if (count($json) > 0)
+				$result = $json[0]->text;
+			//dd($result);
+		}
+
+////////////////////////////////////////////////////////////////////////
+		
+		return $result;
 	}
 
     public function saveAjax(Request $request, Word $record)

@@ -69,6 +69,7 @@ define('LOG_ACTION_SEARCH', 'search');
 define('LOG_ACTION_EMAIL', 'email');
 define('LOG_ACTION_IMPORT', 'import');
 define('LOG_ACTION_TOUCH', 'touch');
+define('LOG_ACTION_TRANSLATE', 'translate');
 define('LOG_ACTION_OTHER', 'other');
 
 define('LOG_PAGE_INDEX', 'index');
