@@ -534,7 +534,7 @@ function read(text, charIndex)
 
 function speechBugWorkaround()
 {		
-	debug("reset speech");
+	//debug("reset speech");
 	window.speechSynthesis.resume(); // fix to keep speech from stopping
 	
 	if (window.speechSynthesis.speaking)
@@ -672,7 +672,7 @@ function setSelectedVoice(voiceSelect)
 		voiceIndex = 0;
 	}
 
-	voiceSelect.selectedIndex = voiceIndex;
+	voiceSelect.selectedIndex = (voiceIndex < voiceSelect.options.length) ? voiceIndex : 0;
 	//debug("get: readVoiceIndex: " + voiceIndex);
 }
 
@@ -807,29 +807,29 @@ function getSelectedText()
         text = document.selection.createRange().text;
     }
 	text = text.trim();
+	if (text.length > 0)
+	{
+		//setDebug(text);
+		// copy selected text
+		var succeed;
+		try
+		{
+			succeed = document.execCommand("copy");
+		}
+		catch(e)
+		{
+			succeed = false;
+		}
 
-	//setDebug(text);
-	// copy selected text
-    var succeed;
-    try
-	{
-		succeed = document.execCommand("copy");
-    }
-	catch(e)
-	{
-        succeed = false;
+		// https://www.spanishdict.com/translate/comulgar
+		var html = "<div style='margin-bottom:10px;'><span style='font-size:1.2em;'>" + text + "</span>"
+			+ "&nbsp;<a target='_blank' href='https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "'>(Google)</a>"
+			+ "&nbsp;<a target='_blank' href='/words/add-vocab-word/28'>(add)</a><div>"
+			;
+		$('#selected-word').html(html);
+		$('#selected-word-definition').text('');
+		ajaxexec('/words/get/' + text, '#selected-word-definition');	
 	}
-
-	// https://www.spanishdict.com/translate/comulgar
-	var html = "<div style='margin-bottom:10px;'><span style='font-size:1.2em;'>" + text + "</span>"
-		+ "&nbsp;<a target='_blank' href='https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "'>(Google)</a>"
-		+ "&nbsp;<a target='_blank' href='/words/add-vocab-word/28'>(add)</a><div>"
-		;
-	$('#selected-word').html(html);
-	$('#selected-word-definition').text('');
-	ajaxexec('/words/get/' + text, '#selected-word-definition');	
-	
-    return text;
 }
 
 function xlate(word) 

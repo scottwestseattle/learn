@@ -61,7 +61,7 @@ class Definition extends Base
 		$record = new Definition();
 
 		$record->user_id 		= Auth::id();
-		$record->title 			= $title;
+		$record->title 			= strtolower($title);
 		$record->translation_en = $definition;
 		$record->language_id	= LANGUAGE_SPANISH;
 		$record->permalink		= Tools::createPermalink($title);

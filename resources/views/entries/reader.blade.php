@@ -89,7 +89,7 @@
 	<div id="panel-run" class="slide-panel text-center">
         <div class="small-thin-text slideCount"></div>
 	    <div id="debug"></div>
-	    <div id="slideDescription" class="slideDescription" style="font-size: 18px;" ondrag="getSelectedText();" ondblclick="getSelectedText();"></div>
+	    <div id="slideDescription" class="slideDescription" style="font-size: 18px;" onmouseup="getSelectedText();" ondblclick="getSelectedText();" ontouchend="getSelectedText();"></div>
         <div class="" style="color: green;" id="selected-word"></div>
         <div class="" style="color: green;" id="selected-word-definition"></div>
 	</div><!-- panel-run -->
