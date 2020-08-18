@@ -141,4 +141,5 @@ return [
 'Show Choices' => 'Show Choices',
 'Hide choices before answering' => 'Hide choices before answering',
 'Show Answer' => 'Show Answer',
+'Dictionary' => 'Dictionary',
 ];

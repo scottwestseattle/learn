@@ -9,24 +9,22 @@ use Auth;
 use App\User;
 use App\Event;
 use App\Tools;
-use App\Word;
-use App\VocabList;
 use App\Definition;
+use App\VocabList;
 
-define('PREFIX', 'words');
-define('LOG_MODEL', 'words');
-define('TITLE', 'Word');
-define('TITLE_LC', 'word');
-define('TITLE_PLURAL', 'Words');
-define('REDIRECT', '/words');
-define('REDIRECT_ADMIN', '/words/admin');
+define('PREFIX', 'definitions');
+define('LOG_MODEL', 'definitions');
+define('TITLE', 'Definition');
+define('TITLE_LC', 'definition');
+define('TITLE_PLURAL', 'Definitions');
+define('REDIRECT', '/definitions');
+define('REDIRECT_ADMIN', '/definitions/admin');
 
-class WordController extends Controller
+class DefinitionController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'translate', 'getajax', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser'
-            , 'confirmDeleteUser', 'deleteUser', 'view', 'touch']);
+        $this->middleware('is_admin')->except(['index']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -35,47 +33,23 @@ class WordController extends Controller
 		parent::__construct();
 	}
 
-    public function index(Request $request, $parent_id = null)
+    public function index(Request $request)
     {
 		$records = []; // make this countable so view will always work
 
 		try
 		{
-			//
-			// check for dupe words in course lessons
-			//
-			$records = Word::getCourseWords($parent_id, 'title');
-
-			$words = [];
-			$dupe = false;
-			foreach($records as $record)
-			{
-				if (array_key_exists($record->title, $words))
-				{
-					dump('dupe: ' . $record->title);
-					$dupe = true;
-				}
-
-				$words[$record->title] = $record->title;
-			}
-
-			if ($dupe)
-				dd('done');
-			// done with dupe check
-
-			$records = Word::getIndex($parent_id);
+			$records = Definition::getIndex();
 		}
 		catch (\Exception $e)
 		{
 			$msg = 'Error getting ' . $this->title . ' list';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg . ' for parent ' . Tools::itoa($parent_id), $parent_id, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
 
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records,
-			'parent_id' => $parent_id,
-			'lesson' => isset($parent_id),
 		]));
     }
 
@@ -526,28 +500,17 @@ class WordController extends Controller
 
     public function getajax(Request $request, $text)
     {	
-		// 1. see if we already have it in the dictionary
-		$record = Definition::get($text);
-		if (isset($record))
+		// 1. see if it's in our lists
+		$rc = Word::searchWord($text);
+		if (isset($rc))
 		{
-			$rc = $record->translation_en;
+			$rc = $rc->description;
 		}
 		else
 		{
-			// 2. see if we already have it in the word lists
-			$record = Word::searchWord($text);
-			if (isset($record))
-			{
-				$rc = $record->description;
-				
-				// add the word to our dictionary for next time
-				Definition::add($text, strtolower($rc), $record->examples);
-			}
-			else
-			{
-				// 2. not in our list, show link to MS Translate ajax
-				$rc = "<a href='' onclick='event.preventDefault(); xlate(\"" . $text . "\");'>Translate</a>";
-			}
+			$rc = 'not found';
+			$rc = "<a href='' onclick='event.preventDefault(); translate(\"" . $text . "\")'>Translate: " . $text . "</a>";
+			$rc = "<a href='' onclick='event.preventDefault(); translate(\"" . $text . "\")'>Translate</a>";
 		}
 
 		return $rc;
@@ -557,29 +520,15 @@ class WordController extends Controller
     {	
 		$rc = $this->translateMicrosoft($text);
 		
-		if (strlen($rc['error']) == 0)
-		{
-			// add the translation to our dictionary for next time
-			$rc = strtolower($rc['data']);
-			Definition::add($text, $rc);
-		}
-		else
-		{
-			$rc = $rc['error'];
-		}
-		
 		return $rc;
 	}
 	
     public function translateMicrosoft($text)
     {
-		$rc = ['error' => '', 'data' => ''];
+		$rc = 'empty search text';
 		$text = trim($text);
 		if (strlen($text) == 0)
-		{
-			$rc['error'] = 'empty string';
 			return $rc;
-		}
 		
 		// NOTE: Be sure to uncomment the following line in your php.ini file.
 		// ;extension=php_openssl.dll
@@ -590,11 +539,14 @@ class WordController extends Controller
 		//$text = 'comulgar';
 		$path = "/translate?api-version=3.0";
 		$params = "&to=en";
+		$result = 'not found';
 		
 		// Prepare cURL command
 		$key = env('MICROSOFT_API_KEY', '');
 		$host = 'api-apc.cognitive.microsofttranslator.com';
 		$region = 'australiaeast';
+
+///////////////////////////////////////////////////////////////////////////
 
 		$guid = sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
@@ -650,39 +602,57 @@ class WordController extends Controller
 			
 			Event::logException(LOG_MODEL, LOG_ACTION_TRANSLATE, $msg, null, $e->getMessage());
 			$result = $msg;
-			$rc['error'] = $msg;
-			return $rc;
+			return $result;
 		}
 		//dd($result);
 
 		$json = json_decode($json);
-		//dd($json);
-		
 		if (count($json) > 0)
 		{
 			$json = $json[0]->translations;
 			if (count($json) > 0)
-			{
-				//dd($json[0]);
-				
-				$xlate = strtolower($json[0]->text);
-				if ($text == $xlate) 
-				{
-					// if translation is same as the word, then it probably wasn't found
-					$rc['error'] = 'translation not found';
-				}
-				else
-				{
-					$rc['data'] = $xlate;
-				}
-			}
-			//dd($rc);
+				$result = $json[0]->text;
+			//dd($result);
 		}
-	
+
+////////////////////////////////////////////////////////////////////////
+		
+		return $result;
+	}
+
+    public function addajax(Request $request, $word)
+    {
+		$word = trim($word);
+		$rc = ''; // no change
+
+		// user is adding a word
+		if (strlen($word) > 0)
+		{
+			$word = Word::getDefinition($word);
+			//$duplicate = Definition::exists($record->title) ? 'Duplicate: ' : '';
+			
+			if (isset($word))
+			{
+				// word already exists
+			}
+			else
+			{
+				// adding new lesson user word
+				$word = new Definition();
+
+				$word->user_id 		= Auth::id();
+				$word->title 		= $record->title;
+				$word->definition	= $record->definition;
+				$word->permalink	= $record->permalink;
+
+				$rc = $this->saveAjax($request, $word);
+			}
+		}
+
 		return $rc;
 	}
 
-    public function saveAjax(Request $request, Word $record)
+    public function saveAjax(Request $request, Definition $record)
     {
 		$rc = '';
 
@@ -691,8 +661,6 @@ class WordController extends Controller
 		$isDirty = $isAdd;
 
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
-
-		//$duplicate = Word::exists($record->title) ? 'Duplicate: ' : '';
 
 		if ($isDirty)
 		{

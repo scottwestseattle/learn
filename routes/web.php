@@ -54,6 +54,13 @@ Route::get('/lessons/rss-reader/{lesson}/', 'LessonController@rssReader');
 Route::get('/courses/rss-reader', 'CourseController@rssReader');
 
 // Entries
+Route::group(['prefix' => 'dictionary'], function () {
+	
+	// misc
+	Route::get('/', 'DefinitionController@index');
+});
+
+// Entries
 Route::group(['prefix' => 'entries'], function () {
 	
 	// misc

@@ -90,8 +90,8 @@
         <div class="small-thin-text slideCount"></div>
 	    <div id="debug"></div>
 	    <div id="slideDescription" class="slideDescription" style="font-size: 18px;" ondrag="getSelectedText();" ondblclick="getSelectedText();"></div>
-        <div class="" id="selected-word"></div>
-        <div class="" id="selected-word-definition"></div>
+        <div class="" style="color: green;" id="selected-word"></div>
+        <div class="" style="color: green;" id="selected-word-definition"></div>
 	</div><!-- panel-run -->
 
     <audio id="audio">

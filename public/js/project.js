@@ -674,6 +674,7 @@ function ajaxexec(url, resultsId = '')
 					else
 					{
 						$(resultsId).text(this.responseText);
+						$(resultsId).css('color', '#a37800');
 					}
 				}
 				//debug(this.responseText);

@@ -53,6 +53,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link" href="/articles">@LANG('content.Articles')</a></li>
+					<li class="nav-item"><a class="nav-link" href="/dictionary">@LANG('content.Dictionary')</a></li>
 					@if (App\Tools::siteUses(LOG_MODEL_WORDS))
 					<li class="nav-item"><a class="nav-link" href="/vocab-lists">@LANG('content.Lists')</a></li>
 					@endif

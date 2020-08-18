@@ -824,7 +824,6 @@ function getSelectedText()
 	var html = "<div style='margin-bottom:10px;'><span style='font-size:1.2em;'>" + text + "</span>"
 		+ "&nbsp;<a target='_blank' href='https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "'>(Google)</a>"
 		+ "&nbsp;<a target='_blank' href='/words/add-vocab-word/28'>(add)</a><div>"
-		//+ "&nbsp;<a href='' onclick='event.preventDefault(); translate(\"" + text + "\")'>(xlate)</a>"
 		;
 	$('#selected-word').html(html);
 	$('#selected-word-definition').text('');
@@ -833,10 +832,10 @@ function getSelectedText()
     return text;
 }
 
-function translate(text) 
+function xlate(word) 
 {
 	$('#selected-word-definition').text('translating...');
-	ajaxexec('/words/translate/' + text, '#selected-word-definition');	
+	ajaxexec('/words/translate/' + word, '#selected-word-definition');	
 }
 		
 function zoom(amount)
