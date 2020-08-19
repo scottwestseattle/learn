@@ -24,7 +24,7 @@ class DefinitionController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index']);
+        $this->middleware('is_admin')->except(['index', 'view']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -319,83 +319,33 @@ class DefinitionController extends Controller
 			], LOG_MODEL, LOG_PAGE_PERMALINK));
 	}
 
-	public function edit(Word $word)
+	public function edit(Definition $definition)
     {
-		$record = $word;
-
-		$words = isset($word->lesson_id) ? Word::getCourseWords($word->lesson_id, 'lesson_number, section_number, id')->groupBy('lesson_id') : [];
+		$record = $definition;
 
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
-			'records' => Word::getIndex($word->lesson_id),
-			'lesson' => $record->type_flag == WORDTYPE_LESSONLIST,
-			'words' => $words,
 			]));
-    }
-
-	public function editUser(Word $word)
-    {
-		$record = $word;
-
-		$words = [];
-
-		return view(PREFIX . '.edit', $this->getViewData([
-			'record' => $record,
-			'records' => Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]),
-			'lesson' => $record->type_flag == WORDTYPE_LESSONLIST,
-			'words' => $words,
-			]));
-    }
-
-    public function updateUser(Request $request, Word $word)
-    {
-		return $this->update($request, $word);
 	}
 
-    public function update(Request $request, Word $word)
+    public function update(Request $request, Definition $definition)
     {
-		$record = $word;
-		$msg = '';
+		$record = $definition;
 		$isDirty = false;
 		$changes = '';
 		$parent = null;
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
-		$isDirtyTitle = $isDirty;
-
-		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
+		$record->forms = Tools::copyDirty($record->forms, $request->forms, $isDirty, $changes);
+		$record->definition = Tools::copyDirty($record->definition, $request->definition, $isDirty, $changes);
+		$record->translation_en = Tools::copyDirty($record->translation_en, $request->translation_en, $isDirty, $changes);
+		$record->translation_es = Tools::copyDirty($record->translation_es, $request->translation_es, $isDirty, $changes);
 		$record->examples = Tools::copyDirty($record->examples, $request->examples, $isDirty, $changes);
-
-		if ($record->type_flag == WORDTYPE_VOCABLIST)
-		{
-		    //todo: allow words to be moved between lists
-		}
-		else
-		{
-		    $record->lesson_id =  Tools::copyDirty($record->lesson_id, $request->lesson_id, $isDirty, $changes);
-		}
 
 		if ($isDirty)
 		{
 			try
 			{
-				if ($isDirtyTitle)
-				{
-					// check for dupes if the word has changed
-					$parent_id = isset($word->lesson_id) ? $word->lesson_id : null;
-					$parent = Word::getParent($record->title, $parent_id);
-				}
-
-				if (isset($parent))
-				{
-					if (array_key_exists('lesson', $parent))
-						$msg = 'Word already exists in this course in lesson' . ': ' . $parent['lesson'];
-					else
-						$msg = 'Word already exists in your vocabulary list';
-
-					throw new \Exception($msg);
-				}
-
 				$record->save();
 
 				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);
@@ -403,7 +353,7 @@ class DefinitionController extends Controller
 			}
 			catch (\Exception $e)
 			{
-				$msg = isset($msg) ? $msg : "Error updating record";
+				$msg = "Error updating record";
 				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg . ': title = ' . $record->title, null, $e->getMessage());
 				Tools::flash('danger', $msg);
 			}
@@ -413,7 +363,7 @@ class DefinitionController extends Controller
 			Tools::flash('success', 'No changes were made');
 		}
 
-        $returnPath = '/words/view/' . $word->id;
+        $returnPath = '/' . PREFIX . '/view/' . $record->id;
 
 		return redirect($returnPath);
 	}
@@ -766,9 +716,9 @@ class DefinitionController extends Controller
 		]));
 	}
 
-	public function view(Word $word)
+	public function view(Definition $definition)
     {
-		$record = $word;
+		$record = $definition;
 
 		// update the view timestamp so it will move to the back of the list
 		$record->updateLastViewedTime();
@@ -776,21 +726,12 @@ class DefinitionController extends Controller
 		// format the examples to display as separate sentences
 		$record->examples = Tools::splitSentences($record->examples);
 
-		// since the currend WOD just got updated, this will get the next wod in line
-		$nextWod = $word->getWod($word->user_id);
-        $wodList = Word::getWodIndex(['limit' => WORDTYPE_USERLIST_LIMIT]);
-        $firstWod = (isset($wodList) && count($wodList) > 0) ? $wodList[0] : null;
-
 		// get next and prev words in ID order
-		$prev = $word->getPrev();
-		$next = $word->getNext();
+		$prev = $record->getPrev();
+		$next = $record->getNext();
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
-			'firstWod' => $firstWod,
-			'records' => $wodList,
-			'lesson' => false,
-			'nextWod' => $nextWod,
 			'next' => $next,
 			'prev' => $prev,
 			], LOG_MODEL, LOG_PAGE_VIEW));

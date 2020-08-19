@@ -80,4 +80,61 @@ class Definition extends Base
 		}
 	}
 
+    public function updateLastViewedTime()
+    {
+        $rc = false;
+
+		try
+		{
+			// update the record's timestamp so it will move to the back of the list
+			$this->last_viewed_at = Tools::getTimestamp();
+			$this->view_count++;
+			$this->save();
+
+			$rc = true;
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error updating last viewed timestamp';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'id = ' . $this->id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $rc;
+    }
+	
+    public function getPrev()
+    {
+		return self::getPrevNext($this->id);
+	}
+
+    public function getNext()
+    {
+		return self::getPrevNext($this->id, /* $prev = */ false);
+	}
+
+    static private function getPrevNext($id, $prev = true)
+    {
+		$record = null;
+
+		try
+		{
+			// get prev or next word by id, null is okay
+			$record = Definition::select()
+				->where('id', $prev ? '<' : '>', $id)
+				->whereNull('deleted_at')
+				->orderBy('title')
+				->first();
+
+			//dd($record);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting prev/next record';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, null, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $record;
+    }	
 }

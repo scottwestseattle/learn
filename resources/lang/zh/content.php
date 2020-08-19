@@ -142,4 +142,6 @@ return [
 'Hide choices before answering' => '回答前隐藏选择',
 'Show Answer' => '显示答案',
 'Dictionary' => '字典',
+'Back to Dictionary' => '返回字典',
+'Definition' => '定义',
 ];

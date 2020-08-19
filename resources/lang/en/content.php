@@ -142,4 +142,6 @@ return [
 'Hide choices before answering' => 'Hide choices before answering',
 'Show Answer' => 'Show Answer',
 'Dictionary' => 'Dictionary',
+'Back to Dictionary' => 'Back to Dictionary',
+'Definition' => 'Definition',
 ];

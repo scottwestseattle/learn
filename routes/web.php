@@ -54,10 +54,24 @@ Route::get('/lessons/rss-reader/{lesson}/', 'LessonController@rssReader');
 Route::get('/courses/rss-reader', 'CourseController@rssReader');
 
 // Entries
-Route::group(['prefix' => 'dictionary'], function () {
+Route::group(['prefix' => 'definitions'], function () {
 	
-	// misc
 	Route::get('/', 'DefinitionController@index');
+	Route::get('/admin', 'DefinitionController@admin');
+	Route::get('/view/{definition}', 'DefinitionController@view');
+
+	// add/create
+	Route::get('/add','DefinitionController@add')->middleware('auth');
+	Route::post('/create','DefinitionController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{definition}','DefinitionController@edit')->middleware('auth');
+	Route::post('/update/{definition}','DefinitionController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{definition}','DefinitionController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{definition}','DefinitionController@delete')->middleware('auth');	
+	
 });
 
 // Entries
