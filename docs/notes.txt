@@ -24,6 +24,11 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 
 Latest DB Changes:
 
+8/19/2020
+ALTER TABLE `definitions` CHANGE `language_id` `language_id` TINYINT(4) UNSIGNED NOT NULL; 
+ALTER TABLE `definitions` ADD `pos_id` TINYINT NULL COMMENT 'part of speech - see DEFINTIONS_POS_* for values' AFTER `forms`; 
+ALTER TABLE `definitions` CHANGE `forms` `forms` VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
+
 8/18/2020
 ALTER TABLE `definitions` CHANGE `plural` `forms` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
 

@@ -59,13 +59,17 @@ class Definition extends Base
 	// make forms easier to search line: ';one;two;three;'
     static public function formatForms($forms)
     {
+		$v = trim($forms);
 		$accents = 'áÁéÉíÍóÓúÚüÜñÑ'; 
-		$v = preg_replace('/[^\da-z;' . $accents . ']/i', '', $forms); // replace all non-alphanums except for ';'
+		$v = str_replace('; ', ';', $v);
+		$v = preg_replace('/[^\da-z; ' . $accents . ']/i', '', $v); // replace all non-alphanums except for ';'
 		$v = str_replace(';;', ';', $v);
-		$v = str_replace(';', ' ', $v);
+		$v = str_replace(';', '\0', $v); // just to trim the leading and trailing ';' and any spaces
 		$v = trim($v);
-		$v = str_replace(' ', ';', $v);
-		$v = ';' . $v . ';';
+		$v = str_replace('\0', ';', $v); // put back the non-trimmed ';'
+		
+		$v = trim($v);
+		$v = (strlen($v) > 0) ? $v = ';' . $v . ';' : null;
 		//dd($v);
 		
 		return $v;

@@ -530,10 +530,23 @@ class WordController extends Controller
 		$record = Definition::search($text);
 		if (isset($record))
 		{
-			if ($record->title == $text)
-				$rc = $record->translation_en;
+			$xlate = null;
+			if (!isset($record->translation_en))
+			{
+				$rc = "<a target='_blank' href='/definitions/edit/$record->id'>Translation not set - Edit Dictionary</a>";
+			}
 			else
-				$rc = $record->title . ': ' . $record->translation_en;
+			{
+				$xlate = $record->translation_en;
+				if ($record->title == $text)
+				{
+					$rc = $xlate;
+				}
+				else
+				{
+					$rc = $record->title . ': ' . $xlate;
+				}				
+			}								
 		}
 		else
 		{
