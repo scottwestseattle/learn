@@ -527,10 +527,13 @@ class WordController extends Controller
     public function getajax(Request $request, $text)
     {	
 		// 1. see if we already have it in the dictionary
-		$record = Definition::get($text);
+		$record = Definition::search($text);
 		if (isset($record))
 		{
-			$rc = $record->translation_en;
+			if ($record->title == $text)
+				$rc = $record->translation_en;
+			else
+				$rc = $record->title . ': ' . $record->translation_en;
 		}
 		else
 		{
@@ -538,10 +541,13 @@ class WordController extends Controller
 			$record = Word::searchWord($text);
 			if (isset($record))
 			{
-				$rc = $record->description;
+				if ($record->title == $text)
+					$rc = $record->description;
+				else
+					$rc = $record->title . ': ' . $record->description;
 				
 				// add the word to our dictionary for next time
-				Definition::add($text, strtolower($rc), $record->examples);
+				Definition::add($title, strtolower($record->description), $record->examples);
 			}
 			else
 			{

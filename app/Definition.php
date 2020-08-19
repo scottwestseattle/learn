@@ -55,13 +55,59 @@ class Definition extends Base
 
 		return $record;
 	}
+
+	// make forms easier to search line: ';one;two;three;'
+    static public function formatForms($forms)
+    {
+		$accents = 'áÁéÉíÍóÓúÚüÜñÑ'; 
+		$v = preg_replace('/[^\da-z;' . $accents . ']/i', '', $forms); // replace all non-alphanums except for ';'
+		$v = str_replace(';;', ';', $v);
+		$v = str_replace(';', ' ', $v);
+		$v = trim($v);
+		$v = str_replace(' ', ';', $v);
+		$v = ';' . $v . ';';
+		//dd($v);
+		
+		return $v;
+	}
+	
+	// search checks title and forms
+    static public function search($word)
+    {
+		$word = trim($word);
+		$record = null;
+
+		try
+		{
+			$record = Definition::select()
+				->where('deleted_at', null)
+				->where(function ($query) use ($word){$query
+					->where('title', $word)
+					->orWhere('forms', 'LIKE', '%;' . $word . ';%')
+					;})
+				->first();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting word: ' . $word;
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
+		//dd($record);
+
+		return $record;
+	}	
 	
 	static public function add($title, $definition, $examples = null)
-	{		
+	{
+		$title = strtolower($title);
+	
 		$record = new Definition();
 
 		$record->user_id 		= Auth::id();
-		$record->title 			= strtolower($title);
+		$record->title 			= $title;
+		$record->forms 			= $title;
 		$record->translation_en = $definition;
 		$record->language_id	= LANGUAGE_SPANISH;
 		$record->permalink		= Tools::createPermalink($title);
