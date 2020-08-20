@@ -44,7 +44,7 @@
 							@endif
 							<div style="float:left;">
 								<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
-								<div style="margin-right:15px; margin-bottom:5px; float:left;">{{str_word_count($record->description)}} @LANG('content.words')</div>
+								<div style="margin-right:15px; margin-bottom:5px; float:left;"><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
 								
 								@if (App\User::isAdmin())
 									<div style="margin-right:15px; float:left;">

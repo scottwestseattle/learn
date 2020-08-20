@@ -28,7 +28,7 @@ class EntryController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['read', 'articles', 'index', 'view', 'permalink', 'rss']);
+        $this->middleware('is_admin')->except(['read', 'articles', 'stats', 'index', 'view', 'permalink', 'rss']);
 
 		$this->prefix = 'entries';
 		$this->title = 'Entry';
@@ -462,6 +462,48 @@ class EntryController extends Controller
 		]));
     }	
 
+    public function stats(Request $request, Entry $entry)
+    {	
+		$record = $entry;
+		$words = [];
+		
+		$text = strip_tags(html_entity_decode($record->description));
+		$text = str_replace("\r\n", ' ', $text);
+
+		$parts = explode(' ', $text);
+		foreach($parts as $part)
+		{			
+			$word = strtolower(trim($part));
+			$word = Tools::alphanum($word, true);
+						
+			if (strlen($word) > 0)
+			{
+				if (array_key_exists($word, $words))
+				{
+					$words[$word]++;
+				}
+				else
+				{
+					$words[$word] = 1;
+				}
+			}
+			
+			//$word = preg_replace("/(?![.=$'€%-])\p{P}/u", "", $part);
+		}
+		
+		ksort($words);
+		$stats['sortAlpha'] = $words;
+		arsort($words);
+		$stats['sortCount'] = $words;
+		$stats['wordCount'] = str_word_count($entry->description);
+		$stats['uniqueCount'] = count($words);
+
+    	return view('entries.stats', $this->getViewData([
+			'record' => $record,
+			'stats' => $stats,
+		]));
+    }	
+	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates
 	//////////////////////////////////////////////////////////////////////////////////////////

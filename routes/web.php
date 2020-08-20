@@ -87,6 +87,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/index/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
 	Route::get('/show/{id}', 'EntryController@show');
 	Route::get('/read/{entry}', 'EntryController@read');
+	Route::get('/stats/{entry}', 'EntryController@stats');
 
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');

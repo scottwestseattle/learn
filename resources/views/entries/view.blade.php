@@ -50,7 +50,8 @@
 				@if (false){{$display_date}}&nbsp;&nbsp;@endif
 				<div style="margin-right:10px; float:left;"><a href='/entries/read/{{$record->id}}'><span style="font-size:20px;" class="glyphCustom glyphicon glyphicon-volume-up"></span></a></div>			
 				<div class="article-source">
-					{{$record->view_count}} @LANG('content.views')&nbsp;&nbsp;{{$wordCount}} @LANG('content.words')
+					<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
+					<div style="margin-right:15px; float:left;"><a href="/entries/stats/{{$record->id}}">{{$wordCount}} @LANG('content.words')</a></div>
 					<span style="margin-left:10px;">
 						@component('components.control-button-publish', ['record' => $record, 'prefix' => $prefix, 'showPublic' => true])@endcomponent					
 					</span>

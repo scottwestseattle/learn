@@ -26,8 +26,8 @@
 		<div>
 
 		<div class="form-group">
-			<label for="description" class="control-label">@LANG('content.Translation, Definition, or Hint'):</label>
-			<textarea rows="3" name="description" id="description" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
+			<label for="definition" class="control-label">@LANG('content.Definition'):</label>
+			<textarea rows="3" name="definition" id="definition" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
 			
 			<label for="examples" class="control-label">@LANG('content.Examples'):</label>
 			<textarea rows="5" name="examples" id="examples" class="form-control" onfocus="setFocus($(this))"></textarea>

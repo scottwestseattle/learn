@@ -362,8 +362,59 @@ class Definition extends Base
 				$records[CONJ_IMP_AFFIRMATIVE][2] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][2];
 				$records[CONJ_IMP_AFFIRMATIVE][4] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][4];
 			}
-			// Case 4: vegular verbs that such as: acarrear, rodear, matar, llamar, tramar
-			else if (strlen($text) > strlen('rear') && Tools::endsWithAny($text, ['rear', 'dear', 'tar', 'amar']))
+			// Case 3a: recalcar, remolcar
+			else if (strlen($text) > strlen('calcar') && Tools::endsWithAny($text, ['calcar', 'molcar']))
+			{
+				$stem = 'car';
+				$middle = 'c';
+				$middleIrregular = 'qu';
+				$endings = self::$_verbEndings['ar'];
+				
+				// get the regular conjugations
+				$records = self::conjugateAr($text, $endings, $stem, $middle);
+				
+				// apply 4 irregular conjugations
+				$root = $records['root'];
+				
+				for ($i = 0; $i < 6; $i++)
+					$records[CONJ_SUB_PRESENT][$i] = $root . $middleIrregular . $endings[CONJ_SUB_PRESENT][$i];
+				
+				$records[CONJ_IND_PRETERITE][0] = $root . $middleIrregular . $endings[CONJ_IND_PRETERITE][0];
+				$records[CONJ_IMP_AFFIRMATIVE][1] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][1];
+				$records[CONJ_IMP_AFFIRMATIVE][2] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][2];
+				$records[CONJ_IMP_AFFIRMATIVE][4] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][4];
+			}	
+			// Case 3b: 'o' stem change: volcar
+			else if (false && strlen($text) > strlen('olcar') && Tools::endsWithAny($text, ['olcar']))
+			{
+			//todo: same as??? 'olver', >>> revolver, revolcar, volver, resolver, devolver
+			//todo: what about: 'over' >> mover: mueve / llover: llueve 
+				$stemTrimmer = 'car';
+				$stemChange = 'ue';
+				$middle = 'c';
+				$middleIrregular = 'qu';
+				$endings = self::$_verbEndings['ar'];
+				
+				// get the regular conjugations
+				$records = self::conjugateAr($text, $endings, $stemTrimmer, $middle);
+				
+				// apply irregular conjugations
+				$root = $records['root'];
+				$rootIrregular = 'vuelc';
+				// vol
+				// vuelc
+				
+				//todo: NOT DONE YET!!! do the irregulars...
+				for ($i = 0; $i < 6; $i++)
+					$records[CONJ_SUB_PRESENT][$i] = $root . $middleIrregular . $endings[CONJ_SUB_PRESENT][$i];
+				
+				$records[CONJ_IND_PRETERITE][0] = $root . $middleIrregular . $endings[CONJ_IND_PRETERITE][0];
+				$records[CONJ_IMP_AFFIRMATIVE][1] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][1];
+				$records[CONJ_IMP_AFFIRMATIVE][2] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][2];
+				$records[CONJ_IMP_AFFIRMATIVE][4] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][4];
+			}				
+			// Case 4: vegular AR verbs that such as: acarrear, rodear, matar, llamar, tramar, increpar
+			else if (strlen($text) > strlen('rear') && Tools::endsWithAny($text, ['rear', 'dear', 'tar', 'amar', 'ivar', 'epar']))
 			{
 				$stem = 'ar';
 				$middle = '';
