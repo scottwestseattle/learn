@@ -24,7 +24,7 @@ class DefinitionController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view']);
+        $this->middleware('is_admin')->except(['index', 'view', 'conjugate']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;

@@ -215,6 +215,49 @@ class Definition extends Base
 
 		return $record;
     }	
+	
+	// á é í ó 			
+	static private $_verbEndings = [
+		'ar' => [
+			CONJ_PARTICIPLE => ['ando', 'ado'],
+			CONJ_IND_PRESENT => ['o', 'as', 'a', 'amos', 'áis', 'an'],
+			CONJ_IND_PRETERITE => ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
+			CONJ_IND_IMPERFECT => ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
+			CONJ_IND_CONDITIONAL => ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
+			CONJ_SUB_PRESENT => ['e', 'es', 'e', 'emos', 'éis', 'en'],
+			CONJ_SUB_IMPERFECT => ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
+			CONJ_SUB_IMPERFECT2 => ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
+			CONJ_SUB_FUTURE => ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
+			CONJ_IMP_AFFIRMATIVE => ['a', 'e', 'emos', 'ad', 'en'],
+			CONJ_IMP_NEGATIVE => ['', '', '', '', '', ''],	
+		],
+		'er' => [
+			CONJ_PARTICIPLE => ['iendo', 'ido'],
+			CONJ_IND_PRESENT => ['o', 'as', 'a', 'amos', 'áis', 'an'],
+			CONJ_IND_PRETERITE => ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
+			CONJ_IND_IMPERFECT => ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
+			CONJ_IND_CONDITIONAL => ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
+			CONJ_SUB_PRESENT => ['e', 'es', 'e', 'emos', 'éis', 'en'],
+			CONJ_SUB_IMPERFECT => ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
+			CONJ_SUB_IMPERFECT2 => ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
+			CONJ_SUB_FUTURE => ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
+			CONJ_IMP_AFFIRMATIVE => ['a', 'e', 'emos', 'ad', 'en'],
+			CONJ_IMP_NEGATIVE => ['', '', '', '', '', ''],	
+		],
+		'ir' => [
+			CONJ_PARTICIPLE => ['iendo', 'ido'],
+			CONJ_IND_PRESENT => ['o', 'as', 'a', 'amos', 'áis', 'an'],
+			CONJ_IND_PRETERITE => ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
+			CONJ_IND_IMPERFECT => ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
+			CONJ_IND_CONDITIONAL => ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
+			CONJ_SUB_PRESENT => ['e', 'es', 'e', 'emos', 'éis', 'en'],
+			CONJ_SUB_IMPERFECT => ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
+			CONJ_SUB_IMPERFECT2 => ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
+			CONJ_SUB_FUTURE => ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
+			CONJ_IMP_AFFIRMATIVE => ['a', 'e', 'emos', 'ad', 'en'],
+			CONJ_IMP_NEGATIVE => ['', '', '', '', '', ''],	
+		],
+	];
 		
     static public function conjugate($text)
     {
@@ -226,78 +269,15 @@ class Definition extends Base
 		$text = Tools::alphanum($text);
 		if (isset($text)) // anything left?
 		{
-			// Case 1: ends with 'azar': aplazar, desplazar, gozar
-			if (Tools::endsWith($text, 'azar') || Tools::endsWith($text, 'ozar'))
+			// Case 1: ends with 'azar' or 'ozar': aplazar, desplazar, gozar
+			if (strlen($text) > strlen('azar') && (Tools::endsWith($text, 'azar') || Tools::endsWith($text, 'ozar')))
 			{
-				// á é í ó 
-				$stem = 'zar';
-				$middle = 'z';
-				$middleIrregular = 'c';
-				
-				// participles
-				$tab[CONJ_PARTICIPLE] = ['ando', 'ado'];
-								
-				// indicative
-				$tab[CONJ_IND_PRESENT] 	= ['o', 'as', 'a', 'amos', 'áis', 'an'];
-				$tab[CONJ_IND_PRETERITE] 	= ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'];
-				$tab[CONJ_IND_IMPERFECT] 	= ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'];
-				$tab[CONJ_IND_CONDITIONAL] 	= ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'];
-				
-				// subjunctive
-				$tab[CONJ_SUB_PRESENT] 	= ['e', 'es', 'e', 'emos', 'éis', 'en'];
-				$tab[CONJ_SUB_IMPERFECT] 	= ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'];
-				$tab[CONJ_SUB_IMPERFECT2] 	= ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'];
-				$tab[CONJ_SUB_FUTURE] 	= ['are', 'ares', 'are', 'áremos', 'areis', 'aren'];
-
-				// imperative
-				$tab[CONJ_IMP_AFFIRMATIVE] 	= ['a', 'e', 'emos', 'ad', 'en'];
-				//$tab[CONJ_IMP_NEGATIVE] 	= ['o', 'as', 'a', 'amos', 'áis', 'an'];
-				
-				// preg_split('/(\. |\.\' |\.\" )/', $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-				$parts = preg_split('/(' . $stem . ')/', $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-				if (count($parts) > 0)
-				{
-					$root = $parts[0]; // verb root such as 
-					$records = [];
-					
-					// participles
-					for ($i = 0; $i < 2; $i++)
-						$records[CONJ_PARTICIPLE][] = $root . $middle . $tab[CONJ_PARTICIPLE][$i];
-										
-					// indication
-					for ($i = 0; $i < 6; $i++)
-						$records[CONJ_IND_PRESENT][] = $root . $middle . $tab[CONJ_IND_PRESENT][$i];
-					for ($i = 0; $i < 6; $i++)
-						$records[CONJ_IND_PRETERITE][] = $root . $middle . $tab[CONJ_IND_PRETERITE][$i];
-					for ($i = 0; $i < 6; $i++)
-						$records[CONJ_IND_IMPERFECT][] = $root . $middle . $tab[CONJ_IND_IMPERFECT][$i];
-					for ($i = 0; $i < 6; $i++)
-						$records[CONJ_IND_CONDITIONAL][] = $root . $middle . $tab[CONJ_IND_CONDITIONAL][$i];
-					// one irregular
-					$records[CONJ_IND_PRETERITE][0] = $root . $middleIrregular . $tab[CONJ_IND_PRETERITE][0];
-					
-					// subjunctive
-					for ($i = 0; $i < 6; $i++)
-						$records[CONJ_SUB_PRESENT][] = $root . $middleIrregular . $tab[CONJ_SUB_PRESENT][$i];
-					for ($i = 0; $i < 6; $i++)
-						$records[CONJ_SUB_IMPERFECT][] = $root . $middle . $tab[CONJ_SUB_IMPERFECT][$i];
-					for ($i = 0; $i < 6; $i++)
-						$records[CONJ_SUB_IMPERFECT2][] = $root . $middle . $tab[CONJ_SUB_IMPERFECT2][$i];
-					for ($i = 0; $i < 6; $i++)
-						$records[CONJ_SUB_FUTURE][] = $root . $middle . $tab[CONJ_SUB_FUTURE][$i];
-
-					// imperative
-					for ($i = 0; $i < 5; $i++)
-						$records[CONJ_IMP_AFFIRMATIVE][] = $root . $middle . $tab[CONJ_IMP_AFFIRMATIVE][$i];
-					// three irregulars
-					$records[CONJ_IMP_AFFIRMATIVE][1] = $root . $middleIrregular . $tab[CONJ_IMP_AFFIRMATIVE][1];
-					$records[CONJ_IMP_AFFIRMATIVE][2] = $root . $middleIrregular . $tab[CONJ_IMP_AFFIRMATIVE][2];
-					$records[CONJ_IMP_AFFIRMATIVE][4] = $root . $middleIrregular . $tab[CONJ_IMP_AFFIRMATIVE][4];
-					
-					//dd($records);
-					$rc['forms'] = self::getFormsString($records);
-					$rc['records'] = $records;
-				}
+				$rc = self::conjugateAzar($text);
+			}
+			// Case 2: ends with 'ezar': tropezar
+			else if (strlen($text) > strlen('ezar') && (Tools::endsWith($text, 'ezar') || Tools::endsWith($text, 'ezar')))
+			{
+				//$rc = self::conjugateEzar($text);
 			}
 		}
 				
@@ -305,6 +285,66 @@ class Definition extends Base
 		
 		return $rc;
 	}		
+	
+    static private function conjugateAzar($text)
+    {	
+		$rc['forms'] = null;
+		$rc['records'] = null;
+		$verbType = 'ar';
+		$stem = 'zar';
+		$middle = 'z';
+		$middleIrregular = 'c';
+
+		// preg_split('/(\. |\.\' |\.\" )/', $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+		$parts = preg_split('/(' . $stem . ')/', $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+		if (count($parts) > 0)
+		{
+			$root = $parts[0]; // verb root such as 
+			$records = [];
+
+			$endings = self::$_verbEndings[$verbType];
+
+			// participles
+			for ($i = 0; $i < 2; $i++)
+				$records[CONJ_PARTICIPLE][] = $root . $middle . $endings[CONJ_PARTICIPLE][$i];
+								
+			// indication
+			for ($i = 0; $i < 6; $i++)
+				$records[CONJ_IND_PRESENT][] = $root . $middle . $endings[CONJ_IND_PRESENT][$i];
+			for ($i = 0; $i < 6; $i++)
+				$records[CONJ_IND_PRETERITE][] = $root . $middle . $endings[CONJ_IND_PRETERITE][$i];
+			for ($i = 0; $i < 6; $i++)
+				$records[CONJ_IND_IMPERFECT][] = $root . $middle . $endings[CONJ_IND_IMPERFECT][$i];
+			for ($i = 0; $i < 6; $i++)
+				$records[CONJ_IND_CONDITIONAL][] = $root . $middle . $endings[CONJ_IND_CONDITIONAL][$i];
+			// one irregular
+			$records[CONJ_IND_PRETERITE][0] = $root . $middleIrregular . $endings[CONJ_IND_PRETERITE][0];
+			
+			// subjunctive
+			for ($i = 0; $i < 6; $i++)
+				$records[CONJ_SUB_PRESENT][] = $root . $middleIrregular . $endings[CONJ_SUB_PRESENT][$i];
+			for ($i = 0; $i < 6; $i++)
+				$records[CONJ_SUB_IMPERFECT][] = $root . $middle . $endings[CONJ_SUB_IMPERFECT][$i];
+			for ($i = 0; $i < 6; $i++)
+				$records[CONJ_SUB_IMPERFECT2][] = $root . $middle . $endings[CONJ_SUB_IMPERFECT2][$i];
+			for ($i = 0; $i < 6; $i++)
+				$records[CONJ_SUB_FUTURE][] = $root . $middle . $endings[CONJ_SUB_FUTURE][$i];
+
+			// imperative
+			for ($i = 0; $i < 5; $i++)
+				$records[CONJ_IMP_AFFIRMATIVE][] = $root . $middle . $endings[CONJ_IMP_AFFIRMATIVE][$i];
+			// three irregulars
+			$records[CONJ_IMP_AFFIRMATIVE][1] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][1];
+			$records[CONJ_IMP_AFFIRMATIVE][2] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][2];
+			$records[CONJ_IMP_AFFIRMATIVE][4] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][4];
+			
+			//dd($records);
+			$rc['forms'] = self::getFormsString($records);
+			$rc['records'] = $records;
+		}
+		
+		return $rc;
+	}				
 	
     static private function getFormsString($records)
     {
