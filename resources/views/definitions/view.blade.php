@@ -23,9 +23,12 @@
 		</a>
 	</div>
 
-	<div style="margin-top:30px;">
+	<div style="mt-3">
 		<h3>
-			{{$record->title}}<span style="vertical-align: middle; background-color: LightGray; color: gray; margin-left: 7px; font-size:12px; padding:3px 3px; font-weight:bold;" class="badge">{{$record->view_count}}</span>
+			{{$record->title}}<span style="vertical-align: middle; background-color: LightGray; color: gray; margin-left: 7px; font-size:13px; padding:3px 3px; font-weight:bold;" class="badge">{{$record->view_count}}</span>
+			@if (App\Definition::possibleVerb($record->title))
+				<div class="small-thin-text mt-2"><a target="_blank" href="/{{PREFIX . '/conjugate/' . $record->title}}/">conjugate</a>
+			@endif
 		</h3>
 	</div>
 
@@ -61,11 +64,7 @@
 		@endif
 	</div>
 
-	@if (isset($records) && count($records) > 0)
-		<div style="margin-top:50px;">
-			@component('components.data-badge-list', ['edit' => '/words/view/', 'records' => $records, 'title' => 'Vocabulary'])@endcomponent
-		</div>
-	@endif
+	<div class="small-thin-text mt-2">{{App\Definition::displayForms($record->forms)}}</div>
 
 </div>
 

@@ -545,7 +545,9 @@ class WordController extends Controller
 				else
 				{
 					$rc = $record->title . ': ' . $xlate;
-				}				
+				}
+				
+				$rc = "<a target='_blank' href='/definitions/view/" . $record->id . "'>$rc</a>";
 			}								
 		}
 		else
@@ -560,7 +562,9 @@ class WordController extends Controller
 					$rc = $record->title . ': ' . $record->description;
 				
 				// add the word to our dictionary for next time
-				Definition::add($title, strtolower($record->description), $record->examples);
+				$id = Definition::add($record->title, strtolower($record->description), $record->examples);
+				
+				$rc = "<a target='_blank' href='/definitions/view/" . $id . ">$rc</a>";
 			}
 			else
 			{

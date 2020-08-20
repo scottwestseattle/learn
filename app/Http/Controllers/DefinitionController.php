@@ -52,6 +52,22 @@ class DefinitionController extends Controller
 			'records' => $records,
 		]));
     }
+	
+    public function conjugate(Request $request, $text)
+    {
+		$records = Definition::conjugate($text);
+		if (isset($records))
+		{
+			$forms = $records['forms'];
+			$records = $records['records'];
+		}
+		
+		return view(PREFIX . '.conjugate', $this->getViewData([
+			'records' => $records,
+			'verb' => $text,
+		]));
+    }	
+	
 
     public function indexUser(Request $request)
     {
@@ -127,12 +143,23 @@ class DefinitionController extends Controller
 
     public function create(Request $request)
     {
+		$title = trim($request->title);
+		$record = Definition::get($title);
+		if (isset($record))
+		{
+			Tools::flash('danger', 'record already exists');
+			return redirect('/' . PREFIX . '/edit/' . $record->id);
+		}
+		
 		$record = new Definition();
 
 		$record->user_id 		= Auth::id();
 		$record->language_id 	= LANGUAGE_SPANISH;
 		$record->title 			= $request->title;
+		$record->forms 			= Definition::formatForms($request->forms);
 		$record->definition		= $request->definition;
+		$record->translation_en	= $request->translation_en;
+		$record->translation_es	= $request->translation_es;
 		$record->examples		= $request->examples;
 		$record->permalink		= Tools::createPermalink($request->title);
 
@@ -144,6 +171,8 @@ class DefinitionController extends Controller
 
 			$msg = 'New record has been added';
 			Tools::flash('success', $msg);
+			
+			return redirect('/' . PREFIX . '/view/' . $record->id);
 		}
 		catch (\Exception $e)
 		{
@@ -153,8 +182,6 @@ class DefinitionController extends Controller
 
 			return back();
 		}
-
-		return redirect('/definitions/');
     }
 
     public function permalink(Request $request, $permalink)
@@ -187,9 +214,17 @@ class DefinitionController extends Controller
 	public function edit(Definition $definition)
     {
 		$record = $definition;
+		$forms = null;
+		
+		$records = Definition::conjugate($definition->title);
+		if (isset($records))
+		{
+			$forms = $records['forms'];
+		}		
 
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
+			'forms' => $forms,
 			]));
 	}
 
@@ -395,28 +430,16 @@ class DefinitionController extends Controller
 		return $rc;
 	}
 
-    public function confirmdelete(Word $word)
+    public function confirmdelete(Definition $definition)
     {
 		return view(PREFIX . '.confirmdelete', $this->getViewData([
-			'record' => $word,
+			'record' => $definition,
 		]));
     }
 
-    public function confirmDeleteUser(Word $word)
+    public function delete(Request $request, Definition $definition)
     {
-		return view(PREFIX . '.confirmdelete', $this->getViewData([
-			'record' => $word,
-		]));
-    }
-
-    public function deleteUser(Request $request, Word $word)
-    {
-		return $this->delete($request, $word);
-	}
-
-    public function delete(Request $request, Word $word)
-    {
-		$record = $word;
+		$record = $definition;
 
 		try
 		{
@@ -431,12 +454,7 @@ class DefinitionController extends Controller
 			Tools::flash('danger', $msg);
 		}
 
-		if ($word->type_flag == WORDTYPE_LESSONLIST)
-			return redirect('/words/add/' . $word->lesson_id);
-		else if ($word->type_flag == WORDTYPE_VOCABLIST)
-			return redirect('/vocab-lists/view/' . $word->vocab_list_id);
-		else
-			return redirect('/words/add-user');
+		return redirect('/' . PREFIX . '/');
     }
 
     public function fastdelete(Word $word)
@@ -545,5 +563,5 @@ class DefinitionController extends Controller
 		Event::logInfo(LOG_MODEL, LOG_ACTION_TOUCH, 'touch ' . $word->title . ': ' . $rc);
 
 		return $rc;
-    }
+    }	
 }

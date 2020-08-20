@@ -297,10 +297,7 @@ class Tools
 			$text = trim($text);
 
 			if ($alphanum)
-			{
-				// remove all but the specified chars
-				$text = preg_replace("/[^a-zA-Z0-9!@.,()-+=?!' \r\n]+/", "", $text);
-			}
+				$text = alphanum($text);
 
 			if (strlen($text) === 0)
 				$text = null;
@@ -308,6 +305,16 @@ class Tools
 
 		return $text;
 	}
+	
+	static public function alphanum($text)
+	{
+		if (isset($text))
+		{
+			$text = preg_replace("/[^a-zA-Z0-9!@.,()-+=?!' \r\n]+/", "", trim($text));
+		}
+
+		return $text;
+	}	
 	
 	static public function getTextOrShowEmpty($text)
 	{

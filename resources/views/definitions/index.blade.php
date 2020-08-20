@@ -3,6 +3,8 @@
 @section('content')
 
 <div class="container page-normal">
+
+	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 	
 	<h1>@LANG('content.Dictionary') ({{count($records)}})</h1>
 	

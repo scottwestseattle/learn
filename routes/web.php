@@ -59,6 +59,7 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/', 'DefinitionController@index');
 	Route::get('/admin', 'DefinitionController@admin');
 	Route::get('/view/{definition}', 'DefinitionController@view');
+	Route::get('/conjugate/{text}', 'DefinitionController@conjugate');
 
 	// add/create
 	Route::get('/add','DefinitionController@add')->middleware('auth');

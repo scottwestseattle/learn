@@ -821,9 +821,9 @@ function getSelectedText()
 			succeed = false;
 		}
 
-		// https://www.spanishdict.com/translate/comulgar
 		var html = "<div style='margin-bottom:10px;'><span style='font-size:1.2em;'>" + text + "</span>"
 			+ "&nbsp;<a target='_blank' href='https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "'>(Google)</a>"
+			+ "&nbsp;<a target='_blank' href='https://www.spanishdict.com/translate/" + text + "'>(SpanDict)</a>"
 			+ "&nbsp;<a target='_blank' href='/definitions/add'>(add)</a><div>"
 			;
 		$('#selected-word').html(html);
