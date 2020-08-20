@@ -16,11 +16,9 @@
 			<label for="title" class="control-label">@LANG('content.Word or Phrase'):</label>
 			<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}" autocomplete="off" onfocus="setFocus($(this))" />
 			<label for="forms" class="control-label">@LANG('content.Word Forms'):</label>
-			@if (isset($record->forms))
+			<a onclick="event.preventDefault(); getVerbForms();" href="" tabindex="-1'><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
+			<a onclick="event.preventDefault(); $('#forms').val('');" href="" tabindex="-1'><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<input type="text" id="forms" name="forms" class="form-control" value="{{$record->forms}}" autocomplete="off" onfocus="setFocus($(this))" />
-			@else
-			<input type="text" id="forms" name="forms" class="form-control" value="{{$forms}}" autocomplete="off" onfocus="setFocus($(this))" />
-			@endif
 		</div>
 
 		<div class="form-group">

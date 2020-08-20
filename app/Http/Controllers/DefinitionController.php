@@ -24,7 +24,7 @@ class DefinitionController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'conjugate']);
+        $this->middleware('is_admin')->except(['index', 'view', 'conjugate', 'verbforms', 'wordexists']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -56,8 +56,10 @@ class DefinitionController extends Controller
     public function conjugate(Request $request, $text)
     {
 		$records = Definition::conjugate($text);
+		$status = null;
 		if (isset($records))
 		{
+			$status = $records['status'];
 			$forms = $records['forms'];
 			$records = $records['records'];
 		}
@@ -65,9 +67,34 @@ class DefinitionController extends Controller
 		return view(PREFIX . '.conjugate', $this->getViewData([
 			'records' => $records,
 			'verb' => $text,
+			'status' => $status,
 		]));
     }	
 	
+    public function verbforms(Request $request, $text)
+    {
+		$forms = null;
+		$records = Definition::conjugate($text);
+		if (isset($records))
+		{
+			$forms = $records['formsPretty'];
+		}
+		
+		return $forms;
+    }	
+
+    public function wordexists(Request $request, $text)
+    {
+		$rc = '';
+		
+		$record = Definition::get($text);
+		if (isset($record))
+		{ 
+			$rc = "<a target='_blank' href='/definitions/view/" . $record->id . "'>" . $record->title . ": already in dictionary (show)</a>";
+		}
+			
+		return $rc;
+    }	
 
     public function indexUser(Request $request)
     {
@@ -216,15 +243,22 @@ class DefinitionController extends Controller
 		$record = $definition;
 		$forms = null;
 		
-		$records = Definition::conjugate($definition->title);
-		if (isset($records))
+		if (isset($record->forms))
 		{
-			$forms = $records['forms'];
+			// make it prettier?
+		}
+		else
+		{
+			$records = Definition::conjugate($definition->title);
+			if (isset($records))
+			{
+				$forms = $records['formsPretty'];
+				$record->forms = $forms;
+			}	
 		}		
 
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
-			'forms' => $forms,
 			]));
 	}
 
@@ -352,22 +386,167 @@ class DefinitionController extends Controller
 
     public function getajax(Request $request, $text)
     {	
-		// 1. see if it's in our lists
-		$rc = Word::searchWord($text);
-		if (isset($rc))
+		// 1. see if we already have it in the dictionary
+		$record = Definition::search($text);
+		if (isset($record))
 		{
-			$rc = $rc->description;
+			$xlate = null;
+			if (!isset($record->translation_en))
+			{
+				$rc = "<a target='_blank' href='/definitions/edit/$record->id'>Translation not set - Edit Dictionary</a>";
+			}
+			else
+			{
+				$xlate = $record->translation_en;
+				if ($record->title == $text)
+				{
+					$rc = $xlate;
+				}
+				else
+				{
+					$rc = $record->title . ': ' . $xlate;
+				}
+				
+				$rc = "<a target='_blank' href='/definitions/view/" . $record->id . "'>$rc</a>";
+			}								
 		}
 		else
 		{
-			$rc = 'not found';
-			$rc = "<a href='' onclick='event.preventDefault(); translate(\"" . $text . "\")'>Translate: " . $text . "</a>";
-			$rc = "<a href='' onclick='event.preventDefault(); translate(\"" . $text . "\")'>Translate</a>";
+			// 2. not in our list, show link to MS Translate ajax
+			$rc = "<a href='' onclick='event.preventDefault(); xlate(\"" . $text . "\");'>Translate</a>";
 		}
 
 		return $rc;
 	}
 
+    public function translate(Request $request, $text)
+    {	
+		$rc = self::translateMicrosoft($text);
+		
+		if (strlen($rc['error']) == 0)
+		{
+			// add the translation to our dictionary for next time
+			$rc = strtolower($rc['data']);
+			Definition::add($text, $rc);
+		}
+		else
+		{
+			$rc = $rc['error'];
+		}
+		
+		return $rc;
+	}
+	
+    static public function translateMicrosoft($text)
+    {
+		$rc = ['error' => '', 'data' => ''];
+		$text = trim($text);
+		if (strlen($text) == 0)
+		{
+			$rc['error'] = 'empty string';
+			return $rc;
+		}
+		
+		// NOTE: Be sure to uncomment the following line in your php.ini file.
+		// ;extension=php_openssl.dll
+		// You might need to set the full path, for example:
+		// extension="C:\Program Files\Php\ext\php_openssl.dll"
+		
+		// Prepare variables
+		//$text = 'comulgar';
+		$path = "/translate?api-version=3.0";
+		$params = "&to=en";
+		
+		// Prepare cURL command
+		$key = env('MICROSOFT_API_KEY', '');
+		$host = 'api-apc.cognitive.microsofttranslator.com';
+		$region = 'australiaeast';
+
+		$guid = sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0x0fff ) | 0x4000,
+			mt_rand( 0, 0x3fff ) | 0x8000,
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+		);
+				
+		$requestBody = array (
+			array (
+				'Text' => $text,
+			),
+		);
+		
+		$content = json_encode($requestBody);
+		//dd($content);
+
+		$headers = "Content-type: application/json\r\n" .
+			"Content-length: " . strlen($content) . "\r\n" .
+			"Ocp-Apim-Subscription-Key: $key\r\n" .
+			"Ocp-Apim-Subscription-Region: " . $region . "\r\n" .
+			"X-ClientTraceId: " . $guid . "\r\n";
+		//dd($headers);
+
+		// NOTE: Use the key 'http' even if you are making an HTTPS request. See:
+		// http://php.net/manual/en/function.stream-context-create.php
+		$options = array (
+			'http' => array (
+				'header' => $headers,
+				'method' => 'POST',
+				'content' => $content
+			)
+		);
+		//dd($options);
+		
+		$context  = stream_context_create($options);
+		
+		$url = 'https://' . $host . $path . $params;
+		//dd($url);
+		
+		try {
+			$json = file_get_contents($url, false, $context);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error Translating: ' . $text;
+			
+			if (strpos($e->getMessage(), '401') !== FALSE)
+			{
+				$msg .= ' - 401 Unauthorized';
+			}
+			
+			Event::logException(LOG_MODEL, LOG_ACTION_TRANSLATE, $msg, null, $e->getMessage());
+			$result = $msg;
+			$rc['error'] = $msg;
+			return $rc;
+		}
+		//dd($result);
+
+		$json = json_decode($json);
+		//dd($json);
+		
+		if (count($json) > 0)
+		{
+			$json = $json[0]->translations;
+			if (count($json) > 0)
+			{
+				//dd($json[0]);
+				
+				$xlate = strtolower($json[0]->text);
+				if ($text == $xlate) 
+				{
+					// if translation is same as the word, then it probably wasn't found
+					$rc['error'] = 'translation not found';
+				}
+				else
+				{
+					$rc['data'] = $xlate;
+				}
+			}
+			//dd($rc);
+		}
+	
+		return $rc;
+	}
 
     public function addajax(Request $request, $word)
     {

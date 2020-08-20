@@ -144,4 +144,5 @@ return [
 'Dictionary' => 'Dictionary',
 'Back to Dictionary' => 'Back to Dictionary',
 'Definition' => 'Definition',
+'Word Forms' => 'Word Forms',
 ];

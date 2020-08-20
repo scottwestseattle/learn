@@ -828,14 +828,14 @@ function getSelectedText()
 			;
 		$('#selected-word').html(html);
 		$('#selected-word-definition').text('');
-		ajaxexec('/words/get/' + text, '#selected-word-definition');	
+		ajaxexec('/definitions/get/' + text, '#selected-word-definition');	
 	}
 }
 
 function xlate(word) 
 {
 	$('#selected-word-definition').text('translating...');
-	ajaxexec('/words/translate/' + word, '#selected-word-definition');	
+	ajaxexec('/definitions/translate/' + word, '#selected-word-definition');	
 }
 		
 function zoom(amount)

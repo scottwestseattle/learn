@@ -60,6 +60,10 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/admin', 'DefinitionController@admin');
 	Route::get('/view/{definition}', 'DefinitionController@view');
 	Route::get('/conjugate/{text}', 'DefinitionController@conjugate');
+	Route::get('/verbforms/{text}', 'DefinitionController@verbforms');
+	Route::get('/wordexists/{text}', 'DefinitionController@wordexists');
+	Route::get('/get/{text}','DefinitionController@getajax');
+	Route::get('/translate/{text}','DefinitionController@translate');
 
 	// add/create
 	Route::get('/add','DefinitionController@add')->middleware('auth');
@@ -180,8 +184,6 @@ Route::group(['prefix' => 'words'], function () {
 
 	Route::post('/updateajax/{word}','WordController@updateajax');
 	Route::get('/updateajax/{word}','WordController@updateajax');
-	Route::get('/get/{text}','WordController@getajax');
-	Route::get('/translate/{text}','WordController@translate');
 
 	// delete
 	Route::get('/confirmdelete/{word}','WordController@confirmdelete');

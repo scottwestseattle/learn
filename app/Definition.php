@@ -49,7 +49,8 @@ class Definition extends Base
 	
     static public function get($word)
     {
-		$word = trim($word);
+		$word = Tools::alphanum($word, /* strict = */ true);
+		
 		$record = null;
 
 		try
@@ -69,8 +70,32 @@ class Definition extends Base
 		return $record;
 	}
 
+    static public function exists($word)
+    {
+		$word = Tools::alphanum($word, /* strict = */ true);
+		$rc = 0;
+
+		try
+		{
+			$rc = Definition::select()
+				->where('title', $word)
+				->where('deleted_at', null)
+				->count();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting word: ' . $word;
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $rc > 0;
+	}
+
     static public function possibleVerb($word)
     {
+		$word = Tools::alphanum($word, /* strict = */ true);
+		
 		$rc = (Tools::endsWith($word, 'ar') || Tools::endsWith($word, 'er') || Tools::endsWith($word, 'ir'));
 		if ($rc == false)
 			$rc = (Tools::endsWith($word, 'arse') || Tools::endsWith($word, 'erse') || Tools::endsWith($word, 'irse'));
@@ -82,16 +107,23 @@ class Definition extends Base
     static public function formatForms($forms)
     {
 		$v = trim($forms);
-		$accents = 'áÁéÉíÍóÓúÚüÜñÑ'; 
 		$v = str_replace('; ', ';', $v);
-		$v = preg_replace('/[^\da-z; ' . $accents . ']/i', '', $v); // replace all non-alphanums except for ';'
+		$v = preg_replace('/[^\da-z; ' . Tools::getAccentChars() . ']/i', '', $v); // replace all non-alphanums except for ';'
 		$v = str_replace(';;', ';', $v);
 		$v = str_replace(';', '\0', $v); // just to trim the leading and trailing ';' and any spaces
 		$v = trim($v);
 		$v = str_replace('\0', ';', $v); // put back the non-trimmed ';'
 		
 		$v = trim($v);
-		$v = (strlen($v) > 0) ? $v = ';' . $v . ';' : null;
+		if (strlen($v) > 0)
+		{
+			if (!Tools::startsWith(';', $v))
+				$v = ';' . $v;
+			
+			if (!Tools::endsWith(';', $v))
+				$v .= ';';
+		}
+
 		//dd($v);
 		
 		return $v;
@@ -107,7 +139,7 @@ class Definition extends Base
 	// search checks title and forms
     static public function search($word)
     {
-		$word = trim($word);
+		$word = Tools::alphanum($word, /* strict = */ true);
 		$record = null;
 
 		try
@@ -263,28 +295,53 @@ class Definition extends Base
 		],
 	];
 		
+	static private $_irregularVerbs = [
+		'tropezar',
+		'tener',
+		'poder',
+		'ser',
+		'poner',
+		'estar',
+		'tropezar',
+	];
+
+	static private $_irregularVerbEndings = [
+		'guir', 
+		'ger', 
+		'gir', 
+		'cer', 
+		'ucir', 
+	];
+
+	static private $_regularVerbsAr = [ // needed for verbs that don't match a pattern
+		'amar',
+	];
+	
     static public function conjugate($text)
     {
 		$records = null;
 		$rc['forms'] = null;
+		$rc['formsPretty'] = null;
 		$rc['records'] = null;
+		$rc['status'] = null;
 		
 		$parts = null;
 		$text = Tools::alphanum($text);
 		if (isset($text)) // anything left?
 		{
-			// Irregular patterns
-			if (Tools::endsWith($text, 'guir') 
-				|| Tools::endsWith($text, 'ger') 
-				|| Tools::endsWith($text, 'gir')
-				|| Tools::endsWith($text, 'cer')
-				|| Tools::endsWith($text, 'ucir')
-				|| Tools::endsWith($text, 'tropezar')
-			)
+			// find the right pattern
+			if (in_array($text, self::$_irregularVerbs))
 			{
+				// Case 1: matches specific verbs in irregular list
+				$rc['status'] = 'irregular verb not implemented yet';
 			}
-			// Case 1: ends with 'azar', 'ezar', 'ozar': aplazar, bostezar, gozar
-			else if (strlen($text) > strlen('azar') && (Tools::endsWith($text, 'azar') || Tools::endsWith($text, 'ozar') || Tools::endsWith($text, 'ezar')))
+			else if (Tools::endsWithAny($text, self::$_irregularVerbEndings))
+			{
+				// Case 2: matches irregular pattern
+				$rc['status'] = 'verb with irregular pattern not implemented yet';
+			}
+			// Case 3: ends with 'azar', 'ezar', 'ozar': aplazar, bostezar, gozar
+			else if (strlen($text) > strlen('azar') && Tools::endsWithAny($text, ['azar', 'ozar', 'ezar']))
 			{
 				$stem = 'zar';
 				$middle = 'z';
@@ -305,20 +362,34 @@ class Definition extends Base
 				$records[CONJ_IMP_AFFIRMATIVE][2] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][2];
 				$records[CONJ_IMP_AFFIRMATIVE][4] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][4];
 			}
-			// Case 2: ends with 'rear': acarrear
-			else if (strlen($text) > strlen('rear') && (Tools::endsWith($text, 'rear') || Tools::endsWith($text, 'dear')))
+			// Case 4: vegular verbs that such as: acarrear, rodear, matar, llamar, tramar
+			else if (strlen($text) > strlen('rear') && Tools::endsWithAny($text, ['rear', 'dear', 'tar', 'amar']))
 			{
 				$stem = 'ar';
 				$middle = '';
 				$endings = self::$_verbEndings[$stem];
 				
-				// no irregulars
 				$records = self::conjugateAr($text, $endings, $stem, $middle);
+			}
+			// Case 5: regular AR verbs that don't match a pattern yet
+			else if (in_array($text, self::$_regularVerbsAr))
+			{
+				$stem = 'ar';
+				$middle = '';
+				$endings = self::$_verbEndings[$stem];
+				
+				$records = self::conjugateAr($text, $endings, $stem, $middle);
+			}
+			else
+			{
+				// verb case not handled yet
+				$rc['status'] = 'verb pattern not implemented yet';
 			}
 			
 			if (isset($records))
 			{
 				$rc['forms'] = self::getFormsString($records);
+				$rc['formsPretty'] = self::getFormsString($records, true);
 				$rc['records'] = $records;			
 			}
 		}
@@ -375,32 +446,35 @@ class Definition extends Base
 		return $records;
 	}				
 	
-    static private function getFormsString($records)
+    static private function getFormsString($records, $pretty = false)
     {
 		$rc = '';
-		
+
 		foreach($records[CONJ_PARTICIPLE] as $record)
-			$rc .= $record . ';';
+			$rc .= $record . ';' . ($pretty ? ' ' : '');			
 		foreach($records[CONJ_IND_PRESENT] as $record)
-			$rc .= $record . ';';
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
 		foreach($records[CONJ_IND_PRETERITE] as $record)
-			$rc .= $record . ';';
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
 		foreach($records[CONJ_IND_IMPERFECT] as $record)
-			$rc .= $record . ';';
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
 		foreach($records[CONJ_IND_CONDITIONAL] as $record)
-			$rc .= $record . ';';
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		foreach($records[CONJ_IND_FUTURE] as $record)
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
 		foreach($records[CONJ_SUB_PRESENT] as $record)
-			$rc .= $record . ';';
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
 		foreach($records[CONJ_SUB_IMPERFECT] as $record)
-			$rc .= $record . ';';
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
 		foreach($records[CONJ_SUB_IMPERFECT2] as $record)
-			$rc .= $record . ';';
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
 		foreach($records[CONJ_SUB_FUTURE] as $record)
-			$rc .= $record . ';';
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
 		foreach($records[CONJ_IMP_AFFIRMATIVE] as $record)
-			$rc .= $record . ';';
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
 		
-		if (strlen($rc) > 0)
+		$rc = trim($rc);
+		if (!$pretty && strlen($rc) > 0)
 			$rc = ';' . $rc;
 		
 		return $rc;

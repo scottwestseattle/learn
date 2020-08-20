@@ -92,6 +92,12 @@
 			@endforeach
 			</div>
 
+		@else
+		
+			@if (isset($status))
+				<h4><i>{{$status}}</i></h4>
+			@endif
+		
 		@endif
 	<div>
 

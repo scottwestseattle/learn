@@ -144,4 +144,5 @@ return [
 'Dictionary' => '字典',
 'Back to Dictionary' => '返回字典',
 'Definition' => '定义',
+'Word Forms' => '字形',
 ];

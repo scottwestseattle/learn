@@ -9,6 +9,13 @@ use DateTime;
 
 class Tools
 {
+	static private $_accents = 'áÁéÉíÍóÓúÚüÜñÑ'; 
+
+    static public function getAccentChars()
+    {
+		return self::$_accents;
+	}
+	
     static public function isMobile()
     {
 		$useragent = $_SERVER['HTTP_USER_AGENT'];
@@ -306,11 +313,19 @@ class Tools
 		return $text;
 	}
 	
-	static public function alphanum($text)
+	static public function alphanum($text, $strict = false)
 	{
 		if (isset($text))
-		{
-			$text = preg_replace("/[^a-zA-Z0-9!@.,()-+=?!' \r\n]+/", "", trim($text));
+		{			
+			// replace all chars except alphanums, some punctuation, accent chars, and whitespace
+			$base = "a-zA-Z0-9 \r\n";
+			$punct = "!@.,()-+=?!'";
+			
+			$match = $base . self::$_accents;
+			if (!$strict)
+				$match .= $punct;
+			
+			$text = preg_replace("/[^" . $match . "]+/", "", trim($text));
 		}
 
 		return $text;
@@ -665,7 +680,40 @@ class Tools
 		return $rc;
 	}
 
+	static public function endsWithAny($haystack, $needle)
+	{
+		$rc = false;
+		
+		if (is_array($needle))
+		{
+			foreach($needle as $n)
+			{
+				$rc = self::endsWith($haystack, $n);
+				if ($rc) // if it ends with any of them then it's true
+					break;
+			}
+		}
+		
+		return $rc;
+	}
+
 	static public function endsWith($haystack, $needle)
+	{
+		$rc = false;
+		
+		$pos = strlen($haystack) - strlen($needle); // get the end
+		if ($pos > 0) // not the same length
+		{
+			if ($needle === substr($haystack, $pos)) // matches
+			{
+				$rc = true;
+			}
+		}
+		
+		return $rc;
+	}
+	
+	static public function endsWithORIG($haystack, $needle)
 	{
 		$rc = false;
 		$pos = strrpos($haystack, $needle);

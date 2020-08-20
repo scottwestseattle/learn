@@ -34,7 +34,7 @@
 
 	<div class="">
 		@if (isset($record->definition))
-			<p style="font-size:1.2em;">{{$record->definition}}</p>
+			<p style="font-size:1.2em;">{!! nl2br($record->definition) !!}</p>
 		@endif
 		@if (isset($record->translation_en))
 			<p style="font-size:1.2em;">{{$record->translation_en}}</p>

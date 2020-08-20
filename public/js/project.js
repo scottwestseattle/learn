@@ -642,7 +642,7 @@ function onCategoryChange(id)
 	xhttp.send();
 }
 
-function ajaxexec(url, resultsId = '')
+function ajaxexec(url, resultsId = '', resultsInput = false)
 {
 	var xhttp = new XMLHttpRequest();
 
@@ -670,6 +670,10 @@ function ajaxexec(url, resultsId = '')
 					if (this.responseText.startsWith('<'))
 					{
 						$(resultsId).html(this.responseText);
+					}
+					else if (resultsInput) // put results in an input
+					{
+						$(resultsId).val(this.responseText);
 					}
 					else
 					{
@@ -926,3 +930,15 @@ function numInc(id, amount)
 	var value = Number(input.val()) + amount;
 	input.val(Number(value) < 0 ? 0 : Number(value));
 }
+
+function getVerbForms()
+{
+	var title = $('#title').val();
+	ajaxexec('/definitions/verbforms/' + title.trim(), '#forms', true);
+}
+
+function wordExists(title)
+{
+	ajaxexec('/definitions/wordexists/' + title.val().trim(), '#wordexists');
+}
+
