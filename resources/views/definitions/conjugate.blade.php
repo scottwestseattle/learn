@@ -49,30 +49,37 @@
 				<span><i>{{$record}}</i></span>
 			@endforeach
 			</div>
+
+			<div class="mb-3">
+			<h4>Indicative Future:</h4>
+			@foreach($records[CONJ_IND_FUTURE] as $record)
+				<span><i>{{$record}}</i></span>
+			@endforeach
+			</div>
 			
 			<div class="mb-3">
-			<h4>Subjective Present:</h4>
+			<h4>Subjunctive Present:</h4>
 			@foreach($records[CONJ_SUB_PRESENT] as $record)
 				<span><i>{{$record}}</i></span>
 			@endforeach
 			</div>
 			
 			<div class="mb-3">
-			<h4>Subjective Imperfect:</h4>
+			<h4>Subjunctive Imperfect:</h4>
 			@foreach($records[CONJ_SUB_IMPERFECT] as $record)
 				<span><i>{{$record}}</i></span>
 			@endforeach
 			</div>
 			
 			<div class="mb-3">
-			<h4>Subjective Imperfect:</h4>
+			<h4>Subjunctive Imperfect:</h4>
 			@foreach($records[CONJ_SUB_IMPERFECT2] as $record)
 				<span><i>{{$record}}</i></span>
 			@endforeach
 			</div>
 			
 			<div class="mb-3">
-			<h4>Subjective Future:</h4>
+			<h4>Subjunctive Future:</h4>
 			@foreach($records[CONJ_SUB_FUTURE] as $record)
 				<span><i>{{$record}}</i></span>
 			@endforeach

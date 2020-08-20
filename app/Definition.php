@@ -16,6 +16,7 @@ define('CONJ_IND_PRESENT', 'ind_pres');
 define('CONJ_IND_PRETERITE', 'ind_pret');
 define('CONJ_IND_IMPERFECT', 'ind_imp');
 define('CONJ_IND_CONDITIONAL', 'ind_cond');
+define('CONJ_IND_FUTURE', 'ind_fut');
 define('CONJ_SUB_PRESENT', 'sub_pres');
 define('CONJ_SUB_IMPERFECT', 'sub_imp');
 define('CONJ_SUB_IMPERFECT2', 'sub_imp2');
@@ -220,16 +221,17 @@ class Definition extends Base
 	static private $_verbEndings = [
 		'ar' => [
 			CONJ_PARTICIPLE => ['ando', 'ado'],
-			CONJ_IND_PRESENT => ['o', 'as', 'a', 'amos', 'áis', 'an'],
-			CONJ_IND_PRETERITE => ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
-			CONJ_IND_IMPERFECT => ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
-			CONJ_IND_CONDITIONAL => ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
-			CONJ_SUB_PRESENT => ['e', 'es', 'e', 'emos', 'éis', 'en'],
-			CONJ_SUB_IMPERFECT => ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
-			CONJ_SUB_IMPERFECT2 => ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
-			CONJ_SUB_FUTURE => ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
-			CONJ_IMP_AFFIRMATIVE => ['a', 'e', 'emos', 'ad', 'en'],
-			CONJ_IMP_NEGATIVE => ['', '', '', '', '', ''],	
+			CONJ_IND_PRESENT 		=> ['o', 'as', 'a', 'amos', 'áis', 'an'],
+			CONJ_IND_PRETERITE 		=> ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
+			CONJ_IND_IMPERFECT 		=> ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
+			CONJ_IND_CONDITIONAL 	=> ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
+			CONJ_IND_FUTURE 		=> ['aré', 'arás', 'ará', 'aremos', 'aréis', 'arán'],
+			CONJ_SUB_PRESENT 		=> ['e', 'es', 'e', 'emos', 'éis', 'en'],
+			CONJ_SUB_IMPERFECT 		=> ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
+			CONJ_SUB_IMPERFECT2 	=> ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
+			CONJ_SUB_FUTURE 		=> ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
+			CONJ_IMP_AFFIRMATIVE 	=> ['a', 'e', 'emos', 'ad', 'en'],
+			CONJ_IMP_NEGATIVE 		=> ['', '', '', '', '', ''],	
 		],
 		'er' => [
 			CONJ_PARTICIPLE => ['iendo', 'ido'],
@@ -237,6 +239,7 @@ class Definition extends Base
 			CONJ_IND_PRETERITE => ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
 			CONJ_IND_IMPERFECT => ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
 			CONJ_IND_CONDITIONAL => ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
+			CONJ_IND_FUTURE 		=> ['aré', 'arás', 'ará', 'aremos', 'aréis', 'arán'],
 			CONJ_SUB_PRESENT => ['e', 'es', 'e', 'emos', 'éis', 'en'],
 			CONJ_SUB_IMPERFECT => ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
 			CONJ_SUB_IMPERFECT2 => ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
@@ -250,6 +253,7 @@ class Definition extends Base
 			CONJ_IND_PRETERITE => ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
 			CONJ_IND_IMPERFECT => ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
 			CONJ_IND_CONDITIONAL => ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
+			CONJ_IND_FUTURE 		=> ['aré', 'arás', 'ará', 'aremos', 'aréis', 'arán'],
 			CONJ_SUB_PRESENT => ['e', 'es', 'e', 'emos', 'éis', 'en'],
 			CONJ_SUB_IMPERFECT => ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
 			CONJ_SUB_IMPERFECT2 => ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
@@ -288,19 +292,28 @@ class Definition extends Base
 				$endings = self::$_verbEndings['ar'];
 				
 				// get the regular conjugations
-				$records = self::conjugateAr($text, $endings, $stem, $middle, $middleIrregular);
+				$records = self::conjugateAr($text, $endings, $stem, $middle);
 				
 				// apply 4 irregular conjugations
 				$root = $records['root'];
+				
+				for ($i = 0; $i < 6; $i++)
+					$records[CONJ_SUB_PRESENT][$i] = $root . $middleIrregular . $endings[CONJ_SUB_PRESENT][$i];
+				
 				$records[CONJ_IND_PRETERITE][0] = $root . $middleIrregular . $endings[CONJ_IND_PRETERITE][0];
 				$records[CONJ_IMP_AFFIRMATIVE][1] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][1];
 				$records[CONJ_IMP_AFFIRMATIVE][2] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][2];
 				$records[CONJ_IMP_AFFIRMATIVE][4] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][4];
 			}
-			// Case 2: ends with 'ezar': tropezar
-			else if (strlen($text) > strlen('ezar') && (Tools::endsWith($text, 'ezar') || Tools::endsWith($text, 'ezar')))
+			// Case 2: ends with 'rear': acarrear
+			else if (strlen($text) > strlen('rear') && (Tools::endsWith($text, 'rear') || Tools::endsWith($text, 'dear')))
 			{
-				//$rc = self::conjugateEzar($text);
+				$stem = 'ar';
+				$middle = '';
+				$endings = self::$_verbEndings[$stem];
+				
+				// no irregulars
+				$records = self::conjugateAr($text, $endings, $stem, $middle);
 			}
 			
 			if (isset($records))
@@ -315,12 +328,12 @@ class Definition extends Base
 		return $rc;
 	}		
 	
-    static private function conjugateAr($text, $endings, $stem, $middle, $middleIrregular)
+    static private function conjugateAr($text, $endings, $stem, $middle)
     {	
 		$records = null;
 
 		// crack it up to pieces
-		$parts = preg_split('/(' . $stem . ')/', $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+		$parts = preg_split('/(' . $stem . '$)/', $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 		if (count($parts) > 0)
 		{
 			$root = $parts[0]; // verb root such as 
@@ -339,10 +352,12 @@ class Definition extends Base
 				$records[CONJ_IND_IMPERFECT][] = $root . $middle . $endings[CONJ_IND_IMPERFECT][$i];
 			for ($i = 0; $i < 6; $i++)
 				$records[CONJ_IND_CONDITIONAL][] = $root . $middle . $endings[CONJ_IND_CONDITIONAL][$i];
+			for ($i = 0; $i < 6; $i++)
+				$records[CONJ_IND_FUTURE][] = $root . $middle . $endings[CONJ_IND_FUTURE][$i];
 						
 			// subjunctive
 			for ($i = 0; $i < 6; $i++)
-				$records[CONJ_SUB_PRESENT][] = $root . $middleIrregular . $endings[CONJ_SUB_PRESENT][$i];
+				$records[CONJ_SUB_PRESENT][] = $root . $middle . $endings[CONJ_SUB_PRESENT][$i];
 			for ($i = 0; $i < 6; $i++)
 				$records[CONJ_SUB_IMPERFECT][] = $root . $middle . $endings[CONJ_SUB_IMPERFECT][$i];
 			for ($i = 0; $i < 6; $i++)
