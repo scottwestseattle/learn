@@ -269,15 +269,44 @@ class Definition extends Base
 		$text = Tools::alphanum($text);
 		if (isset($text)) // anything left?
 		{
-			// Case 1: ends with 'azar' or 'ozar': aplazar, desplazar, gozar
-			if (strlen($text) > strlen('azar') && (Tools::endsWith($text, 'azar') || Tools::endsWith($text, 'ozar')))
+			// Irregular patterns
+			if (Tools::endsWith($text, 'guir') 
+				|| Tools::endsWith($text, 'ger') 
+				|| Tools::endsWith($text, 'gir')
+				|| Tools::endsWith($text, 'cer')
+				|| Tools::endsWith($text, 'ucir')
+				|| Tools::endsWith($text, 'tropezar')
+			)
 			{
-				$rc = self::conjugateAzar($text);
+			}
+			// Case 1: ends with 'azar', 'ezar', 'ozar': aplazar, bostezar, gozar
+			else if (strlen($text) > strlen('azar') && (Tools::endsWith($text, 'azar') || Tools::endsWith($text, 'ozar') || Tools::endsWith($text, 'ezar')))
+			{
+				$stem = 'zar';
+				$middle = 'z';
+				$middleIrregular = 'c';
+				$endings = self::$_verbEndings['ar'];
+				
+				// get the regular conjugations
+				$records = self::conjugateAr($text, $endings, $stem, $middle, $middleIrregular);
+				
+				// apply 4 irregular conjugations
+				$root = $records['root'];
+				$records[CONJ_IND_PRETERITE][0] = $root . $middleIrregular . $endings[CONJ_IND_PRETERITE][0];
+				$records[CONJ_IMP_AFFIRMATIVE][1] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][1];
+				$records[CONJ_IMP_AFFIRMATIVE][2] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][2];
+				$records[CONJ_IMP_AFFIRMATIVE][4] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][4];
 			}
 			// Case 2: ends with 'ezar': tropezar
 			else if (strlen($text) > strlen('ezar') && (Tools::endsWith($text, 'ezar') || Tools::endsWith($text, 'ezar')))
 			{
 				//$rc = self::conjugateEzar($text);
+			}
+			
+			if (isset($records))
+			{
+				$rc['forms'] = self::getFormsString($records);
+				$rc['records'] = $records;			
 			}
 		}
 				
@@ -286,23 +315,16 @@ class Definition extends Base
 		return $rc;
 	}		
 	
-    static private function conjugateAzar($text)
+    static private function conjugateAr($text, $endings, $stem, $middle, $middleIrregular)
     {	
-		$rc['forms'] = null;
-		$rc['records'] = null;
-		$verbType = 'ar';
-		$stem = 'zar';
-		$middle = 'z';
-		$middleIrregular = 'c';
+		$records = null;
 
-		// preg_split('/(\. |\.\' |\.\" )/', $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+		// crack it up to pieces
 		$parts = preg_split('/(' . $stem . ')/', $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 		if (count($parts) > 0)
 		{
 			$root = $parts[0]; // verb root such as 
-			$records = [];
-
-			$endings = self::$_verbEndings[$verbType];
+			$records['root'] = $root;
 
 			// participles
 			for ($i = 0; $i < 2; $i++)
@@ -317,9 +339,7 @@ class Definition extends Base
 				$records[CONJ_IND_IMPERFECT][] = $root . $middle . $endings[CONJ_IND_IMPERFECT][$i];
 			for ($i = 0; $i < 6; $i++)
 				$records[CONJ_IND_CONDITIONAL][] = $root . $middle . $endings[CONJ_IND_CONDITIONAL][$i];
-			// one irregular
-			$records[CONJ_IND_PRETERITE][0] = $root . $middleIrregular . $endings[CONJ_IND_PRETERITE][0];
-			
+						
 			// subjunctive
 			for ($i = 0; $i < 6; $i++)
 				$records[CONJ_SUB_PRESENT][] = $root . $middleIrregular . $endings[CONJ_SUB_PRESENT][$i];
@@ -333,17 +353,11 @@ class Definition extends Base
 			// imperative
 			for ($i = 0; $i < 5; $i++)
 				$records[CONJ_IMP_AFFIRMATIVE][] = $root . $middle . $endings[CONJ_IMP_AFFIRMATIVE][$i];
-			// three irregulars
-			$records[CONJ_IMP_AFFIRMATIVE][1] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][1];
-			$records[CONJ_IMP_AFFIRMATIVE][2] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][2];
-			$records[CONJ_IMP_AFFIRMATIVE][4] = $root . $middleIrregular . $endings[CONJ_IMP_AFFIRMATIVE][4];
 			
 			//dd($records);
-			$rc['forms'] = self::getFormsString($records);
-			$rc['records'] = $records;
 		}
 		
-		return $rc;
+		return $records;
 	}				
 	
     static private function getFormsString($records)
