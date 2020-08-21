@@ -8,11 +8,12 @@ use Auth;
 use App;
 use App\Entry;
 use App\Event;
-use App\Translation;
-use App\Tools;
-use App\User;
 use App\Geo;
 use App\Status;
+use App\Tag;
+use App\Tools;
+use App\Translation;
+use App\User;
 
 define('BODYSTYLE', '<span style="color:green;">');
 define('ENDBODYSTYLE', '</span>');
@@ -56,13 +57,15 @@ class EntryController extends Controller
     public function articles()
     {		
 		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
-
-		$records = Entry::getArticles(9999);
-		//dd($records);
+	
+		$records = Entry::getArticlesRecent();
 		
+//		$count = count($records);
+ 
 		$vdata = $this->getViewData([
 			'records' => $records,
 			'page_title' => 'List of Articles',
+//			'count' => $count,
 		]);
 			
     	return view('entries.articles', $vdata);
@@ -169,6 +172,7 @@ class EntryController extends Controller
 
 		if (isset($entry))
 		{
+			Tag::recent($entry); // tag it as recent for the user so it will move to the top of the list
 			Entry::countView($entry);
 			$wordCount = str_word_count($entry->description); // count it before <br/>'s are added
 			$entry->description = nl2br($entry->description);
@@ -446,6 +450,9 @@ class EntryController extends Controller
 		{
 			return $this->pageNotFound404('read/' . $entry->id);			
 		}
+				
+		Tag::recent($entry); // tag it as recent for the user so it will move to the top of the list
+		Entry::countView($entry);
 		
 		$record = $entry;
 		$text = [];
@@ -486,7 +493,7 @@ class EntryController extends Controller
     public function superstats(Request $request)
     {	
 		$words = [];
-		$records = Entry::getArticles(9999);
+		$records = Entry::getArticles();
 		$i = 0;
 		$wordCount = 0;
 		$articleCount = 0;

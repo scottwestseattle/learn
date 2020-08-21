@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
 use DateTime;
-use App;
-use App\Tools;
+
 use App\Status;
+use App\Tag;
+use App\Tools;
 
 class Entry extends Base
 {
@@ -28,6 +29,11 @@ class Entry extends Base
     {
     	return $this->belongsTo(User::class);
     }
+	
+    public function tags()
+    {
+		return $this->belongsToMany('App\Tag');
+    }	
 
     public function getSpeechLanguage()
     {
@@ -79,13 +85,33 @@ class Entry extends Base
 		
 		return $records;
 	}
+
+	static public function getArticlesRecent($limit = PHP_INT_MAX)
+	{			
+		$records = DB::table('entries')
+			->leftJoin('entry_tag', function($join) {
+				$join->on('entry_tag.entry_id', '=', 'entries.id');
+				$join->where('entry_tag.user_id', Auth::id());
+			})			
+			->select('entries.*')
+			->where('entries.deleted_flag', 0)
+			->where('entries.type_flag', ENTRY_TYPE_ARTICLE)
+			->where('entries.release_flag', '>=', self::getReleaseFlag())
+			->orderByRaw('entry_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
+			->get($limit);
+
+		return $records;
+	}
 	
-	static public function getArticles($limit = 10)
-	{
-		$records = self::getEntriesByType(ENTRY_TYPE_ARTICLE, $limit);
-		
-		//dd($records);
-		
+	static public function getArticles($limit = PHP_INT_MAX)
+	{			
+		$records = $record = Entry::select()
+				->where('deleted_flag', 0)
+				->where('type_flag', ENTRY_TYPE_ARTICLE)
+				->where('release_flag', '>=', self::getReleaseFlag())
+				->orderByRaw('display_date DESC, id DESC')
+				->get($limit);
+
 		return $records;
 	}
 	

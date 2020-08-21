@@ -78,7 +78,7 @@ class FrontPageController extends Controller
 
 		try
 		{
-			$articles = Entry::getArticles();
+			$articles = Entry::getArticles(10);
 		}
 		catch (\Exception $e)
 		{

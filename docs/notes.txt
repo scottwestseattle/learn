@@ -247,12 +247,4 @@ php artisan migrate:rollback --step=1
 // create Migration, Model and Controller (model name is singular!!)
 php artisan make:model Entry -m -c
 
-Course
-    lesson
-    exercise
-
-title
-description
-main_photo
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
