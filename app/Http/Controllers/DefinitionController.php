@@ -24,7 +24,7 @@ class DefinitionController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'conjugate', 'verbforms', 'wordexists']);
+        $this->middleware('is_admin')->except(['index', 'view', 'find', 'conjugate', 'verbforms', 'wordexists']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -677,6 +677,24 @@ class DefinitionController extends Controller
 		]));
 	}
 
+	public function find(Request $request, $text)
+    {
+		$record = Definition::search($text);
+		if (isset($record))
+		{ 
+			// update the view timestamp so it will move to the back of the list
+			$record->updateLastViewedTime();
+			
+			// format the examples to display as separate sentences
+			$record->examples = Tools::splitSentences($record->examples);
+		}
+		
+		return view(PREFIX . '.view', $this->getViewData([
+			'record' => $record,
+			'word' => Tools::alphanum($text, true),
+			], LOG_MODEL, LOG_PAGE_VIEW));		
+	}
+	
 	public function view(Definition $definition)
     {
 		$record = $definition;

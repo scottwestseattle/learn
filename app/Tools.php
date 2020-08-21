@@ -880,4 +880,41 @@ class Tools
 		
 		return $date;
 	}	
+	
+    static public function getWordStats($text, $words = null)
+    {	
+		$words = isset($words) ? $words : [];
+		
+		$text = strip_tags(html_entity_decode($text));
+		$text = str_replace("\r\n", ' ', $text);
+		$parts = explode(' ', $text);
+		foreach($parts as $part)
+		{			
+			$word = strtolower(trim($part));
+			$word = self::alphanum($word, true);
+						
+			if (strlen($word) > 0)
+			{
+				if (array_key_exists($word, $words))
+				{
+					$words[$word]++;
+				}
+				else
+				{
+					$words[$word] = 1;
+				}
+			}
+		}
+		
+		ksort($words);
+		$stats['sortAlpha'] = $words;
+		
+		arsort($words);
+		$stats['sortCount'] = $words;
+		
+		$stats['wordCount'] = str_word_count($text);
+		$stats['uniqueCount'] = count($words);
+	
+		return $stats;
+	}	
 }

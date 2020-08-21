@@ -465,42 +465,62 @@ class EntryController extends Controller
     public function stats(Request $request, Entry $entry)
     {	
 		$record = $entry;
-		$words = [];
 		
-		$text = strip_tags(html_entity_decode($record->description));
-		$text = str_replace("\r\n", ' ', $text);
-
-		$parts = explode(' ', $text);
-		foreach($parts as $part)
-		{			
-			$word = strtolower(trim($part));
-			$word = Tools::alphanum($word, true);
-						
-			if (strlen($word) > 0)
-			{
-				if (array_key_exists($word, $words))
-				{
-					$words[$word]++;
-				}
-				else
-				{
-					$words[$word] = 1;
-				}
-			}
-			
-			//$word = preg_replace("/(?![.=$'€%-])\p{P}/u", "", $part);
+		$stats = Tools::getWordStats($record->description);
+		
+		// count possible verbs
+		$possibleVerbs = 0;
+		foreach($stats['sortCount'] as $key => $value)
+		{
+			if (Tools::endsWithAny($key, ['ar', 'er', 'ir']))
+				$possibleVerbs++;
 		}
-		
-		ksort($words);
-		$stats['sortAlpha'] = $words;
-		arsort($words);
-		$stats['sortCount'] = $words;
-		$stats['wordCount'] = str_word_count($entry->description);
-		$stats['uniqueCount'] = count($words);
 
     	return view('entries.stats', $this->getViewData([
 			'record' => $record,
 			'stats' => $stats,
+			'possibleVerbs' => $possibleVerbs,
+		]));
+    }	
+
+    public function superstats(Request $request)
+    {	
+		$words = [];
+		$records = Entry::getArticles(9999);
+		$i = 0;
+		$wordCount = 0;
+		$articleCount = 0;
+		$stats = null;
+		foreach($records as $record)
+		{
+			if ($record->language_flag == LANGUAGE_SPANISH)
+			{
+				$stats = Tools::getWordStats($record->description, $words);
+				$wordCount += $stats['wordCount'];
+				$words = $stats['sortAlpha'];
+				
+				//dump($stats);
+								
+				$articleCount++;
+				//if ($articleCount > 1) break;
+			}
+		}
+		
+		// count possible verbs
+		$possibleVerbs = 0;
+		foreach($stats['sortCount'] as $key => $value)
+		{
+			if (Tools::endsWithAny($key, ['ar', 'er', 'ir']))
+				$possibleVerbs++;
+		}
+		
+		$stats['wordCount'] = $wordCount;
+		
+    	return view('entries.stats', $this->getViewData([
+			'record' => null,
+			'stats' => $stats,
+			'articleCount' => $articleCount,
+			'possibleVerbs' => $possibleVerbs,
 		]));
     }	
 	

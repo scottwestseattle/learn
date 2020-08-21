@@ -10,6 +10,7 @@
 				<td style="width:40px;"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				<td style="width:40px;"><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
 			@endif
+			<td style="width:40px;"><a href='/entries/superstats'><span class="glyphCustom glyphicon glyphicon-stats"></span></a></td>
 		</tr></table>
 	</div>
 @endif

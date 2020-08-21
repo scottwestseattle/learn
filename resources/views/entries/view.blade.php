@@ -8,6 +8,8 @@
 
 <div class="page-size container">
                
+	<div class="mb-5 pb-5">
+	
 	@guest
 	@else	
 		@component('entries.menu-submenu', ['record' => $record])@endcomponent		
@@ -99,6 +101,9 @@
 			</div>
 		@endif			
 	</div>
+	
+	</div>
+	
 </div>
 
 @endsection

@@ -4,14 +4,18 @@
 
 <div class="container page-normal">
 
-	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin, 'parent_id' => $record->parent_id])@endcomponent
+	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
+	@if (isset($fromDictionary))
 	<div class="page-nav-buttons">
 		<a class="btn btn-success btn-sm btn-nav-top" role="button" href="/{{$prefix}}/">
 		    @LANG('content.Back to Dictionary')<span class="glyphicon glyphicon-button-back-to"></span>
 		</a>
 	</div>
+	@endif
 	
+	<!-- Top nav buttons -->
+	@if (isset($prev) || isset($next))
 	<div class="page-nav-buttons">
 		<a class="btn btn-primary btn-sm btn-nav-lesson {{isset($prev) ? '' : 'disabled'}}" role="button" href="/{{$prefix}}/view/{{isset($prev) ? $prev->id : 0}}">
 			<span class="glyphicon glyphicon-button-prev"></span>
@@ -22,12 +26,16 @@
 			<span class="glyphicon glyphicon-button-next"></span>
 		</a>
 	</div>
+	@endif
 
+	<!-- Show the record -->
+	@if (isset($record))
+		
 	<div style="mt-3">
 		<h3>
 			{{$record->title}}<span style="vertical-align: middle; background-color: LightGray; color: gray; margin-left: 7px; font-size:13px; padding:3px 3px; font-weight:bold;" class="badge">{{$record->view_count}}</span>
 			@if (App\Definition::possibleVerb($record->title))
-				<div class="small-thin-text mt-2"><a target="_blank" href="/{{PREFIX . '/conjugate/' . $record->title}}/">conjugate</a>
+				<div class="small-thin-text mt-2"><a href="/{{PREFIX . '/conjugate/' . $record->title}}/">conjugate</a>
 			@endif
 		</h3>
 	</div>
@@ -48,7 +56,22 @@
 		@endforeach
 		@endif
 	<div>
+	@else
+		
+	<div style="mt-3">
+		<h3>{{$word}}</h3>
+	</div>
 
+	<div class="">
+		<p style="font-size:1.2em;">Not found in dictionary</p>
+		<p><a target='_blank' href="https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text={{$word}}">Google Translate: {{$word}}</a></p>
+		<p><a target='_blank' href="https://www.spanishdict.com/translate/{{$word}}">Span¡shD!ct.com: {{$word}}</a></p>
+
+	<div>
+	
+	@endif
+
+	<!-- Bottom nav buttons -->
 	<div class="page-nav-buttons">
 		@if (isset($prev))
 		<a class="btn btn-primary btn-sm btn-nav-lesson" role="button" href="/{{$prefix}}/view/{{$prev->id}}">
@@ -64,7 +87,9 @@
 		@endif
 	</div>
 
+	@if (isset($record))
 	<div class="small-thin-text mt-2">{{App\Definition::displayForms($record->forms)}}</div>
+	@endif
 
 </div>
 

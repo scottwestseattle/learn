@@ -59,6 +59,7 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/', 'DefinitionController@index');
 	Route::get('/admin', 'DefinitionController@admin');
 	Route::get('/view/{definition}', 'DefinitionController@view');
+	Route::get('/find/{text}', 'DefinitionController@find');
 	Route::get('/conjugate/{text}', 'DefinitionController@conjugate');
 	Route::get('/verbforms/{text}', 'DefinitionController@verbforms');
 	Route::get('/wordexists/{text}', 'DefinitionController@wordexists');
@@ -88,6 +89,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/show/{id}', 'EntryController@show');
 	Route::get('/read/{entry}', 'EntryController@read');
 	Route::get('/stats/{entry}', 'EntryController@stats');
+	Route::get('/superstats', 'EntryController@superstats');
 
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
