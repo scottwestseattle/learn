@@ -145,6 +145,7 @@ class Definition extends Base
 			
 			if (strlen($word) > 0)
 			{
+				// the clean is specific to the verb conjugator in SpanishDict.com
 				switch($word)
 				{
 					case 'PARTICIPLES':
@@ -177,7 +178,7 @@ class Definition extends Base
 						break;
 					default:
 					{
-						if (!in_array($word, $words))
+						//if (!in_array($word, $words))
 						{
 							$words[] = $word;
 						}

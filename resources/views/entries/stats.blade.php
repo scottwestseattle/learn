@@ -6,7 +6,7 @@
                
 	@guest
 	@else	
-		@component('entries.menu-submenu', ['record' => $record])@endcomponent		
+		@component('entries.menu-submenu', ['record' => $record, 'index' => $index])@endcomponent		
 	@endguest
 	
 	<div class="mb-5">

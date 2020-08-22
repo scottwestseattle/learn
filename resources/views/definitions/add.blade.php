@@ -21,7 +21,7 @@
 			
 			<label for="forms" class="control-label">@LANG('content.Word Forms'):</label>
 			<a onclick="event.preventDefault(); getVerbForms();" href="" tabindex="-1'><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
-			<a onclick="event.preventDefault(); $('#forms').val('');" href="" tabindex="-1'><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
+			<a onclick="event.preventDefault(); $('#forms').val(''); $('#forms').focus();" href="" tabindex="-1'><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<textarea rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
 		<div>
 

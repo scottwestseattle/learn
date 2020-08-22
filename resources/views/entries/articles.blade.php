@@ -4,7 +4,7 @@
 
 <div class="container page-normal">
 
-	@component('entries.menu-submenu')@endcomponent	
+	@component('entries.menu-submenu', ['index' => $index])@endcomponent	
 
 	<h1>@LANG('ui.' . $page_title) ({{count($records)}})</h1>
 

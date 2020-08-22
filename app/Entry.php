@@ -93,15 +93,21 @@ class Entry extends Base
 		$records = null;
 		if (isset($tag))
 		{
+			$tagRecent = Tag::getRecent();
 			$records = DB::table('entries')
-				->join('entry_tag', function($join) {
+				->join('entry_tag', function($join) use ($tag) {
 					$join->on('entry_tag.entry_id', '=', 'entries.id');
+					$join->where('entry_tag.tag_id', $tag->id);
 				})	
+				->leftJoin('entry_tag as recent_tag', function($join) use ($tagRecent) {
+					$join->on('recent_tag.entry_id', '=', 'entries.id');
+					$join->where('recent_tag.user_id', Auth::id());
+					$join->where('recent_tag.tag_id', $tagRecent->id);
+				})							
 				->select('entries.*')
 				->where('entries.deleted_flag', 0)
 				->where('entries.release_flag', '>=', self::getReleaseFlag())
-				->where('entry_tag.tag_id', $tag->id)
-				->orderByRaw('entry_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
+				->orderByRaw('recent_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
 				->get($limit);
 		}
 
@@ -110,10 +116,13 @@ class Entry extends Base
 
 	static public function getArticlesRecent($limit = PHP_INT_MAX)
 	{			
+		$tag = Tag::getRecent();
+		
 		$records = DB::table('entries')
-			->leftJoin('entry_tag', function($join) {
+			->leftJoin('entry_tag', function($join) use ($tag) {
 				$join->on('entry_tag.entry_id', '=', 'entries.id');
 				$join->where('entry_tag.user_id', Auth::id());
+				$join->where('entry_tag.tag_id', $tag->id);
 			})			
 			->select('entries.*')
 			->where('entries.deleted_flag', 0)

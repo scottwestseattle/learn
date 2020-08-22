@@ -90,7 +90,7 @@ class DefinitionController extends Controller
 		$record = Definition::get($text);
 		if (isset($record))
 		{ 
-			$rc = "<a target='_blank' href='/definitions/view/" . $record->id . "'>" . $record->title . ": already in dictionary (show)</a>";
+			$rc = "<a href='/definitions/view/" . $record->id . "'>" . $record->title . ": already in dictionary (show)</a>&nbsp;<a href='/definitions/edit/" . $record->id . "'>(edit)</a>";
 		}
 			
 		return $rc;

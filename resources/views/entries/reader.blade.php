@@ -41,7 +41,7 @@
 		<!-- Top Row Buttons -->
 		<!-------------------------------------------------------->
 		<div style="margin: 0 5px 0 0;">
-			<span style="font-size:1.3em; margin-right:10px;" class=""><a class="" role="" href="/articles"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
+			<span style="font-size:1.3em; margin-right:10px;" class=""><a class="" role="" href="/{{$index}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); reload()" href=""><span id="button-repeat" class="glyphicon glyphicon-repeat"></span></a></span>
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); mute()" href=""><span id="button-mute" class="glyphicon glyphicon-volume-up"></span></a></span>
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); prev()" href=""><span id="button-prev" class="glyphicon glyphicon-backward"></span></a></span>

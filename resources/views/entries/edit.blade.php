@@ -4,7 +4,7 @@
 
 <div class="container page-normal">
 
-	@component('entries.menu-submenu', ['record' => $record])@endcomponent	
+	@component('entries.menu-submenu', ['record' => $record, 'index' => $index])@endcomponent	
 
 	<h1>Edit</h1>
 

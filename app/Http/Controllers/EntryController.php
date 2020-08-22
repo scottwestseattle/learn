@@ -63,6 +63,7 @@ class EntryController extends Controller
 		$vdata = $this->getViewData([
 			'records' => $records,
 			'page_title' => 'Articles',
+			'index' => 'articles',
 		]);
 			
     	return view('entries.articles', $vdata);
@@ -77,6 +78,7 @@ class EntryController extends Controller
 		$vdata = $this->getViewData([
 			'records' => $records,
 			'page_title' => 'Books',
+			'index' => 'books',
 		]);
 			
     	return view('entries.articles', $vdata);
@@ -196,16 +198,22 @@ class EntryController extends Controller
 		$page_title = $entry->title;
 		$backLink = null;
 		$backLinkText = null;
+		$index = null;
 		if ($entry->type_flag == ENTRY_TYPE_ARTICLE)
 		{
 			$backLink = '/articles';
+			$index = 'articles';
 			$backLinkText = __('content.Back to List');
 			$page_title = __('ui.Article') . ' - ' . $page_title;
 			
 			$next = Entry::getNextPrevEntry($entry);
 			$prev = Entry::getNextPrevEntry($entry, /* next = */ false);
 		}		
-
+		else if ($entry->type_flag == ENTRY_TYPE_BOOK)
+		{
+			$index = 'books';
+		}
+		
 		$vdata = $this->getViewData([
 			'record' => $entry, 
 			'next' => $next,
@@ -216,6 +224,7 @@ class EntryController extends Controller
 			'display_date' => $entry->display_date,
 			'isRobot' => false, // $isRobot, //todo: not yet because ome spam robot is coming from fikirandroy page (don't want them to switch pages)
 			'wordCount' => $wordCount,
+			'index' => $index,
 		]);
 		
 		return view('entries.view', $vdata);
@@ -357,6 +366,7 @@ class EntryController extends Controller
 			'entryTypes' => Entry::getEntryTypes(),
 			'dates' => Controller::getDateControlDates(),
 			'filter' => $dates,
+			'index' => $entry->type_flag == ENTRY_TYPE_ARTICLE ? 'articles' : 'books',			
 		]);
 		
 		return view('entries.edit', $vdata);
@@ -417,6 +427,7 @@ class EntryController extends Controller
 		
 		$vdata = $this->getViewData([
 			'entry' => $entry,
+			'index' => $entry->type_flag == ENTRY_TYPE_ARTICLE ? 'articles' : 'books',			
 		]);
 		
 		return view('entries.confirmdelete', $vdata);        	
@@ -441,6 +452,7 @@ class EntryController extends Controller
 			'record' => $entry,
 			'release_flags' => Status::getReleaseFlags(),
 			'wip_flags' => Status::getWipFlags(),
+			'index' => $entry->type_flag == ENTRY_TYPE_ARTICLE ? 'articles' : 'books',			
 		]);
 		
 		return view('entries.publish', $vdata);
@@ -482,6 +494,7 @@ class EntryController extends Controller
 				
     	return view('entries.reader', $this->getViewData([
 			'record' => $record,
+			'index' => $record->type_flag == ENTRY_TYPE_ARTICLE ? 'articles' : 'books',
 		]));
     }	
 
@@ -503,6 +516,7 @@ class EntryController extends Controller
 			'record' => $record,
 			'stats' => $stats,
 			'possibleVerbs' => $possibleVerbs,
+			'index' => $record->type_flag == ENTRY_TYPE_ARTICLE ? 'articles' : 'books',
 		]));
     }	
 

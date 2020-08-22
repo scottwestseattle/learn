@@ -4,7 +4,7 @@
 
 <div class="container page-normal">
 
-	@component('entries.menu-submenu', ['record' => $entry])@endcomponent	
+	@component('entries.menu-submenu', ['record' => $entry, 'index' => $index])@endcomponent	
 
 	<h1>Delete</h1>
 
