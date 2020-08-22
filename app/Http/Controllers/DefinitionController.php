@@ -399,21 +399,22 @@ class DefinitionController extends Controller
 			$xlate = null;
 			if (!isset($record->translation_en))
 			{
-				$rc = "<a target='_blank' href='/definitions/edit/$record->id'>Translation not set - Edit Dictionary</a>";
+				$rc = "<a target='_blank' href='/definitions/edit/$record->id'>$record->title (edit)</a><div>Translation not set</div>";
 			}
 			else
 			{
-				$xlate = $record->translation_en;
 				if ($record->title == $text)
 				{
-					$rc = $xlate;
+					// exact match of title, so just show the translation
 				}
 				else
 				{
-					$rc = $record->title . ': ' . $xlate;
+					// matched either the forms or conjugations, so show the title word too
 				}
-				
-				$rc = "<a target='_blank' href='/definitions/view/" . $record->id . "'>$rc</a>";
+
+				$xlate = nl2br($record->translation_en);
+
+				$rc = "<a target='_blank' href='/definitions/view/$record->id'>$record->title</a><div>$xlate</div>";
 			}								
 		}
 		else

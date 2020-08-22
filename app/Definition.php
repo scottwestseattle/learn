@@ -350,8 +350,13 @@ class Definition extends Base
 				->where(function ($query) use ($word){$query
 					->where('title', $word)
 					->orWhere('forms', 'LIKE', '%;' . $word . ';%')
+					->orWhere('conjugations', 'LIKE', '%;' . $word . ';%')
 					;})
 				->first();
+
+			//todo: need to handle multiple matches
+			//if ($records->count() > 1);
+			//	dd($records);
 		}
 		catch (\Exception $e)
 		{
