@@ -16,8 +16,9 @@ class Entry extends Base
 	static private $entryTypes = [
 		ENTRY_TYPE_NOTSET => 'Not Set',
 		ENTRY_TYPE_ARTICLE => 'Article',
+		ENTRY_TYPE_BOOK => 'Book',
 		ENTRY_TYPE_ENTRY => 'Entry',
-		ENTRY_TYPE_OTHER => 'Other',
+//		ENTRY_TYPE_OTHER => 'Other',
 	];
 	
 	static public function getEntryTypes()
@@ -83,6 +84,27 @@ class Entry extends Base
 				
 		$records = DB::select($q, [Tools::getSiteId(), ENTRY_TYPE_TOUR]);
 		
+		return $records;
+	}
+
+	static public function getRecent($tag, $limit = PHP_INT_MAX)
+	{
+		$tag = Tag::getOrCreate($tag);
+		$records = null;
+		if (isset($tag))
+		{
+			$records = DB::table('entries')
+				->join('entry_tag', function($join) {
+					$join->on('entry_tag.entry_id', '=', 'entries.id');
+				})	
+				->select('entries.*')
+				->where('entries.deleted_flag', 0)
+				->where('entries.release_flag', '>=', self::getReleaseFlag())
+				->where('entry_tag.tag_id', $tag->id)
+				->orderByRaw('entry_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
+				->get($limit);
+		}
+
 		return $records;
 	}
 

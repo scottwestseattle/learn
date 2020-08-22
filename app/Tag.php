@@ -29,12 +29,47 @@ class Tag extends Base
 		}
     }
 
+    static public function tag(Entry $entry, $name, $userId = null)
+    {
+		if (Auth::check())
+		{
+			$tag = Tag::getOrCreate($name);
+			if (isset($tag))
+			{
+				$entry->tags()->detach($tag->id);
+				$entry->tags()->attach($tag->id, ['user_id' => $userId]);
+			}
+		}
+    }
+
+    static public function remove(Entry $entry, $name, $userId = null)
+    {
+		if (Auth::check())
+		{
+			$tag = Tag::get($name);
+			if (isset($tag))
+			{
+				$entry->tags()->detach($tag->id);
+			}
+		}
+    }
     static public function getRecent()
 	{
 		$record = self::get('recent');
 		if (!isset($record))
 		{
 			$record = self::addTag('recent');
+		}
+		
+		return $record;
+	}
+
+    static public function getOrCreate($name)
+	{
+		$record = self::get($name);
+		if (!isset($record))
+		{
+			$record = self::addTag($name);
 		}
 		
 		return $record;
@@ -56,13 +91,13 @@ class Tag extends Base
     {
 		$record = null;
 		$name = Tools::alphanum($name, true);
-		if (isset($name) && strlen($name) > 0) // anything is left
+		if (isset($name) && strlen($name) > 0) // if anything is left
 		{		
 			if (Auth::check())
 			{
 				$record = new Tag();
-				$record->user_id	= Auth::id();
-				$record->name 		= $name;
+				$record->user_id = Auth::id();
+				$record->name 	 = $name;
 				
 				try
 				{

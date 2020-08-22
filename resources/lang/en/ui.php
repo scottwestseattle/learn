@@ -114,4 +114,5 @@ return [
 'by clicking here' => 'by clicking here',
 'Search' => 'Search',
 'views' => 'views',
+'Books' => 'Books',
 ];

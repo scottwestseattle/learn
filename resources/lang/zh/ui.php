@@ -114,4 +114,5 @@ return [
 'by clicking here' => '点击这里',
 'Search' => '搜索',
 'views' => '查看次数',
+'Books' => '图书',
 ];

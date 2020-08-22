@@ -6,7 +6,7 @@
 
 	@component('entries.menu-submenu')@endcomponent	
 
-	<h1>@LANG('ui.Articles') ({{count($records)}})</h1>
+	<h1>@LANG('ui.' . $page_title) ({{count($records)}})</h1>
 
 	<div>
 		@if (isset($records))

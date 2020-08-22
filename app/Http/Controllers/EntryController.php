@@ -29,7 +29,7 @@ class EntryController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['read', 'articles', 'stats', 'index', 'view', 'permalink', 'rss']);
+        $this->middleware('is_admin')->except(['read', 'articles', 'books', 'stats', 'index', 'view', 'permalink', 'rss']);
 
 		$this->prefix = 'entries';
 		$this->title = 'Entry';
@@ -60,12 +60,23 @@ class EntryController extends Controller
 	
 		$records = Entry::getArticlesRecent();
 		
-//		$count = count($records);
- 
 		$vdata = $this->getViewData([
 			'records' => $records,
-			'page_title' => 'List of Articles',
-//			'count' => $count,
+			'page_title' => 'Articles',
+		]);
+			
+    	return view('entries.articles', $vdata);
+    }
+
+    public function books()
+    {		
+		$this->saveVisitor(LOG_MODEL_BOOKS, LOG_PAGE_INDEX);
+	
+		$records = Entry::getRecent(TAG_BOOK);
+		
+		$vdata = $this->getViewData([
+			'records' => $records,
+			'page_title' => 'Books',
 		]);
 			
     	return view('entries.articles', $vdata);
@@ -357,7 +368,6 @@ class EntryController extends Controller
 		$prevTitle = $record->title;
 		
 		$record->site_id 			= Tools::getSiteId();
-		$record->type_flag 			= $request->type_flag;
 		$record->title 				= Tools::trimNull($request->title);
 		$record->permalink			= Tools::trimNull($request->permalink);
 		$record->description_short	= Tools::trimNull($request->description_short);
@@ -365,8 +375,14 @@ class EntryController extends Controller
 		$record->source_credit		= Tools::trimNull($request->source_credit);
 		$record->source_link		= Tools::trimNull($request->source_link);
 		$record->display_date 		= Controller::getSelectedDate($request);		
-		$entry->language_flag		= Tools::getLanguageFlag();
+		$record->language_flag		= Tools::getLanguageFlag();
 
+		$record->type_flag 			= intval($request->type_flag);
+		if ($record->type_flag === ENTRY_TYPE_BOOK)
+			Tag::tag($record, TAG_BOOK);
+		else
+			Tag::remove($record, TAG_BOOK);
+			
 		try
 		{
 			$record->save();
@@ -493,11 +509,12 @@ class EntryController extends Controller
     public function superstats(Request $request)
     {	
 		$words = [];
-		$records = Entry::getArticles();
 		$i = 0;
 		$wordCount = 0;
 		$articleCount = 0;
 		$stats = null;
+
+		$records = Entry::getRecent(TAG_BOOK);
 		foreach($records as $record)
 		{
 			if ($record->language_flag == LANGUAGE_SPANISH)

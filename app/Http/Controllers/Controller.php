@@ -35,18 +35,17 @@ define('LOG_TYPE_TRACKING', 5);
 define('LOG_TYPE_OTHER', 99);
 
 define('LOG_MODEL_ARTICLES', 'articles');
-define('LOG_MODEL_BLOGS', 'blogs');
-define('LOG_MODEL_BLOG_ENTRIES', 'blog entries');
+define('LOG_MODEL_BOOKS', 'books');
 define('LOG_MODEL_COURSES', 'courses');
+define('LOG_MODEL_ENTRIES', 'entries');
 define('LOG_MODEL_EVENTS', 'events');
 define('LOG_MODEL_HOME', 'home');
 define('LOG_MODEL_LESSONS', 'lessons');
 define('LOG_MODEL_SITES', 'sites');
-define('LOG_MODEL_USERS', 'users');
 define('LOG_MODEL_TRANSLATIONS', 'translations');
+define('LOG_MODEL_USERS', 'users');
 define('LOG_MODEL_VISITORS', 'visitors');
 define('LOG_MODEL_WORDS', 'words');
-define('LOG_MODEL_ENTRIES', 'entries');
 
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');
@@ -110,6 +109,7 @@ define('TIMED_SLIDES_DEFAULT_SECONDS', 50);
 define('ENTRY_TYPE_NOTSET', 	-1);
 define('ENTRY_TYPE_ENTRY', 		1);
 define('ENTRY_TYPE_ARTICLE', 	2);
+define('ENTRY_TYPE_BOOK',	 	3);
 define('ENTRY_TYPE_OTHER',		99);
 
 // query sorting
@@ -121,6 +121,10 @@ define('ORDERBY_VIEWS', 3);
 // Languages
 define('LANGUAGE_ENGLISH', 0);
 define('LANGUAGE_SPANISH', 1);
+
+// Tags
+define('TAG_RECENT', 'recent');
+define('TAG_BOOK', 'book');
 
 class Controller extends BaseController
 {

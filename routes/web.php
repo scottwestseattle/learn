@@ -32,6 +32,7 @@ Route::get('/eunoticereset/', 'FrontPageController@eunoticereset');
 Route::get('/sample/', 'FrontPageController@sample');
 Route::get('/authenticated', 'HomeController@authenticated');
 Route::get('/articles', 'EntryController@articles');
+Route::get('/books', 'EntryController@books');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
