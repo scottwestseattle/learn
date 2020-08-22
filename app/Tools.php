@@ -330,6 +330,21 @@ class Tools
 
 		return $text;
 	}	
+
+	static public function alpha($text)
+	{
+		if (isset($text))
+		{			
+			// replace all chars except alphanums, some punctuation, accent chars, and whitespace
+			$text = str_replace("\r\n", ' ', $text);
+			$base = "a-zA-Z ";			
+			$match = $base . self::$_accents;
+			
+			$text = preg_replace("/[^" . $match . "]+/", "", trim($text));
+		}
+
+		return $text;
+	}	
 	
 	static public function getTextOrShowEmpty($text)
 	{

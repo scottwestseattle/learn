@@ -120,7 +120,8 @@ class Entry extends Base
 			->where('entries.type_flag', ENTRY_TYPE_ARTICLE)
 			->where('entries.release_flag', '>=', self::getReleaseFlag())
 			->orderByRaw('entry_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
-			->get($limit);
+			->limit($limit)
+			->get();
 
 		return $records;
 	}
@@ -132,7 +133,8 @@ class Entry extends Base
 				->where('type_flag', ENTRY_TYPE_ARTICLE)
 				->where('release_flag', '>=', self::getReleaseFlag())
 				->orderByRaw('display_date DESC, id DESC')
-				->get($limit);
+				->limit($limit)
+				->get();
 
 		return $records;
 	}

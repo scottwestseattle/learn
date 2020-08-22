@@ -105,22 +105,24 @@ class Definition extends Base
 	
 	// make forms easier to search line: ';one;two;three;'
     static public function formatForms($forms)
-    {
-		$v = trim($forms);
+    {		
+		/* old way
 		$v = str_replace('; ', ';', $v);
 		$v = preg_replace('/[^\da-z; ' . Tools::getAccentChars() . ']/i', '', $v); // replace all non-alphanums except for ';'
 		$v = str_replace(';;', ';', $v);
 		$v = str_replace(';', '\0', $v); // just to trim the leading and trailing ';' and any spaces
 		$v = trim($v);
 		$v = str_replace('\0', ';', $v); // put back the non-trimmed ';'
-		
 		$v = trim($v);
+		*/
+		
+		$v = self::cleanForms($forms);
 		if (strlen($v) > 0)
 		{
-			if (!Tools::startsWith(';', $v))
+			if (!Tools::startsWith($v, ';'))
 				$v = ';' . $v;
 			
-			if (!Tools::endsWith(';', $v))
+			if (!Tools::endsWith($v, ';'))
 				$v .= ';';
 		}
 
@@ -128,10 +130,77 @@ class Definition extends Base
 		
 		return $v;
 	}
+	
+    static public function cleanForms($forms)
+    {
+		$words = [];
+		$v = str_replace(';', ' ', $forms); 	// replace all ';' with spaces
+		$v = Tools::alpha($v, true);			// clean it up
+		$v = preg_replace('/[ *]/i', '|', $v);	// replace all spaces with '|'
 
+		$parts = explode('|', $v);
+		foreach($parts as $part)
+		{			
+			$word = trim($part);
+			
+			if (strlen($word) > 0)
+			{
+				switch($word)
+				{
+					case 'PARTICIPLES':
+					case 'are':
+					case 'Present':
+					case '1':
+					case '2':
+					case 'Affirmative':
+					case 'Conditional':
+					case 'ellosellasUds':
+					case 'Future':
+					case 'Imperfect':
+					case 'Imperative':
+					case 'in':
+					case 'Indicative':
+					case 'Irregularities':
+					case 'Negative':
+					case 'no':
+					case 'nosotros':
+					case 'Past':
+					case 'Preterite':
+					case 'red':
+					case 'Subjunctive':
+					case 'Ud':
+					case 'Uds':
+					case 'vosotros':
+					case 'yo':
+					case 'tú':
+					case 'élellaUd':
+						break;
+					default:
+					{
+						if (!in_array($word, $words))
+						{
+							$words[] = $word;
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		//dd($words);
+		
+		$forms = '';
+		foreach($words as $word)
+			$forms .= $word . ';';
+		
+		return $forms;
+	}	
+	
     static public function displayForms($forms)
     {
 		$v = str_replace(';', ' ', $forms);
+		$words = explode(' ', trim($v));
+		$v .= ' (' . count($words) . ')';
 		
 		return trim($v);
 	}
