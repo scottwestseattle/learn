@@ -878,6 +878,11 @@ body {
 	font-weight:200;
 }
 
+.small-thin-hdr {
+	font-size:12px;
+	font-weight:bold;
+}
+
 td.article-extra {
 	font-size:12px;
 	padding:0 10px;

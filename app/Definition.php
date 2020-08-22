@@ -116,7 +116,8 @@ class Definition extends Base
 		$v = trim($v);
 		*/
 		
-		$v = self::cleanForms($forms);
+		$v = self::cleanForms($forms);		
+		
 		if (strlen($v) > 0)
 		{
 			if (!Tools::startsWith($v, ';'))
@@ -131,14 +132,38 @@ class Definition extends Base
 		return $v;
 	}
 	
-    static public function cleanForms($forms)
+	// make forms easier to search line: ';one;two;three;'
+    static public function getConjugations($raw)
     {
+		$clean = $raw;
+		
+		// quick check to see if it's raw or has already been formatted
+		$parts = explode('|', $raw); 
+		if (count($parts) === 12 && Tools::startsWith($parts[11], ';no '))
+		{
+			// already cleaned and formatted
+		}
+		else
+		{
+			$clean = self::cleanConjugations($raw);
+		}
+	
+		return $clean;
+	}
+	
+    static public function cleanConjugations($raw)
+    {		
+		if (!isset($raw))
+			return null;
+		
 		$words = [];
-		$v = str_replace(';', ' ', $forms); 	// replace all ';' with spaces
+		$v = str_replace(';', ' ', $raw); 	// replace all ';' with spaces
 		$v = Tools::alpha($v, true);			// clean it up
 		$v = preg_replace('/[ *]/i', '|', $v);	// replace all spaces with '|'
 
 		$parts = explode('|', $v);
+		//dd($parts);
+		$prefix = null;
 		foreach($parts as $part)
 		{			
 			$word = trim($part);
@@ -163,7 +188,6 @@ class Definition extends Base
 					case 'Indicative':
 					case 'Irregularities':
 					case 'Negative':
-					case 'no':
 					case 'nosotros':
 					case 'Past':
 					case 'Preterite':
@@ -176,32 +200,139 @@ class Definition extends Base
 					case 'tú':
 					case 'élellaUd':
 						break;
+					case 'no':
+						$prefix = $word; // we need the 'no'
+						break;
 					default:
 					{
-						//if (!in_array($word, $words))
+						if (isset($prefix)) // save the 'no' and use it
 						{
-							$words[] = $word;
+							$word = $prefix . ' ' . $word;
+							$prefix = null;
 						}
+
+						$words[] = $word;
 						break;
 					}
 				}
 			}
 		}
-
 		//dd($words);
 		
-		$forms = '';
-		foreach($words as $word)
-			$forms .= $word . ';';
-		
-		return $forms;
+		$conj = null;
+		if (count($words) == 66) // total verb conjugations
+		{
+			//
+			// save the conjugations
+			//
+			$conj = '';
+			
+			// participles
+			$offset = 5;
+			$index = 0;
+			$conjugations[CONJ_PARTICIPLE] = ';' . $words[$index++] . ';' . $words[$index++] . ';';
+			$conj .= $conjugations[CONJ_PARTICIPLE]; // save the conjugation string
+			
+			// indicative
+			$factor = 1;
+			$conjugations[CONJ_IND_PRESENT] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';		
+			$conj .= '|' . $conjugations[CONJ_IND_PRESENT]; // save the conjugation string
+			
+			$factor = 1; $index++;
+			$conjugations[CONJ_IND_PRETERITE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';		
+			$conj .= '|' . $conjugations[CONJ_IND_PRETERITE]; // save the conjugation string
+			
+			$factor = 1; $index++;
+			$conjugations[CONJ_IND_IMPERFECT] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';		
+			$conj .= '|' . $conjugations[CONJ_IND_IMPERFECT]; // save the conjugation string
+			
+			$factor = 1; $index++;
+			$conjugations[CONJ_IND_CONDITIONAL] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';		
+			$conj .= '|' . $conjugations[CONJ_IND_CONDITIONAL]; // save the conjugation string
+			
+			$factor = 1; $index++;
+			$conjugations[CONJ_IND_FUTURE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_IND_FUTURE]; // save the conjugation string
+
+			// subjunctive
+			$offset = 4;
+			$factor = 1; 
+			$index += 26;
+			$conjugations[CONJ_SUB_PRESENT] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_SUB_PRESENT]; // save the conjugation string
+
+			$factor = 1; $index++;
+			$conjugations[CONJ_SUB_IMPERFECT] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_SUB_IMPERFECT]; // save the conjugation string
+
+			$factor = 1; $index++;
+			$conjugations[CONJ_SUB_IMPERFECT2] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_SUB_IMPERFECT2]; // save the conjugation string
+
+			$factor = 1; $index++;
+			$conjugations[CONJ_SUB_FUTURE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_SUB_FUTURE]; // save the conjugation string
+
+			// imperatives
+			$offset = 2;
+			$factor = 1; 
+			$index += 21;
+			$conjugations[CONJ_IMP_AFFIRMATIVE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' ;		
+			$conj .= '|' . $conjugations[CONJ_IMP_AFFIRMATIVE]; // save the conjugation string
+
+			$factor = 1; $index++;		
+			$conjugations[CONJ_IMP_NEGATIVE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_IMP_NEGATIVE]; // save the conjugation string
+			
+			//dd($conjugations);
+		}
+			
+		return $conj;
 	}	
+
+    static public function getConjugationsPretty($conj)
+    {
+		$tenses = null;
+		if (isset($conj))
+		{
+			// raw conjugation looks like: |;mato;mata;matas;|mate;mate;matamos;|
+			$tenses = [];
+			$parts = explode('|', $conj);
+			foreach($parts as $part)
+			{
+				$part = trim($part);
+				if (strlen($part) > 0)
+				{
+					$part = trim($part, ";");
+					$part = str_replace(';', ', ', $part);
+					$tenses[] = $part;
+				}
+			}
+		}
+		//dd($tenses);
+		
+/* output:
+  0 => "siendo, sido"
+  1 => "soy, eres, es, somos, sois, son"
+  2 => "fui, fuiste, fue, fuimos, fuisteis, fueron"
+  3 => "era, eras, era, éramos, erais, eran"
+  4 => "sería, serías, sería, seríamos, seríais, serían"
+  5 => "seré, serás, será, seremos, seréis, serán"
+  6 => "sea, seas, sea, seamos, seáis, sean"
+  7 => "fuera, fueras, fuera, fuéramos, fuerais, fueran"
+  8 => "fuese, fueses, fuese, fuésemos, fueseis, fuesen"
+  9 => "fuere, fueres, fuere, fuéremos, fuereis, fueren"
+  10 => "sé, sea, seamos, sed, sean"
+  11 => "no seas, no sea, no seamos, no seáis, no sean"	
+*/	
+		return $tenses;
+	}
 	
-    static public function displayForms($forms)
+    static public function getFormsPretty($forms)
     {
 		$v = str_replace(';', ' ', $forms);
-		$words = explode(' ', trim($v));
-		$v .= ' (' . count($words) . ')';
+		$v = trim($v);
+		$v = str_replace(' ', ', ', $v);
 		
 		return trim($v);
 	}

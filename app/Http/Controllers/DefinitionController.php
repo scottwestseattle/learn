@@ -183,12 +183,16 @@ class DefinitionController extends Controller
 		$record->user_id 		= Auth::id();
 		$record->language_id 	= LANGUAGE_SPANISH;
 		$record->title 			= $request->title;
-		$record->forms 			= Definition::formatForms($request->forms);
+		$record->forms 			= $request->forms;
 		$record->definition		= $request->definition;
 		$record->translation_en	= $request->translation_en;
 		$record->translation_es	= $request->translation_es;
 		$record->examples		= $request->examples;
 		$record->permalink		= Tools::createPermalink($request->title);
+
+		// format the forms and conjugations if it's a verb
+		$conj = Definition::getConjugations($request->conjugations);
+		$record->conjugations = $conj;
 
 		try
 		{
@@ -269,14 +273,16 @@ class DefinitionController extends Controller
 		$changes = '';
 		$parent = null;
 
-		$forms = Definition::formatForms($request->forms);
-
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
-		$record->forms = Tools::copyDirty($record->forms, $forms, $isDirty, $changes);
+		$record->forms = Tools::copyDirty($record->forms, $request->forms, $isDirty, $changes);
 		$record->definition = Tools::copyDirty($record->definition, $request->definition, $isDirty, $changes);
 		$record->translation_en = Tools::copyDirty($record->translation_en, $request->translation_en, $isDirty, $changes);
 		$record->translation_es = Tools::copyDirty($record->translation_es, $request->translation_es, $isDirty, $changes);
 		$record->examples = Tools::copyDirty($record->examples, $request->examples, $isDirty, $changes);
+
+		// format the forms and conjugations if it's a verb
+		$conj = Definition::getConjugations($request->conjugations);
+		$record->conjugations = Tools::copyDirty($record->conjugations, $conj, $isDirty, $changes);
 
 		if ($isDirty)
 		{
@@ -687,6 +693,8 @@ class DefinitionController extends Controller
 			
 			// format the examples to display as separate sentences
 			$record->examples = Tools::splitSentences($record->examples);
+			
+			$record->conjugations = Definition::getConjugationsPretty($record->conjugations);
 		}
 		
 		return view(PREFIX . '.view', $this->getViewData([
@@ -708,6 +716,8 @@ class DefinitionController extends Controller
 		// get next and prev words in ID order
 		$prev = $record->getPrev();
 		$next = $record->getNext();
+		
+		$record->conjugations = Definition::getConjugationsPretty($record->conjugations);
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,

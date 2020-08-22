@@ -24,6 +24,9 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 
 Latest DB Changes:
 
+8/22/2020
+ALTER TABLE `definitions` ADD `conjugations` VARCHAR(1024) NULL AFTER `forms`; 
+
 8/19/2020
 ALTER TABLE `definitions` CHANGE `language_id` `language_id` TINYINT(4) UNSIGNED NOT NULL; 
 ALTER TABLE `definitions` ADD `pos_id` TINYINT NULL COMMENT 'part of speech - see DEFINTIONS_POS_* for values' AFTER `forms`; 

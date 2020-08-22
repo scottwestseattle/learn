@@ -13,12 +13,18 @@
 	<form method="POST" id="form-edit" action="/definitions/update/{{$record->id}}">
 		
 		<div class="form-group">
-			<label for="title" class="control-label">@LANG('content.Word or Phrase'):</label>
+			<label for="title" class="control-label">@LANG('content.Word'):</label>
 			<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}" autocomplete="off" onfocus="setFocus($(this))" />
+			
 			<label for="forms" class="control-label">@LANG('content.Word Forms'):</label>
-			<a onclick="event.preventDefault(); getVerbForms();" href="" tabindex="-1'><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
 			<a onclick="event.preventDefault(); $('#forms').val(''); $('#forms').focus();" href="" tabindex="-1'><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
-			<textarea rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))" >{{$record->forms}}</textarea>
+			<input type="text" rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))" value="{{$record->forms}}" />
+
+			<label for="conjugations" class="control-label">@LANG('content.Conjugations'):</label>
+			<a onclick="event.preventDefault(); getVerbForms();" href="" tabindex="-1'><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
+			<a onclick="event.preventDefault(); $('#conjugations').val(''); $('#conjugations').focus();" href="" tabindex="-1'><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
+			<textarea rows="3" name="conjugations" id="conjugations" class="form-control" autocomplete="off" onfocus="setFocus($(this))" >{{$record->conjugations}}</textarea>
+
 		</div>
 
 		<div class="form-group">
