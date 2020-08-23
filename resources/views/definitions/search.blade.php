@@ -10,10 +10,12 @@
 		<span style="" class="small-thin-text mb-2">
 			<a href="/definitions/search/1">{{'A-Z'}}</a>&nbsp;&nbsp;
 			<a href="/definitions/search/2">{{'Z-A'}}</a>&nbsp;&nbsp;
-			<a href="/definitions/search/3">{{'newest'}}</a>
-			<a href="/definitions/search/4">{{'recently viewed'}}</a>
-			<a href="/definitions/search/5">{{'missing translation'}}</a>
-			<a href="/definitions/search/6">{{'missing definition'}}</a>
+			<a href="/definitions/search/3">{{'newest'}}</a>&nbsp;&nbsp;
+			<a href="/definitions/search/4">{{'recent'}}</a>&nbsp;&nbsp;
+			@if ($isAdmin)
+				<a href="/definitions/search/5">{{'missing translation'}}</a>&nbsp;&nbsp;
+				<a href="/definitions/search/6">{{'missing definition'}}</a>
+			@endif
 		</span>
 	</h1>
 
@@ -29,12 +31,16 @@
 							@if ($isAdmin)
 								<td><a href='/definitions/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
 							@endif
-							<td>
+							<td class="hidden-xs">
 								<a class="medium-thin-text" href="/definitions/view/{{$record->id}}">
 									{{$record->title}}
 								</a>
 							</td>
 							<td>
+								<div class="large-text hidden-lg hidden-md hidden-sm">
+									<a href="/definitions/view/{{$record->id}}">{{$record->title}}</a>
+								</div>
+								
 								<div class="medium-thin-text mb-2">{!!nl2br($record->definition)!!}</div>
 								@if (isset($record->conjugations))
 									<div class="small-thin-text mb-2"><a href="" onclick="event.preventDefault(); $('#hide-{{$record->id}}').show(); $('#showconjugations-{{$record->id}}').show(); ajaxexec('/definitions/showconjugations/{{$record->id}}', '#showconjugations-{{$record->id}}');">{{'conjugations'}}</a> <span style="display:none;" id="hide-{{$record->id}}"><a href="" onclick="event.preventDefault(); $('#hide-{{$record->id}}').hide(); $('#showconjugations-{{$record->id}}').hide();">(hide)</a></span></div>

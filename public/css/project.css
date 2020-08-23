@@ -883,6 +883,10 @@ body {
 	font-weight:200;
 }
 
+.large-text {
+	font-size:18px;
+}
+
 .small-thin-hdr {
 	font-size:12px;
 	font-weight:bold;
@@ -932,3 +936,26 @@ label.tiny {
 	vertical-align: middle;
 }
 
+@media (max-width:767px) {
+    .hidden-xs {
+        display: none!important
+    }
+}
+
+@media (min-width:768px) and (max-width:991px) {
+    .hidden-sm {
+        display: none!important
+    }
+}
+
+@media (min-width:992px) and (max-width:1199px) {
+    .hidden-md {
+        display: none!important
+    }
+}
+
+@media (min-width:1200px) {
+    .hidden-lg {
+        display: none!important
+    }
+}
