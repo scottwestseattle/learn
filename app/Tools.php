@@ -4,6 +4,7 @@ namespace App;
 
 use Auth;
 use Lang;
+use App;
 use App\User;
 use DateTime;
 
@@ -872,6 +873,11 @@ class Tools
 
         return $time;
     }
+
+    static public function timestamp2date($timestamp)
+    {
+		return self::translateDate($timestamp);
+	}
 	
     static public function translateDate($date)
     {		

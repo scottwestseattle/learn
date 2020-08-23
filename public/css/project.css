@@ -878,9 +878,24 @@ body {
 	font-weight:200;
 }
 
+.medium-thin-text {
+	font-size:15px;
+	font-weight:200;
+}
+
 .small-thin-hdr {
 	font-size:12px;
 	font-weight:bold;
+}
+
+.green {
+	color:green;
+}
+.teal {
+	color:teal;
+}
+.steelblue {
+	color:#4682b4;
 }
 
 td.article-extra {

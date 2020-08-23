@@ -26,21 +26,69 @@ define('CONJ_IMP_NEGATIVE', 'imp_neg');
 
 class Definition extends Base
 {
-    static public function getIndex($parent_id = null, $limit = 10000)
+    static public function getIndex($sort = null, $limit = PHP_INT_MAX)
 	{
+		$sort = intval($sort);
+		$limit = intval($limit);
 		$records = [];
+		$orderBy = 'title';
+		switch($sort)
+		{
+			case 1:
+				$orderBy = 'title';
+				break;
+			case 2:
+				$orderBy = 'title desc';
+				break;
+			case 3:
+				$orderBy = 'id desc';
+				break;
+			case 4:
+				$orderBy = 'updated_at desc';
+				break;
+			case 5: // missing translation
+				$orderBy = 'title';
+				break;
+			case 6: // missing definition
+				$orderBy = 'title';
+				break;
+			default:
+				break;
+		}
 
 		try
 		{
-			$records = Definition::select()
-				->whereNull('deleted_at')
-				->orderBy('title')
-				->get();
+			if ($sort === 5)
+			{
+				$records = Definition::select()
+					->whereNull('deleted_at')
+					->whereNull('translation_en')
+					->orderByRaw($orderBy)
+					->limit($limit)
+					->get();
+			}
+			else if ($sort == 6)
+			{
+				$records = Definition::select()
+					->whereNull('deleted_at')
+					->whereNull('definition')
+					->orderByRaw($orderBy)
+					->limit($limit)
+					->get();
+			}
+			else
+			{
+				$records = Definition::select()
+					->whereNull('deleted_at')
+					->orderByRaw($orderBy)
+					->limit($limit)
+					->get();
+			}
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Error getting vocabulary list';
-			Event::logException('word', LOG_ACTION_SELECT, 'parent_id = ' . Tools::itoa($parent_id), null, $msg . ': ' . $e->getMessage());
+			$msg = 'Error getting index';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, null, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 		}
 
@@ -200,9 +248,25 @@ class Definition extends Base
 					case 'tú':
 					case 'élellaUd':
 						break;
-					case 'no':
+					case 'no': // non reflexives with two words
 						$prefix = $word; // we need the 'no'
+						break;	
+/*
+					case 'me': // reflexive prefixes
+					case 'te':
+					case 'se':
+					case 'nos':
+					case 'os':
+						$prefix = $word;
 						break;
+					case 'no te':
+					case 'no se':
+					case 'no nos':
+					case 'no os':
+						$prefix = $word;
+						dump($word);
+						break;
+*/
 					default:
 					{
 						if (isset($prefix)) // save the 'no' and use it
@@ -217,10 +281,47 @@ class Definition extends Base
 				}
 			}
 		}
-		//dd($words);
+		$count = count($words);
+		if ($count == 125) // it's reflexive so need more touch up
+		{
+			$parts = [];
+			foreach($words as $word)
+			{			
+				switch($word)
+				{
+					case 'me': // reflexive prefixes
+					case 'te':
+					case 'se':
+					case 'nos':
+					case 'os':
+					case 'no te':
+					case 'no se':
+					case 'no nos':
+					case 'no os':
+						$prefix = $word;
+						break;
+					default:
+					{
+						if (isset($prefix)) // save the 'no' and use it
+						{
+							$word = $prefix . ' ' . $word;
+							$prefix = null;
+						}
+
+						$parts[] = $word;
+						break;
+					}
+				}
+			}			
+
+			$words = $parts;
+			//dd($parts);
+		}
 		
 		$conj = null;
-		if (count($words) == 66) // total verb conjugations
+		$count = count($words);
+		//dd($words);
+		if ($count == 66) // total verb conjugations
 		{
 			//
 			// save the conjugations
@@ -285,6 +386,12 @@ class Definition extends Base
 			$conj .= '|' . $conjugations[CONJ_IMP_NEGATIVE]; // save the conjugation string
 			
 			//dd($conjugations);
+		}
+		else
+		{
+			$msg = 'Error cleaning conjugation: total results: ' . count($words);
+			//dd($words);
+			throw new \Exception($msg);
 		}
 			
 		return $conj;

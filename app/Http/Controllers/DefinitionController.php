@@ -24,7 +24,7 @@ class DefinitionController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'find', 'conjugate', 'verbforms', 'wordexists']);
+        $this->middleware('is_admin')->except(['index', 'view', 'find', 'search', 'conjugate', 'showconjugations', 'verbforms', 'wordexists']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -53,6 +53,33 @@ class DefinitionController extends Controller
 		]));
     }
 	
+    public function search(Request $request, $sort = null)
+    {
+		$sort = intval($sort);
+		
+		if ($sort === 0) // check for previous sort order
+			$sort = session('definitionSort', 0);
+		else 			// set sort value
+			session(['definitionSort' => $sort]);
+
+		$records = null;
+
+		try
+		{
+			$records = Definition::getIndex($sort);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting ' . $this->title . ' list';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return view(PREFIX . '.search', $this->getViewData([
+			'records' => $records,
+		]));
+    }
+		
     public function conjugate(Request $request, $text)
     {
 		$records = Definition::conjugate($text);
@@ -190,9 +217,19 @@ class DefinitionController extends Controller
 		$record->examples		= $request->examples;
 		$record->permalink		= Tools::createPermalink($request->title);
 
-		// format the forms and conjugations if it's a verb
-		$conj = Definition::getConjugations($request->conjugations);
-		$record->conjugations = $conj;
+		try
+		{
+			// format the forms and conjugations if it's a verb
+			$conj = Definition::getConjugations($request->conjugations);
+			$record->conjugations = $conj;
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting conjugations - see events';
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+			return back();			
+		}
 
 		try
 		{
@@ -280,9 +317,19 @@ class DefinitionController extends Controller
 		$record->translation_es = Tools::copyDirty($record->translation_es, $request->translation_es, $isDirty, $changes);
 		$record->examples = Tools::copyDirty($record->examples, $request->examples, $isDirty, $changes);
 
-		// format the forms and conjugations if it's a verb
-		$conj = Definition::getConjugations($request->conjugations);
-		$record->conjugations = Tools::copyDirty($record->conjugations, $conj, $isDirty, $changes);
+		try
+		{
+			// format the forms and conjugations if it's a verb
+			$conj = Definition::getConjugations($request->conjugations);
+			$record->conjugations = Tools::copyDirty($record->conjugations, $conj, $isDirty, $changes);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting conjugations - see events';
+			Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+			return back();
+		}
 
 		if ($isDirty)
 		{
@@ -703,6 +750,16 @@ class DefinitionController extends Controller
 			'word' => Tools::alphanum($text, true),
 			], LOG_MODEL, LOG_PAGE_VIEW));		
 	}
+
+	public function showconjugations(Request $request, Definition $definition)
+    {
+		$record = $definition;
+		$record->conjugations = Definition::getConjugationsPretty($record->conjugations);
+
+		return view(PREFIX . '.component-conjugations', $this->getViewData([
+			'record' => $record,
+			], LOG_MODEL, LOG_PAGE_VIEW));		
+    }
 	
 	public function view(Definition $definition)
     {
@@ -717,8 +774,8 @@ class DefinitionController extends Controller
 		// get next and prev words in ID order
 		$prev = $record->getPrev();
 		$next = $record->getNext();
-		
-		$record->conjugations = Definition::getConjugationsPretty($record->conjugations);
+
+		$record->conjugations = Definition::getConjugationsPretty($record->conjugations);		
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,

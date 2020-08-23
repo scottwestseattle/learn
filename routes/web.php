@@ -58,6 +58,7 @@ Route::get('/courses/rss-reader', 'CourseController@rssReader');
 Route::group(['prefix' => 'definitions'], function () {
 	
 	Route::get('/', 'DefinitionController@index');
+	Route::get('/search/{sort?}', 'DefinitionController@search');
 	Route::get('/admin', 'DefinitionController@admin');
 	Route::get('/view/{definition}', 'DefinitionController@view');
 	Route::get('/find/{text}', 'DefinitionController@find');
@@ -66,6 +67,7 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/wordexists/{text}', 'DefinitionController@wordexists');
 	Route::get('/get/{text}','DefinitionController@getajax');
 	Route::get('/translate/{text}','DefinitionController@translate');
+	Route::get('/showconjugations/{definition}','DefinitionController@showconjugations');
 
 	// add/create
 	Route::get('/add','DefinitionController@add')->middleware('auth');

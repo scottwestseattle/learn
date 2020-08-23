@@ -145,4 +145,5 @@ return [
 'Back to Dictionary' => 'Back to Dictionary',
 'Definition' => 'Definition',
 'Word Forms' => 'Word Forms',
+'Conjugations' => 'Conjugations',
 ];
