@@ -27,6 +27,9 @@ var _cancelled = false;
 var _readFontSize = 18;
 var _maxFontSize = 99;
 
+// track read time
+var _startTime = null;
+
 $(document).ready(function() {
 
 	var fontSize = localStorage['readFontSize'];
@@ -358,11 +361,13 @@ function reload()
 
 function run()
 {
+	_startTime = new Date();	
 	resume();
 }
 
 function runContinue() 
 {
+	_startTime = new Date();	
 	$("#pause").show();
 	$("#resume").hide();	
 	deck.run(/* fromBeginning = */ false);
@@ -719,6 +724,39 @@ function end()
 	deck.start();
 	$("#pause").show();
 	$("#resume").hide();
+	$('#readCurrLine').text("Line: " + (curr + 1));
+	
+	// get run time
+	if (_startTime != null)
+	{
+		endTime = new Date();
+		var timeDiff = endTime - _startTime; //in ms
+		timeDiff /= 1000; // to seconds
+		var seconds = Math.round(timeDiff);
+		var total = seconds;
+		var minutes = 0;
+		var hours = 0;
+		var time = seconds + ' seconds';
+		if (seconds > 60)
+		{
+			minutes = Math.round(seconds / 60);
+			seconds = seconds % 60;
+			
+			if (minutes > 60)
+			{
+				hours = Math.round(minutes / 60);
+				minutes = minutes % 60;
+				
+				time = hours + ":" + minutes + ":" + seconds;
+			}
+			else
+			{
+				time = minutes + ":" + seconds;				
+			}
+		}
+		
+		$('#elapsedTime').text("Reading Time: " + time + " (" + total + ")");
+	}	
 }
 
 function reset()

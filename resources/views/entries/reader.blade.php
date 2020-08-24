@@ -79,6 +79,8 @@
 				<a onclick="event.preventDefault(); incLine(-50)" href=""><span id="button-decrement-line" class="glyphicon glyphicon-minus-sign"></span></a>
 				<span id="readCurrLine" class="" style="margin:10px;">Line: </span>
 				<a onclick="event.preventDefault(); incLine(50)" href=""><span id="button-increment-line" class="glyphicon glyphicon-plus-sign"></span></a>
+				<div id="elapsedTime" class="mt-5"></div>
+				
 			</div>
         </div>
 
