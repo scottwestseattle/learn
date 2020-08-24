@@ -52,8 +52,12 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="/articles">@LANG('content.Articles')</a></li>
-					<li class="nav-item"><a class="nav-link" href="/definitions">@LANG('content.Dictionary')</a></li>
+					@if (defined('LOG_MODEL_ARTICLES') && App\Tools::siteUses(LOG_MODEL_ARTICLES))
+						<li class="nav-item"><a class="nav-link" href="/articles">@LANG('content.Articles')</a></li>
+					@endif
+					@if (defined('LOG_MODEL_DEFINITIONS') && App\Tools::siteUses(LOG_MODEL_DEFINITIONS))
+						<li class="nav-item"><a class="nav-link" href="/definitions">@LANG('content.Dictionary')</a></li>
+					@endif
 					@if (defined('LOG_MODEL_WORDS') && App\Tools::siteUses(LOG_MODEL_WORDS))
 						<li class="nav-item"><a class="nav-link" href="/vocab-lists">@LANG('content.Lists')</a></li>
 					@endif
@@ -63,8 +67,6 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 					@if (defined('LOG_MODEL_BOOKS') && App\Tools::siteUses(LOG_MODEL_BOOKS))
 						<li class="nav-item"><a class="nav-link" href="/books">@LANG('ui.Books')</a></li>
 					@endif
-					<li class="nav-item"><a class="nav-link" href="/contact">@LANG('ui.Contact')</a></li>
-					<li class="nav-item"><a class="nav-link" href="/about">@LANG('ui.About')</a></li>
 
                     <!-- Authentication Links -->
                     @guest
@@ -158,9 +160,11 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 			<p style="font-size:1.2em;" class="">{{$siteTitleLite}}</p>
 			<p>&copy; {{date("Y")}} {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
 			<span class="footer-links">
+				<a href="#">@LANG('ui.Back to Top')</a>&bull;
 				<a href="/privacy">@LANG('ui.Privacy Policy')</a>&bull;
 				<a href="/terms">@LANG('ui.Terms of Use')</a>&bull;
-				<a href="#">@LANG('ui.Back to Top')</a></p>
+				<a href="/contact">@LANG('ui.Contact')</a>&bull;
+				<a href="/about">@LANG('ui.About')</a>
 			</span>
 		</div>
 	</footer>

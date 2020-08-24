@@ -12,6 +12,7 @@
 	data-touchpath="{{(isset($touchPath) ? $touchPath : '')}}"
 	data-max="{{count($record['lines'])}}"
 	data-language="{{$record->getSpeechLanguage()}}"
+	data-isadmin="{{$isAdmin ? 1 : 0}}"
 ></div>
 
 	<!-------------------------------------------------------->

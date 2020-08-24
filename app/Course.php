@@ -91,15 +91,26 @@ class Course extends Base
 		$records = []; // make this countable so view will always work
 
 		$public = array_search('public', $parms) !== false;
-
+		$siteId = Tools::getSiteId();
+		$siteIdCondition = '=';
+		
+		if (Tools::isSuperAdmin())
+		{
+			// super admins can see all sites
+			$siteId = 0;
+			$siteIdCondition = '>=';
+		}
+			
 		if (!$public && Tools::isAdmin())
 		{
 			if (array_search('all', $parms) !== false)
 			{
 				$records = Course::select()
 					->where('deleted_flag', 0)
+					->where('site_id', $siteIdCondition, $siteId)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->orderBy('type_flag')
+					->orderBy('site_id')
 					->orderBy('display_order')
 					->get();
 			}
@@ -107,9 +118,11 @@ class Course extends Base
 			{
 				$records = Course::select()
 					->where('deleted_flag', 0)
+					->where('site_id', $siteIdCondition, $siteId)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->where('wip_flag', '!=', WIP_FINISHED)
 					->orderBy('type_flag')
+					->orderBy('site_id')
 					->orderBy('display_order')
 					->get();
 			}
@@ -117,9 +130,11 @@ class Course extends Base
 			{
 				$records = Course::select()
 					->where('deleted_flag', 0)
+					->where('site_id', $siteIdCondition, $siteId)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->where('release_flag', '!=', RELEASE_PUBLIC)
 					->orderBy('type_flag')
+					->orderBy('site_id')
 					->orderBy('display_order')
 					->get();
 			}
@@ -127,19 +142,23 @@ class Course extends Base
 			{
 				$records = Course::select()
 					->where('deleted_flag', 0)
+					->where('site_id', $siteIdCondition, $siteId)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->orderBy('type_flag')
+					->orderBy('site_id')
 					->orderBy('display_order')
 					->get();
 			}
 		}
 		else
 		{
-			// get public
+			// public
 			$records = Course::select()
 				->where('deleted_flag', 0)
+				->where('site_id', $siteIdCondition, $siteId)
 				->where('release_flag', '>=', RELEASE_PUBLIC)
 				->orderBy('type_flag')
+				->orderBy('site_id')
 				->orderBy('display_order')
 				->get();
 		}

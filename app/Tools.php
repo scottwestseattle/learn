@@ -8,9 +8,45 @@ use App;
 use App\User;
 use DateTime;
 
+define('SITE_ID_LOCALHOST',	0);
+define('SITE_ID_ENGLISH',	1);
+define('SITE_ID_ENGLISH50', 2);
+define('SITE_ID_SPANISH50', 3);
+define('SITE_ID_SPANISH',	4);
+define('SITE_ID_PLANCHA',	5);
+define('SITE_ID_TEST',		6);
+define('SITE_ID_',			7);
+
 class Tools
 {
 	static private $_accents = 'áÁéÉíÍóÓúÚüÜñÑ'; 
+
+	static private $_sites = [
+		'localhost' 			=> SITE_ID_LOCALHOST,
+		'english.codespace.us'	=> SITE_ID_ENGLISH,
+		'english50.com'			=> SITE_ID_ENGLISH50,
+		'spanish50.com'			=> SITE_ID_SPANISH50,
+		'spanish.codespace.us'	=> SITE_ID_SPANISH,
+		'plancha.codespace.us'	=> SITE_ID_PLANCHA,
+	];
+	
+	static private $_sitesLanguages = [
+		'localhost' 			=> 'es-ES',
+		//'localhost' 			=> 'en-EN',
+		'english.codespace.us'	=> 'en-EN',
+		'english50.com'			=> 'en-EN',
+		'spanish.codespace.us'	=> 'es-ES',
+		'spanish50.com'			=> 'es-ES',
+	];	
+
+	static private $_sitesLanguageFlags = [
+		//'localhost'			=> LANGUAGE_ENGLISH,
+		'localhost'				=> LANGUAGE_SPANISH,
+		'english.codespace.us'	=> LANGUAGE_ENGLISH,
+		'spanish.codespace.us'	=> LANGUAGE_SPANISH,
+		'english50.com'			=> LANGUAGE_ENGLISH,
+		'spanish50.com'			=> LANGUAGE_SPANISH,
+	];	
 
     static public function getAccentChars()
     {
@@ -408,32 +444,13 @@ class Tools
 		return $v;
 	}
 
-	static private $_sites = [
-		'localhost' => 0,
-		'english.codespace.us' => 1,
-		'english50.com' => 2,
-		'spanish50.com' => 3,
-		'spanish.codespace.us' => 4,
-	];
+	static public function getSiteIds()
+	{
+		$ids = array_flip(self::$_sites);
+		
+		return $ids;
+	}
 	
-	static private $_sitesLanguages = [
-		'localhost' => 'es-ES',
-		//'localhost' => 'en-EN',
-		'english.codespace.us' => 'en-EN',
-		'english50.com' => 'en-EN',
-		'spanish.codespace.us' => 'es-ES',
-		'spanish50.com' => 'es-ES',
-	];	
-
-	static private $_sitesLanguageFlags = [
-		//'localhost' => LANGUAGE_ENGLISH,
-		'localhost' => LANGUAGE_SPANISH,
-		'english.codespace.us' => LANGUAGE_ENGLISH,
-		'spanish.codespace.us' => LANGUAGE_SPANISH,
-		'english50.com' => LANGUAGE_ENGLISH,
-		'spanish50.com' => LANGUAGE_SPANISH,
-	];	
-
 	static public function getSiteId()
 	{
 		$siteId = -1;
@@ -467,18 +484,23 @@ class Tools
 		$siteId = self::getSiteId();
 		switch($siteId)
 		{
-			case 0: // localhost
-				$rc = true; // use everything
-				//$rc = ($model == LOG_MODEL_ARTICLES); // only articles
+			case SITE_ID_LOCALHOST: // localhost
+				$rc = true;
+				$rc = ($model == LOG_MODEL_COURSES);
+				$rc = ($model == LOG_MODEL_ARTICLES || $model == LOG_MODEL_DEFINITIONS);
 				break;
-			case 1: // learn.codespace.us
+			case SITE_ID_ENGLISH:	// english.codespace
+			case SITE_ID_ENGLISH50: // english50
 				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
 				break;
-			case 2: // english50
+			case SITE_ID_PLANCHA:
+				$rc = ($model == LOG_MODEL_COURSES);
+				break;
+			case SITE_ID_SPANISH: // spanish.codespace.us
 				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
 				break;
-			case 3: // spanish50
-				$rc = true; // use everything
+			case SITE_ID_SPANISH50: // spanish50
+				$rc = true;
 				break;
 			default:
 				break;

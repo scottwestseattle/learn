@@ -250,6 +250,7 @@ class CourseController extends Controller
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->display_order = Tools::copyDirty($record->display_order, $request->display_order, $isDirty, $changes);
 		$record->type_flag = Tools::copyDirty($record->type_flag, $request->type_flag, $isDirty, $changes);
+		$record->site_id = Tools::copyDirty($record->site_id, $request->site_id, $isDirty, $changes);
 
 		if ($isDirty)
 		{

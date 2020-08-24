@@ -78,6 +78,7 @@ function deck() {
 	this.slides = [];   // slides
 	this.speech = null;
 	this.language = "";
+	this.isAdmin = false;
 
 	// options
 	this.runState = RUNSTATE_START;
@@ -281,7 +282,8 @@ function loadData()
 		deck.quizTextDone = container.data('quiztext-done');
 		deck.lessonId = container.data('lessonid');
 		deck.touchPath = container.data('touchpath');
-		deck.language = container.data('language'); // this is the language that the web site is in
+		deck.language = container.data('language');			// this is the language that the web site is in
+		deck.isAdmin = container.data('isadmin') == '1';
     });	
 }
 
@@ -823,9 +825,11 @@ function getSelectedText()
 
 		var html = "<div style='margin-bottom:10px;'><span style='font-size:1.2em;'>" + text + "</span>"
 			+ "&nbsp;<a target='_blank' href='https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "'>(Google)</a>"
-			+ "&nbsp;<a target='_blank' href='https://www.spanishdict.com/translate/" + text + "'>(SpanDict)</a>"
-			+ "&nbsp;<a target='_blank' href='/definitions/add'>(add)</a><div>"
-			;
+			+ "&nbsp;<a target='_blank' href='https://www.spanishdict.com/translate/" + text + "'>(SpanDict)</a>";
+			if (deck.isAdmin)
+				html += "&nbsp;<a target='_blank' href='/definitions/add'>(add)</a>";
+			html+= "</div>";
+	
 		$('#selected-word').html(html);
 		$('#selected-word-definition').text('');
 		ajaxexec('/definitions/get/' + text, '#selected-word-definition');	

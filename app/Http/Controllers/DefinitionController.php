@@ -24,7 +24,7 @@ class DefinitionController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'find', 'search', 'conjugate', 'showconjugations', 'verbforms', 'wordexists']);
+        $this->middleware('is_admin')->except(['index', 'view', 'find', 'search', 'getajax', 'translate', 'conjugate', 'showconjugations', 'verbforms', 'wordexists']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -445,8 +445,12 @@ class DefinitionController extends Controller
 		{
 			$xlate = null;
 			if (!isset($record->translation_en))
-			{
-				$rc = "<a target='_blank' href='/definitions/edit/$record->id'>$record->title (edit)</a><div>Translation not set</div>";
+			{				
+				$rc = "<a target='_blank' href='/definitions/view/$record->id'>$record->title</a>&nbsp;";
+				if (Tools::isAdmin())
+					$rc .= "<a target='_blank' href='/definitions/edit/$record->id'>(edit)</a>";
+				
+				$rc .= "<div class='mt-2'>found but translation not set</div>";
 			}
 			else
 			{

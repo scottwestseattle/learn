@@ -76,16 +76,19 @@ class FrontPageController extends Controller
 			}
 		}
 
-		try
+		if (Tools::siteUses(LOG_MODEL_ARTICLES))
 		{
-			$articles = Entry::getArticles(10);
-		}
-		catch (\Exception $e)
-		{
-			//dump($e);
-			$msg = 'Error getting Articles';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);
+			try
+			{
+				$articles = Entry::getArticles(10);
+			}
+			catch (\Exception $e)
+			{
+				//dump($e);
+				$msg = 'Error getting Articles';
+				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+				Tools::flash('danger', $msg);
+			}
 		}
 
 		return view('frontpage.index', $this->getViewData([

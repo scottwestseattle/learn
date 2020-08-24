@@ -37,6 +37,7 @@ define('LOG_TYPE_OTHER', 99);
 define('LOG_MODEL_ARTICLES', 'articles');
 define('LOG_MODEL_BOOKS', 'books');
 define('LOG_MODEL_COURSES', 'courses');
+define('LOG_MODEL_DEFINITIONS', 'definitions');
 define('LOG_MODEL_ENTRIES', 'entries');
 define('LOG_MODEL_EVENTS', 'events');
 define('LOG_MODEL_HOME', 'home');
