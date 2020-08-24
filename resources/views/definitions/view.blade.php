@@ -35,7 +35,10 @@
 		<h3>
 			{{$record->title}}<span style="vertical-align: middle; background-color: LightGray; color: gray; margin-left: 7px; font-size:13px; padding:3px 3px; font-weight:bold;" class="badge">{{$record->view_count}}</span>
 			@if ($canConjugate)
-				<div class="small-thin-text mt-2"><a href="/{{PREFIX . '/conjugate/' . $record->id}}/">conjugate</a>
+				<div class="small-thin-text mt-2"><a href="/{{PREFIX . '/conjugationsgen/' . $record->id}}/">generate conjugations</a>
+			@endif
+			@if (App\Definition::fixConjugations($record))
+				<div class="small-thin-text mt-2"><a href="/{{PREFIX . '/edit/' . $record->id}}/">fix conjugation</a>
 			@endif
 		</h3>
 	</div>

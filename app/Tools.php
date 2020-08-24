@@ -698,6 +698,23 @@ class Tools
 		return $rc;
 	}
 
+	static public function startsWithAny($haystack, $needles)
+	{
+		$rc = false;
+		
+		if (is_array($needles))
+		{
+			foreach($needles as $needle)
+			{
+				$rc = self::startsWith($haystack, $needle);
+				if ($rc)
+					break; // quick out
+			}
+		}
+		
+		return $rc;
+	}
+	
 	static public function startsWith($haystack, $needle)
 	{
 		$rc = false;

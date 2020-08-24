@@ -24,7 +24,7 @@
 			<input type="text" rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))"  value="{{$word}}"/>
 
 			<label for="conjugations" class="control-label">@LANG('content.Conjugations'):</label>
-			<a onclick="event.preventDefault(); getVerbForms('#title', '#conjugations');" href="" tabindex="-1'><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
+			<a onclick="event.preventDefault(); conjugationsGen('#title', '#conjugations');" href="" tabindex="-1'><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
 			<a onclick="event.preventDefault(); $('#conjugations').val(''); $('#conjugations').focus();" href="" tabindex="-1'><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<textarea rows="3" name="conjugations" id="conjugations" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
 

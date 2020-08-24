@@ -168,30 +168,125 @@ class Definition extends Base
 		
 		return $v;
 	}
+
+    static public function fixConjugations($record)
+    {
+		$rc = false;
+
+		if (!isset($record))
+		{
+			$rc = true;
+		}
+		else if (isset($record->conjugations))
+		{
+			if (!isset($record->conjugations_search))
+				$rc = true;		
+		}
+		
+		if (isset($record->conjugations_search))
+		{
+			if (!isset($record->conjugations))
+				$rc = true;
+			else if (!Tools::startsWith($record->conjugations_search, ';'))
+				$rc = true;			
+			else if (!Tools::endsWith($record->conjugations_search, ';'))
+				$rc = true;			
+		}
+			
+		return $rc;
+	}
 	
     static public function getConjugations($raw)
     {
-		if (!isset($raw))
-			return $raw; // nothing to do
+		$rc['full'] = null;		// full conjugations
+		$rc['search'] = null;	// conjugations list that can be searched (needed for reflexive conjugations like: 'nos acordamos')
 		
-		$clean = $raw;
-
+		if (!isset($raw))
+			return $rc; // nothing to do
+		
 		// quick check to see if it's raw or has already been formatted
 		$parts = explode('|', $raw); 
 		if (count($parts) === 12 && Tools::startsWith($parts[11], ';no '))
 		{
 			// already cleaned and formatted
+			$rc['full'] = $raw;
+			$rc['search'] = self::getConjugationsSearch($raw);
 		}
 		else
 		{
-			$clean = self::cleanConjugations($raw);
+			// looks raw so attempt to clean it
+			// returns both 'full' and 'search'
+			$rc = self::cleanConjugations($raw);
 		}
 	
-		return $clean;
+		return $rc;
+	}
+
+	// make the search string either from a word array or from a full conjugation
+    static public function getConjugationsSearch($words)
+    {
+		$rc = null;
+		
+		if (!is_array($words))
+		{
+			// make the words array first
+			// raw conjugation looks like: |;mato;mata;matas;|mate;mate;matamos;|
+			$tenses = [];
+			$lines = explode('|', $words);
+			foreach($lines as $line)
+			{
+				$parts = explode(';', $line);
+				if (count($parts) > 0)
+				{
+					foreach($parts as $part)
+					{
+						// fix the reflexives
+						if (Tools::startsWithAny($part, ['me ', 'te ', 'se ', 'nos ', 'os ', 'no te ', 'no se ', 'no nos ', 'no os ', 'no se ']))
+						{
+							// chop off the reflexive prefix words, like 'me acuerdo', 'no se acuerden'
+							$pieces = explode(' ', $part);
+							if (count($pieces) > 2)
+								$part = $pieces[2];
+							else if (count($pieces) > 1)
+								$part = $pieces[1];
+							else if (count($pieces) > 0)
+								$part = $pieces[0];
+						}
+						
+						$tenses[] = $part;
+					}
+				}
+			}
+			
+			$words = $tenses;
+		}
+		
+		if (isset($words) && is_array($words))
+		{
+			$unique = [];
+			foreach($words as $word)
+			{
+				if (strlen($word) > 0)
+				{
+					if (!in_array($word, $unique))
+					{
+						$unique[] = $word;
+						$rc .= $word . ';';
+					}
+				}
+			}
+			
+			$rc = ';' . $rc; // make it mysql searchable for exact match, like: ";voy;vea;veamos;ven;vamos;
+		}
+		
+		return $rc;
 	}
 	
     static public function cleanConjugations($raw)
     {		
+		$rc['full'] = null;		// full conjugations
+		$rc['search'] = null;	// conjugations list that can be searched (needed for reflexive conjugations like: 'nos acordamos')
+		
 		if (!isset($raw))
 			return null;
 		
@@ -203,6 +298,8 @@ class Definition extends Base
 		$parts = explode('|', $v);
 		//dd($parts);
 		$prefix = null;
+		$search = null;
+		$searchUnique = [];
 		foreach($parts as $part)
 		{			
 			$word = trim($part);
@@ -242,24 +339,27 @@ class Definition extends Base
 					case 'no': // non reflexives with two words
 						$prefix = $word; // we need the 'no'
 						break;	
-/*
-					case 'me': // reflexive prefixes
-					case 'te':
-					case 'se':
-					case 'nos':
-					case 'os':
-						$prefix = $word;
-						break;
-					case 'no te':
-					case 'no se':
-					case 'no nos':
-					case 'no os':
-						$prefix = $word;
-						dump($word);
-						break;
-*/
 					default:
 					{
+						// do this before the 'no' is added
+						// check unique array to only add a word once to the search string
+						if (!in_array($word, $searchUnique))
+						{
+							switch($word)
+							{
+								case 'me': // skip reflexive prefixes
+								case 'te':
+								case 'se':
+								case 'nos':
+								case 'os':
+									break;
+								default:
+									$searchUnique[] = $word;
+									$search .= $word . ';';								
+									break;
+							}
+						}
+						
 						if (isset($prefix)) // save the 'no' and use it
 						{
 							$word = $prefix . ' ' . $word;
@@ -272,6 +372,9 @@ class Definition extends Base
 				}
 			}
 		}
+		
+		$search = isset($search) ? ';' . $search : null;
+				
 		$count = count($words);
 		if ($count == 125) // it's reflexive so need more touch up
 		{
@@ -384,8 +487,11 @@ class Definition extends Base
 			//dd($words);
 			throw new \Exception($msg);
 		}
-			
-		return $conj;
+
+		$rc['full'] = $conj;
+		$rc['search'] = $search;
+		
+		return $rc;
 	}	
 
     static public function getConjugationsPretty($conj)
@@ -425,7 +531,7 @@ class Definition extends Base
 */	
 		return $tenses;
 	}
-	
+
     static public function getFormsPretty($forms)
     {
 		$v = str_replace(';', ' ', $forms);
@@ -446,9 +552,9 @@ class Definition extends Base
 			$record = Definition::select()
 				->where('deleted_at', null)
 				->where(function ($query) use ($word){$query
-					->where('title', $word)
-					->orWhere('forms', 'LIKE', '%;' . $word . ';%')
-					->orWhere('conjugations', 'LIKE', '%;' . $word . ';%')
+					->where('title', $word)											// exact match of title
+					->orWhere('forms', 'LIKE', '%;' . $word . ';%')					// exact match of ";word;"
+					->orWhere('conjugations_search', 'LIKE', '%;' . $word . ';%') 	// exact match of ";word;"
 					;})
 				->first();
 
@@ -623,21 +729,22 @@ class Definition extends Base
 	
 	static private $_verbSuffixes = ['ar', 'er', 'ir'];
 	static private $_verbReflexiveSuffixes = ['arse', 'erse', 'irse'];
-	
+
     static public function canConjugate($word)
     {
 		$rc = false;
 		
 		if (self::possibleVerb($word))
 		{
-			$conj = self::conjugateGen($word);
+			//todo: doing it the hard way, make a simple way to check if we can gen it
+			$conj = self::conjugationsGen($word);
 			$rc = isset($conj['records']);
 		}
 		
 		return $rc;
 	}
 	
-    static public function conjugateGen($text)
+    static public function conjugationsGen($text)
     {
 		$records = null;
 		$rc['forms'] = null;
@@ -760,7 +867,7 @@ class Definition extends Base
 			if (isset($records))
 			{
 				$rc['forms'] = self::getConjugationsGenString($records);
-				$rc['formsPretty'] = self::getConjugationsGenString($records, true);
+				$rc['formsPretty'] = self::getConjugationsGenString($records, /* pretty = */ true);
 				$rc['records'] = $records;			
 			}
 		}

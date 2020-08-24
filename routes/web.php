@@ -62,12 +62,14 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/admin', 'DefinitionController@admin');
 	Route::get('/view/{definition}', 'DefinitionController@view');
 	Route::get('/find/{text}', 'DefinitionController@find');
-	Route::get('/conjugate/{definition}', 'DefinitionController@conjugate');
-	Route::get('/verbforms/{text}', 'DefinitionController@verbforms');
 	Route::get('/wordexists/{text}', 'DefinitionController@wordexists');
 	Route::get('/get/{text}','DefinitionController@getajax');
 	Route::get('/translate/{text}','DefinitionController@translate');
-	Route::get('/showconjugations/{definition}','DefinitionController@showconjugations');
+	
+	// conjugations
+	Route::get('/conjugationsgen/{definition}', 'DefinitionController@conjugationsGen');
+	Route::get('/conjugationsgenajax/{text}', 'DefinitionController@conjugationsGenAjax');
+	Route::get('/conjugationscomponent/{definition}','DefinitionController@conjugationsComponent');
 
 	// add/create
 	Route::get('/add/{word?}','DefinitionController@add')->middleware('auth');

@@ -41,21 +41,38 @@
 									<a href="/definitions/view/{{$record->id}}">{{$record->title}}</a>
 								</div>
 								
-								<div class="medium-thin-text mb-2">{!!nl2br($record->definition)!!}</div>
-								@if (isset($record->conjugations))
-									<div class="small-thin-text mb-2"><a href="" onclick="event.preventDefault(); $('#hide-{{$record->id}}').show(); $('#showconjugations-{{$record->id}}').show(); ajaxexec('/definitions/showconjugations/{{$record->id}}', '#showconjugations-{{$record->id}}');">{{'conjugations'}}</a> <span style="display:none;" id="hide-{{$record->id}}"><a href="" onclick="event.preventDefault(); $('#hide-{{$record->id}}').hide(); $('#showconjugations-{{$record->id}}').hide();">(hide)</a></span></div>
-									<div id="showconjugations-{{$record->id}}"></div>
+								@if (isset($record->definition))
+									<div class="medium-thin-text mb-2">{!!nl2br($record->definition)!!}</div>
+								@else
+									<a href="/definitions/edit/{{$record->id}}" class="small-thin-text danger">add definition</a>
 								@endif
+																								
 								<div class="teal"><i>{!!nl2br($record->examples)!!}</i></div>
+								
 								@if (isset($record->translation_en))
 									<div class="mt-2 steelblue">English: {!!nl2br($record->translation_en)!!}</div>
+								@else
+									<a href="/definitions/edit/{{$record->id}}" class="small-thin-text danger">add translation</a>
 								@endif
+								
 								<div class="small-thin-text mt-2">
 									{{$record->view_count}} view{{$record->view_count !== 1 ? 's' : ''}}@if (isset($record->last_viewed_at))<span>,  last on {{App\Tools::timestamp2date($record->last_viewed_at)}}</span>@endif
 								</div>
+								
+								@if (isset($record->conjugations))
+									<div class="small-thin-text mt-2"><a href="" onclick="event.preventDefault(); $('#hide-{{$record->id}}').show(); $('#showconjugations-{{$record->id}}').show(); ajaxexec('/definitions/conjugationscomponent/{{$record->id}}', '#showconjugations-{{$record->id}}');">
+										@if (App\Definition::fixConjugations($record))
+											<a href="/definitions/edit/{{$record->id}}" class="small-thin-text danger">conjugations</a>
+										@else
+											<span>conjugations</span>
+										@endif
+									</a> <span style="display:none;" id="hide-{{$record->id}}"><a href="" onclick="event.preventDefault(); $('#hide-{{$record->id}}').hide(); $('#showconjugations-{{$record->id}}').hide();">(hide)</a></span></div>
+									<div id="showconjugations-{{$record->id}}"></div>
+								@endif
+								
 							</td>
 							@if ($isAdmin)
-							<td><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
+								<td><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
 							@endif
 						</tr>
 						@endforeach

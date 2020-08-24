@@ -931,10 +931,10 @@ function numInc(id, amount)
 	input.val(Number(value) < 0 ? 0 : Number(value));
 }
 
-function getVerbForms(fromId, toId)
+function conjugationsGen(fromId, toId)
 {
 	var title = $(fromId).val();
-	ajaxexec('/definitions/verbforms/' + title.trim(), toId, true);
+	ajaxexec('/definitions/conjugationsgenajax/' + title.trim(), toId, true);
 }
 
 function wordExists(title)

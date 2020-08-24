@@ -25,6 +25,9 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 Latest DB Changes:
 
 8/23/2020
+ALTER TABLE `definitions` ADD `conjugations_search` VARCHAR(1024) NULL AFTER `conjugations`; 
+
+8/23/2020
 ALTER TABLE `courses` ADD `site_id` INT NOT NULL AFTER `id`; 
 ALTER TABLE `courses` CHANGE `user_id` `user_id` INT(10) UNSIGNED NOT NULL COMMENT 'who created it and owns it' AFTER `site_id`; 
 

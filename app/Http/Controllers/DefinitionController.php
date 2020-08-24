@@ -24,7 +24,7 @@ class DefinitionController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'find', 'search', 'getajax', 'translate', 'conjugate', 'showconjugations', 'verbforms', 'wordexists']);
+        $this->middleware('is_admin')->except(['index', 'view', 'find', 'search', 'getajax', 'translate', 'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponent', 'wordexists']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -57,9 +57,10 @@ class DefinitionController extends Controller
     {
 		$sort = intval($sort);
 		
-		if ($sort === 0) // check for previous sort order
+		// check if a previous sort was used 
+		if ($sort === 0)
 			$sort = session('definitionSort', 0);
-		else 			// set sort value
+		else // save current sort value for next time
 			session(['definitionSort' => $sort]);
 
 		$records = null;
@@ -80,10 +81,11 @@ class DefinitionController extends Controller
 		]));
     }
 		
-    public function conjugate(Request $request, Definition $definition)
+	// open the conjugations view
+    public function conjugationsGen(Request $request, Definition $definition)
     {
 		$record = $definition;
-		$records = Definition::conjugateGen($record->title);
+		$records = Definition::conjugationsGen($record->title);
 		$status = null;
 		if (isset($records))
 		{
@@ -92,17 +94,17 @@ class DefinitionController extends Controller
 			$records = $records['records'];
 		}
 		
-		return view(PREFIX . '.conjugate', $this->getViewData([
+		return view(PREFIX . '.conjugations', $this->getViewData([
 			'record' => $record,
 			'records' => $records,
 			'status' => $status,
 		]));
     }	
 	
-    public function verbforms(Request $request, $text)
+    public function conjugationsGenAjax(Request $request, $text)
     {
 		$forms = null;
-		$records = Definition::conjugateGen($text);
+		$records = Definition::conjugationsGen($text);
 		if (isset($records))
 		{
 			$forms = $records['forms'];
@@ -110,6 +112,17 @@ class DefinitionController extends Controller
 		
 		return $forms;
     }	
+	
+	public function conjugationsComponent(Request $request, Definition $definition)
+    {
+		$record = $definition;
+		$record->conjugations = Definition::getConjugationsPretty($record->conjugations);
+
+		return view(PREFIX . '.component-conjugations', $this->getViewData([
+			'record' => $record,
+			], LOG_MODEL, LOG_PAGE_VIEW));		
+    }
+	
 
     public function wordexists(Request $request, $text)
     {
@@ -225,7 +238,8 @@ class DefinitionController extends Controller
 		{
 			// format the forms and conjugations if it's a verb
 			$conj = Definition::getConjugations($request->conjugations);
-			$record->conjugations = $conj;
+			$record->conjugations = $conj['full'];
+			$record->conjugations_search = $conj['search'];
 		}
 		catch (\Exception $e)
 		{
@@ -295,7 +309,7 @@ class DefinitionController extends Controller
 		}
 		else
 		{
-			//$records = Definition::conjugateGen($definition->title);
+			//$records = Definition::conjugationsGen($definition->title);
 			//if (isset($records))
 			//{
 			//	$forms = $records['formsPretty'];
@@ -329,8 +343,9 @@ class DefinitionController extends Controller
 		{
 			// this will check if a raw conjugations has been entered and if so, clean it
 			// if it's not raw, then it just sends it back
-			$conj = Definition::getConjugations($request->conjugations);
-			$record->conjugations = Tools::copyDirty($record->conjugations, $conj, $isDirty, $changes);
+			$conj = Definition::getConjugations($request->conjugations);			
+			$record->conjugations = Tools::copyDirty($record->conjugations, $conj['full'], $isDirty, $changes);
+			$record->conjugations_search = Tools::copyDirty($record->conjugations, $conj['search'], $isDirty, $changes);
 		}
 		catch (\Exception $e)
 		{
@@ -763,16 +778,6 @@ class DefinitionController extends Controller
 			'word' => Tools::alphanum($text, true),
 			], LOG_MODEL, LOG_PAGE_VIEW));		
 	}
-
-	public function showconjugations(Request $request, Definition $definition)
-    {
-		$record = $definition;
-		$record->conjugations = Definition::getConjugationsPretty($record->conjugations);
-
-		return view(PREFIX . '.component-conjugations', $this->getViewData([
-			'record' => $record,
-			], LOG_MODEL, LOG_PAGE_VIEW));		
-    }
 	
 	public function view(Definition $definition)
     {
