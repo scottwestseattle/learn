@@ -70,7 +70,7 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/showconjugations/{definition}','DefinitionController@showconjugations');
 
 	// add/create
-	Route::get('/add','DefinitionController@add')->middleware('auth');
+	Route::get('/add/{word?}','DefinitionController@add')->middleware('auth');
 	Route::post('/create','DefinitionController@create')->middleware('auth');
 
 	// edit/update

@@ -349,6 +349,11 @@ class Tools
 
 		return $text;
 	}
+
+	static public function alphanumpunct($text)
+	{
+		return(self::alphanum($text));
+	}
 	
 	static public function alphanum($text, $strict = false)
 	{
@@ -356,7 +361,7 @@ class Tools
 		{			
 			// replace all chars except alphanums, some punctuation, accent chars, and whitespace
 			$base = "a-zA-Z0-9 \r\n";
-			$punct = "!@.,()-+=?!'";
+			$punct = "!@.,()-+=?!';";
 			
 			$match = $base . self::$_accents;
 			if (!$strict)

@@ -16,15 +16,15 @@
 
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('content.Word'):</label>
-			<input type="text" id="title" name="title" class="form-control" autocomplete="off"  onfocus="setFocus($(this)); $('#wordexists').html('');" onblur="wordExists($(this))" autofocus />
+			<input type="text" id="title" name="title" value="{{$word}}" class="form-control" autocomplete="off"  onfocus="setFocus($(this)); $('#wordexists').html('');" onblur="wordExists($(this))" autofocus />
 			<div id="wordexists" class="mb-2"></div>
 			
-			<label for="forms" class="control-label">@LANG('content.Word Forms'):</label>
+			<label for="forms" class="control-label">@LANG('content.Word Forms'): <span class="small-thin-text">(separate with comma, space, or semi-colon)</span></label>
 			<a onclick="event.preventDefault(); $('#forms').val(''); $('#forms').focus();" href="" tabindex="-1'><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
-			<input type="text" rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))" />
+			<input type="text" rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))"  value="{{$word}}"/>
 
 			<label for="conjugations" class="control-label">@LANG('content.Conjugations'):</label>
-			<a onclick="event.preventDefault(); getVerbForms();" href="" tabindex="-1'><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
+			<a onclick="event.preventDefault(); getVerbForms('#title', '#conjugations');" href="" tabindex="-1'><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
 			<a onclick="event.preventDefault(); $('#conjugations').val(''); $('#conjugations').focus();" href="" tabindex="-1'><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<textarea rows="3" name="conjugations" id="conjugations" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
 

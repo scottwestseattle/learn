@@ -151,21 +151,12 @@ class Definition extends Base
 	
 	// make forms easier to search line: ';one;two;three;'
     static public function formatForms($forms)
-    {		
-		/* old way
-		$v = str_replace('; ', ';', $v);
-		$v = preg_replace('/[^\da-z; ' . Tools::getAccentChars() . ']/i', '', $v); // replace all non-alphanums except for ';'
-		$v = str_replace(';;', ';', $v);
-		$v = str_replace(';', '\0', $v); // just to trim the leading and trailing ';' and any spaces
-		$v = trim($v);
-		$v = str_replace('\0', ';', $v); // put back the non-trimmed ';'
-		$v = trim($v);
-		*/
-		
-		$v = self::cleanForms($forms);		
-		
+    {
+		$v = Tools::alphanumpunct($forms);
+		$v = preg_replace('/[ ;,]+/', ';', $v); // replace one or more spaces with one ';' to separate words
 		if (strlen($v) > 0)
 		{
+			// wrap it in ';'
 			if (!Tools::startsWith($v, ';'))
 				$v = ';' . $v;
 			
@@ -178,11 +169,13 @@ class Definition extends Base
 		return $v;
 	}
 	
-	// make forms easier to search line: ';one;two;three;'
     static public function getConjugations($raw)
     {
-		$clean = $raw;
+		if (!isset($raw))
+			return $raw; // nothing to do
 		
+		$clean = $raw;
+
 		// quick check to see if it's raw or has already been formatted
 		$parts = explode('|', $raw); 
 		if (count($parts) === 12 && Tools::startsWith($parts[11], ';no '))
@@ -637,14 +630,14 @@ class Definition extends Base
 		
 		if (self::possibleVerb($word))
 		{
-			$conj = self::conjugate($word);
+			$conj = self::conjugateGen($word);
 			$rc = isset($conj['records']);
 		}
 		
 		return $rc;
 	}
 	
-    static public function conjugate($text)
+    static public function conjugateGen($text)
     {
 		$records = null;
 		$rc['forms'] = null;
@@ -766,8 +759,8 @@ class Definition extends Base
 			
 			if (isset($records))
 			{
-				$rc['forms'] = self::getFormsString($records);
-				$rc['formsPretty'] = self::getFormsString($records, true);
+				$rc['forms'] = self::getConjugationsGenString($records);
+				$rc['formsPretty'] = self::getConjugationsGenString($records, true);
 				$rc['records'] = $records;			
 			}
 		}
@@ -826,36 +819,57 @@ class Definition extends Base
 		return $records;
 	}				
 	
-    static private function getFormsString($records, $pretty = false)
+    static private function getConjugationsGenString($records, $pretty = false)
     {
 		$rc = '';
 
 		foreach($records[CONJ_PARTICIPLE] as $record)
-			$rc .= $record . ';' . ($pretty ? ' ' : '');			
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc .= '|;';
+		
 		foreach($records[CONJ_IND_PRESENT] as $record)
 			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc .= '|;';
+
 		foreach($records[CONJ_IND_PRETERITE] as $record)
 			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc .= '|;';
+
 		foreach($records[CONJ_IND_IMPERFECT] as $record)
 			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc .= '|;';
+
 		foreach($records[CONJ_IND_CONDITIONAL] as $record)
 			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc .= '|;';
+
 		foreach($records[CONJ_IND_FUTURE] as $record)
 			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc .= '|;';
+
 		foreach($records[CONJ_SUB_PRESENT] as $record)
 			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc .= '|;';
+
 		foreach($records[CONJ_SUB_IMPERFECT] as $record)
 			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc .= '|;';
+
 		foreach($records[CONJ_SUB_IMPERFECT2] as $record)
 			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc .= '|;';
+
 		foreach($records[CONJ_SUB_FUTURE] as $record)
 			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc .= '|;';
+
 		foreach($records[CONJ_IMP_AFFIRMATIVE] as $record)
 			$rc .= $record . ';' . ($pretty ? ' ' : '');
-		
-		$rc = trim($rc);
-		if (!$pretty && strlen($rc) > 0)
-			$rc = ';' . $rc;
+		if (!$pretty) $rc .= '|;';
+
+		foreach($records[CONJ_IMP_NEGATIVE] as $record)
+			$rc .= $record . ';' . ($pretty ? ' ' : '');
+		if (!$pretty) $rc = ';' . $rc;		
 		
 		return $rc;
 	}	

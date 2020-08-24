@@ -83,7 +83,7 @@ class DefinitionController extends Controller
     public function conjugate(Request $request, Definition $definition)
     {
 		$record = $definition;
-		$records = Definition::conjugate($record->title);
+		$records = Definition::conjugateGen($record->title);
 		$status = null;
 		if (isset($records))
 		{
@@ -102,10 +102,10 @@ class DefinitionController extends Controller
     public function verbforms(Request $request, $text)
     {
 		$forms = null;
-		$records = Definition::conjugate($text);
+		$records = Definition::conjugateGen($text);
 		if (isset($records))
 		{
-			$forms = $records['formsPretty'];
+			$forms = $records['forms'];
 		}
 		
 		return $forms;
@@ -190,9 +190,12 @@ class DefinitionController extends Controller
 		]));
     }
 
-    public function add()
+    public function add($word = null)
     {
+		$word = Tools::alpha($word);
+		
 		return view(PREFIX . '.add', $this->getViewData([
+				'word' => $word,
 			]));
 	}
 
@@ -211,7 +214,7 @@ class DefinitionController extends Controller
 		$record->user_id 		= Auth::id();
 		$record->language_id 	= LANGUAGE_SPANISH;
 		$record->title 			= $request->title;
-		$record->forms 			= $request->forms;
+		$record->forms 			= Definition::formatForms($request->forms);
 		$record->definition		= $request->definition;
 		$record->translation_en	= $request->translation_en;
 		$record->translation_es	= $request->translation_es;
@@ -226,9 +229,9 @@ class DefinitionController extends Controller
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Error getting conjugations - see events';
+			$msg = 'Record not added: error getting conjugations';			
 			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);
+			Tools::flash('danger', $msg . ' - see events');
 			return back();			
 		}
 
@@ -287,20 +290,22 @@ class DefinitionController extends Controller
 		
 		if (isset($record->forms))
 		{
-			// make it prettier?
+			// make it prettier
+			$forms = Definition::getFormsPretty($record->forms);
 		}
 		else
 		{
-			$records = Definition::conjugate($definition->title);
-			if (isset($records))
-			{
-				$forms = $records['formsPretty'];
-				$record->forms = $forms;
-			}	
+			//$records = Definition::conjugateGen($definition->title);
+			//if (isset($records))
+			//{
+			//	$forms = $records['formsPretty'];
+			//	$record->forms = $forms;
+			//}	
 		}		
 
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
+			'formsPretty' => $forms,
 			]));
 	}
 
@@ -312,23 +317,26 @@ class DefinitionController extends Controller
 		$parent = null;
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
-		$record->forms = Tools::copyDirty($record->forms, $request->forms, $isDirty, $changes);
 		$record->definition = Tools::copyDirty($record->definition, $request->definition, $isDirty, $changes);
 		$record->translation_en = Tools::copyDirty($record->translation_en, $request->translation_en, $isDirty, $changes);
 		$record->translation_es = Tools::copyDirty($record->translation_es, $request->translation_es, $isDirty, $changes);
 		$record->examples = Tools::copyDirty($record->examples, $request->examples, $isDirty, $changes);
 
+		$forms 	= Definition::formatForms($request->forms);
+		$record->forms = Tools::copyDirty($record->forms, $forms, $isDirty, $changes);
+
 		try
 		{
-			// format the forms and conjugations if it's a verb
+			// this will check if a raw conjugations has been entered and if so, clean it
+			// if it's not raw, then it just sends it back
 			$conj = Definition::getConjugations($request->conjugations);
 			$record->conjugations = Tools::copyDirty($record->conjugations, $conj, $isDirty, $changes);
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Error getting conjugations - see events';
+			$msg = 'Changes not saved: error getting conjugations';
 			Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);
+			Tools::flash('danger', $msg . ' - see events');
 			return back();
 		}
 
