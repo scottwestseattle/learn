@@ -480,8 +480,7 @@ function read(text, charIndex)
 		
 		if (event.name == "word")
 		{
-			//setDebug(event.charLength + ' / ' + event.wordLength);
-
+			//setDebug(event.charLength + ' / ' + event.wordLength);			
 			var cases = -1; 
 			if (typeof event.charLength !== 'undefined')
 			{
@@ -526,6 +525,11 @@ function read(text, charIndex)
 				}
 			}
 			
+			//
+			// make sure element is visible in the viewport
+			//
+			scrollTo('.highlight-word'); // has to be a class
+
 			// case 4: onBoundary not implemented so highlighting isn't possible
 		}
 	}	

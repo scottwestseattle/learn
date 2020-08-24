@@ -31,8 +31,8 @@ class Tools
 	];
 	
 	static private $_sitesLanguages = [
-		'localhost' 			=> 'es-ES',
-		//'localhost' 			=> 'en-EN',
+		//'localhost' 			=> 'es-ES',
+		'localhost' 			=> 'en-EN',
 		'english.codespace.us'	=> 'en-EN',
 		'english50.com'			=> 'en-EN',
 		'spanish.codespace.us'	=> 'es-ES',
@@ -485,9 +485,9 @@ class Tools
 		switch($siteId)
 		{
 			case SITE_ID_LOCALHOST: // localhost
-				$rc = true;
 				$rc = ($model == LOG_MODEL_COURSES);
 				$rc = ($model == LOG_MODEL_ARTICLES || $model == LOG_MODEL_DEFINITIONS);
+				$rc = true;
 				break;
 			case SITE_ID_ENGLISH:	// english.codespace
 			case SITE_ID_ENGLISH50: // english50

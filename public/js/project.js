@@ -942,3 +942,22 @@ function wordExists(title)
 	ajaxexec('/definitions/wordexists/' + title.val().trim(), '#wordexists');
 }
 
+function scrollTo(className)
+{
+	var e = $(className).first();
+	var position = e.offset();
+	//var top_of_element = position.top;
+	var bottom_of_element = position.top + e.outerHeight();
+	var bottom_of_screen = $(window).scrollTop() + $(window).innerHeight();
+	var top_of_screen = $(window).scrollTop();
+
+	if ((bottom_of_screen > bottom_of_element) && (top_of_screen < bottom_of_element))
+	{
+		// the element is visible, don't scroll
+	} 
+	else 
+	{
+		// the element is not visible, scroll to it
+		window.scroll(position.left, position.top);
+	}
+}
