@@ -732,10 +732,28 @@ function end()
 		endTime = new Date();
 		var timeDiff = endTime - _startTime; //in ms
 		timeDiff /= 1000; // to seconds
-		var seconds = Math.round(timeDiff);
+		var seconds = Math.round(timeDiff);		
 		var total = seconds;
-		var minutes = 0;
-		var hours = 0;
+
+/* test
+		var start = new Date(_startTime);
+		var end = new Date(endTime);
+		var dt = end - start;
+		alert(dt);
+		var minutes = dt.getMinutes();
+		var hours = dt.getHours();
+		seconds = dt.getSeconds();
+
+		if (minutes < 10)
+			minutes = "0" + minutes;
+		if (seconds < 10)
+			seconds = "0" + seconds;
+		if (hours < 10)
+			hours = "0" + hours;
+		
+		var time = hours + ":" + minutes + ":" + seconds;
+*/
+
 		var time = seconds + ' seconds';
 		if (seconds > 60)
 		{
@@ -747,10 +765,22 @@ function end()
 				hours = Math.round(minutes / 60);
 				minutes = minutes % 60;
 				
+				if (minutes < 10)
+					minutes = "0" + minutes;
+				if (seconds < 10)
+					seconds = "0" + seconds;
+				if (hours < 10)
+					hours = "0" + hours;
+				
 				time = hours + ":" + minutes + ":" + seconds;
 			}
 			else
 			{
+				if (minutes < 10)
+					minutes = "0" + minutes;
+				if (seconds < 10)
+					seconds = "0" + seconds;
+				
 				time = minutes + ":" + seconds;				
 			}
 		}

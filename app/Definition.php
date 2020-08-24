@@ -142,11 +142,9 @@ class Definition extends Base
 
     static public function possibleVerb($word)
     {
-		$word = Tools::alphanum($word, /* strict = */ true);
+		$word = Tools::alpha($word);
 		
-		$rc = (Tools::endsWith($word, 'ar') || Tools::endsWith($word, 'er') || Tools::endsWith($word, 'ir'));
-		if ($rc == false)
-			$rc = (Tools::endsWith($word, 'arse') || Tools::endsWith($word, 'erse') || Tools::endsWith($word, 'irse'));
+		$rc = Tools::endsWithAny($word, array_merge(self::$_verbSuffixes, self::$_verbReflexiveSuffixes));
 			
 		return $rc;
 	}
@@ -565,7 +563,7 @@ class Definition extends Base
 	// á é í ó 			
 	static private $_verbEndings = [
 		'ar' => [
-			CONJ_PARTICIPLE => ['ando', 'ado'],
+			CONJ_PARTICIPLE 		=> ['ando', 'ado'],
 			CONJ_IND_PRESENT 		=> ['o', 'as', 'a', 'amos', 'áis', 'an'],
 			CONJ_IND_PRETERITE 		=> ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
 			CONJ_IND_IMPERFECT 		=> ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
@@ -576,35 +574,35 @@ class Definition extends Base
 			CONJ_SUB_IMPERFECT2 	=> ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
 			CONJ_SUB_FUTURE 		=> ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
 			CONJ_IMP_AFFIRMATIVE 	=> ['a', 'e', 'emos', 'ad', 'en'],
-			CONJ_IMP_NEGATIVE 		=> ['', '', '', '', '', ''],	
+			CONJ_IMP_NEGATIVE		=> ['es', 'e', 'emos', 'éis', 'en'],
 		],
-		'er' => [
-			CONJ_PARTICIPLE => ['iendo', 'ido'],
-			CONJ_IND_PRESENT => ['o', 'as', 'a', 'amos', 'áis', 'an'],
-			CONJ_IND_PRETERITE => ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
-			CONJ_IND_IMPERFECT => ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
-			CONJ_IND_CONDITIONAL => ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
+		'er' => [ //todo: not done, just copied
+			CONJ_PARTICIPLE 		=> ['ando', 'ado'],
+			CONJ_IND_PRESENT 		=> ['o', 'as', 'a', 'amos', 'áis', 'an'],
+			CONJ_IND_PRETERITE 		=> ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
+			CONJ_IND_IMPERFECT 		=> ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
+			CONJ_IND_CONDITIONAL 	=> ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
 			CONJ_IND_FUTURE 		=> ['aré', 'arás', 'ará', 'aremos', 'aréis', 'arán'],
-			CONJ_SUB_PRESENT => ['e', 'es', 'e', 'emos', 'éis', 'en'],
-			CONJ_SUB_IMPERFECT => ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
-			CONJ_SUB_IMPERFECT2 => ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
-			CONJ_SUB_FUTURE => ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
-			CONJ_IMP_AFFIRMATIVE => ['a', 'e', 'emos', 'ad', 'en'],
-			CONJ_IMP_NEGATIVE => ['', '', '', '', '', ''],	
+			CONJ_SUB_PRESENT 		=> ['e', 'es', 'e', 'emos', 'éis', 'en'],
+			CONJ_SUB_IMPERFECT 		=> ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
+			CONJ_SUB_IMPERFECT2 	=> ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
+			CONJ_SUB_FUTURE 		=> ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
+			CONJ_IMP_AFFIRMATIVE 	=> ['a', 'e', 'emos', 'ad', 'en'],
+			CONJ_IMP_NEGATIVE		=> ['es', 'e', 'emos', 'éis', 'en'],
 		],
-		'ir' => [
-			CONJ_PARTICIPLE => ['iendo', 'ido'],
-			CONJ_IND_PRESENT => ['o', 'as', 'a', 'amos', 'áis', 'an'],
-			CONJ_IND_PRETERITE => ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
-			CONJ_IND_IMPERFECT => ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
-			CONJ_IND_CONDITIONAL => ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
+		'ir' => [ //todo: not done, just copies
+			CONJ_PARTICIPLE 		=> ['iendo', 'ido'],
+			CONJ_IND_PRESENT		=> ['o', 'as', 'a', 'amos', 'áis', 'an'],
+			CONJ_IND_PRETERITE		=> ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
+			CONJ_IND_IMPERFECT		=> ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
+			CONJ_IND_CONDITIONAL	=> ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
 			CONJ_IND_FUTURE 		=> ['aré', 'arás', 'ará', 'aremos', 'aréis', 'arán'],
-			CONJ_SUB_PRESENT => ['e', 'es', 'e', 'emos', 'éis', 'en'],
-			CONJ_SUB_IMPERFECT => ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
-			CONJ_SUB_IMPERFECT2 => ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
-			CONJ_SUB_FUTURE => ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
-			CONJ_IMP_AFFIRMATIVE => ['a', 'e', 'emos', 'ad', 'en'],
-			CONJ_IMP_NEGATIVE => ['', '', '', '', '', ''],	
+			CONJ_SUB_PRESENT		=> ['e', 'es', 'e', 'emos', 'éis', 'en'],
+			CONJ_SUB_IMPERFECT		=> ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
+			CONJ_SUB_IMPERFECT2		=> ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
+			CONJ_SUB_FUTURE 		=> ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
+			CONJ_IMP_AFFIRMATIVE 	=> ['a', 'e', 'emos', 'ad', 'en'],
+			CONJ_IMP_NEGATIVE		=> ['es', 'e', 'emos', 'éis', 'en'],
 		],
 	];
 		
@@ -629,6 +627,22 @@ class Definition extends Base
 	static private $_regularVerbsAr = [ // needed for verbs that don't match a pattern
 		'amar',
 	];
+	
+	static private $_verbSuffixes = ['ar', 'er', 'ir'];
+	static private $_verbReflexiveSuffixes = ['arse', 'erse', 'irse'];
+	
+    static public function canConjugate($word)
+    {
+		$rc = false;
+		
+		if (self::possibleVerb($word))
+		{
+			$conj = self::conjugate($word);
+			$rc = isset($conj['records']);
+		}
+		
+		return $rc;
+	}
 	
     static public function conjugate($text)
     {
@@ -803,6 +817,8 @@ class Definition extends Base
 			// imperative
 			for ($i = 0; $i < 5; $i++)
 				$records[CONJ_IMP_AFFIRMATIVE][] = $root . $middle . $endings[CONJ_IMP_AFFIRMATIVE][$i];
+			for ($i = 0; $i < 5; $i++)
+				$records[CONJ_IMP_NEGATIVE][] = 'no ' . $root . $middle . $endings[CONJ_IMP_NEGATIVE][$i];
 			
 			//dd($records);
 		}

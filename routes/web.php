@@ -62,7 +62,7 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/admin', 'DefinitionController@admin');
 	Route::get('/view/{definition}', 'DefinitionController@view');
 	Route::get('/find/{text}', 'DefinitionController@find');
-	Route::get('/conjugate/{text}', 'DefinitionController@conjugate');
+	Route::get('/conjugate/{definition}', 'DefinitionController@conjugate');
 	Route::get('/verbforms/{text}', 'DefinitionController@verbforms');
 	Route::get('/wordexists/{text}', 'DefinitionController@wordexists');
 	Route::get('/get/{text}','DefinitionController@getajax');

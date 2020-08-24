@@ -80,9 +80,10 @@ class DefinitionController extends Controller
 		]));
     }
 		
-    public function conjugate(Request $request, $text)
+    public function conjugate(Request $request, Definition $definition)
     {
-		$records = Definition::conjugate($text);
+		$record = $definition;
+		$records = Definition::conjugate($record->title);
 		$status = null;
 		if (isset($records))
 		{
@@ -92,8 +93,8 @@ class DefinitionController extends Controller
 		}
 		
 		return view(PREFIX . '.conjugate', $this->getViewData([
+			'record' => $record,
 			'records' => $records,
-			'verb' => $text,
 			'status' => $status,
 		]));
     }	
@@ -779,12 +780,17 @@ class DefinitionController extends Controller
 		$prev = $record->getPrev();
 		$next = $record->getNext();
 
-		$record->conjugations = Definition::getConjugationsPretty($record->conjugations);		
+		$canConjugate = false;
+		if (isset($record->conjugations))
+			$record->conjugations = Definition::getConjugationsPretty($record->conjugations);
+		else
+			$canConjugate = Definition::canConjugate($record->title);
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
 			'next' => $next,
 			'prev' => $prev,
+			'canConjugate' => $canConjugate,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
