@@ -630,7 +630,7 @@ class Definition extends Base
 		{
 			// trim off the suffix and search for the stem which should be the imperative
 			$word = rtrim($word, $suffixes[$any]);
-			dump($any . ': ' . $suffixes[$any] . ', word: ' . $word);
+			//dump($any . ': ' . $suffixes[$any] . ', word: ' . $word);
 			
 			// we're only looking for verbs at this point
 			$record = Definition::select()

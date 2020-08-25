@@ -642,7 +642,7 @@ function onCategoryChange(id)
 	xhttp.send();
 }
 
-function ajaxexec(url, resultsId = '', resultsInput = false)
+function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = null)
 {
 	var xhttp = new XMLHttpRequest();
 
@@ -681,6 +681,10 @@ function ajaxexec(url, resultsId = '', resultsInput = false)
 						$(resultsId).css('color', '#a37800');
 					}
 				}
+				
+				if (resultsCallback != null)
+					resultsCallback(this.responseText);
+				
 				//debug(this.responseText);
 			}
 			else

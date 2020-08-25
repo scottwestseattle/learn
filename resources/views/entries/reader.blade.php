@@ -95,6 +95,7 @@
 	    <div id="slideDescription" class="slideDescription" style="font-size: 18px;" onmouseup="getSelectedText();" ondblclick="getSelectedText();" ontouchend="getSelectedText();"></div>
         <div class="" style="color: green;" id="selected-word"></div>
         <div class="" style="color: green;" id="selected-word-definition"></div>
+        <div class="" style="color: green;" id="hot-words"></div>
 	</div><!-- panel-run -->
 
     <audio id="audio">

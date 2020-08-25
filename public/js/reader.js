@@ -26,6 +26,7 @@ var _voicesLoadAttempts = 0;
 var _cancelled = false;
 var _readFontSize = 18;
 var _maxFontSize = 99;
+var _hotWords = [];
 
 // track read time
 var _startTime = null;
@@ -902,10 +903,33 @@ function getSelectedText()
 				html += "&nbsp;<a target='_blank' href='/definitions/add/" + text + "'>(add)</a>";
 			html+= "</div>";
 	
+		//_hotWords.push(text + ": ");
 		$('#selected-word').html(html);
 		$('#selected-word-definition').text('');
-		ajaxexec('/definitions/get/' + text, '#selected-word-definition');	
+		ajaxexec('/definitions/get/' + text, '#selected-word-definition', false, translateCallback);
 	}
+}
+
+function translateCallback(definition) 
+{
+	definition = definition.replace(/<\/a>/gi, ": ");
+	definition = definition.replace(/(<([^>]+)>)/gi, "");
+	if (definition == "Translate: ")
+		return;
+	
+	if (!_hotWords.includes(definition))
+	{
+		_hotWords.push(definition);
+		_hotWords.sort();
+	}
+	
+	var t = '';
+	
+	_hotWords.forEach(function(entry, index){
+		t += entry + "<br/>";
+	});
+	
+	$('#hot-words').html(t);
 }
 
 function xlate(word) 
