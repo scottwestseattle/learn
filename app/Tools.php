@@ -378,7 +378,8 @@ class Tools
 		if (isset($text))
 		{			
 			// replace all chars except alphanums, some punctuation, accent chars, and whitespace
-			$text = str_replace("\r\n", ' ', $text);
+			//$text = str_replace("\r\n", ' ', $text); // old way worked but didn't handle tabs
+			$text = preg_replace("/\s+/", ' ', $text); // change all whitespace to one space
 			$base = "a-zA-Z ";			
 			$match = $base . self::$_accents;
 			
@@ -757,6 +758,26 @@ class Tools
 		return $rc;
 	}
 
+	static public function endsWithAnyIndex($haystack, $needle)
+	{
+		$rc = false;
+		
+		if (is_array($needle))
+		{
+			foreach($needle as $index => $n)
+			{
+				$rc = self::endsWith($haystack, $n);
+				if ($rc) // if it ends with any of them then it's true
+				{
+					$rc = $index;
+					break;
+				}
+			}
+		}
+		
+		return $rc;
+	}
+	
 	static public function endsWith($haystack, $needle)
 	{
 		$rc = false;

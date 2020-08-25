@@ -52,6 +52,9 @@ class Definition extends Base
 			case 6: // missing definition
 				$orderBy = 'title';
 				break;
+			case 7: // missing conjugation
+				$orderBy = 'title';
+				break;
 			default:
 				break;
 		}
@@ -72,6 +75,19 @@ class Definition extends Base
 				$records = Definition::select()
 					->whereNull('deleted_at')
 					->whereNull('definition')
+					->orderByRaw($orderBy)
+					->limit($limit)
+					->get();
+			}
+			else if ($sort == 7)
+			{
+				$records = Definition::select()
+					->whereNull('deleted_at')					
+					->whereNotNull('conjugations')
+					->where(function ($query) {$query
+						->whereNull('conjugations_search')
+						->orWhereRaw('LENGTH(conjugations) < 50')
+						;})
 					->orderByRaw($orderBy)
 					->limit($limit)
 					->get();
@@ -278,7 +294,7 @@ class Definition extends Base
 			
 			$rc = ';' . $rc; // make it mysql searchable for exact match, like: ";voy;vea;veamos;ven;vamos;
 		}
-		
+	
 		return $rc;
 	}
 	
@@ -302,40 +318,50 @@ class Definition extends Base
 		$searchUnique = [];
 		foreach($parts as $part)
 		{			
-			$word = trim($part);
+			$word = mb_strtolower(trim($part));
 			
 			if (strlen($word) > 0)
 			{
 				// the clean is specific to the verb conjugator in SpanishDict.com
 				switch($word)
 				{
-					case 'PARTICIPLES':
+					case 'participles':
 					case 'are':
-					case 'Present':
+					case 'present':
 					case '1':
 					case '2':
-					case 'Affirmative':
-					case 'Conditional':
-					case 'ellosellasUds':
-					case 'Future':
-					case 'Imperfect':
-					case 'Imperative':
+					case 'affirmative':
+					case 'conditional':
+					case 'ellosellasuds':
+					case 'future':
+					case 'imperfect':
+					case 'imperative':
 					case 'in':
-					case 'Indicative':
-					case 'Irregularities':
-					case 'Negative':
+					case 'indicative':
+					case 'irregularities':
+					case 'negative':
 					case 'nosotros':
-					case 'Past':
-					case 'Preterite':
+					case 'past':
+					case 'preterite':
 					case 'red':
-					case 'Subjunctive':
-					case 'Ud':
-					case 'Uds':
+					case 'subjunctive':
+					case 'ud':
+					case 'uds':
 					case 'vosotros':
 					case 'yo':
 					case 'tú':
-					case 'élellaUd':
+					case 'élellaud':
+					/*
+					// for wiki
+					case 'vos':
+					case 'usted':
+					case 'nosotras':
+					case 'vosotras':
+					case 'ustedes':
+					case 'ellosellas':
+					case 'élellaello':
 						break;
+					*/
 					case 'no': // non reflexives with two words
 						$prefix = $word; // we need the 'no'
 						break;	
@@ -373,6 +399,7 @@ class Definition extends Base
 			}
 		}
 		
+		dd($words);
 		$search = isset($search) ? ';' . $search : null;
 				
 		$count = count($words);
@@ -548,7 +575,7 @@ class Definition extends Base
 		$record = null;
 
 		try
-		{
+		{			
 			$record = Definition::select()
 				->where('deleted_at', null)
 				->where(function ($query) use ($word){$query
@@ -561,6 +588,11 @@ class Definition extends Base
 			//todo: need to handle multiple matches
 			//if ($records->count() > 1);
 			//	dd($records);
+			
+			if (!isset($record))
+			{
+				$record = self::searchDeeper($word);
+			}
 		}
 		catch (\Exception $e)
 		{
@@ -573,6 +605,42 @@ class Definition extends Base
 
 		return $record;
 	}	
+
+	// handle special cases:
+	// imperative: haz, haga, hagamos, hagan + me, melo, se, selo, nos, noslo
+	// hazme, hazmelo, haznos, haznoslo
+	// hagame, hágamelo, hagase, hágaselo, haganos, háganoslo
+	// hagámoslo, hagámosle
+	// haganme, haganmelo, haganse, haganselo
+	// hacerme, hacermelo, hacernos, hacernoslo, hacerse, hacerselo	
+	static public function searchDeeper($word)
+	{	
+		$record = null;
+
+		$suffixes = [
+			'me',    'te',    'se',    'nos',
+			'melo',  'telo',  'selo',  'noslo',
+			'mela',  'tela',  'sela',  'nosla',
+			'melos', 'telos', 'selos', 'noslos',
+			'melas', 'telas', 'selas', 'noslas',
+		];
+		
+		$any = Tools::endsWithAnyIndex($word, $suffixes);
+		if ($any !== false)
+		{
+			// trim off the suffix and search for the stem which should be the imperative
+			$word = rtrim($word, $suffixes[$any]);
+			dump($any . ': ' . $suffixes[$any] . ', word: ' . $word);
+			
+			// we're only looking for verbs at this point
+			$record = Definition::select()
+				->whereNull('deleted_at')
+				->where('conjugations_search', 'LIKE', '%;' . $word . ';%')
+				->first();			
+		}
+
+		return $record;
+	}
 	
 	static public function add($title, $definition, $examples = null)
 	{

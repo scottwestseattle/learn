@@ -14,7 +14,8 @@
 			<a href="/definitions/search/4">{{'recent'}}</a>&nbsp;&nbsp;
 			@if ($isAdmin)
 				<a href="/definitions/search/5">{{'missing translation'}}</a>&nbsp;&nbsp;
-				<a href="/definitions/search/6">{{'missing definition'}}</a>
+				<a href="/definitions/search/6">{{'missing definition'}}</a>&nbsp;&nbsp;
+				<a href="/definitions/search/7">{{'missing conjugation'}}</a>
 			@endif
 		</span>
 	</h1>
