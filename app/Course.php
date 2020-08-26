@@ -46,20 +46,23 @@ class Course extends Base
 		{
 			switch ($this->type_flag)
 			{
-				case 1:
+				case COURSETYPE_ENGLISH:
 					$cardClass = 'card-course-type1';
 					break;
-				case 2:
+				case COURSETYPE_SPANISH:
 					$cardClass = 'card-course-type2';
 					break;
-				case 3:
+				case COURSETYPE_TECH:
 					$cardClass = 'card-course-type3';
 					break;
 				case 4: // other
 					$cardClass = 'card-course-type4';
 					break;
-				case 40: // exercise
+				case COURSETYPE_TIMED_SLIDES: // exercise
 					$cardClass = 'card-course-type40';
+					break;
+				case COURSETYPE_OTHER: // exercise
+					$cardClass = 'card-course-type99';
 					break;
 				default:
 					break;

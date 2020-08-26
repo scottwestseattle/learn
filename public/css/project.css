@@ -404,15 +404,15 @@ body {
 }
 
 .card-course-type0 { /* not set */
-	background-color: #9568ad; /* plumb */
+	background-color: darkgray;
 }
 
 .card-course-type1 { /* English */
-	background-color: #4993FD; /* header blue */
+	background-color: #f5746f; /* reddish */
 }
 
 .card-course-type2 { /* Spanish */
-	background-color: #2AB455; /* green */
+	background-color: #4993FD; /* header blue */
 }
 
 .card-course-type3 { /* Tech */
@@ -420,11 +420,11 @@ body {
 }
 
 .card-course-type4 { /* Other */
-	background-color: #f5746f; /* reddish */
+	background-color: #9568ad; /* plumb */
 }
 
-.card-course-type40 { /* Exercise */
-	background-color: #f5746f; /* reddish */
+.card-course-type40 { /* Planch */
+	background-color: #2AB455; /* green */
 }
 
 .card-course .card-header {

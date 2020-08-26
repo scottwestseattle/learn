@@ -23,14 +23,16 @@
 		])@endcomponent
 		</div>
 
+		@component('components.control-accent-chars-esp', ['visible' => true, 'flat' => true])@endcomponent																					   
+
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('gen.Title'):</label>
-			<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
+			<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}" onfocus="setFocus($(this))" ></input>	
 		</div>
 				
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('gen.Description'):</label>
-			<textarea name="description" class="form-control">{{$record->description}}</textarea>
+			<textarea id="description" name="description" class="form-control" onfocus="setFocus($(this))" >{{$record->description}}</textarea>
 		</div>
 
 		<div class="form-group">

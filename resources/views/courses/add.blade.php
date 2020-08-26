@@ -8,14 +8,16 @@
 
 	<h1>@LANG('ui.Add') @LANG('content.' . $title)</h1>
                
+	@component('components.control-accent-chars-esp', ['visible' => true, 'flat' => true])@endcomponent																					   
+			   
 	<form method="POST" action="/{{$prefix}}/create">
 							
 		<label for="title" class="control-label">@LANG('gen.Title'):</label>
-		<input type="text" name="title" class="form-control" />
+		<input type="text" id="title" name="title" class="form-control" onfocus="setFocus($(this))" />
 		
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('gen.Description'):</label>
-			<textarea name="description" class="form-control"></textarea>
+			<textarea id="description" name="description" class="form-control" onfocus="setFocus($(this))" ></textarea>
 		<div>
 		
 		<div class="form-group">

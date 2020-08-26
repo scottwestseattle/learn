@@ -88,6 +88,7 @@ class CourseController extends Controller
 		$record = new Course();
 
 		$record->user_id 		= Auth::id();
+		$record->site_id 		= Tools::getSiteId();
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
 		$record->permalink		= Tools::createPermalink($request->title);
@@ -111,7 +112,7 @@ class CourseController extends Controller
 			return back();
 		}
 
-		return redirect(REDIRECT_ADMIN);
+		return redirect('/' . PREFIX . '/view/' . $record->id);
     }
 
     public function permalink(Request $request, $permalink)

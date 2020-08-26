@@ -45,29 +45,33 @@
             </div>
         @endif
 
-        <!--------------------------------------------------------------------------->
-        <!-- Main Photo -->
-        <!--------------------------------------------------------------------------->
+        @if ($course->isTimedSlides())
 
-        <!-- Photo Preview -->
-        <div id="photo-div" class="form-group" style="display:none;">
-            <img id="photo" width="150" src="{{$photoPath}}/none.png" />
-            <input id="main_photo" name="main_photo" type="hidden" value="default" />
-        </div>
+			<!--------------------------------------------------------------------------->
+			<!-- Main Photo -->
+			<!--------------------------------------------------------------------------->
 
-        <div class="form-group">
-        @component('components.control-dropdown-photos', [
-            'prompt' => 'Select Exercise',
-            'empty' => 'Select Main Photo',
-            'options' => App\Tools::getPhotos($photoPath),
-            'selected_option' => null,
-            'field_name' => 'main_photo',
-            'prompt_div' => true,
-            'select_class' => 'form-control',
-            'onchange' => 'showMainPhoto',
-            'noSelection' => 'none.png',
-        ])@endcomponent
-        </div>
+			<!-- Photo Preview -->
+			<div id="photo-div" class="form-group" style="display:none;">
+				<img id="photo" width="150" src="{{$photoPath}}/none.png" />
+				<input id="main_photo" name="main_photo" type="hidden" value="default" />
+			</div>
+
+			<div class="form-group">
+			@component('components.control-dropdown-photos', [
+				'prompt' => 'Select Exercise',
+				'empty' => 'Select Main Photo',
+				'options' => App\Tools::getPhotos($photoPath),
+				'selected_option' => null,
+				'field_name' => 'main_photo',
+				'prompt_div' => true,
+				'select_class' => 'form-control',
+				'onchange' => 'showMainPhoto',
+				'noSelection' => 'none.png',
+			])@endcomponent
+			</div>
+
+		@endif
 
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('gen.Title'):</label>

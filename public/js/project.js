@@ -751,6 +751,7 @@ function insertChar(char, id, isTinyMce)
 
 	if (id != 0 && id != '0')
 	{
+		// if we're using the id parameter 
 		txtarea = document.getElementById(id);
 	}
 	else if (!prevFocus || prevFocus == 'undefined')
@@ -760,18 +761,22 @@ function insertChar(char, id, isTinyMce)
 	}
 	else
 	{
-		id = prevFocus.attr('id');
-		if (!id)
+		//
+		// if we're using previous focus instead of the id 
+		//
+		var focusId = prevFocus.attr('id');
+		
+		if (!focusId)
 		{
-			console.log('id = ' + id);
+			console.log('"id" must be set for each control that calls this component');
 			return;
 		}
 		else
 		{
-			txtarea = document.getElementById(id);
+			txtarea = document.getElementById(focusId);
 			if (!txtarea)
 			{
-				console.log('txtarea not set: ' + txtarea);
+				console.log('textarea not set: ' + txtarea);
 				return;
 			}
 		}
