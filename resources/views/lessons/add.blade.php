@@ -78,19 +78,19 @@
 			<input type="text" name="title" id="title" class="form-control" />
 		</div>
 
-		<div class="form-group">
-			<label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
-			<input type="number" name="seconds" id="seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_SECONDS}}" />
-            @component('components.control-numinc', ['id' => 'seconds', 'multiple' => 5])@endcomponent			
-		<div>
-
-		<div class="form-group">
-			<label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
-			<input type="number" name="break_seconds" id="break_seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_BREAK_SECONDS}}" />
-            @component('components.control-numinc', ['id' => 'break_seconds', 'multiple' => 5])@endcomponent
-		<div>			
-
         @if ($course->isTimedSlides())
+			<div class="form-group">
+				<label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
+				<input type="number" name="seconds" id="seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_SECONDS}}" />
+				@component('components.control-numinc', ['id' => 'seconds', 'multiple' => 5])@endcomponent			
+			<div>
+
+			<div class="form-group">
+				<label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
+				<input type="number" name="break_seconds" id="break_seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_BREAK_SECONDS}}" />
+				@component('components.control-numinc', ['id' => 'break_seconds', 'multiple' => 5])@endcomponent
+			<div>			
+
             <div class="form-group">
                 <div class="submit-button">
                     <button type="submit" name="update" class="btn btn-primary">@LANG('ui.Add')</button>
@@ -121,11 +121,13 @@
 			<input type="text" name="title_chapter" class="form-control" />
 		<div>
 
-		<div class="form-group">
-			<label for="reps" class="control-label">@LANG('gen.Reps'):</label>
-			<input type="number" name="reps" class="form-control" />
-		<div>
-
+        @if ($course->isTimedSlides())
+			<div class="form-group">
+				<label for="reps" class="control-label">@LANG('gen.Reps'):</label>
+				<input type="number" name="reps" class="form-control" />
+			<div>
+		@endif
+		
 		<div class="form-group">
 			<div class="submit-button">
 				<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Add')</button>
