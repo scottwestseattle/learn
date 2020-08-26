@@ -26,6 +26,51 @@ define('CONJ_IMP_NEGATIVE', 'imp_neg');
 
 class Definition extends Base
 {
+    public function entries()
+    {
+		return $this->belongsToMany('App\Entry');
+    }	
+	
+    public function tags()
+    {
+		return $this->belongsToMany('App\Tag');
+    }	
+
+    public function addTagUser($name)
+    {
+		if (Auth::check())
+		{
+			$this->addTag($name, Auth::id());
+		}
+	}
+	
+    public function addTag($name, $userId = null)
+    {
+		$tag = Tag::getOrCreate($name);
+		if (isset($tag))
+		{
+			$this->tags()->detach($tag->id); // if it's already tagged, remove it so it will by updated
+			$this->tags()->attach($tag->id, ['user_id' => $userId]);
+		}
+    }
+
+    public function removeTagUser($name)
+    {
+		if (Auth::check())
+		{
+			$this->removeTag($name);
+		}
+	}
+
+    public function removeTag($name)
+    {
+		$tag = Tag::get($name);
+		if (isset($tag))
+		{
+			$this->tags()->detach($tag->id);
+		}
+    }
+	
     static public function getIndex($sort = null, $limit = PHP_INT_MAX)
 	{
 		$sort = intval($sort);
@@ -110,6 +155,28 @@ class Definition extends Base
 
 		return $records;
     }
+	
+    static public function getById($id)
+    {
+		$id = intval($id);
+		$record = null;
+
+		try
+		{
+			$record = Definition::select()
+				->where('id', $id)
+				->where('deleted_at', null)
+				->first();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting word: ' . $id;
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $id, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $record;
+	}
 	
     static public function get($word)
     {

@@ -52,7 +52,7 @@ $(document).ready(function() {
 	
 	$("#pause").hide();
 	$("#resume").show();
-	
+	ajaxexec('/entries/get-definitions-user/' + parseInt(deck.contentId, 10) + '', '#defs');
 });
 
 $(window).on('unload', function() {
@@ -87,11 +87,10 @@ function deck() {
 	// options
 	this.runState = RUNSTATE_START;
 
-	//new:
-	//this.quizTextRound = 'not set';
-	//this.quizTextCorrect = 'not set';
-	this.lessonId = 'not set';
-
+	this.contentType 	 = 'contentTypeNotSet';	// type of the content being read
+	this.contentId 		 = 'contentIdNotSet';	// id of the content being read
+	this.readLocationTag = 'readLocation';		// readLocation session id tag
+	
 	this.getId = function(index) {
 		return this.slides[this.slides[index].order].id;
 	}
@@ -284,10 +283,14 @@ function loadData()
 
 		// new settings
 		deck.quizTextDone = container.data('quiztext-done');
-		deck.lessonId = container.data('lessonid');
 		deck.touchPath = container.data('touchpath');
 		deck.language = container.data('language');			// this is the language that the web site is in
 		deck.isAdmin = container.data('isadmin') == '1';
+		
+		// use these to create a unique session id tag, looks like: 'readLocationEntry23'
+		deck.contentType = container.data('contenttype');
+		deck.contentId = container.data('contentid');
+		deck.readLocationTag += deck.contentType + deck.contentId;
     });	
 }
 
@@ -906,30 +909,18 @@ function getSelectedText()
 		//_hotWords.push(text + ": ");
 		$('#selected-word').html(html);
 		$('#selected-word-definition').text('');
-		ajaxexec('/definitions/get/' + text, '#selected-word-definition', false, translateCallback);
+		ajaxexec('/definitions/get/' + text + '/' + deck.contentId, '#selected-word-definition', false, translateCallback);
 	}
+}
+
+function removeDefinitionUser(url)
+{
+	ajaxexec(url, '', false, translateCallback);
 }
 
 function translateCallback(definition) 
 {
-	definition = definition.replace(/<\/a>/gi, ": ");
-	definition = definition.replace(/(<([^>]+)>)/gi, "");
-	if (definition == "Translate: ")
-		return;
-	
-	if (!_hotWords.includes(definition))
-	{
-		_hotWords.push(definition);
-		_hotWords.sort();
-	}
-	
-	var t = '';
-	
-	_hotWords.forEach(function(entry, index){
-		t += entry + "<br/>";
-	});
-	
-	$('#hot-words').html(t);
+	ajaxexec('/entries/get-definitions-user/' + parseInt(deck.contentId, 10) + '', '#defs');
 }
 
 function xlate(word) 
@@ -958,10 +949,8 @@ function setFontSize()
 }
 
 function saveReadLocation(location)
-{
-	var tag = 'readLocation' + deck.lessonId;
-	
-	localStorage[tag] = location;
+{	
+	localStorage[deck.readLocationTag] = location;
 	if (location == 0)
 	{
 		$('#button-continue-reading').hide();
@@ -973,8 +962,7 @@ function saveReadLocation(location)
 
 function setReadLocation()
 {
-	var tag = 'readLocation' + deck.lessonId;
-	var location = localStorage[tag];
+	var location = localStorage[deck.readLocationTag];
 	location = parseInt(location);
 	if (location > 0 && location < max)
 	{
@@ -987,4 +975,13 @@ function setReadLocation()
 	
 	$('#readCurrLine').text("Line: " + (curr + 1));
 	//debug("setReadLocation: " + location);
+}
+
+function toggleShowDefinitions()
+{
+	if ($('#defs').is(':visible'))
+		$('#defs').hide();
+	else
+		$('#defs').show();
+	
 }

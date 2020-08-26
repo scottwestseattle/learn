@@ -29,7 +29,10 @@ class EntryController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['read', 'articles', 'books', 'stats', 'index', 'view', 'permalink', 'rss']);
+        $this->middleware('is_admin')->except([
+			'read', 'articles', 'books', 'stats', 'index', 'view', 'permalink', 'rss', 
+			'getDefinitionsUserAjax', 'removeDefinitionUserAjax',
+		]);
 
 		$this->prefix = 'entries';
 		$this->title = 'Entry';
@@ -498,6 +501,29 @@ class EntryController extends Controller
 		]));
     }	
 
+    public function getDefinitionsUserAjax(Request $request, Entry $entry)
+    {
+		if (Auth::check())
+		{
+			//$records = Entry::getDefinitionsUser();
+			$records = $entry->definitions;
+			
+			return view('entries.component-definitions', $this->getViewData([
+				'records' => $records,
+				'entryId' => $entry->id,
+			]));
+		}		
+		else
+			return null;
+	}
+	
+    public function removeDefinitionUserAjax(Request $request, Entry $entry, $defId)
+    {	
+		$rc = $entry->removeDefinitionUser(intval($defId));
+		
+		return ($rc);
+	}
+	
     public function stats(Request $request, Entry $entry)
     {	
 		$record = $entry;

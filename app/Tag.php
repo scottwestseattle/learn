@@ -8,10 +8,16 @@ use App\Entry;
 
 class Tag extends Base
 {	
-	// many to many
     public function entries()
     {
+		// many to many
         return $this->belongsToMany('App\Entry')->orderBy('created_at');
+    }
+
+    public function definitions()
+    {
+		// many to many
+        return $this->belongsToMany('App\Definition')->orderBy('title');
     }
 
 	// add or update 'recent' tag for entries.
@@ -29,6 +35,8 @@ class Tag extends Base
 		}
     }
 
+	// tag the specified entry with the named tag
+	// if it doesn't exist create it.
     static public function tag(Entry $entry, $name, $userId = null)
     {
 		if (Auth::check())
@@ -53,6 +61,7 @@ class Tag extends Base
 			}
 		}
     }
+	
     static public function getRecent()
 	{
 		$record = self::get('recent');

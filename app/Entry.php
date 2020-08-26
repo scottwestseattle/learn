@@ -7,6 +7,7 @@ use DB;
 use Auth;
 use DateTime;
 
+use App\Definition;
 use App\Status;
 use App\Tag;
 use App\Tools;
@@ -30,11 +31,132 @@ class Entry extends Base
     {
     	return $this->belongsTo(User::class);
     }
+
+	//////////////////////////////////////////////////////////////////
+	// Definitions - many to many
+	//////////////////////////////////////////////////////////////////
+
+    public function definitions()
+    {
+		return $this->belongsToMany('App\Definition')->orderBy('title');
+    }	
+
+    static public function addDefinitionUserStatic($entryId, Definition $def)
+    {
+		$entryId = intval($entryId);
+		if ($entryId > 0)
+		{
+			$record = $record = Entry::select()
+				->where('deleted_flag', 0)
+				->where('id', $entryId)
+				->first();
+			
+			if (isset($record))
+			{
+				$record->addDefinitionUser($def);
+			}
+		}
+	}
+	
+    public function addDefinitionUser(Definition $def)
+    {
+		if (Auth::check())
+		{
+			$this->addDefinition($def, Auth::id());
+		}
+	}
+	
+    public function addDefinition(Definition $def, $userId = null)
+    {
+		if (isset($def))
+		{
+			$this->definitions()->detach($def->id); // if it's already tagged, remove it so it will by updated
+			$this->definitions()->attach($def->id, ['user_id' => $userId]);
+		}
+    }
+
+    public function removeDefinitionUser($defId)
+    {
+		$rc = '';
+		
+		if (Auth::check())
+		{
+			$def = Definition::getById($defId);
+			if (isset($def))
+			{
+				$this->definitions()->detach($def->id, ['user_id' => Auth::id()]);
+				$rc = 'success';
+			}
+			else
+			{
+				$rc = 'definition not found';
+			}
+		}
+		else
+		{
+			$rc = 'not logged in';
+		}
+		
+		return $rc;
+	}
+
+    public function removeDefinition(Definition $def)
+    {
+		$this->definitions()->detach($def->id);
+    }
+
+	//////////////////////////////////////////////////////////////////
+	// Tags - many to many
+	//////////////////////////////////////////////////////////////////
 	
     public function tags()
     {
 		return $this->belongsToMany('App\Tag');
     }	
+
+	//
+	// todo: this is how the article tags should be used
+	// this code is currently in the tags
+	// tags should be generic
+	// **NOT USED YET**
+	//
+    public function addTagUser($name)
+    {
+		if (Auth::check())
+		{
+			$this->addTag($name, Auth::id());
+		}
+	}
+	
+    public function addTag($name, $userId = null)
+    {
+		$tag = Tag::getOrCreate($name);
+		if (isset($tag))
+		{
+			$this->tags()->detach($tag->id); // if it's already tagged, remove it so it will by updated
+			$this->tags()->attach($tag->id, ['user_id' => $userId]);
+		}
+    }
+
+    public function removeTagUser($name)
+    {
+		if (Auth::check())
+		{
+			$this->removeTag($name);
+		}
+	}
+
+    public function removeTag($name)
+    {
+		$tag = Tag::get($name);
+		if (isset($tag))
+		{
+			$this->tags()->detach($tag->id);
+		}
+    }
+	//
+	// End of new tag code
+	//
 
     public function getSpeechLanguage()
     {

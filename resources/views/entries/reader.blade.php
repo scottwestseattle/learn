@@ -7,12 +7,13 @@
 <!-------------------------------------------------------->
 <div class="data-misc"
 	data-count="{{count($record['lines'])}}"
-	data-type="{{$record->type_flag}}"
-	data-lessonid="{{$record->id}}"
 	data-touchpath="{{(isset($touchPath) ? $touchPath : '')}}"
 	data-max="{{count($record['lines'])}}"
 	data-language="{{$record->getSpeechLanguage()}}"
 	data-isadmin="{{$isAdmin ? 1 : 0}}"
+	data-type="{{$record->type_flag}}"
+	data-contenttype="Entry"
+	data-contentid="{{$record->id}}"
 ></div>
 
 	<!-------------------------------------------------------->
@@ -49,6 +50,7 @@
 			<span id="pause" style="font-size:1.3em; margin-right:10px; xdisplay:none;" class=""><a onclick="event.preventDefault(); pause()" href=""><span id="button-pause" class="glyphicon glyphicon-pause"></span></a></span>
 			<span id="resume" style="font-size:1.3em; margin-right:10px; display:none;" class=""><a onclick="event.preventDefault(); resume()" href=""><span id="button-resume" class="glyphicon glyphicon-play"></span></a></span>
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); next()" href=""><span id="button-next" class="glyphicon glyphicon-forward"></span></a></span>
+			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); toggleShowDefinitions();" href=""><span id="button-show" class="glyphicon glyphicon-th-list"></span></a></span>
 		</div>
 		<div class="text-center">
 			<div><span class="small-thin-text" id="language"></span></div>
@@ -95,7 +97,7 @@
 	    <div id="slideDescription" class="slideDescription" style="font-size: 18px;" onmouseup="getSelectedText();" ondblclick="getSelectedText();" ontouchend="getSelectedText();"></div>
         <div class="" style="color: green;" id="selected-word"></div>
         <div class="" style="color: green;" id="selected-word-definition"></div>
-        <div class="" style="color: green;" id="hot-words"></div>
+        <div class="mt-2" style="display: none;" id="defs"></div>
 	</div><!-- panel-run -->
 
     <audio id="audio">

@@ -63,9 +63,9 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/view/{definition}', 'DefinitionController@view');
 	Route::get('/find/{text}', 'DefinitionController@find');
 	Route::get('/wordexists/{text}', 'DefinitionController@wordexists');
-	Route::get('/get/{text}','DefinitionController@getajax');
+	Route::get('/get/{text}/{entryId?}','DefinitionController@getajax');
 	Route::get('/translate/{text}','DefinitionController@translate');
-	
+		
 	// conjugations
 	Route::get('/conjugationsgen/{definition}', 'DefinitionController@conjugationsGen');
 	Route::get('/conjugationsgenajax/{text}', 'DefinitionController@conjugationsGenAjax');
@@ -95,6 +95,8 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/read/{entry}', 'EntryController@read');
 	Route::get('/stats/{entry}', 'EntryController@stats');
 	Route::get('/superstats', 'EntryController@superstats');
+	Route::get('/get-definitions-user/{entry}', 'EntryController@getDefinitionsUserAjax');
+	Route::get('/remove-definition-user/{entry}/{defId}', 'EntryController@removeDefinitionUserAjax');
 
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');

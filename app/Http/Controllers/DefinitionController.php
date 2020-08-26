@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use DB;
 use Lang;
 use Auth;
-use App\User;
+use App\Definition;
+use App\Entry;
 use App\Event;
 use App\Tools;
-use App\Definition;
+use App\User;
 use App\VocabList;
 
 define('PREFIX', 'definitions');
@@ -24,7 +25,10 @@ class DefinitionController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'find', 'search', 'getajax', 'translate', 'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponent', 'wordexists']);
+        $this->middleware('is_admin')->except([
+			'index', 'view', 'find', 'search', 'getajax', 'translate', 
+			'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponent', 'wordexists',
+			]);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -460,13 +464,18 @@ class DefinitionController extends Controller
 
 		return $rc;
 	}
-
-    public function getajax(Request $request, $text)
+	
+    public function getajax(Request $request, $text, $entryId)
     {	
+		$entryId = intval($entryId);
+		
 		// 1. see if we already have it in the dictionary
 		$record = Definition::search($text);
 		if (isset($record))
 		{
+			// when a user looks up a word, add it to his definition list for the entry being read
+			Entry::addDefinitionUserStatic($entryId, $record);
+			
 			$xlate = null;
 			if (!isset($record->translation_en))
 			{				
@@ -480,11 +489,11 @@ class DefinitionController extends Controller
 			{
 				if ($record->title == $text)
 				{
-					// exact match of title, so just show the translation
+					// exact match of title
 				}
 				else
 				{
-					// matched either the forms or conjugations, so show the title word too
+					// matched either the forms or conjugations
 				}
 
 				$xlate = nl2br($record->translation_en);
