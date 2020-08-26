@@ -26,8 +26,8 @@ class DefinitionController extends Controller
 	public function __construct ()
 	{
         $this->middleware('is_admin')->except([
-			'index', 'view', 'find', 'search', 'getajax', 'translate', 
-			'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponent', 'wordexists',
+			'index', 'view', 'find', 'search', 'getajax', 'translateAjax', 
+			'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponentAjax', 'wordExistsAjax',
 			]);
 
 		$this->prefix = PREFIX;
@@ -117,7 +117,7 @@ class DefinitionController extends Controller
 		return $forms;
     }	
 	
-	public function conjugationsComponent(Request $request, Definition $definition)
+	public function conjugationsComponentAjax(Request $request, Definition $definition)
     {
 		$record = $definition;
 		$record->conjugations = Definition::getConjugationsPretty($record->conjugations);
@@ -128,7 +128,7 @@ class DefinitionController extends Controller
     }
 	
 
-    public function wordexists(Request $request, $text)
+    public function wordExistsAjax(Request $request, $text)
     {
 		$rc = '';
 		
@@ -465,7 +465,7 @@ class DefinitionController extends Controller
 		return $rc;
 	}
 	
-    public function getajax(Request $request, $text, $entryId)
+    public function getAjax(Request $request, $text, $entryId)
     {	
 		$entryId = intval($entryId);
 		
@@ -510,7 +510,7 @@ class DefinitionController extends Controller
 		return $rc;
 	}
 
-    public function translate(Request $request, $text)
+    public function translateAjax(Request $request, $text, $entryId = null)
     {	
 		$rc = self::translateMicrosoft($text);
 		
@@ -518,7 +518,10 @@ class DefinitionController extends Controller
 		{
 			// add the translation to our dictionary for next time
 			$rc = strtolower($rc['data']);
-			Definition::add($text, $rc);
+			$def = Definition::add($text, $rc);
+			
+			// when a user translates a word, add it to his definition list for the entry being read
+			Entry::addDefinitionUserStatic($entryId, $def);
 		}
 		else
 		{

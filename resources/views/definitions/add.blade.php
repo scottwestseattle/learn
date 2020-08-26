@@ -19,7 +19,7 @@
 			<input type="text" id="title" name="title" value="{{$word}}" class="form-control" autocomplete="off"  onfocus="setFocus($(this)); $('#wordexists').html('');" onblur="wordExists($(this))" autofocus />
 			<div id="wordexists" class="mb-2"></div>
 			
-			<label for="forms" class="control-label">@LANG('content.Word Forms'): <span class="small-thin-text">(separate with comma, space, or semi-colon)</span></label>
+			<label for="forms" class="control-label">@LANG('content.Word Forms'): <span class="small-thin-text">(separate with comma or semi-colon)</span></label>
 			<a onclick="event.preventDefault(); $('#forms').val(''); $('#forms').focus();" href="" tabindex="-1'><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<input type="text" rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))"  value="{{$word}}"/>
 

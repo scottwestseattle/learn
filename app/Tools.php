@@ -378,7 +378,7 @@ class Tools
 		if (isset($text))
 		{			
 			// replace all chars except alphanums, some punctuation, accent chars, and whitespace
-			//$text = str_replace("\r\n", ' ', $text); // old way worked but didn't handle tabs
+			//$text = str_replace("\r\n", ' ', $text); // old way works but didn't handle tabs
 			$text = preg_replace("/\s+/", ' ', $text); // change all whitespace to one space
 			$base = "a-zA-Z ";			
 			$match = $base . self::$_accents;
@@ -518,7 +518,8 @@ class Tools
 	static public $_lineSplitters = array('Mr.', 'Miss.', 'Sr.', 'Mrs.', 'Ms.', 'St.');
 	static public $_lineSplittersSubs = array('Mr:', 'Miss:', 'Sr:', 'Mrs:', 'Ms:', 'St:');
 	static public $_fixWords = array(
-		'Mr.', 'Mrs.', 'Miss.', 'Y, ', 'Y; ', 
+		'Mr.', 'Sr.', 'Sr ', 'Mrs.', 'Miss.',
+		'Y,', 'Y;', 'y,', 'y:', 
 		'Jessica', 'Jéssica', 'Jess', 
 		'Max', 'Aspid', 'Áspid',
 		'Mariel', 'MARIEL', 'Beaumont', 'BEAUMONT',
@@ -526,7 +527,8 @@ class Tools
 		'Geovanny', 'Giovanny', 'Geo', 'Gio',
 		);
 	static public $_fixWordsSubs = array(
-		'Señor', 'Señora', 'Señorita', 'Y ', 'Y ', 
+		'Señor', 'Señor', 'Señor ', 'Señora', 'Señorita', 
+		'Y ', 'Y ', 'y ', 'y ',
 		'Sofía', 'Sofía', 'Sofía', 
 		'Pedro', 'Picapiedra', 'Picapiedra',
 		'Gerarda', 'Gerarda', 'Gonzalez', 'Gonzalez',

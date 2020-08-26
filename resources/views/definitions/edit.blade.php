@@ -16,7 +16,7 @@
 			<label for="title" class="control-label">@LANG('content.Word'):</label>
 			<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}" autocomplete="off" onfocus="setFocus($(this))" />
 			
-			<label for="forms" class="control-label">@LANG('content.Word Forms'): <span class="small-thin-text">(separate with comma, space, or semi-colon)</span></label>
+			<label for="forms" class="control-label">@LANG('content.Word Forms'): <span class="small-thin-text">(separate with comma or semi-colon)</span></label>
 			<a onclick="event.preventDefault(); $('#forms').val(''); $('#forms').focus();" href="" tabindex="-1'><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<input type="text" rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))" value="{{$formsPretty}}" />
 			<div class="small-thin-text mb-2 ml-2">{{$record->forms}}</div>

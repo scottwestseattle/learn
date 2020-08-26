@@ -236,18 +236,38 @@ class Definition extends Base
     static public function formatForms($forms)
     {
 		$v = Tools::alphanumpunct($forms);
-		$v = preg_replace('/[ ;,]+/', ';', $v); // replace one or more spaces with one ';' to separate words
-		if (strlen($v) > 0)
-		{
-			// wrap it in ';'
-			if (!Tools::startsWith($v, ';'))
-				$v = ';' . $v;
-			
-			if (!Tools::endsWith($v, ';'))
-				$v .= ';';
-		}
+		$v = preg_replace('/[;,]+/', ';', $v); // replace one or more spaces with one ';' to separate words
+		$v = self::trimDelimitedString(';', $v);
+		$v = self::wrapString(';', $v);
 
-		//dd($v);
+		return $v;
+	}
+
+    static public function wrapString($wrapping, $text)
+    {
+		if (strlen($text) > 0)
+		{
+			if (!Tools::startsWith($text, $wrapping))
+				$text = $wrapping . $text;
+			
+			if (!Tools::endsWith($text, $wrapping))
+				$text .= $wrapping;
+		}
+		
+		return $text;
+	}
+	
+	// trims each part of a non-whitespace delimited string, like: "no one; one;   two;  three" to "no one;one;two;three;"
+    static public function trimDelimitedString($d, $text)
+    {
+		$parts = explode($d, $text);
+		$v = '';
+		foreach($parts as $part)
+		{
+			$part = trim($part);
+			if (strlen($part) > 0)
+				$v .= $part . $d; // put the trimmed part back followed by the delimiter
+		}
 		
 		return $v;
 	}
@@ -377,7 +397,6 @@ class Definition extends Base
 		$v = str_replace(';', ' ', $raw); 	// replace all ';' with spaces
 		$v = Tools::alpha($v, true);			// clean it up
 		$v = preg_replace('/[ *]/i', '|', $v);	// replace all spaces with '|'
-
 		$parts = explode('|', $v);
 		//dd($parts);
 		$prefix = null;
@@ -386,7 +405,7 @@ class Definition extends Base
 		foreach($parts as $part)
 		{			
 			$word = mb_strtolower(trim($part));
-			
+
 			if (strlen($word) > 0)
 			{
 				// the clean is specific to the verb conjugator in SpanishDict.com
@@ -419,7 +438,7 @@ class Definition extends Base
 					case 'tú':
 					case 'élellaud':
 					/*
-					// for wiki
+					// for wiki, not done because the conjugations are in a different order
 					case 'vos':
 					case 'usted':
 					case 'nosotras':
@@ -427,8 +446,8 @@ class Definition extends Base
 					case 'ustedes':
 					case 'ellosellas':
 					case 'élellaello':
-						break;
 					*/
+						break;
 					case 'no': // non reflexives with two words
 						$prefix = $word; // we need the 'no'
 						break;	
@@ -466,7 +485,7 @@ class Definition extends Base
 			}
 		}
 		
-		dd($words);
+		//dd($words);
 		$search = isset($search) ? ';' . $search : null;
 				
 		$count = count($words);
@@ -628,11 +647,9 @@ class Definition extends Base
 
     static public function getFormsPretty($forms)
     {
-		$v = str_replace(';', ' ', $forms);
-		$v = trim($v);
-		$v = str_replace(' ', ', ', $v);
-		
-		return trim($v);
+		$v = preg_replace('/^;(.*);$/', "$1", $forms);
+		$v = str_replace(';', ', ', $v);
+		return $v;
 	}
 	
 	// search checks title and forms
@@ -715,7 +732,7 @@ class Definition extends Base
 	
 		$record = new Definition();
 
-		$record->user_id 		= Auth::id();
+		$record->user_id 		= Auth::id(); // null is ok
 		$record->title 			= $title;
 		$record->forms 			= $title;
 		$record->translation_en = $definition;
@@ -732,8 +749,10 @@ class Definition extends Base
 		{
 			$msg = 'Error adding definition: ' . $title . ', ' . $definition;
 			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
-			$rc = $msg;
+			$record = null;
 		}
+		
+		return $record;
 	}
 
     public function updateLastViewedTime()

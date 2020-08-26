@@ -33,7 +33,7 @@
 @endforeach
 
 <div class="container">
-
+	
 	<!-------------------------------------------------------->
 	<!-- Header -->
 	<!-------------------------------------------------------->
@@ -45,7 +45,7 @@
 		<div style="margin: 0 5px 0 0;">
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a class="" role="" href="/{{$index}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); reload()" href=""><span id="button-repeat" class="glyphicon glyphicon-repeat"></span></a></span>
-			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); mute()" href=""><span id="button-mute" class="glyphicon glyphicon-volume-up"></span></a></span>
+			<!-- span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); mute()" href=""><span id="button-mute" class="glyphicon glyphicon-volume-up"></span></a></span -->
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); prev()" href=""><span id="button-prev" class="glyphicon glyphicon-backward"></span></a></span>
 			<span id="pause" style="font-size:1.3em; margin-right:10px; xdisplay:none;" class=""><a onclick="event.preventDefault(); pause()" href=""><span id="button-pause" class="glyphicon glyphicon-pause"></span></a></span>
 			<span id="resume" style="font-size:1.3em; margin-right:10px; display:none;" class=""><a onclick="event.preventDefault(); resume()" href=""><span id="button-resume" class="glyphicon glyphicon-play"></span></a></span>
@@ -91,19 +91,24 @@
 	<!---------------------------------------------------------------------------------------------------------------->
 	<!-- Run Panel -->
 	<!---------------------------------------------------------------------------------------------------------------->
-	<div id="panel-run" class="slide-panel text-center">
-        <div class="small-thin-text slideCount"></div>
-	    <div id="debug"></div>
-	    <div id="slideDescription" class="slideDescription" style="font-size: 18px;" onmouseup="getSelectedText();" ondblclick="getSelectedText();" ontouchend="getSelectedText();"></div>
-        <div class="" style="color: green;" id="selected-word"></div>
-        <div class="" style="color: green;" id="selected-word-definition"></div>
-        <div class="mt-2" style="display: none;" id="defs"></div>
-	</div><!-- panel-run -->
-
-    <audio id="audio">
-        <source src="" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+	
+	<div class="container-fluid">
+	  <div class="row">
+		<div id="panel-run-col-text" class="" style="width:100%;" >
+			<div id="panel-run" class="slide-panel text-center" style="">
+				<div class="small-thin-text slideCount"></div>
+				<div id="debug"></div>
+				<div id="slideDescription" class="slideDescription" style="font-size: 18px;" onmouseup="getSelectedText();" ondblclick="getSelectedText();" ontouchend="getSelectedText();"></div>
+				<div class="" style="color: green;" id="selected-word"></div>
+				<div class="" style="color: green;" id="selected-word-definition"></div>
+			</div><!-- panel-run -->
+		</div>
+		<div id="panel-run-col-defs" class="mt-3" style="display:none; padding:0;">
+			<div id="defs" style=""></div>
+		</div>
+	  </div>
+	</div>	
+	
 
 </div><!-- container -->
 

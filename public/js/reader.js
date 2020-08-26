@@ -977,11 +977,20 @@ function setReadLocation()
 	//debug("setReadLocation: " + location);
 }
 
+//<div id="panel-run-col-defs" class="col-md-4 mt-3" style="background-color:white; padding:0;">
+//<div id="panel-run-col-text" class="col-md-8" style="" >
 function toggleShowDefinitions()
 {
-	if ($('#defs').is(':visible'))
-		$('#defs').hide();
+	if ($('#panel-run-col-defs').is(':visible'))
+	{
+		$('#panel-run-col-defs').hide();
+		$('#panel-run-col-defs').removeClass('col-md-4');
+		$('#panel-run-col-text').removeClass('col-md-8');		
+	}
 	else
-		$('#defs').show();
-	
+	{
+		$('#panel-run-col-defs').show();
+		$('#panel-run-col-defs').addClass('col-md-4');
+		$('#panel-run-col-text').addClass('col-md-8');
+	}
 }

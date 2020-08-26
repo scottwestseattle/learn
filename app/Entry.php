@@ -41,19 +41,22 @@ class Entry extends Base
 		return $this->belongsToMany('App\Definition')->orderBy('title');
     }	
 
-    static public function addDefinitionUserStatic($entryId, Definition $def)
+    static public function addDefinitionUserStatic($entryId, $def)
     {
 		$entryId = intval($entryId);
 		if ($entryId > 0)
 		{
-			$record = $record = Entry::select()
-				->where('deleted_flag', 0)
-				->where('id', $entryId)
-				->first();
-			
-			if (isset($record))
+			if (isset($def))
 			{
-				$record->addDefinitionUser($def);
+				$record = $record = Entry::select()
+					->where('deleted_flag', 0)
+					->where('id', $entryId)
+					->first();
+				
+				if (isset($record))
+				{
+					$record->addDefinitionUser($def);
+				}
 			}
 		}
 	}
