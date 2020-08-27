@@ -26,8 +26,8 @@ class DefinitionController extends Controller
 	public function __construct ()
 	{
         $this->middleware('is_admin')->except([
-			'index', 'view', 'find', 'search', 'getajax', 'translateAjax', 
-			'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponentAjax', 'wordExistsAjax',
+			'index', 'view', 'find', 'search', 'conjugationsGen', 
+			'getAjax', 'translateAjax', 'conjugationsGenAjax', 'conjugationsComponentAjax', 'wordExistsAjax',
 			]);
 
 		$this->prefix = PREFIX;
@@ -512,6 +512,7 @@ class DefinitionController extends Controller
 
     public function translateAjax(Request $request, $text, $entryId = null)
     {	
+		$entryId = intval($entryId);
 		$rc = self::translateMicrosoft($text);
 		
 		if (strlen($rc['error']) == 0)

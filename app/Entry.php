@@ -41,6 +41,29 @@ class Entry extends Base
 		return $this->belongsToMany('App\Definition')->orderBy('title');
     }	
 
+	public function getDefinitions($userId)
+	{
+		$userId = intval($userId);
+		$entryId = $this->id;
+		$records = DB::table('entries')
+			->join('definition_entry', function($join) use ($entryId, $userId) {
+				$join->on('definition_entry.entry_id', '=', 'entries.id');
+				$join->where('definition_entry.entry_id', $entryId);
+				$join->where('definition_entry.user_id', $userId);
+			})
+			->join('definitions', function($join) use ($entryId) {
+				$join->on('definitions.id', '=', 'definition_entry.definition_id');
+				$join->whereNull('definitions.deleted_at');
+			})
+			->select('definitions.*')
+			->where('entries.deleted_flag', 0)
+			->orderBy('definitions.title')
+			->get();
+
+		return $records;
+	}
+
+
     static public function addDefinitionUserStatic($entryId, $def)
     {
 		$entryId = intval($entryId);
@@ -75,6 +98,7 @@ class Entry extends Base
 		{
 			$this->definitions()->detach($def->id); // if it's already tagged, remove it so it will by updated
 			$this->definitions()->attach($def->id, ['user_id' => $userId]);
+			Event::logAdd(LOG_MODEL, $def->title, 'user id: ' . $userId, $def->id);			
 		}
     }
 

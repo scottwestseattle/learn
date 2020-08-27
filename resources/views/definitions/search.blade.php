@@ -44,7 +44,7 @@
 								
 								@if (isset($record->definition))
 									<div class="medium-thin-text mb-2">{!!nl2br($record->definition)!!}</div>
-								@else
+								@elseif (App\User::isSuperAdmin())
 									<a href="/definitions/edit/{{$record->id}}" class="small-thin-text danger">add definition</a>
 								@endif
 																								
@@ -52,7 +52,7 @@
 								
 								@if (isset($record->translation_en))
 									<div class="mt-2 steelblue">English: {!!nl2br($record->translation_en)!!}</div>
-								@else
+								@elseif (App\User::isSuperAdmin())
 									<a href="/definitions/edit/{{$record->id}}" class="small-thin-text danger">add translation</a>
 								@endif
 								

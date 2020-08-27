@@ -503,18 +503,35 @@ class EntryController extends Controller
 
     public function getDefinitionsUserAjax(Request $request, Entry $entry)
     {
+		$rc = '';
+		
 		if (Auth::check())
 		{
-			//$records = Entry::getDefinitionsUser();
-			$records = $entry->definitions;
-			
+			try
+			{
+				$records = $entry->getDefinitions(Auth::id());
+				//$records = $entry->definitions; // this is the list created by the many to many relationship but it isn't by user
+				//throw new \Exception('test');
+			}
+			catch (\Exception $e) 
+			{
+				$msg = 'error getting user definitions';
+				$info = ', entry id: ' . $entry->id . ', user id: ' . Auth::id() . '';
+				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg . $info, null, $e->getMessage());
+				return $msg; 
+			}						
+
 			return view('entries.component-definitions', $this->getViewData([
 				'records' => $records,
 				'entryId' => $entry->id,
 			]));
-		}		
+		}	
 		else
-			return null;
+		{
+			// not an error if they're not logged in, just return blank
+		}
+
+		return $rc;
 	}
 	
     public function removeDefinitionUserAjax(Request $request, Entry $entry, $defId)

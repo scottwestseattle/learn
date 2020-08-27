@@ -18,7 +18,7 @@
 								
 								@if (isset($record->translation_en))
 									<div class="mt-2 steelblue">{!!nl2br($record->translation_en)!!}</div>
-								@else
+								@elseif (App\User::isSuperAdmin())
 									<a href="/definitions/edit/{{$record->id}}" target="_blank" class="small-thin-text danger">add translation</a>
 								@endif
 																

@@ -31,15 +31,20 @@
 	<!-- Show the record -->
 	@if (isset($record))
 		
+	
 	<div style="mt-3">
 		<h3>
 			{{$record->title}}<span style="vertical-align: middle; background-color: LightGray; color: gray; margin-left: 7px; font-size:13px; padding:3px 3px; font-weight:bold;" class="badge">{{$record->view_count}}</span>
-			@if ($canConjugate)
-				<div class="small-thin-text mt-2"><a href="/{{PREFIX . '/conjugationsgen/' . $record->id}}/">generate conjugations</a>
+
+			@if (App\User::isSuperAdmin())
+				@if ($canConjugate)
+					<div class="small-thin-text mt-2"><a href="/{{PREFIX . '/conjugationsgen/' . $record->id}}/">generate conjugations</a>
+				@endif
+				@if (App\Definition::fixConjugations($record))
+					<div class="small-thin-text mt-2"><a href="/{{PREFIX . '/edit/' . $record->id}}/">fix conjugation</a>
+				@endif
 			@endif
-			@if (App\Definition::fixConjugations($record))
-				<div class="small-thin-text mt-2"><a href="/{{PREFIX . '/edit/' . $record->id}}/">fix conjugation</a>
-			@endif
+			
 		</h3>
 	</div>
 
@@ -69,8 +74,7 @@
 		<p style="font-size:1.2em;">Not found in dictionary</p>
 		<p><a target='_blank' href="https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text={{$word}}">Google Translate: {{$word}}</a></p>
 		<p><a target='_blank' href="https://www.spanishdict.com/translate/{{$word}}">Span¡shD!ct.com: {{$word}}</a></p>
-
-	<div>
+	</div>
 	
 	@endif
 

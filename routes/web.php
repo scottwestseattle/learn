@@ -64,7 +64,7 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/find/{text}', 'DefinitionController@find');
 	Route::get('/wordexists/{text}', 'DefinitionController@wordExistsAjax');
 	Route::get('/get/{text}/{entryId?}','DefinitionController@getAjax');
-	Route::get('/translate/{text}','DefinitionController@translateAjax');
+	Route::get('/translate/{text}/{entryId?}','DefinitionController@translateAjax');
 		
 	// conjugations
 	Route::get('/conjugationsgen/{definition}', 'DefinitionController@conjugationsGen');

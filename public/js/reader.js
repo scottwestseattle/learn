@@ -926,7 +926,7 @@ function translateCallback(definition)
 function xlate(word) 
 {
 	$('#selected-word-definition').text('translating...');
-	ajaxexec('/definitions/translate/' + word, '#selected-word-definition');	
+	ajaxexec('/definitions/translate/' + word + '/' + deck.contentId + '', '#selected-word-definition', false, translateCallback);	
 }
 		
 function zoom(amount)
@@ -981,16 +981,19 @@ function setReadLocation()
 //<div id="panel-run-col-text" class="col-md-8" style="" >
 function toggleShowDefinitions()
 {
-	if ($('#panel-run-col-defs').is(':visible'))
+	if ($('#panel-run').is(':visible'))
 	{
-		$('#panel-run-col-defs').hide();
-		$('#panel-run-col-defs').removeClass('col-md-4');
-		$('#panel-run-col-text').removeClass('col-md-8');		
-	}
-	else
-	{
-		$('#panel-run-col-defs').show();
-		$('#panel-run-col-defs').addClass('col-md-4');
-		$('#panel-run-col-text').addClass('col-md-8');
+		if ($('#panel-run-col-defs').is(':visible'))
+		{
+			$('#panel-run-col-defs').hide();
+			$('#panel-run-col-defs').removeClass('col-md-4');
+			$('#panel-run-col-text').removeClass('col-md-8');		
+		}
+		else
+		{
+			$('#panel-run-col-defs').show();
+			$('#panel-run-col-defs').addClass('col-md-4');
+			$('#panel-run-col-text').addClass('col-md-8');
+		}
 	}
 }
