@@ -8,11 +8,11 @@
 					<tbody>
 						@foreach($records as $record)
 						<tr>
-							<td class="hidden-xs" style="xpadding: 2px 5px;">
-								<a class="medium-thin-text" href="/definitions/view/{{$record->id}}" target="_blank">{{$record->title}}</a>
+							<td class="hidden-xs" style=""><!-- SM and higher -->
+								<a class="" href="/definitions/view/{{$record->id}}" target="_blank">{{$record->title}}</a>
 							</td>
-							<td style="padding-top: 2px;">
-								<div class="medium-thin-text hidden-lg hidden-md hidden-sm">
+							<td style="padding-top: 2px;"><!-- XS -->
+								<div class="hidden-lg hidden-md hidden-sm">
 									<a href="/definitions/view/{{$record->id}}" target="_blank">{{$record->title}}</a>
 								</div>
 								

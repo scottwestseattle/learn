@@ -206,7 +206,7 @@ function deck() {
 
 	this.showSlide = function() {
 	    var slide = deck.slides[curr];
-        $(".slideCount").text((curr+1) + " of " + deck.slides.length + ' ' + getElapsedTime());
+        $(".slideCount").text((curr+1) + " of " + deck.slides.length); // + ' ' + getElapsedTime());
         $(".slideDescription").text(deck.slides[curr].description);
 		$('#selected-word').text('');
 		$('#selected-word-definition').text('');
@@ -393,13 +393,6 @@ function runContinueOther()
 	$("#resume").hide();	
 	startClock();
 	deck.run(/* fromBeginning = */ false);
-}
-
-function startClock()
-{
-	_startTime = new Date();	
-	clearTimeout(_clockTimerId);
-	_clockTimerId = setTimeout(showElapsedTime, 1000);
 }
 
 function togglePause()
@@ -760,68 +753,6 @@ function end()
 	clearTimeout(_clockTimerId);
 }
 
-function getElapsedTime()
-{
-	var time = '';
-	
-	// get run time
-	if (_startTime != null)
-	{
-		endTime = new Date();
-		var timeDiff = endTime - _startTime; //in ms
-		timeDiff /= 1000; // to seconds
-		var seconds = Math.round(timeDiff);		
-		var total = seconds;
-
-		if (seconds < 10)
-			time = '00:0' + seconds;
-		else
-			time = '00:' + seconds
-		
-		if (seconds >= 60)
-		{
-			minutes = Math.round(seconds / 60);
-			seconds = seconds % 60;
-			
-			if (minutes >= 60)
-			{
-				hours = Math.round(minutes / 60);
-				minutes = minutes % 60;
-				
-				if (minutes < 10)
-					minutes = "0" + minutes;
-				if (seconds < 10)
-					seconds = "0" + seconds;
-				if (hours < 10)
-					hours = "0" + hours;
-				
-				time = hours + ":" + minutes + ":" + seconds;
-			}
-			else
-			{
-				if (minutes < 10)
-					minutes = "0" + minutes;
-				if (seconds < 10)
-					seconds = "0" + seconds;
-				
-				time = minutes + ":" + seconds;				
-			}
-		}		
-	}
-
-	return time;
-}
-
-function showElapsedTime()
-{
-	var time = getElapsedTime();
-	$('#elapsedTime').text("Reading Time: " + time);
-    $(".slideCount").text((curr+1) + " of " + deck.slides.length + ' ' + time);	
-
-	clearTimeout(_clockTimerId);
-	_clockTimerId = setTimeout(showElapsedTime, 1000);
-}
-
 function reset()
 {
 	clear();
@@ -1007,10 +938,10 @@ function getReadLocation()
 	if (multipleLocations && deck.readLocationOtherDevice > 0 && deck.readLocationOtherDevice < max)
 	{
 		$('#button-start-reading').text("Start reading from the beginning");
-		$('#button-continue-reading').text("Continue reading from line " + (location + 1) + " (location on this device)");
+		$('#button-continue-reading').html("Continue reading from line " + (location + 1) + "<br/><span class='small-thin-text'>(location on this device)</span>");
 		
 		$('#button-continue-reading-other').show();
-		$('#button-continue-reading-other').text("Continue reading from line " + (deck.readLocationOtherDevice + 1) + " (location from other device)");
+		$('#button-continue-reading-other').html("Continue reading from line " + (deck.readLocationOtherDevice + 1) + "<br/><span class='small-thin-text'>(location from other device)</span>");
 	}
 	
 	$('#readCurrLine').text("Line: " + (curr + 1));
@@ -1036,4 +967,74 @@ function toggleShowDefinitions()
 			$('#panel-run-col-text').addClass('col-md-8');
 		}
 	}
+}
+
+function startClock()
+{
+	_startTime = new Date();	
+	clearTimeout(_clockTimerId);
+	_clockTimerId = setTimeout(showElapsedTime, 1000);
+}
+
+function showElapsedTime()
+{
+	var time = getElapsedTime();
+	$('#elapsedTime').text("Reading Time: " + time);
+    //$(".slideCount").text((curr+1) + " of " + deck.slides.length + ' ' + time);	
+	$('#clock').text(time);
+
+	clearTimeout(_clockTimerId);
+	_clockTimerId = setTimeout(showElapsedTime, 1000);
+}
+
+function getElapsedTime()
+{
+	var time = '';
+	
+	// get run time
+	if (_startTime != null)
+	{
+		endTime = new Date();
+		var timeDiff = endTime - _startTime; //in ms
+		timeDiff /= 1000; // to seconds
+		var seconds = Math.round(timeDiff);		
+		var total = seconds;
+
+		if (seconds < 10)
+			time = '00:0' + seconds;
+		else
+			time = '00:' + seconds
+		
+		if (seconds >= 60)
+		{
+			minutes = Math.round(seconds / 60);
+			seconds = seconds % 60;
+			
+			if (minutes >= 60)
+			{
+				hours = Math.round(minutes / 60);
+				minutes = minutes % 60;
+				
+				if (minutes < 10)
+					minutes = "0" + minutes;
+				if (seconds < 10)
+					seconds = "0" + seconds;
+				if (hours < 10)
+					hours = "0" + hours;
+				
+				time = hours + ":" + minutes + ":" + seconds;
+			}
+			else
+			{
+				if (minutes < 10)
+					minutes = "0" + minutes;
+				if (seconds < 10)
+					seconds = "0" + seconds;
+				
+				time = minutes + ":" + seconds;				
+			}
+		}		
+	}
+
+	return time;
 }

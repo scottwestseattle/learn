@@ -515,14 +515,23 @@ class DefinitionController extends Controller
 		$entryId = intval($entryId);
 		$rc = self::translateMicrosoft($text);
 		
-		if (strlen($rc['error']) == 0)
+		if (strlen($rc['error']) == 0) // no errors
 		{
 			// add the translation to our dictionary for next time
-			$rc = strtolower($rc['data']);
-			$def = Definition::add($text, $rc);
+			$translation = strtolower($rc['data']);
+			$def = Definition::add($text, $translation);
 			
 			// when a user translates a word, add it to his definition list for the entry being read
 			Entry::addDefinitionUserStatic($entryId, $def);
+			
+			if (isset($def))
+			{
+				$rc = "<a href='/definitions/view/$def->id/' target='_blank'>$def->title</a><div class='green mt-1'>$translation</div>";
+			}
+			else
+			{
+				$rc = $translation;
+			}
 		}
 		else
 		{
