@@ -728,7 +728,7 @@ class Definition extends Base
 	
 	static public function add($title, $definition, $examples = null)
 	{
-		$title = strtolower($title);
+		$title = mb_strtolower($title);
 	
 		$record = new Definition();
 

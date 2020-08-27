@@ -26,7 +26,7 @@ class Tag extends Base
     {
 		if (Auth::check())
 		{
-			$recent = Tag::getRecent();
+			$recent = self::getRecent();
 			if (isset($recent)) // replace old one if exists
 				$entry->tags()->detach($recent->id, ['user_id' => Auth::id()]);
 			
@@ -41,7 +41,7 @@ class Tag extends Base
     {
 		if (Auth::check())
 		{
-			$tag = Tag::getOrCreate($name);
+			$tag = self::getOrCreate($name);
 			if (isset($tag))
 			{
 				$entry->tags()->detach($tag->id);
@@ -54,7 +54,7 @@ class Tag extends Base
     {
 		if (Auth::check())
 		{
-			$tag = Tag::get($name);
+			$tag = self::get($name);
 			if (isset($tag))
 			{
 				$entry->tags()->detach($tag->id);

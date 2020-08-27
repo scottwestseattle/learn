@@ -67,6 +67,7 @@ class Entry extends Base
     static public function addDefinitionUserStatic($entryId, $def)
     {
 		$entryId = intval($entryId);
+		$userId = Auth::id();
 		if ($entryId > 0)
 		{
 			if (isset($def))
@@ -80,7 +81,22 @@ class Entry extends Base
 				{
 					$record->addDefinitionUser($def);
 				}
+				else
+				{
+					$info = 'entry not found, entry id: ' . $entryId . ', user id: ' . $userId . '';
+					Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);			
+				}
 			}
+			else
+			{
+				$info = 'def not set, user id: ' . $userId;
+				Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);			
+			}
+		}
+		else
+		{
+			$info = 'entry id not set, user id: ' . $userId;
+			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);			
 		}
 	}
 	
@@ -92,13 +108,18 @@ class Entry extends Base
 		}
 	}
 	
-    public function addDefinition(Definition $def, $userId = null)
+    public function addDefinition($def, $userId = null)
     {
-		if (isset($def))
+		if (isset($def) && isset($userId))
 		{
 			$this->definitions()->detach($def->id); // if it's already tagged, remove it so it will by updated
 			$this->definitions()->attach($def->id, ['user_id' => $userId]);
-			Event::logAdd(LOG_MODEL, $def->title, 'user id: ' . $userId, $def->id);			
+			Event::logAdd(LOG_MODEL_ENTRIES, 'added definition: "' . $def->title . '" to entry', 'user id: ' . $userId, $def->id);			
+		}
+		else
+		{
+			$info = 'def or user not set, user id: ' . $userId;
+			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);			
 		}
     }
 
