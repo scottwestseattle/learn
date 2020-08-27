@@ -31,7 +31,7 @@ class EntryController extends Controller
 	{
         $this->middleware('is_admin')->except([
 			'read', 'articles', 'books', 'stats', 'index', 'view', 'permalink', 'rss', 
-			'getDefinitionsUserAjax', 'removeDefinitionUserAjax',
+			'getDefinitionsUserAjax', 'removeDefinitionUserAjax', 'setReadLocationAjax',
 		]);
 
 		$this->prefix = 'entries';
@@ -482,7 +482,7 @@ class EntryController extends Controller
 			return $this->pageNotFound404('read/' . $entry->id);			
 		}
 				
-		Tag::recent($entry); // tag it as recent for the user so it will move to the top of the list
+		$readLocation = Tag::recent($entry); // tag it as recent for logged-in user so it will move to the top of the list
 		Entry::countView($entry);
 		
 		$record = $entry;
@@ -498,6 +498,7 @@ class EntryController extends Controller
     	return view('entries.reader', $this->getViewData([
 			'record' => $record,
 			'index' => $record->type_flag == ENTRY_TYPE_ARTICLE ? 'articles' : 'books',
+			'readLocation' => (Auth::check() ? $readLocation : null),
 		]));
     }	
 
@@ -539,6 +540,15 @@ class EntryController extends Controller
 		$rc = $entry->removeDefinitionUser(intval($defId));
 		
 		return ($rc);
+	}
+
+    public function setReadLocationAjax(Request $request, Entry $entry, $location)
+    {	
+		$location = intval($location);
+		
+		$rc = Tag::setReadLocation($entry, $location);
+		
+		return ($rc ? 'read location saved' : 'read location not saved - user id: ' . Auth::id());
 	}
 	
     public function stats(Request $request, Entry $entry)

@@ -10,10 +10,12 @@
 	data-touchpath="{{(isset($touchPath) ? $touchPath : '')}}"
 	data-max="{{count($record['lines'])}}"
 	data-language="{{$record->getSpeechLanguage()}}"
-	data-isadmin="{{$isAdmin ? 1 : 0}}"
 	data-type="{{$record->type_flag}}"
 	data-contenttype="Entry"
-	data-contentid="{{$record->id}}"
+	data-contentid="{{$record->id}}" 
+	data-isadmin="{{$isAdmin ? 1 : 0}}" 
+	data-userid="{{Auth::id()}}" 
+	data-readlocation={{$readLocation}}
 ></div>
 
 	<!-------------------------------------------------------->
@@ -74,9 +76,8 @@
             <div class="small-thin-text">{{count($record['lines'])}} lines</div>
             <div id="slideTitle" style="font-size:18px" class="mb-2">{{$record->title}}</div>
             <a onclick="event.preventDefault(); run()"  href="" class="btn btn-primary mb-3"  id="button-start-reading" role="button">Start Reading</a>
-            <div>
-				<a onclick="event.preventDefault(); runContinue()"  href="" class="btn btn-success mb-3" id="button-continue-reading" style="display:none;" role="button">Continue reading from line</a>
-			</div>
+            <div><a onclick="event.preventDefault(); runContinue()"  href="" class="btn btn-success mb-3" id="button-continue-reading" style="display:none;" role="button">Continue reading from line</a></div>
+            <div><a onclick="event.preventDefault(); runContinueOther()"  href="" class="btn btn-warning mb-3" id="button-continue-reading-other" style="display:none;" role="button">Continue reading from location on other device</a></div>
 			<div style="line-height: 24px; vertical-align:middle;">
 				<a onclick="event.preventDefault(); incLine(-50)" href=""><span id="button-decrement-line" class="glyphicon glyphicon-minus-sign"></span></a>
 				<span id="readCurrLine" class="" style="margin:10px;">Line: </span>

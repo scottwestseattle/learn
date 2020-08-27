@@ -97,6 +97,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/superstats', 'EntryController@superstats');
 	Route::get('/get-definitions-user/{entry}', 'EntryController@getDefinitionsUserAjax');
 	Route::get('/remove-definition-user/{entry}/{defId}', 'EntryController@removeDefinitionUserAjax');
+	Route::get('/set-read-location/{entry}/{location}', 'EntryController@setReadLocationAjax');
 
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');

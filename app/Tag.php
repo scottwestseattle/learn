@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use DB;
+
 use App\Entry;
 
 class Tag extends Base
@@ -24,16 +26,62 @@ class Tag extends Base
 	// this lets us order by most recent entries
     static public function recent(Entry $entry)
     {
+		$readLocation = 0;
+		
+		if (Auth::check())
+		{
+			$recent = self::getRecent();
+			if (isset($recent)) // replace old one if exists
+			{
+				$readLocation = self::getReadLocation($recent->id, $entry->id);
+				$entry->tags()->detach($recent->id, ['user_id' => Auth::id()]);
+			}
+			
+			$entry->tags()->attach($recent->id, ['user_id' => Auth::id(), 'read_location' => $readLocation]);
+			$entry->refresh();
+		}
+		
+		return $readLocation;
+    }
+
+    static public function setReadLocation(Entry $entry, $readLocation)
+    {
+		$rc = false;
+		
 		if (Auth::check())
 		{
 			$recent = self::getRecent();
 			if (isset($recent)) // replace old one if exists
 				$entry->tags()->detach($recent->id, ['user_id' => Auth::id()]);
 			
-			$entry->tags()->attach($recent->id, ['user_id' => Auth::id()]);
+			$entry->tags()->attach($recent->id, ['user_id' => Auth::id(), 'read_location' => $readLocation]);
 			$entry->refresh();
+			$rc = true;
 		}
-    }
+		
+		return $rc;
+	}
+
+    static public function getReadLocation($tagId, $entryId)
+    {
+		$readLocation = 0;
+		
+		if (Auth::check())
+		{
+			$record = DB::table('entry_tag')
+					->where('tag_id', $tagId)
+					->where('entry_id', $entryId)
+					->where('user_id', Auth::id())
+					->first();
+					
+			if (isset($record))
+			{
+				$readLocation = $record->read_location;
+			}
+		}
+		
+		return intval($readLocation);
+	}
 
 	// tag the specified entry with the named tag
 	// if it doesn't exist create it.

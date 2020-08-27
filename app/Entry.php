@@ -202,6 +202,7 @@ class Entry extends Base
 			$this->tags()->detach($tag->id);
 		}
     }
+	
 	//
 	// End of new tag code
 	//

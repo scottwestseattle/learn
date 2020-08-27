@@ -38,7 +38,7 @@ $(document).ready(function() {
 		localStorage['readFontSize'] = _readFontSize;
 	else
 	{
-		_readFontSize = parseInt(fontSize);
+		_readFontSize = parseInt(fontSize, 10);
 		if (_readFontSize > _maxFontSize)
 			_readFontSize = _maxFontsize;
 	}
@@ -47,7 +47,7 @@ $(document).ready(function() {
 	window.speechSynthesis.cancel();	
 	setTimeout(loadVoices, 500);
 	loadData();
-	setReadLocation();
+	getReadLocation();
 	deck.start();
 	
 	$("#pause").hide();
@@ -83,6 +83,7 @@ function deck() {
 	this.speech = null;
 	this.language = "";
 	this.isAdmin = false;
+	this.userId = 0;
 
 	// options
 	this.runState = RUNSTATE_START;
@@ -90,6 +91,7 @@ function deck() {
 	this.contentType 	 = 'contentTypeNotSet';	// type of the content being read
 	this.contentId 		 = 'contentIdNotSet';	// id of the content being read
 	this.readLocationTag = 'readLocation';		// readLocation session id tag
+	this.readLocationOtherDevice = 0;			// read location from another device for logged in user
 	
 	this.getId = function(index) {
 		return this.slides[this.slides[index].order].id;
@@ -204,7 +206,7 @@ function deck() {
 
 	this.showSlide = function() {
 	    var slide = deck.slides[curr];
-        $(".slideCount").text((curr+1) + " of " + deck.slides.length);
+        $(".slideCount").text((curr+1) + " of " + deck.slides.length + ' ' + getElapsedTime());
         $(".slideDescription").text(deck.slides[curr].description);
 		$('#selected-word').text('');
 		$('#selected-word-definition').text('');
@@ -286,11 +288,15 @@ function loadData()
 		deck.touchPath = container.data('touchpath');
 		deck.language = container.data('language');			// this is the language that the web site is in
 		deck.isAdmin = container.data('isadmin') == '1';
+		deck.userId = parseInt(container.data('userid'), 10);
 		
 		// use these to create a unique session id tag, looks like: 'readLocationEntry23'
 		deck.contentType = container.data('contenttype');
 		deck.contentId = container.data('contentid');
 		deck.readLocationTag += deck.contentType + deck.contentId;
+		
+		// this is the read location from the db
+		deck.readLocationOtherDevice = container.data('readlocation');
     });	
 }
 
@@ -365,16 +371,35 @@ function reload()
 
 function run()
 {
-	_startTime = new Date();	
 	resume();
 }
 
 function runContinue() 
 {
-	_startTime = new Date();	
+	// read location on this device
+	curr = parseInt(localStorage[deck.readLocationTag], 10);	
+	
 	$("#pause").show();
 	$("#resume").hide();	
+	startClock();
 	deck.run(/* fromBeginning = */ false);
+}
+
+function runContinueOther() 
+{
+	curr = deck.readLocationOtherDevice;
+	
+	$("#pause").show();
+	$("#resume").hide();	
+	startClock();
+	deck.run(/* fromBeginning = */ false);
+}
+
+function startClock()
+{
+	_startTime = new Date();	
+	clearTimeout(_clockTimerId);
+	_clockTimerId = setTimeout(showElapsedTime, 1000);
 }
 
 function togglePause()
@@ -402,6 +427,7 @@ function resume()
 	}
 	else
 	{
+		startClock();
 		deck.run();	
 	}
 	
@@ -439,6 +465,7 @@ function playAudioFile(file)
 }
 
 var _speechTimerId = null;
+var _clockTimerId = null;
 var _utter = null;
 function read(text, charIndex)
 {
@@ -729,6 +756,13 @@ function end()
 	$("#pause").show();
 	$("#resume").hide();
 	$('#readCurrLine').text("Line: " + (curr + 1));
+	showElapsedTime();
+	clearTimeout(_clockTimerId);
+}
+
+function getElapsedTime()
+{
+	var time = '';
 	
 	// get run time
 	if (_startTime != null)
@@ -739,32 +773,17 @@ function end()
 		var seconds = Math.round(timeDiff);		
 		var total = seconds;
 
-/* test
-		var start = new Date(_startTime);
-		var end = new Date(endTime);
-		var dt = end - start;
-		alert(dt);
-		var minutes = dt.getMinutes();
-		var hours = dt.getHours();
-		seconds = dt.getSeconds();
-
-		if (minutes < 10)
-			minutes = "0" + minutes;
 		if (seconds < 10)
-			seconds = "0" + seconds;
-		if (hours < 10)
-			hours = "0" + hours;
+			time = '00:0' + seconds;
+		else
+			time = '00:' + seconds
 		
-		var time = hours + ":" + minutes + ":" + seconds;
-*/
-
-		var time = seconds + ' seconds';
-		if (seconds > 60)
+		if (seconds >= 60)
 		{
 			minutes = Math.round(seconds / 60);
 			seconds = seconds % 60;
 			
-			if (minutes > 60)
+			if (minutes >= 60)
 			{
 				hours = Math.round(minutes / 60);
 				minutes = minutes % 60;
@@ -787,10 +806,20 @@ function end()
 				
 				time = minutes + ":" + seconds;				
 			}
-		}
-		
-		$('#elapsedTime').text("Reading Time: " + time + " (" + total + ")");
-	}	
+		}		
+	}
+
+	return time;
+}
+
+function showElapsedTime()
+{
+	var time = getElapsedTime();
+	$('#elapsedTime').text("Reading Time: " + time);
+    $(".slideCount").text((curr+1) + " of " + deck.slides.length + ' ' + time);	
+
+	clearTimeout(_clockTimerId);
+	_clockTimerId = setTimeout(showElapsedTime, 1000);
 }
 
 function reset()
@@ -949,7 +978,7 @@ function setFontSize()
 }
 
 function saveReadLocation(location)
-{	
+{
 	localStorage[deck.readLocationTag] = location;
 	if (location == 0)
 	{
@@ -957,24 +986,35 @@ function saveReadLocation(location)
 		$('#button-start-reading').text("Start Reading");
 	}
 
+	if (deck.userId > 0) // if logged in, save read location in db
+		ajaxexec('/entries/set-read-location/' + parseInt(deck.contentId, 10) + '/' + location + '/');
+	deck.readLocationOtherDevice = location;
 	//debug("saveReadLocation: " + location);
 }
 
-function setReadLocation()
+function getReadLocation()
 {
-	var location = localStorage[deck.readLocationTag];
-	location = parseInt(location);
+	var location = parseInt(localStorage[deck.readLocationTag], 10);
+	var multipleLocations = (location != deck.readLocationOtherDevice);
+	
 	if (location > 0 && location < max)
 	{
+		$('#button-start-reading').text("Start reading from the beginning");
 		$('#button-continue-reading').show();
 		$('#button-continue-reading').text("Continue reading from line " + (location + 1));
+	}
+	
+	if (multipleLocations && deck.readLocationOtherDevice > 0 && deck.readLocationOtherDevice < max)
+	{
 		$('#button-start-reading').text("Start reading from the beginning");
+		$('#button-continue-reading').text("Continue reading from line " + (location + 1) + " (location on this device)");
 		
-		curr = location;
+		$('#button-continue-reading-other').show();
+		$('#button-continue-reading-other').text("Continue reading from line " + (deck.readLocationOtherDevice + 1) + " (location from other device)");
 	}
 	
 	$('#readCurrLine').text("Line: " + (curr + 1));
-	//debug("setReadLocation: " + location);
+	//debug("getReadLocation: " + location);
 }
 
 //<div id="panel-run-col-defs" class="col-md-4 mt-3" style="background-color:white; padding:0;">
