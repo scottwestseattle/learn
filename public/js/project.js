@@ -970,3 +970,13 @@ function scrollTo(className)
 		window.scroll(position.left, position.top);
 	}
 }
+
+function translateGoogle(text)
+{
+	window.open("https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "");
+}
+
+function translateSpanishDict(text)
+{
+	window.open("https://www.spanishdict.com/translate/" + text + "");
+}

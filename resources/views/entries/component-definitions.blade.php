@@ -24,9 +24,9 @@
 																
 							</td>
 							
-							<td>
-							<a onclick="event.preventDefault(); removeDefinitionUser('/entries/remove-definition-user/{{$entryId}}/{{$record->id}}');" href=''>
-							<span class="glyphCustom-sm glyphicon glyphicon-remove small-thin-text mediumgray"></span></a>
+							<td style="width:20px;">
+								<a onclick="event.preventDefault(); removeDefinitionUser('/entries/remove-definition-user/{{$entryId}}/{{$record->id}}');" href=''>
+								<span class="glyphCustom-sm glyphicon glyphicon-remove small-thin-text mediumgray"></span></a>
 							</td>
 							
 						</tr>
