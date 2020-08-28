@@ -4,6 +4,12 @@
 	<div style="text-align:left;">
 		<!-- repeat this block for each column -->
 			<div class="table" style="font-size: 13px; background-color:white;">
+				@if (count($records) > 3)
+					<div class="text-center small-thin-hdr mb-2">
+						Definitions
+						@component('components.badge', ['text' => count($records), 'class' => 'badge-blue badge-small'])@endcomponent
+					</div>
+				@endif
 				<table class="table-striped" style="width:100%;">
 					<tbody>
 						@foreach($records as $record)

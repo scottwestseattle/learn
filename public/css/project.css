@@ -978,3 +978,31 @@ label.tiny {
 	white-space: -moz-pre-wrap; /* Mozilla */
 	word-wrap: break-word; /* IE 5+ */
 } 
+
+.badge-purple, .badge-blue {
+	display: inline-block; 
+	vertical-align: middle; 
+	margin-bottom: 3px;
+}
+
+.badge-purple {
+	background-color: purple; 
+	color: white;	
+}
+
+.badge-blue {
+	background-color: #4993FD; /* bright-blue */
+	color: white;	
+}
+
+.badge-medium {
+	font-size:12px;
+	margin-left: 10px;
+}
+
+.badge-small {
+	font-size:10px; 
+	padding:2px 2px; 
+	font-weight:bold;	
+	margin-left: 5px;
+}

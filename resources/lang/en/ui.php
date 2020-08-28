@@ -115,4 +115,5 @@ return [
 'Search' => 'Search',
 'views' => 'views',
 'Books' => 'Books',
+'Review' => 'Review',
 ];

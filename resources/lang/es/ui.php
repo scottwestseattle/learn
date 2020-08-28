@@ -115,4 +115,5 @@ return [
 'Search' => 'Buscar',
 'views' => 'conteo de visitas',
 'Books' => 'Libros',
+'Review' => 'Revisar',
 ];

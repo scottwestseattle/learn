@@ -115,4 +115,5 @@ return [
 'Search' => '搜索',
 'views' => '查看次数',
 'Books' => '图书',
+'Review' => '评论',
 ];

@@ -13,16 +13,15 @@
     <div style="min-width:300px;" class="card mb-1">
         <div class="card-body">
             <h5 class="card-title">
-                <a href="/vocab-lists/view/{{$record->id}}">{{$record->title}}</a>
-                <span style="background-color:purple; margin-left:10px; font-size:12px;" class="badge badge-dark">{{$record->words->count()}}</span>
+                <a href="/vocab-lists/view/{{$record->id}}">{{$record->title}}</a>@component('components.badge', ['text' => count($record->words)])@endcomponent
             </h5>
             <p class="card-text">
             <a class="btn btn-primary btn-xs" role="button" href="/vocab-lists/review/{{$record->id}}">
-                Review&nbsp;<span class="glyphicon glyphicon-eye-open"></span>
+                @LANG('ui.Review')<span class="glyphicon glyphicon-eye-open ml-1"></span>
             </a>
             @if (App\User::isOwner($record->user_id))
                 <a class="btn btn-info btn-xs" role="button" href="/words/add-vocab-word/{{$record->id}}">
-                    Add Word&nbsp;<span class="glyphicon glyphicon-plus-sign"></span>
+                    @LANG('ui.Add')<span class="glyphicon glyphicon-plus-sign ml-1"></span>
                 </a>
 
                 <a href='/{{$prefix}}/publish/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-publish"></span></a>

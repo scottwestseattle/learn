@@ -21,7 +21,7 @@
 			<div id="wordexists" class="small-thin-text ml-2 mb-2"></div>
 			<div class="mb-2 ml-2">
 				<a onclick="event.preventDefault(); translateGoogle($('#title').val());" href="" tabindex="-1" class="small-thin-text">Google</a>
-				<a onclick="event.preventDefault(); translateSpanishDict($('#title').val());" href="" tabindex="-1"  class="small-thin-text ml-3">Span!shD¡ct</a>
+				<a onclick="event.preventDefault(); translateSpanishDict($('#title').val());" href="" tabindex="-1"  class="small-thin-text ml-2">Span!shD¡ct</a>
 			</div>
 			
 			<label for="forms" class="control-label">@LANG('content.Word Forms'): <span class="small-thin-text">(separate with comma or semi-colon)</span></label>
@@ -30,7 +30,7 @@
 
 			<label for="conjugations" class="control-label">@LANG('content.Conjugations'):</label>
 			<a onclick="event.preventDefault(); conjugationsGen('#title', '#conjugations');" href="" tabindex="-1" class="ml-3"><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
-			<a onclick="event.preventDefault(); $('#conjugations').val(''); $('#conjugations').focus();" href="" tabindex="-1"  class="ml-1"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
+			<a onclick="event.preventDefault(); $('#conjugations').val(''); $('#conjugations').focus();" href="" tabindex="-1" class="ml-1"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<textarea rows="3" name="conjugations" id="conjugations" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
 
 

@@ -463,7 +463,8 @@ var _utter = null;
 function read(text, charIndex)
 {
 	_cancelled = false;
-	clearTimeout(_speechTimerId);
+	clearTimeout(_speechTimerId);	
+	
 	_utter = new SpeechSynthesisUtterance();
 
 	if (deck.voice != null)
@@ -543,7 +544,7 @@ function read(text, charIndex)
 				var start = event.charIndex;
 				_lastCharIndex = start;
 				var word = text.substring(start);
-				debug(event.name + ': ' + word + ', index:' + event.charIndex + ", charLength: " + event.charLength);
+				//debug(event.name + ': ' + word + ', index:' + event.charIndex + ", charLength: " + event.charLength);
 				var words = word.split(" ");
 				if (words.length > 0)
 				{
@@ -610,16 +611,16 @@ function tts(text)
 
 function loadVoices()
 {
-	_voices = speechSynthesis.getVoices();	
+	_voices = window.speechSynthesis.getVoices();	
 
 	if (_voices.length == 0 && _voicesLoadAttempts++ < 10)
 	{
-		debug("loading voices...not ready");
+		console.log("loading voices...not ready");
 		setTimeout(loadVoices, 500);
 		return;
 	}
 	
-	//tts('ready');	
+	//tts('ready with ' + _voices.length + ' voices');	
 	
 	var voiceSelect = document.querySelector('select');	
 	var found = 0;
@@ -639,7 +640,8 @@ function loadVoices()
 			option.setAttribute('data-lang', _voices[i].lang);
 			option.setAttribute('data-name', _voices[i].name);
 			
-			if (true) // normal path
+			var showOnlyDeckLanguage = true; // change to false for testing languages
+			if (showOnlyDeckLanguage) // normal path
 			{
 				// look for voices which map the language we are looking for and save the first one
 				if (deck.language.startsWith("es") && (_voices[i].lang.startsWith("es") || _voices[i].lang.startsWith("spa")))
