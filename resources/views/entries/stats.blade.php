@@ -4,10 +4,7 @@
 
 <div class="page-size container">
                
-	@guest
-	@else	
-		@component('entries.menu-submenu', ['record' => $record, 'index' => $index])@endcomponent		
-	@endguest
+	@component('entries.menu-submenu', ['record' => $record, 'index' => $index])@endcomponent		
 	
 	<div class="mb-5">
 	

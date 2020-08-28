@@ -10,15 +10,14 @@
                
 	<div class="mb-5 pb-5">
 	
-	@guest
-	@else	
-		@component('entries.menu-submenu', ['record' => $record, 'index' => $index])@endcomponent		
-	@endguest
+	@component('entries.menu-submenu', ['record' => $record, 'index' => $index, 'prefix' => $prefix])@endcomponent		
 			
 		<!------------------------------------>
 		<!-- Top Navigation Buttons -->
 		<!------------------------------------>
 		
+		@if (false)
+			
 		@if (isset($prev) || isset($record->parent_id) || isset($next))
 		<div style="margin-top: 10px;">
 			@if (isset($prev))
@@ -40,6 +39,8 @@
 				</button>
 			</a>			
 		</div>
+		@endif
+		
 		@endif
 
 		<!------------------------------------>
@@ -89,6 +90,8 @@
 	<!-- Bottom Navigation Buttons -->
 	<!------------------------------------>
 
+	@if (false)
+		
 	<div class="trim-text" style="max-width:100%; margin-top: 30px;">
 		@if (isset($prev))
 			<div class="" style="float:left; margin: 0 5px 5px 0;" >
@@ -101,6 +104,8 @@
 			</div>
 		@endif			
 	</div>
+	
+	@endif
 	
 	</div>
 	

@@ -67,6 +67,7 @@ class EntryController extends Controller
 			'records' => $records,
 			'page_title' => 'Articles',
 			'index' => 'articles',
+			'isIndex' => true,
 		]);
 			
     	return view('entries.articles', $vdata);
@@ -82,6 +83,7 @@ class EntryController extends Controller
 			'records' => $records,
 			'page_title' => 'Books',
 			'index' => 'books',
+			'isIndex' => true,
 		]);
 			
     	return view('entries.articles', $vdata);
@@ -554,6 +556,8 @@ class EntryController extends Controller
     public function stats(Request $request, Entry $entry)
     {	
 		$record = $entry;
+		
+		Tag::recent($entry); // tag it as recent for the user so it will move to the top of the list
 		
 		$stats = Tools::getWordStats($record->description);
 		
