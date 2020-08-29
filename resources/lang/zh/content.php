@@ -131,7 +131,7 @@ return [
 'Vocabulary List Word' => '词汇表单词',
 'Back to Vocabulary Lists' => '返回词汇表',
 'Add New Word' => '添加新词',
-'Review' => '评论',
+'Review MOVED TO ui' => '评论',
 'Latest Articles' => '最新的文章',
 'No articles' => '没有文章',
 'Articles' => '文章',
@@ -146,4 +146,5 @@ return [
 'Definition' => '定义',
 'Word Forms' => '字形',
 'Conjugations' => '词形变化',
+'Reader' => '读者',
 ];

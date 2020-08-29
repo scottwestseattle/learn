@@ -131,7 +131,7 @@ return [
 'Vocabulary List Word' => 'Vocabulary List Word',
 'Back to Vocabulary Lists' => 'Back to Vocabulary Lists',
 'Add New Word' => 'Add New Word',
-'Review' => 'Review',
+'Review MOVED TO ui' => 'Review',
 'Latest Articles' => 'Latest Articles',
 'No articles' => 'No articles',
 'Articles' => 'Articles',
@@ -146,4 +146,5 @@ return [
 'Definition' => 'Definition',
 'Word Forms' => 'Word Forms',
 'Conjugations' => 'Conjugations',
+'Reader' => 'Reader',
 ];

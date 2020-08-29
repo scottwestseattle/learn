@@ -818,6 +818,20 @@ function setTab(event, tab)
 
 }
 
+function setActiveTab(event, tabIdShow, tabBodyClass, tabLinkClass = null)
+{
+	event.preventDefault();
+
+	$(tabBodyClass).hide();
+	$(tabIdShow).show();
+
+	if (tabLinkClass != null)
+	{
+		$(tabLinkClass).removeClass('active');
+		$(tabIdShow + '-nav-link').addClass('active');
+	}
+}
+
 function saveAndStay()
 {
 	alert('Not implemented yet');

@@ -17,11 +17,11 @@
 </div>
 @endif
 
-<div class="container page-normal mt-4">
+<div class="container page-normal">
 
     <!-- SHOW ARTICLES -->
 	@if (App\Tools::siteUses(LOG_MODEL_ARTICLES))
-		<h3 class="mt-0">@LANG('content.Latest Articles')</h3>
+		<h3>@LANG('content.Latest Articles')</h3>
 		<div class="text-center mt-3">		
 			<div style="display: inline-block; width: 95%;">
 				<table>

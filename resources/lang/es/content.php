@@ -131,7 +131,7 @@ return [
 'Vocabulary List Word' => 'Palabra de Lista de Vocabulario',
 'Back to Vocabulary Lists' => 'Volver a las Listas de Vocabulario',
 'Add New Word' => 'Agregar Nueva Palabra',
-'Review' => 'Revisar',
+'Review MOVED TO ui' => 'Revisar',
 'Latest Articles' => 'Últimos Artículos',
 'No articles' => 'No hay articulos',
 'Articles' => 'Artículos',
@@ -146,4 +146,5 @@ return [
 'Definition' => 'Definición',
 'Word Forms' => 'Formas de la palabra',
 'Conjugations' => 'Conjugaciones',
+'Reader' => 'Lector',
 ];

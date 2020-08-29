@@ -6,9 +6,9 @@
 	$directLink = false;
 ?>
 
-<div class="page-size container">
+<div class="container page-normal">
                
-	<div class="mb-5 pb-5">
+	<div class="">
 	
 	@component('entries.menu-submenu', ['record' => $record, 'index' => $index, 'prefix' => $prefix])@endcomponent		
 			

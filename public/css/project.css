@@ -44,10 +44,6 @@ Super Light Green: #eff7f0
 }
 
 
-h1,h3 {
-	margin:10px 0 15px 0;
-}
-
 .size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
 .size-xs { display: initial; }
 
@@ -119,13 +115,17 @@ body {
 
 /* spacing for normal, non-front pages */
 .page-normal {
-    padding-top: 10px;
-    margin-bottom: 3rem;
+	margin-top: 20px;
+	margin-bottom: 3rem;
 	min-height: 500px;
 }
 
-.page-normal h1 {
+h1,h3 {
+	margin: 30px 0 15px 0;
 	font-size: 1.7em;
+}
+
+.submenu-view {
 }
 
 .grassy-green {
@@ -235,7 +235,7 @@ body {
 
 .btn-panel-bottom {
 	text-align: center;
-	padding:10px;
+	padding:5px;
 	position: fixed;
 	bottom: 0px;
 	left: 0px;
@@ -474,27 +474,6 @@ body {
     font-size: .53rem;
     line-height: 1;
     border-radius: .1rem
-}
-
-.glyphCustom {
-	margin:0 5px;
-	font-size: 22px;
-	color: #286090;
-}
-
-.glyphCustom-lt {
-	font-size:13px; 
-	color:#acacac;	
-}
-
-.glyphCustom-sm {
-	margin:0 5px;
-	font-size: 14px;
-	color: #286090;
-}
-
-.glyphRed {
-	color: red;
 }
 
 .drop-box {
@@ -924,11 +903,6 @@ label.tiny {
 	margin-bottom:2px;
 }
 
-.submenu-view {
-	margin: 20px 0;
-	font-size:20px;	
-}
-
 .highlight-word {
 	background-color: yellow;
 	border-radius: 25px;
@@ -979,6 +953,10 @@ label.tiny {
 	word-wrap: break-word; /* IE 5+ */
 } 
 
+/*********************************************************/
+/* badges                                                */
+/*********************************************************/
+
 .badge-purple, .badge-blue {
 	display: inline-block; 
 	vertical-align: middle; 
@@ -1006,3 +984,51 @@ label.tiny {
 	font-weight:bold;	
 	margin-left: 5px;
 }
+
+/*********************************************************/
+/* glyphs                                                */
+/*********************************************************/
+
+.glyphCustom {
+	margin:0 5px;
+	font-size: 22px;
+	color: #286090;
+}
+
+.glyphCustom-lt {
+	font-size:13px; 
+	color:#acacac;	
+}
+
+.glyphCustom-sm {
+	margin:0 5px;
+	font-size: 14px;
+	color: #286090;
+}
+
+.glyphRed {
+	color: red;
+}
+
+.glyphReader {
+	font-size:27px;
+	margin-right: 10px;
+}
+
+.glyphReaderMove {
+	font-size:2em;
+	display:inline-block;
+	vertical-align:middle;
+}
+
+.glyphReaderPlay {
+	font-size:2.5em;
+	display:inline-block;
+	vertical-align:middle;
+}
+
+.middle {
+	display:inline-block;
+	vertical-align:middle;
+}
+

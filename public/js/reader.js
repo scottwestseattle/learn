@@ -206,7 +206,7 @@ function deck() {
 
 	this.showSlide = function() {
 	    var slide = deck.slides[curr];
-        $(".slideCount").text((curr+1) + " of " + deck.slides.length); // + ' ' + getElapsedTime());
+        $("#slideCount").text((curr+1) + " of " + deck.slides.length);
         $(".slideDescription").text(deck.slides[curr].description);
 		$('#selected-word').text('');
 		$('#selected-word-definition').text('');
@@ -222,7 +222,7 @@ function deck() {
         //debug("read slide " + (curr+1) + ": " + slide.description);
 		read(slide.description, 0);
 		
-        //$(".slideCount").text(slide.number + " of " + deck.slides.length);
+        //$("#slideCount").text(slide.number + " of " + deck.slides.length);
         //$(".slideDescription").text(deck.slides[curr].description);
 	}
 
@@ -891,8 +891,10 @@ function xlate(word)
 	ajaxexec('/definitions/translate/' + word + '/' + deck.contentId + '', '#selected-word-definition', false, translateCallback);	
 }
 		
-function zoom(amount)
+function zoom(event, amount)
 {
+	event.preventDefault(); 	
+	
 	//var size = $("#slideDescription").css("font-size");
 	_readFontSize += amount;
 	
@@ -907,7 +909,10 @@ function setFontSize()
 {
 	$("#slideDescription").css("font-size", _readFontSize + "px");
 	$("#slideTitle").css("font-size", _readFontSize + "px");
-	$("#readFontSize").text("Size: " + _readFontSize);
+	
+	$("#readFontSize").css("font-size", _readFontSize + "px");
+	$(".glyph-zoom-button").css("font-size", _readFontSize + "px");
+	$("#readFontSize").text("Text Size: " + _readFontSize);
 }
 
 function saveReadLocation(location)
@@ -982,7 +987,6 @@ function showElapsedTime()
 {
 	var time = getElapsedTime();
 	$('#elapsedTime').text("Reading Time: " + time);
-    //$(".slideCount").text((curr+1) + " of " + deck.slides.length + ' ' + time);	
 	$('#clock').text(time);
 
 	clearTimeout(_clockTimerId);
