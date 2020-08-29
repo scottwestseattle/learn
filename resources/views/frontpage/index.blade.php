@@ -39,10 +39,8 @@
 						<tbody>
 							<tr><td style="padding-bottom:10px; font-size:1.3em; font-weight:normal;"><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
 							<tr><td style="padding-bottom:10px; font-size:.8em; font-weight:10;">
-								@if (false)
-								<div style="float:left; margin-right:15px;">{{$record->display_date}}</div>
-								@endif
 								<div style="float:left;">
+									@component('entries.icon-read', ['record' => $record])@endcomponent						
 									<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
 									<div style="margin-right:15px; margin-bottom:5px; float:left;"><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
 									
@@ -54,7 +52,6 @@
 																	
 								</div>
 								<div style="float:left;">
-									<div style="margin-right:5px; float:left;"><a href='/entries/read/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-volume-up"></span></a></div>
 									@if (App\User::isAdmin())
 									<div style="margin-right:5px; float:left;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
 									<div style="margin-right:0px; float:left;"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>

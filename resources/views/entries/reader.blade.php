@@ -53,7 +53,7 @@
 			@if (Auth::check())
 				<span class="glyphReader"><a onclick="setActiveTab(event, '#tab2', '.tab-body');" href=""><span class="glyphicon glyphicon-th-list"></span></a></span>
 			@endif			
-			<span class="glyphReader"><a onclick="setActiveTab(event, '#tab1', '.tab-body');" href=""><span class="glyphicon glyphicon-comment"></span></a></span>
+			<span class="glyphReader"><a onclick="setActiveTab(event, '#tab1', '.tab-body');" href=""><span class="glyphicon glyphicon-volume-up"></span></a></span>
 		</div>
 	</div>
 
@@ -96,7 +96,7 @@
 					</div>
 
 					<div id="debug"></div>
-					<div id="slideDescription" class="slideDescription" style="font-size: 18px;" onmouseup="getSelectedText();" ondblclick="getSelectedText();" ontouchend="getSelectedText();"></div>
+					<div id="slideDescription" class="slideDescription" style="font-size: 18px;" onmouseup="getSelectedText(1);" ondblclick="getSelectedText(2);" ontouchend="getSelectedText();"></div>
 					<div class="" style="color: green;" id="selected-word"></div>
 					<div class="" style="color: green;" id="selected-word-definition"></div>
 				</div><!-- panel-run -->
@@ -138,10 +138,10 @@
 	<!--------------------------------------------------------------->
 	<!-- Bottom panel ----------------------------------------------->
 	<!--------------------------------------------------------------->	
-	<div id="bottom-panel" class="btn-panel-bottom m-0 p-0">
+	<div id="bottom-panel" class="btn-panel-bottom m-0 pb-1">
 		<div class="glyphReaderMove mr-4"><a onclick="event.preventDefault(); prev()" href=""><span class="glyphicon glyphicon-backward"></span></a></div>
-		<div id="pause"  class="glyphReaderPlay mr-4"><a onclick="event.preventDefault(); pause()" href=""><span class="glyphicon glyphicon-pause"></span></a></div>
-		<div id="resume" class="glyphReaderPlay mr-4"><a onclick="event.preventDefault(); resume()" href=""><span class="glyphicon glyphicon-play"></span></a></div>
+		<div id="pause"  class="glyphReaderPlay mr-4 mb-1"><a onclick="event.preventDefault(); pause()" href=""><span class="glyphicon glyphicon-pause"></span></a></div>
+		<div id="resume" class="glyphReaderPlay mr-4"><a onclick="event.preventDefault(); resume()" href=""><span class="glyphicon glyphcircle glyphicon-play"></span></a></div>
 		<div class="glyphReaderMove"><a onclick="event.preventDefault(); next()" href=""><span class="glyphicon glyphicon-forward"></span></a></div>
 	</div>
 	

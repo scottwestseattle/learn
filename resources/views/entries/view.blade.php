@@ -50,8 +50,7 @@
 		<div>
 			<!-- Stats -->
 			<div style="" class="vertical-align">
-				@if (false){{$display_date}}&nbsp;&nbsp;@endif
-				<div style="margin-right:10px; float:left;"><a href='/entries/read/{{$record->id}}'><span style="font-size:20px;" class="glyphCustom glyphicon glyphicon-volume-up"></span></a></div>			
+				@component('entries.icon-read', ['record' => $record])@endcomponent						
 				<div class="article-source">
 					<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
 					<div style="margin-right:15px; float:left;"><a href="/entries/stats/{{$record->id}}">{{$wordCount}} @LANG('content.words')</a></div>

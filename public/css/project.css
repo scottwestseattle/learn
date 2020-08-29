@@ -235,7 +235,6 @@ h1,h3 {
 
 .btn-panel-bottom {
 	text-align: center;
-	padding:0px;
 	position: fixed;
 	bottom: 0px;
 	left: 0px;
@@ -1023,9 +1022,16 @@ label.tiny {
 }
 
 .glyphReaderPlay {
-	font-size:2.5em;
+	font-size:2em;
 	display:inline-block;
 	vertical-align:middle;
+}
+
+.glyphcircle {
+	color:white;
+	background-color:#4993FD;
+	border-radius: 50%;
+	padding: 10px;
 }
 
 .middle {

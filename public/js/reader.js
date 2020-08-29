@@ -845,7 +845,8 @@ function debug(text)
 }
 
 var _dictionary = "_blank";
-function getSelectedText() 
+var _selectedWordThrottle = ""; // used to slow down ajax definition calls for selected words
+function getSelectedText(clicks) 
 {
 	pause();
 	
@@ -858,7 +859,16 @@ function getSelectedText()
 	text = text.trim();
 	if (text.length > 0)
 	{
-		//setDebug(text);
+		if (text == _selectedWordThrottle)
+		{
+			// throttle the lookups because they come on mouseup for selections and dblclick for word selection
+			setTimeout(function(){	_selectedWordThrottle = ""; /*console.log('cleared throttle');*/ }, 500);
+
+			return;
+		}
+		//console.log('sent ajax for: ' + text);
+		_selectedWordThrottle = text;
+		
 		// copy selected text
 		var succeed;
 		try
@@ -954,10 +964,10 @@ function getReadLocation()
 	if (multipleLocations && deck.readLocationOtherDevice > 0 && deck.readLocationOtherDevice < max)
 	{
 		$('#button-start-reading').text("Start reading from the beginning");
-		$('#button-continue-reading').html("Continue reading from line " + (location + 1) + "<br/><span class='small-thin-text'>(location on this device)</span>");
+		$('#button-continue-reading').html("Continue reading from line " + (location + 1) + ""); // "<br/><span class='small-thin-text'>(location on this device)</span>");
 		
 		$('#button-continue-reading-other').show();
-		$('#button-continue-reading-other').html("Continue reading from line " + (deck.readLocationOtherDevice + 1) + "<br/><span class='small-thin-text'>(location from other device)</span>");
+		$('#button-continue-reading-other').html("Continue reading from line " + (deck.readLocationOtherDevice + 1) + "<br/><span class='small-thin-text'>(location from a different session)</span>");
 	}
 	
 	$('#readCurrLine').text("Line: " + (curr + 1));
