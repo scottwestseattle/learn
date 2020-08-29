@@ -1,6 +1,5 @@
-@if (isset($records))
-
 <div>
+	@if (isset($records) && count($records) > 0)
 	<div style="text-align:left;">
 		<!-- repeat this block for each column -->
 			<div class="table" style="font-size: 13px; background-color:white;">
@@ -42,5 +41,7 @@
 			</div>
 		<!-- end of repeat block -->
 	</div>
+	@else
+		<div class="text-center">Vocabulary list is empty</div>
+	@endif
 </div>
-@endif

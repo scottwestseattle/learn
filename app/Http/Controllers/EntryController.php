@@ -532,6 +532,7 @@ class EntryController extends Controller
 		else
 		{
 			// not an error if they're not logged in, just return blank
+			$rc = 'Log in or create an account in order to see your vocabulary lists.';
 		}
 
 		return $rc;

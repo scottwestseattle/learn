@@ -235,12 +235,13 @@ h1,h3 {
 
 .btn-panel-bottom {
 	text-align: center;
-	padding:5px;
+	padding:0px;
 	position: fixed;
 	bottom: 0px;
 	left: 0px;
 	background: white;
 	width:100%;
+	opacity:0.8;
 }
 
 /***********************************************************
@@ -1032,3 +1033,6 @@ label.tiny {
 	vertical-align:middle;
 }
 
+.tab-body {
+	padding-bottom:60px;
+}

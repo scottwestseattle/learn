@@ -86,7 +86,7 @@
 		<!-- Run Panel -->
 		<!---------------------------------------------------------------------------------------------------------------->
 		
-		<div class="container-fluid">
+		<div id="run-panel" class="container-fluid" style="xpadding-bottom:60px;"><!-- padding is to make the elements scroll correctly -->
 		  <div class="row">
 			<div id="panel-run-col-text" class="" style="width:100%;" >
 				<div id="panel-run" class="slide-panel text-center" style="">
@@ -109,7 +109,7 @@
 	<!-- tab 2 ------------------------------------------------------->
 	<!--------------------------------------------------------------->
 	<div id="tab2" class="tab-body" style="display:none;">
-		<div id="panel-run-col-defs" class="mt-3" style="xdisplay:none; padding:0;">
+		<div id="panel-run-col-defs" class="mt-3">
 			<div id="defs" style=""></div>
 		</div>
 	</div>	
@@ -138,7 +138,7 @@
 	<!--------------------------------------------------------------->
 	<!-- Bottom panel ----------------------------------------------->
 	<!--------------------------------------------------------------->	
-	<div class="btn-panel-bottom">
+	<div id="bottom-panel" class="btn-panel-bottom m-0 p-0">
 		<div class="glyphReaderMove mr-4"><a onclick="event.preventDefault(); prev()" href=""><span class="glyphicon glyphicon-backward"></span></a></div>
 		<div id="pause"  class="glyphReaderPlay mr-4"><a onclick="event.preventDefault(); pause()" href=""><span class="glyphicon glyphicon-pause"></span></a></div>
 		<div id="resume" class="glyphReaderPlay mr-4"><a onclick="event.preventDefault(); resume()" href=""><span class="glyphicon glyphicon-play"></span></a></div>

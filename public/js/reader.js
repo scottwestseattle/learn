@@ -27,6 +27,7 @@ var _cancelled = false;
 var _readFontSize = 18;
 var _maxFontSize = 99;
 var _hotWords = [];
+var _bottomPanelHeight; // height of bottom button panel
 
 // track read time
 var _startTime = null;
@@ -53,6 +54,9 @@ $(document).ready(function() {
 	$("#pause").hide();
 	$("#resume").show();
 	ajaxexec('/entries/get-definitions-user/' + parseInt(deck.contentId, 10) + '', '#defs');
+
+	_bottomPanelHeight = $("#bottom-panel").outerHeight(); // needed for scrolling
+	//console.log("bottom panel height: " + _bottomPanelHeight);
 });
 
 $(window).on('unload', function() {
@@ -210,6 +214,10 @@ function deck() {
         $(".slideDescription").text(deck.slides[curr].description);
 		$('#selected-word').text('');
 		$('#selected-word-definition').text('');
+		
+		if ($('#tab1').is(':visible'))
+			window.scroll(0, 0); // scroll to top
+
 	}
 
 	this.readSlideResume = function() {
@@ -558,7 +566,8 @@ function read(text, charIndex)
 			//
 			// make sure element is visible in the viewport
 			//
-			scrollTo('.highlight-word'); // has to be a class
+			if ($('#tab1').is(':visible')) // only scroll when on the read tab, otherwise it scrolls the other tabs
+				scrollTo('.highlight-word', _bottomPanelHeight); // has to be a class
 
 			// case 4: onBoundary not implemented so highlighting isn't possible
 		}
