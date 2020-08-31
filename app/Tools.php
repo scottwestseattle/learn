@@ -387,7 +387,24 @@ class Tools
 		}
 
 		return $text;
-	}	
+	}
+
+	static public function permalink($permalink)
+	{
+		$rc = null;
+		
+		if (isset($permalink)) // clean the permalink
+		{
+			// example permalink: /one/two/three-four-five/six-seven
+			$permalink = preg_replace("/[^a-zA-Z0-9\-]/", "", $permalink);
+			
+			// if anything left
+			if (isset($permalink) && strlen($permalink) > 0)
+				$rc = $permalink;
+		}
+		
+		return $rc;
+	}
 	
 	static public function getTextOrShowEmpty($text)
 	{
@@ -1005,4 +1022,11 @@ class Tools
 	
 		return $stats;
 	}	
+	
+	static public function getOrSetString($text, $default)
+    {
+		// if text not set or blank then return the default
+		return ((isset($text) && strlen($text) > 0) ? $text : $default);
+	}
+	
 }

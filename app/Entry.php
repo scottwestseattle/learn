@@ -38,7 +38,8 @@ class Entry extends Base
 
     public function definitions()
     {
-		return $this->belongsToMany('App\Definition')->orderBy('title');
+		return $this->belongsToMany('App\Definition')->wherePivot('user_id', Auth::id())->orderBy('title');
+		//return $this->belongsToMany('App\Definition')->orderBy('title');
     }	
 
 	public function getDefinitions($userId)
@@ -399,16 +400,19 @@ class Entry extends Base
 	
 	static public function get($permalink, $id = null, $site_id = null)
 	{
-		if (isset($permalink)) // clean the permalink
-			$permalink = preg_replace("/[^a-zA-Z0-9\-]/", "", $permalink);
+		$permalink = Tools::permalink($permalink);
 		
-		$id = intval($id); // clean the id
-		
-		$record = $record = Entry::select()
-				->where('deleted_flag', 0)
-				->where('release_flag', '>=', self::getReleaseFlag())
-				->where('permalink', $permalink)
-				->first();
+		$record = null;
+		if (isset($permalink))
+		{
+			$id = intval($id); // clean the id
+			
+			$record = $record = Entry::select()
+					->where('deleted_flag', 0)
+					->where('release_flag', '>=', self::getReleaseFlag())
+					->where('permalink', $permalink)
+					->first();
+		}
 
 		//dd($record);	
 		return $record;

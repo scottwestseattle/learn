@@ -125,9 +125,6 @@ h1,h3 {
 	font-size: 1.7em;
 }
 
-.submenu-view {
-}
-
 .grassy-green {
 	background-color: #449D44;
 	color: white;
@@ -973,6 +970,11 @@ label.tiny {
 	color: white;	
 }
 
+.badge-white {
+	background-color: white;
+	color: #4993FD;	
+}
+
 .badge-medium {
 	font-size:12px;
 	margin-left: 10px;
@@ -1041,4 +1043,12 @@ label.tiny {
 
 .tab-body {
 	padding-bottom:60px;
+}
+
+td.icon {
+	width:10px;
+}
+
+.submenu-view td.icon {
+	width: 40px;
 }

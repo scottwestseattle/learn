@@ -9,7 +9,7 @@
 	<h1>@LANG('ui.' . $page_title) ({{count($records)}})</h1>
 
 	<div>
-		@if (isset($records))
+	@if (isset($records))
 		@foreach($records as $record)			
 		<div class="drop-box-articles mb-4" style="padding:10px 10px 20px 15px;">
 			<div style="font-size:1.3em; font-weight:normal;">
@@ -44,7 +44,7 @@
 			</div>
 		</div>
 		@endforeach
-		@endif
+	@endif
 	</div>
 
 </div>

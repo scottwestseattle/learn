@@ -147,4 +147,7 @@ return [
 'Word Forms' => 'Word Forms',
 'Conjugations' => 'Conjugations',
 'Reader' => 'Reader',
+'Back' => 'Back',
+'Stop' => 'Stop',
+'I don\'t know' => 'I don\'t know',
 ];

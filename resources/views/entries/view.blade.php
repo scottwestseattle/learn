@@ -57,6 +57,14 @@
 					<span style="margin-left:10px;">
 						@component('components.control-button-publish', ['record' => $record, 'prefix' => $prefix, 'showPublic' => true])@endcomponent					
 					</span>
+					@if (isset($record->definitions) && count($record->definitions) > 0)
+						<div class="mr-2 float-left">
+							<a href="/entries/vocabulary/{{$record->id}}" class="btn btn-xs btn-primary" role="button">
+								<div class="middle mr-0" style="margin-bottom:2px;">Vocabulary</div>
+								<div class="badge badge-small badge-white middle ml-0">{{count($record->definitions)}}</div>
+							</a>
+						</div>
+					@endif
 				</div>
 			</div>
 			

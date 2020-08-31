@@ -9,6 +9,7 @@ use App;
 use App\Entry;
 use App\Event;
 use App\Geo;
+use App\Quiz;
 use App\Status;
 use App\Tag;
 use App\Tools;
@@ -30,7 +31,7 @@ class EntryController extends Controller
 	public function __construct ()
 	{
         $this->middleware('is_admin')->except([
-			'read', 'articles', 'books', 'stats', 'index', 'view', 'permalink', 'rss', 
+			'read', 'articles', 'books', 'stats', 'index', 'view', 'permalink', 'rss', 'vocabulary', 'vocabularyReview', 'removeDefinitionUser',
 			'getDefinitionsUserAjax', 'removeDefinitionUserAjax', 'setReadLocationAjax',
 		]);
 
@@ -89,6 +90,73 @@ class EntryController extends Controller
     	return view('entries.articles', $vdata);
     }
  
+    public function vocabulary(Request $request, Entry $entry)
+    {
+		$record = $entry;
+						
+    	return view('entries.vocabulary', $this->getViewData([
+			'record' => $record,
+		]));
+    }
+
+    public function vocabularyReview(Request $request, Entry $entry)
+    {
+		$record = $entry;
+	
+		$qna = self::makeQna($record->definitions); // splits text into questions and answers
+		$qna = Quiz::makeReviewQuiz($qna);				// format the answers according to quiz type
+		$options = Tools::getOptionArray('font-size="150%"');
+
+		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
+		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
+		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
+		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
+
+		$qnaText = [
+			'Round' => 'Round',
+			'Correct' => 'Correct',
+			'TypeAnswers' => 'Type the Answer',
+			'Wrong' => 'Wrong',
+			'of' => 'of',
+		];
+
+		return view('entries.vocabulary-review', $this->getViewData([
+			'record' => $record,
+			'sentenceCount' => count($qna),
+			'records' => $qna,
+			'options' => $options,
+			'canEdit' => true,
+			'quizText' => $qnaText,
+			'isMc' => true,
+			'returnPath' => '/entries/vocabulary/' . $record->id . '',
+			'touchPath' => '',
+			], LOG_MODEL, LOG_PAGE_VIEW));		
+    }
+	
+	public function makeQna($records)
+    {
+		$qna = [];
+		$cnt = 0;
+		foreach($records as $record)
+		{
+		    // flip the title and description so title will be the answer
+			$question = $record->title;
+			$answer = Tools::getOrSetString($record->translation_en, 'translation not set');
+			
+            $qna[$cnt]['q'] = $question;
+            $qna[$cnt]['a'] = $answer;
+            $qna[$cnt]['id'] = $record->id;
+            $qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
+            $qna[$cnt]['options'] = '';
+
+			$cnt++;
+		}
+
+		//dd($qna);
+
+		return $qna;
+	}	
+	
     public function index($type_flag = null)
     {				
 		$entries = $this->getEntriesByType($type_flag, false, 0, null, false, ORDERBY_DATE);
@@ -177,63 +245,68 @@ class EntryController extends Controller
 	
     public function permalink(Request $request, $permalink)
     {		
+		$entry = Entry::get($permalink);
+		
+		return $this->getView($entry);
+	}
+	
+    private function getView(Entry $record)
+    {
 		$next = null;
 		$prev = null;
 		$isRobot = false;
 		$wordCount = null;
 		
-		$entry = Entry::get($permalink);
-
-		$id = isset($entry) ? $entry->id : null;
+		$id = isset($record) ? $record->id : null;
 		$visitor = $this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
 		$isRobot = isset($visitor) && $visitor->robot_flag;
 
-		if (isset($entry))
+		if (isset($record))
 		{
-			Tag::recent($entry); // tag it as recent for the user so it will move to the top of the list
-			Entry::countView($entry);
-			$wordCount = str_word_count($entry->description); // count it before <br/>'s are added
-			$entry->description = nl2br($entry->description);
+			Tag::recent($record); // tag it as recent for the user so it will move to the top of the list
+			Entry::countView($record);
+			$wordCount = str_word_count($record->description); // count it before <br/>'s are added
+			$record->description = nl2br($record->description);
 		}
 		else
 		{
 			return $this->pageNotFound404($permalink);
 		}
 		
-		$page_title = $entry->title;
+		$page_title = $record->title;
 		$backLink = null;
 		$backLinkText = null;
 		$index = null;
-		if ($entry->type_flag == ENTRY_TYPE_ARTICLE)
+		if ($record->type_flag == ENTRY_TYPE_ARTICLE)
 		{
 			$backLink = '/articles';
 			$index = 'articles';
 			$backLinkText = __('content.Back to List');
 			$page_title = __('ui.Article') . ' - ' . $page_title;
 			
-			$next = Entry::getNextPrevEntry($entry);
-			$prev = Entry::getNextPrevEntry($entry, /* next = */ false);
+			$next = Entry::getNextPrevEntry($record);
+			$prev = Entry::getNextPrevEntry($record, /* next = */ false);
 		}		
-		else if ($entry->type_flag == ENTRY_TYPE_BOOK)
+		else if ($record->type_flag == ENTRY_TYPE_BOOK)
 		{
 			$index = 'books';
 		}
 		
 		$vdata = $this->getViewData([
-			'record' => $entry, 
+			'record' => $record, 
 			'next' => $next,
 			'prev' => $prev,
 			'backLink' => $backLink,
 			'backLinkText' => $backLinkText,
 			'page_title' => $page_title,
-			'display_date' => $entry->display_date,
+			'display_date' => $record->display_date,
 			'isRobot' => false, // $isRobot, //todo: not yet because ome spam robot is coming from fikirandroy page (don't want them to switch pages)
 			'wordCount' => $wordCount,
 			'index' => $index,
 		]);
 		
-		return view('entries.view', $vdata);
-	}
+		return view('entries.view', $vdata);		
+	}	
 
     public function pageNotFound404($address)
     {
@@ -543,6 +616,13 @@ class EntryController extends Controller
 		$rc = $entry->removeDefinitionUser(intval($defId));
 		
 		return ($rc);
+	}
+
+    public function removeDefinitionUser(Request $request, Entry $entry, $defId)
+    {	
+		$rc = $entry->removeDefinitionUser(intval($defId));
+		
+		return back();
 	}
 
     public function setReadLocationAjax(Request $request, Entry $entry, $location)

@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
 use App\Course;
-use App\Word;
-use App\User;
 use App\Event;
+use App\Quiz;
+use App\User;
+use App\Word;
 
 define('LESSON_FORMAT_DEFAULT', 0);
 define('LESSON_FORMAT_AUTO', 1);
@@ -318,49 +319,6 @@ class Lesson extends Base
 		return self::formatMc1($quizNew, $reviewType);
 	}
 
-	static private function getCommaSeparatedWords($text)
-    {
-		$words = '';
-		$array = [];
-
-		// pattern looks like: "The words [am, is, are] in the sentence."
-		preg_match_all('#\[(.*)\]#is', $text, $words, PREG_SET_ORDER);
-
-		// if answers not found, set it to ''
-		$words = (count($words) > 0 && count($words[0]) > 1) ? $words[0][1] : '';
-
-		if (strlen($words) > 0)
-		{
-			$raw = explode(',', $words); // extract the comma-separated words
-
-			if (is_array($raw) && count($raw) > 0)
-			{
-				foreach($raw as $word)
-				{
-					$array[] = trim($word);
-				}
-			}
-		}
-
-		return $array;
-	}
-
-	static private function formatButton($text, $id, $class)
-    {
-		$button = '<div><button id="'
-            . $id
-            . '" onclick="checkAnswerMc1('
-            . $id . ', \''
-		    . $text . '\')" class="btn btn-primary btn-quiz-mc3 '
-		    . $class . '">'
-		    . $text
-		    . '</button></div>';
-
-		//dump($button);
-
-		return $button;
-	}
-
 	// creates buttons for each answer option
 	// and puts them into the question
 	static private function formatMc1($quiz, $reviewType)
@@ -398,7 +356,7 @@ class Lesson extends Base
 						// mark the correct button so it can be styled during the quiz
 						$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
 
-						$buttons .= self::formatButton($m, $buttonId++, $buttonClass);
+						$buttons .= Quiz::formatButton($m, $buttonId++, $buttonClass);
 					}
 
 					// put the formatted info back into the quiz
@@ -413,7 +371,7 @@ class Lesson extends Base
 				else
 				{
 					// get the answer options from the question text
-					$answers = self::getCommaSeparatedWords($q);
+					$answers = Quiz::getCommaSeparatedAnswers($q);
 
 					if (count($answers) > 0)
 					{
@@ -428,7 +386,7 @@ class Lesson extends Base
 							// mark the correct button so it can be styled during the quiz
 							$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
 
-							$buttons .= self::formatButton($m, $buttonId++, $buttonClass);
+							$buttons .= Quiz::formatButton($m, $buttonId++, $buttonClass);
 
 						}
 						//dd($buttons);
@@ -476,7 +434,7 @@ class Lesson extends Base
 			$id = $record['id'];
 
 			// get the answer options from the question text, like: Algeria [Rabat, Jerusalem, Algiers]
-			$answers = self::getCommaSeparatedWords($q);
+			$answers = Quiz::getCommaSeparatedAnswers($q);
 
 			if (count($answers) > 0) // if there are embedded answers
 			{

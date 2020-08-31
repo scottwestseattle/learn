@@ -783,13 +783,22 @@ function getQuestion(question)
 	var flip = (question) ? quiz.flipped() : !quiz.flipped(); // flip the flip for getting answers!!
 
 	if (flip)
+	{
 		q = quiz.qna[quiz.qna[curr].order].a;
+		//console.log("flip: " + quiz._flip + ", answer: " + q);
+	}
 	else
+	{
 		q = quiz.qna[quiz.qna[curr].order].q;
-
-	//alert(quiz + ': ' + curr);
+		//console.log("flip: " + quiz._flip + ", question: " + q);
+	}
 
 	return q;
+}
+
+function isFlipChecked()
+{
+	return $("checkbox-flip").prop("checked");
 }
 
 function loadQuestion()
@@ -1135,4 +1144,9 @@ function touch(q)
 
         //alert('id: ' + q.id + ', word: ' + q.a);
     }
+}
+
+function flip()
+{
+	quiz.flip();
 }

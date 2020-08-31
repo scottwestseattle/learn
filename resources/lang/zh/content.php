@@ -147,4 +147,7 @@ return [
 'Word Forms' => '字形',
 'Conjugations' => '词形变化',
 'Reader' => '读者',
+'Back' => '回到',
+'Stop' => '停止',
+'I don\'t know' => '我不知道',
 ];

@@ -96,8 +96,11 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/stats/{entry}', 'EntryController@stats');
 	Route::get('/superstats', 'EntryController@superstats');
 	Route::get('/get-definitions-user/{entry}', 'EntryController@getDefinitionsUserAjax');
-	Route::get('/remove-definition-user/{entry}/{defId}', 'EntryController@removeDefinitionUserAjax');
+	Route::get('/remove-definition-user-ajax/{entry}/{defId}', 'EntryController@removeDefinitionUserAjax');
+	Route::get('/remove-definition-user/{entry}/{defId}', 'EntryController@removeDefinitionUser');
 	Route::get('/set-read-location/{entry}/{location}', 'EntryController@setReadLocationAjax');
+	Route::get('/vocabulary/{entry}', 'EntryController@vocabulary');
+	Route::get('/review-vocabulary/{entry}', 'EntryController@vocabularyReview');
 
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
