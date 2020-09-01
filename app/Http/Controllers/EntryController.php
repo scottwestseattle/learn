@@ -104,7 +104,7 @@ class EntryController extends Controller
 		$record = $entry;
 	
 		$qna = self::makeQna($record->definitions); // splits text into questions and answers
-		$qna = Quiz::makeReviewQuiz($qna);			// format the answers according to quiz type
+		//$qna = Quiz::makeReviewQuiz($qna);			// format the answers according to quiz type
 
 		$options = Tools::getOptionArray('font-size="150%"');
 
@@ -142,10 +142,13 @@ class EntryController extends Controller
 		{
 		    // flip the title and description so title will be the answer
 			$question = $record->title;
-			$answer = Tools::getOrSetString($record->translation_en, 'translation not set');
+			$translation = Tools::getOrSetString($record->translation_en, $question . ': translation not set');
+			$definition = Tools::getOrSetString($record->definition, $question . ': definition not set');
 	
             $qna[$cnt]['q'] = $question;
-            $qna[$cnt]['a'] = $answer;
+            $qna[$cnt]['a'] = $translation;
+            $qna[$cnt]['definition'] = $definition;
+            $qna[$cnt]['translation'] = $translation;
             $qna[$cnt]['id'] = $record->id;
             $qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
             $qna[$cnt]['options'] = '';

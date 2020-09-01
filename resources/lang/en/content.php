@@ -149,7 +149,7 @@ return [
 'Reader' => 'Reader',
 'Back' => 'Back',
 'Stop' => 'Stop',
-'I dont know' => 'I dont know',
+'I do not know' => 'I do not know',
 'Reverse question and answer' => 'Reverse question and answer',
 'Use definition instead of translation' => 'Use definition instead of translation',
 ];

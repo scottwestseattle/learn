@@ -272,14 +272,17 @@ function quiz() {
 				$(".btn-right").css('background-color','#5CB85C');
 				$(".btn-right").css('border-color','#5CB85C');
 
+				// wrong button option
 				$(".btn-wrong").css('background-color','LightGray');
 				$(".btn-wrong").css('border-color','LightGray');
 
+				// answer chosen but wrong
 				$(".btn-chosen").css('background-color','red');
-				$(".btn-chosen").css('border-color','DarkRed');
+				$(".btn-chosen").css('border-color','black');
 
-				$(".btn-right-show").css('color', '#212529');
-				$(".btn-right-show").css('background-color', '#ffed4a');
+				// [I don't know] button clicked, show answer in yellow
+				$(".btn-right-show").css('color', 'purple');
+				$(".btn-right-show").css('background-color', '#ffc107');
 				$(".btn-right-show").css('border-color', '#ffed4a');
 
 				// check if the chosen button is invisible
@@ -302,9 +305,15 @@ function quiz() {
 	}
 
 	this.flipped = function() {
-		return this._flip;
+		return $('#checkbox-flip').prop('checked');
 	}
+	
+	this.useDefinition = function() {
+		return $("#checkbox-use-definition").prop("checked");
+	}
+	
 
+	//review: not used
 	this.flip = function() {
 		this._flip = !this._flip;
 		this.promptQuestion = (this._flip ? this.promptQuestionReverse : this.promptQuestionNormal);
@@ -326,30 +335,20 @@ function quiz() {
 	this.showQuestion = function() {
 
 		clear();
+		var q = getQuestion();
 		var a = getAnswer();
 		var currIndex = quiz.qna[curr].order;
 		var currQuestion = quiz.qna[currIndex];
 
 		// show question
-		var q = getQuestion();
 		$("#prompt").html(q);
 
-		// get button options
-		if ($("#checkbox-hide-options").prop('checked'))
-		{
-			$("#optionButtons").hide();
-			$("#button-show-options").show();
-			$("#button-show-answer").hide();
-		}
-		else
-		{
-			$("#button-show-options").hide();
-			$("#button-show-answer").show();
-		}
+		// shows or hides answer option buttons according to checkbox
+		displayAnswerButtons();
 		
 		if (true)
 		{
-			// sbw new way where buttons are in html and configured from here
+			// new way where buttons are in html and configured from here
 			var answers = new Array();
 			var choices = Math.min(quiz.qna.length, 5);
 						
@@ -383,12 +382,6 @@ function quiz() {
 					}
 				}
 			}
-
-			console.log('choices: ' + choices);
-			console.log('currIndex: ' + currIndex);
-			answers.forEach(function (item, index, arr) {
-				console.log('random array: ' + index + ', item: ' + item + ', ans: ' +  quiz.qna[item].a);
-			});
 			
 			// now lay in the correct answer randomly if it's not already in the array
 			if (!answers.includes(currIndex))
@@ -397,10 +390,19 @@ function quiz() {
 				answers[correctButton] = currIndex;
 			}
 
+			if (false)
+			{
+				console.log('choices: ' + choices);
+				console.log('currIndex: ' + currIndex);
+				console.log('correct button: ' + correctButton);				
+				answers.forEach(function (item, index, arr) {
+					console.log('random array: ' + index + ', item: ' + item + ', ans: ' +  quiz.qna[item].a);
+				});				
+			}
+
 			// reset the buttons
 			$(".btn-quiz-mc3").removeClass('btn-right');
 			$(".btn-quiz-mc3").removeClass('btn-right-show');
-			
 			$(".btn-quiz-mc3").removeClass('btn-wrong');
 			$(".btn-quiz-mc3").removeClass('btn-chosen');
 			$(".btn-quiz-mc3").css('background-color', '#2fa360');
@@ -408,7 +410,7 @@ function quiz() {
 			$(".btn-quiz-mc3").css('color', 'white');
 			
 			answers.forEach(function (item, index, arr) {
-				var text = quiz.qna[item].a;
+				var text = getAnswer(item); // quiz.qna[item].a;
 				var btn = '#' + index;
 												
 				if (item == currIndex) // the right answer
@@ -416,14 +418,12 @@ function quiz() {
 				else
 					$(btn).addClass('btn-wrong');
 					
-				$(btn).text(text);
+				$(btn).html(text);
 				
 				// buttons start as hidden in case we are using less than the max (5)
 				// only show the ones we are using so we're not lugging around dead empty buttons
 				$(btn).show(); 
 			});
-
-			console.log('correct: ' + correctButton);			
 		}
 		else
 		{
@@ -559,6 +559,7 @@ function loadData()
 
 		var question = container.data('question');
 		var answer = container.data('answer');
+		var def = container.data('definition');
 		var options = container.data('options'); // mc options
 		var id = container.data('id');
 		var wordId = container.data('wid');
@@ -567,6 +568,7 @@ function loadData()
 		quiz.qna[i] = {
 		    q:question.toString(),
 		    a:answer.toString(),
+			definition:def.toString(),
 		    id:id.toString(),
 		    options:options.toString(),
 		    order:0,
@@ -793,22 +795,25 @@ function showAnswer()
 
 function showAnswerOptionButtons()
 {
-	$("#optionButtons").show();
+	// use visibility instead of show/hide to keep the spacing
+	$("#optionButtons").css('visibility', 'visible');
 	$("#button-show-options").hide();
 	$("#button-show-answer").show();	
 }
 
-function hideOptionsClick()
-{
+function displayAnswerButtons()
+{	
 	if ($("#checkbox-hide-options").prop('checked'))
 	{
-		$("#optionButtons").hide();
+		// use visibility instead of show/hide to keep the spacing
+		$("#optionButtons").css('visibility', 'hidden'); 
+		
 		$("#button-show-options").show();
 		$("#button-show-answer").hide();
 	}
 	else
 	{
-		$("#optionButtons").show();
+		$("#optionButtons").css('visibility', 'visible');
 		$("#button-show-options").hide();
 		$("#button-show-answer").show();
 	}
@@ -856,38 +861,45 @@ function clear()
 	$("#answer-show-div").text('');
 }
 
-function getAnswer()
+function getAnswer(index = null)
 {
-	return getQorA(/* question = */ false);
-}
+	var rc = null;
+	index = (index == null) ? quiz.qna[curr].order : index;
 
-function getQuestion()
-{
-	return getQorA(/* question = */ true);
-}
-
-function getQorA(question)
-{
-	var q = null;
-	var flip = (question) ? quiz.flipped() : !quiz.flipped(); // flip the flip for getting answers!!
-
-	if (flip)
+	if (quiz.flipped())
 	{
-		console.log("curr: " + curr);
-		q = quiz.qna[quiz.qna[curr].order].a;
+		rc = quiz.qna[index].q;
 	}
 	else
 	{
-		q = quiz.qna[quiz.qna[curr].order].q;
-		//console.log("flip: " + quiz._flip + ", question: " + q);
+		if (quiz.useDefinition())
+			rc = quiz.qna[index].definition;
+		else
+			rc = quiz.qna[index].a;
 	}
 
-	return q;
+	return rc;
 }
 
-function isFlipChecked()
+function getQuestion(index = null)
 {
-	return $("checkbox-flip").prop("checked");
+	var rc = null;
+	index = (index == null) ? quiz.qna[curr].order : index;
+
+	if (quiz.flipped())
+	{
+		if (quiz.useDefinition())
+			rc = quiz.qna[index].definition;
+		else
+			rc = quiz.qna[index].a;
+	}
+	else
+	{
+		rc = quiz.qna[index].q;
+	}
+
+	return rc;
+
 }
 
 function loadQuestion()
@@ -897,6 +909,11 @@ function loadQuestion()
 	updateScore();
 
 	quiz.setAlertPrompt(quiz.promptQuestion, COLOR_QUESTION_PROMPT);
+}
+
+function reloadQuestion()
+{
+	quiz.showQuestion();
 }
 
 function toStringBoolArray(a)
@@ -1042,7 +1059,7 @@ function checkAnswer(checkOptions, correctButtonClicked = false, showOnly = fals
 		{
 			if (showOnly)
 			{
-				result = "Showing correct answer, marked as wrong";
+				result = "Answer marked as wrong";
 				answerColor = 'purple';
 				quiz.qna[quiz.qna[curr].order].correct = false;
 				

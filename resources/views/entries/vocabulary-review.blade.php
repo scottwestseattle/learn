@@ -34,6 +34,7 @@
 	<div class="data-qna"
 	    data-question="{{$rec['q']}}"
 	    data-answer="{{$rec['a']}}"
+	    data-definition="{{$rec['definition']}}"
 	    data-options="{{$rec['options']}}"
 	    data-id="{{$rec['id']}}"
 	    data-ix="{{$rec['ix']}}" >
@@ -119,13 +120,12 @@
 		<!-------------------------------------------------------->
 		<!-- ANSWER OPTION BUTTONS  -->
 		<!-------------------------------------------------------->
-		<div style="width:100%; min-height:300px;" id="optionButtons">
-		
-		<div><button id="0" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
-		<div><button id="1" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
-		<div><button id="2" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
-		<div><button id="3" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
-		<div><button id="4" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+		<div style="width:100%; xmin-height:300px;" id="optionButtons">
+			<div><button id="0" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="1" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="2" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="3" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="4" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
 		</div>
 
 		</fieldset>
@@ -149,16 +149,16 @@
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); showAnswerOptionButtons()" id="button-show-options">@LANG('content.Show Choices')</button>
 			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); showAnswer()" id="button-show-answer">@LANG('content.I do not know')</button>
 			<div class="mt-2 ml-1">
-				<input type="checkbox" name="checkbox-hide-options" id="checkbox-hide-options" onclick="hideOptionsClick()" />
-				<label for="checkbox-hide-options" class="checkbox-xs" onclick="hideOptionsClick()">@LANG('content.Hide choices before answering')</label>
+				<input type="checkbox" name="checkbox-hide-options" id="checkbox-hide-options" onclick="displayAnswerButtons()" />
+				<label for="checkbox-hide-options" class="checkbox-xs" onclick="displayAnswerButtons()">@LANG('content.Hide choices before answering')</label>
 			</div>
 			<div class="mt-1 ml-1">
-				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="flip();" />
-				<label for="checkbox-flip" class="checkbox-xs" onclick="flip();">@LANG('content.Reverse question and answer')</label>
+				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="reloadQuestion();" />
+				<label for="checkbox-flip" class="checkbox-xs" onclick="reloadQuestion();">@LANG('content.Reverse question and answer')</label>
 			</div>
 			<div class="mt-1 ml-1">
-				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="flip();" />
-				<label for="checkbox-flip" class="checkbox-xs" onclick="flip();">@LANG('content.Use definition instead of translation')</label>
+				<input type="checkbox" name="checkbox-use-definition" id="checkbox-use-definition" onclick="reloadQuestion();" />
+				<label for="checkbox-use-definition" class="checkbox-xs" onclick="reloadQuestion();">@LANG('content.Use definition instead of translation')</label>
 			</div>
 		</div>
 

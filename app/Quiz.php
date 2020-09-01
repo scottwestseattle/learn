@@ -25,12 +25,7 @@ class Quiz
 
 			if (true)
 			{
-				// new review: the rest isn't needed
-				$quizNew[$cnt]['q'] = $record['q'];
-				$quizNew[$cnt]['a'] = $record['a'];
-				$quizNew[$cnt]['id'] = $record['id'];
-				$quizNew[$cnt]['ix'] = $record['id'];	
-				$quizNew[$cnt]['options'] = '';				
+				//sbw
 			}
 			else if (preg_match('#\[(.*)\]#is', $record['q']))
 			{

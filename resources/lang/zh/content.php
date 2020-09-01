@@ -149,7 +149,7 @@ return [
 'Reader' => '读者',
 'Back' => '回到',
 'Stop' => '停止',
-'I dont know' => '我不知道',
+'I do not know' => '我不知道',
 'Reverse question and answer' => '反问与答',
 'Use definition instead of translation' => '使用定义而不是翻译',
 ];
