@@ -149,5 +149,7 @@ return [
 'Reader' => 'Lector',
 'Back' => 'Volver',
 'Stop' => 'Terminar',
-'I don\'t know' => 'No lo sé',
+'I dont know' => 'No lo sé',
+'Reverse question and answer' => 'Inverar pregunta y respuesta',
+'Use definition instead of translation' => 'Usar definición en lugar de traducción',
 ];

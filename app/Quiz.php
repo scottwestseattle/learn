@@ -10,33 +10,40 @@ use DateTime;
 
 class Quiz
 {
-
 	// this version puts the answer options into a separate cell
 	static public function makeReviewQuiz($quiz)
     {
 		$quizNew = [];
 		$answers = [];
+		$max = 0;
 
-		$max = count($quiz) - 1; // max question index
-		if ($max > 0)
+		$randomOptions = 5;
+		$cnt = 0;
+		foreach($quiz as $record)
 		{
-			$randomOptions = 5;
-			$cnt = 0;
-			foreach($quiz as $record)
+			$options = [];
+
+			if (true)
 			{
-				$options = [];
-				$optionsReverse = [];
-
-				if (preg_match('#\[(.*)\]#is', $record['q']))
+				// new review: the rest isn't needed
+				$quizNew[$cnt]['q'] = $record['q'];
+				$quizNew[$cnt]['a'] = $record['a'];
+				$quizNew[$cnt]['id'] = $record['id'];
+				$quizNew[$cnt]['ix'] = $record['id'];	
+				$quizNew[$cnt]['options'] = '';				
+			}
+			else if (preg_match('#\[(.*)\]#is', $record['q']))
+			{
+				// there is already an answer so it will be handled in formatMc1
+			}
+			else
+			{
+				//
+				// get random answers from other questions
+				//
+				$max = count($quiz) - 1; // max question index
+				if ($max > 0)
 				{
-					// there is already an answer so it will be handled in formatMc1
-				}
-				else
-				{
-					//
-					// get random answers from other questions
-					//
-
 					// using 100 just so it's not infinite, only goes until three unique options are picked
 					$pos = rand(0, $randomOptions - 1); // position of the correct answer
 					for ($i = 0; $i < 100 && count($options) < $randomOptions; $i++)
@@ -53,17 +60,14 @@ class Quiz
 							{
 								// add in the real answer at the random position
 								$options[$record['a']] = $record['a'];
-								$optionsReverse[$record['a']] = $record['q'];
 							}
 
 							$options[$option['a']] = $option['a'];
-							$optionsReverse[$option['a']] = $option['q'];
 
 							if ($pos == count($options))
 							{
 								// add in the real answer at the random position
 								$options[$record['a']] = $record['a'];
-								$optionsReverse[$record['a']] = $record['q'];
 							}
 						}
 						else
@@ -73,22 +77,27 @@ class Quiz
 					}
 
 					$quizNew[$cnt]['options'] = $options;
-					$quizNew[$cnt]['optionsReverse'] = $optionsReverse;
 				}
-
+				
 				$quizNew[$cnt]['q'] = $record['q'];
 				$quizNew[$cnt]['a'] = $record['a'];
 				$quizNew[$cnt]['id'] = $record['id'];
 				$quizNew[$cnt]['ix'] = $record['id'];
-
-				//dump($quizNew[$cnt]);
-
-				$cnt++;
 			}
+
+
+			//dump($quizNew[$cnt]);
+
+			$cnt++;
+		}
+
+		if ($max > 0)
+		{
+			$quizNew = self::addAnswerButtons($quizNew);		
 		}
 
 		//dd($quizNew);
-		return self::addAnswerButtons($quizNew);
+		return $quizNew;
 	}
 	
 	// creates buttons for each answer option
@@ -144,9 +153,10 @@ class Quiz
     {
 		$button = '<div><button id="'
             . $id
-            . '" onclick="checkAnswerMc1('
-            . $id . ', \''
-		    . $text . '\')" class="btn btn-primary btn-quiz-mc3 '
+            . '" onclick="checkAnswerFromButton(event)"'
+            //. '" onclick="checkAnswerFromButton('
+		   // . $id . ')" class="btn btn-primary btn-quiz-mc3 '
+		    . ' class="btn btn-primary btn-quiz-mc3 '
 		    . $class . '">'
 		    . $text
 		    . '</button></div>';

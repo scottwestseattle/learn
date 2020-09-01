@@ -1,4 +1,4 @@
-@extends('layouts.quiz')
+@extends('layouts.review')
 
 @section('content')
 
@@ -119,7 +119,14 @@
 		<!-------------------------------------------------------->
 		<!-- ANSWER OPTION BUTTONS  -->
 		<!-------------------------------------------------------->
-		<div style="width:100%; min-height:300px;" id="optionButtons"></div>
+		<div style="width:100%; min-height:300px;" id="optionButtons">
+		
+		<div><button id="0" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+		<div><button id="1" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+		<div><button id="2" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+		<div><button id="3" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+		<div><button id="4" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+		</div>
 
 		</fieldset>
 
@@ -140,14 +147,18 @@
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">@LANG('content.Check Typed Answer')</button>
 			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop')</button>
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); showAnswerOptionButtons()" id="button-show-options">@LANG('content.Show Choices')</button>
-			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); showAnswer()" id="button-show-answer">@LANG('content.I don\'t know')</button>
+			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); showAnswer()" id="button-show-answer">@LANG('content.I do not know')</button>
 			<div class="mt-2 ml-1">
 				<input type="checkbox" name="checkbox-hide-options" id="checkbox-hide-options" onclick="hideOptionsClick()" />
 				<label for="checkbox-hide-options" class="checkbox-xs" onclick="hideOptionsClick()">@LANG('content.Hide choices before answering')</label>
 			</div>
 			<div class="mt-1 ml-1">
 				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="flip();" />
-				<label for="checkbox-flip" class="checkbox-xs" onclick="flip();">@LANG('content.Reverse words and translations')</label>
+				<label for="checkbox-flip" class="checkbox-xs" onclick="flip();">@LANG('content.Reverse question and answer')</label>
+			</div>
+			<div class="mt-1 ml-1">
+				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="flip();" />
+				<label for="checkbox-flip" class="checkbox-xs" onclick="flip();">@LANG('content.Use definition instead of translation')</label>
 			</div>
 		</div>
 
