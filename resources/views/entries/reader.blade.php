@@ -72,10 +72,10 @@
 				<a onclick="event.preventDefault(); run()"  href="" class="btn btn-primary mb-3"  id="button-start-reading" role="button">Start Reading</a>
 				<div><a onclick="event.preventDefault(); runContinue()"  href="" class="btn btn-success mb-3" id="button-continue-reading" style="display:none;" role="button">Continue reading from line</a></div>
 				<div><a onclick="event.preventDefault(); runContinueOther()"  href="" class="btn btn-warning mb-3" id="button-continue-reading-other" style="display:none;" role="button">Continue reading from location on other device</a></div>
-				<div style="line-height: 24px; vertical-align:middle;">
-					<a onclick="event.preventDefault(); incLine(-50)" href=""><span id="button-decrement-line" class="glyphicon glyphicon-minus-sign"></span></a>
-					<span id="readCurrLine" class="" style="margin:10px;">Line: </span>
-					<a onclick="event.preventDefault(); incLine(50)" href=""><span id="button-increment-line" class="glyphicon glyphicon-plus-sign"></span></a>
+				<div>
+					<a onclick="incLine(event, -50)" href=""><span id="button-decrement-line" class="glyphicon glyphCustom glyphicon-minus-sign"></span></a>
+					<div id="readCurrLine" class="middle large-text mb-2" style="min-width:85px;">Line </div>
+					<a onclick="incLine(event, 50)" href=""><span id="button-increment-line" class="glyphicon glyphCustom glyphicon-plus-sign"></span></a>
 					<div id="elapsedTime" class="mt-5"></div>
 				</div>
 			</div>
@@ -119,8 +119,6 @@
 	<!--------------------------------------------------------------->
 	<div id="tab3" class="tab-body" style="display:none;">
 		<div class="text-center mt-3">
-		
-			
 			<div class="mb-5">
 			<div><span class="small-thin-text" id="language"></span></div>
 			<div id="languages" class="mt-1" style="display:default; font-size:10px;"><select onchange="changeVoice();" name="select" id="select"></select></div>
@@ -131,7 +129,6 @@
 				<div class="middle" id="readFontSize">Font Size: 18</div>
 				<div class="middle ml-3"><a onclick="zoom(event, 3)" href=""><span class="glyphicon glyphReader glyphicon-zoom-in glyph-zoom-button"></span></a></div>
 			</div>
-			
 		</div>
 	</div>
 	

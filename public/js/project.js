@@ -960,6 +960,58 @@ function conjugationsGen(fromId, toId)
 	ajaxexec('/definitions/conjugationsgenajax/' + title.trim(), toId, true);
 }
 
+function wordFormsGen(event, fromId, toId)
+{
+	event.preventDefault();
+	var word = $(fromId).val();
+	var wordForms = $(toId).val(); // get current forms so we don't wipe them out
+	var wordForms = getWordForms(word, wordForms);
+	$(toId).val(wordForms);
+}
+
+function getWordForms(word, wordForms)
+{
+	var gen = '';
+	var root = word.substring(0, word.length - 1);
+	wordForms = wordForms.trim();
+	
+	// if it ends in a consonant, add 'as', else add 's'
+	// paciente = pacientes
+	// alto = altos, alta, altas
+	// capaz = capaces
+	// reloj = relojes
+	if (word.endsWith('o') || word.endsWith('a'))
+	{
+		gen += root + 'o';
+		gen += ', ' + root + 'os';
+		gen += ', ' + root + 'a';
+		gen += ', ' + root + 'as';
+	}
+	else if (word.endsWith('e'))
+	{
+		gen += word + 's';
+	}
+	else if (word.endsWith('z'))
+	{
+		gen += root + 'ces';
+	}
+	// for all the rest, just add 'es'
+	else //if (word.endsWith('r') || word.endsWith('j'))
+	{
+		gen += word + 'es';
+	}
+	
+	if (wordForms.length > 0)
+	{
+		if (!wordForms.endsWith(',') && !wordForms.endsWith(';'))
+			wordForms += ', ';
+		else
+			wordForms += ' ';
+	}
+	 
+	return wordForms + gen;
+}
+
 function wordExists(title)
 {
 	ajaxexec('/definitions/wordexists/' + title.val().trim(), '#wordexists');
@@ -986,12 +1038,15 @@ function scrollTo(className, heightAdjustment = 0)
 	}
 }
 
-function translateGoogle(text)
+function translateOnWebsite(event, destination, text)
 {
-	window.open("https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "");
+	event.preventDefault();
+	
+	if (destination == 'spanishdict')
+		window.open("https://www.spanishdict.com/translate/" + text + "");
+	else if (destination == 'wordreference')
+		window.open("https://www.wordreference.com/definicion/" + text + "");		
+	else // everything else goes to google
+		window.open("https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "");
 }
 
-function translateSpanishDict(text)
-{
-	window.open("https://www.spanishdict.com/translate/" + text + "");
-}

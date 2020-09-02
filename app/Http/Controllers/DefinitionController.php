@@ -505,6 +505,10 @@ class DefinitionController extends Controller
 		{
 			// 2. not in our list, show link to MS Translate ajax
 			$rc = "<a href='' onclick='event.preventDefault(); xlate(\"" . $text . "\");'>Translate</a>";
+			
+			if (Tools::isAdmin())
+				$rc .= "<a class='ml-3' target='_blank' href='/definitions/add/" . $text . "'>Add</a>";
+			
 		}
 
 		return $rc;
@@ -535,7 +539,11 @@ class DefinitionController extends Controller
 		}
 		else
 		{
-			$rc = $rc['error'];
+			$rc = '<div>' . $rc['error'] . '</div>';
+			
+			if (Tools::isAdmin())
+				$rc .= "<div><a class='ml-3' target='_blank' href='/definitions/add/" . $text . "'>Add</a></div>";
+			
 		}
 		
 		return $rc;

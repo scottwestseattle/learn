@@ -28,7 +28,7 @@ var _readFontSize = 18;
 var _maxFontSize = 99;
 var _hotWords = [];
 var _bottomPanelHeight; // height of bottom button panel
-
+var _incLine = 0; // helper to get to a starting line
 // track read time
 var _startTime = null;
 
@@ -333,22 +333,27 @@ function prev()
 	loadSlide();
 }
 
-function incLine(count)
+function incLine(e, count)
 {	
-	curr += count;
-	mod = curr % 50;
-	curr -= (mod);
+	e.preventDefault(); 
+
+	_incLine += count + 1;
 	
-	if (curr < 0)
-		curr = 0;
-	else if (curr >= max)
-		curr = 0;
+	// put the line on multiples of 50
+	mod = _incLine % 50;
+	_incLine -= (mod + 1);
+	
+	if (_incLine < 0)
+		_incLine = 0;
+	else if (_incLine >= max)
+		_incLine = 0;
 	
 	$('#button-start-reading').text("Start reading from the beginning");
-	$('#readCurrLine').text("Line: " + (curr + 1));
+	$('#readCurrLine').text("Line " + (_incLine + 1));
 	$('#button-continue-reading').show();
-	$('#button-continue-reading').text("Continue reading from line " + (curr + 1));
-	
+	$('#button-continue-reading').text("Continue reading from line " + (_incLine + 1));
+
+	curr = _incLine;	
 }
 
 function next()
@@ -384,8 +389,12 @@ function run()
 
 function runContinue() 
 {
-	// read location on this device
-	curr = parseInt(localStorage[deck.readLocationTag], 10);	
+	// not starting at the beginning
+	
+	if (_incLine != 0) // if line selector was used (+-50) then use that
+		curr = _incLine;
+	else 			  // use last location from the session
+		curr = parseInt(localStorage[deck.readLocationTag], 10);
 	
 	$("#pause").show();
 	$("#resume").hide();	
@@ -428,8 +437,9 @@ function resume()
 	}
 	else
 	{
+		// resuming without being paused means play was clicked from start panel
 		startClock();
-		deck.run();	
+		deck.run(_incLine == 0); // if line has been inc'ing then don't start at the beginning.
 	}
 	
 	$("#pause").show();
@@ -759,7 +769,7 @@ function end()
 	deck.start();
 	$("#pause").show();
 	$("#resume").hide();
-	$('#readCurrLine').text("Line: " + (curr + 1));
+	$('#readCurrLine').text("Line " + (curr + 1));
 	showElapsedTime();
 	clearTimeout(_clockTimerId);
 }
@@ -882,8 +892,9 @@ function getSelectedText(clicks)
 
 		var html = "<div style='margin-bottom:10px;'><span style='font-size:1.2em;'>" + text + "</span>"
 			+ "&nbsp;<a target='_blank' href='https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "'>(Google)</a>"
-			+ "&nbsp;<a target='_blank' href='https://www.spanishdict.com/translate/" + text + "'>(SpanDict)</a>";
-			if (deck.isAdmin)
+			+ "&nbsp;<a target='_blank' href='https://www.spanishdict.com/translate/" + text + "'>(SpanDict)</a>"
+			+ "&nbsp;<a target='_blank' href='https://www.wordreference.com/definicion/" + text + "'>(WR)</a>";
+			if (false && deck.isAdmin)
 				html += "&nbsp;<a target='_blank' href='/definitions/add/" + text + "'>(add)</a>";
 			html+= "</div>";
 	
@@ -970,7 +981,7 @@ function getReadLocation()
 		$('#button-continue-reading-other').html("Continue reading from line " + (deck.readLocationOtherDevice + 1) + "<br/><span class='small-thin-text'>(location from a different session)</span>");
 	}
 	
-	$('#readCurrLine').text("Line: " + (curr + 1));
+	$('#readCurrLine').text("Line " + (curr + 1));
 	//debug("getReadLocation: " + location);
 }
 

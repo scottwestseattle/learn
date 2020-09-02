@@ -15,14 +15,17 @@
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('content.Word'):</label>
 			<a onclick="event.preventDefault(); $('#title').val(''); $('#title').focus();" href="" tabindex="-1" class="ml-3"><span id="" class="glyphicon glyphicon-remove" ></span></a>			
-			<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}" autocomplete="off" onfocus="setFocus($(this))" />
+			<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}" autocomplete="off" onfocus="setFocus($(this))" onblur="wordExists($(this))" />
+			<div id="wordexists" class="small-thin-text ml-2 mb-2"></div>
 			<div class="mb-2 ml-2">
-				<a onclick="event.preventDefault(); translateGoogle($('#title').val());" href="" tabindex="-1" class="small-thin-text">Google</a>
-				<a onclick="event.preventDefault(); translateSpanishDict($('#title').val());" href="" tabindex="-1"  class="small-thin-text ml-2">Span!shD¡ct</a>
+				<a onclick="translateOnWebsite(event, 'google', $('#title').val());" href="" tabindex="-1" class="small-thin-text">Google</a>
+				<a onclick="translateOnWebsite(event, 'spanishdict', $('#title').val());" href="" tabindex="-1"  class="small-thin-text ml-2">Span!shD¡ct</a>
+				<a onclick="translateOnWebsite(event, 'wordreference', $('#title').val());" href="" tabindex="-1"  class="small-thin-text ml-2">WR</a>
 			</div>
 			
-			<label for="forms" class="control-label mr-3">@LANG('content.Word Forms'): <span class="small-thin-text">(separate with comma or semi-colon)</span></label>
-			<a onclick="event.preventDefault(); $('#forms').val(''); $('#forms').focus();" href="" tabindex="-1"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
+			<label for="forms" class="control-label mr-3">@LANG('content.Word Forms'): <span class="small-thin-text">( with comma or semi-colon)</span></label>
+			<a onclick="wordFormsGen(event, '#title', '#forms');" href="" tabindex="-1" class="ml-2"><span class="glyphicon glyphicon-plus-sign" ></span></a>			
+			<a onclick="event.preventDefault(); $('#forms').val(''); $('#forms').focus();" href="" tabindex="-1" class="ml-2"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<input type="text" rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))" value="{{$formsPretty}}" />
 			<div class="small-thin-text mb-2 ml-2">{{$record->forms}}</div>
 

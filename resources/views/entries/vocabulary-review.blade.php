@@ -120,7 +120,7 @@
 		<!-------------------------------------------------------->
 		<!-- ANSWER OPTION BUTTONS  -->
 		<!-------------------------------------------------------->
-		<div style="width:100%; xmin-height:300px;" id="optionButtons">
+		<div style="width:100%;" id="optionButtons">
 			<div><button id="0" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
 			<div><button id="1" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
 			<div><button id="2" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>

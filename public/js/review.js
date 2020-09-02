@@ -346,92 +346,83 @@ function quiz() {
 		// shows or hides answer option buttons according to checkbox
 		displayAnswerButtons();
 		
-		if (true)
-		{
-			// new way where buttons are in html and configured from here
-			var answers = new Array();
-			var choices = Math.min(quiz.qna.length, 5);
-						
-			for (var i = 0; i < choices; i++) // start at one because we've already added the correct answer
-			{
-				var rnd = Math.floor(Math.random() * choices);
-
-				// if it's not the correct answer AND it's not already in the answers list
-				if (!answers.includes(rnd))
-				{
-					// not in array yet, add it
-					answers.push(rnd);
-				}
-				else
-				{
-					// continue from the random position until we find an unused answer
-					var loop = 0;
-					while(loop < quiz.qna.length) // don't loop forever
-					{
-						rnd++;
-						if (rnd >= choices)
-							rnd = 0; // wrap to the beginning and keep looking
-						
-						// if not in the answers list, add it
-						if (!answers.includes(rnd))
-						{
-							answers.push(rnd);
-						}
-
-						loop++;
-					}
-				}
-			}
-			
-			// now lay in the correct answer randomly if it's not already in the array
-			if (!answers.includes(currIndex))
-			{
-				var correctButton = Math.floor(Math.random() * choices);
-				answers[correctButton] = currIndex;
-			}
-
-			if (false)
-			{
-				console.log('choices: ' + choices);
-				console.log('currIndex: ' + currIndex);
-				console.log('correct button: ' + correctButton);				
-				answers.forEach(function (item, index, arr) {
-					console.log('random array: ' + index + ', item: ' + item + ', ans: ' +  quiz.qna[item].a);
-				});				
-			}
-
-			// reset the buttons
-			$(".btn-quiz-mc3").removeClass('btn-right');
-			$(".btn-quiz-mc3").removeClass('btn-right-show');
-			$(".btn-quiz-mc3").removeClass('btn-wrong');
-			$(".btn-quiz-mc3").removeClass('btn-chosen');
-			$(".btn-quiz-mc3").css('background-color', '#2fa360');
-			$(".btn-quiz-mc3").css('border-color', '#2d995b');
-			$(".btn-quiz-mc3").css('color', 'white');
-			
-			answers.forEach(function (item, index, arr) {
-				var text = getAnswer(item); // quiz.qna[item].a;
-				var btn = '#' + index;
-												
-				if (item == currIndex) // the right answer
-					$(btn).addClass('btn-right');
-				else
-					$(btn).addClass('btn-wrong');
+		// new way where buttons are in html and configured from here
+		var answers = new Array();
+		var choices = Math.min(quiz.qna.length, 5);
 					
-				$(btn).html(text);
-				
-				// buttons start as hidden in case we are using less than the max (5)
-				// only show the ones we are using so we're not lugging around dead empty buttons
-				$(btn).show(); 
-			});
-		}
-		else
+		for (var i = 0; i < choices; i++) // start at one because we've already added the correct answer
 		{
-			// old way where buttons were created in php
-			o = quiz.qna[quiz.qna[curr].order].options;
-			if (o && o.length > 0)
-				$("#optionButtons").html(o);	// show the option buttons
+			var rnd = Math.floor(Math.random() * quiz.qna.length);
+
+			// if it's not the correct answer AND it's not already in the answers list
+			if (!answers.includes(rnd))
+			{
+				// not in array yet, add it
+				answers.push(rnd);
+			}
+			else
+			{
+				// continue from the random position until we find an unused answer
+				var loop = 0;
+				while(loop < quiz.qna.length) // don't loop forever
+				{
+					rnd++;
+					if (rnd >= choices)
+						rnd = 0; // wrap to the beginning and keep looking
+					
+					// if not in the answers list, add it
+					if (!answers.includes(rnd))
+					{
+						answers.push(rnd);
+						break;
+					}
+
+					loop++;
+				}
+			}
 		}
+		
+		// now lay in the correct answer randomly if it's not already in the array
+		if (!answers.includes(currIndex))
+		{
+			var correctButton = Math.floor(Math.random() * choices);
+			answers[correctButton] = currIndex;
+		}
+
+		if (false)
+		{
+			console.log('choices: ' + choices);
+			console.log('currIndex: ' + currIndex);
+			console.log('correct button: ' + correctButton);				
+			answers.forEach(function (item, index, arr) {
+				console.log('random array: ' + index + ', item: ' + item + ', ans: ' +  quiz.qna[item].a);
+			});				
+		}
+
+		// reset the buttons
+		$(".btn-quiz-mc3").removeClass('btn-right');
+		$(".btn-quiz-mc3").removeClass('btn-right-show');
+		$(".btn-quiz-mc3").removeClass('btn-wrong');
+		$(".btn-quiz-mc3").removeClass('btn-chosen');
+		$(".btn-quiz-mc3").css('background-color', '#2fa360');
+		$(".btn-quiz-mc3").css('border-color', '#2d995b');
+		$(".btn-quiz-mc3").css('color', 'white');
+		
+		answers.forEach(function (item, index, arr) {
+			var text = getAnswer(item); // quiz.qna[item].a;
+			var btn = '#' + index;
+											
+			if (item == currIndex) // the right answer
+				$(btn).addClass('btn-right');
+			else
+				$(btn).addClass('btn-wrong');
+				
+			$(btn).html(text);
+			
+			// buttons start as hidden in case we are using less than the max (5)
+			// only show the ones we are using so we're not lugging around dead empty buttons
+			$(btn).show(); 
+		});
 
 		// show answer
 		if ($("#checkbox-show").prop('checked'))
@@ -807,7 +798,6 @@ function displayAnswerButtons()
 	{
 		// use visibility instead of show/hide to keep the spacing
 		$("#optionButtons").css('visibility', 'hidden'); 
-		
 		$("#button-show-options").show();
 		$("#button-show-answer").hide();
 	}
