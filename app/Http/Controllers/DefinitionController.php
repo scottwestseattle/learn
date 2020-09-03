@@ -39,6 +39,11 @@ class DefinitionController extends Controller
 
     public function index(Request $request)
     {
+		return $this->search($request);
+    }
+
+    public function indexOldWithPills(Request $request)
+    {
 		$records = []; // make this countable so view will always work
 
 		try
@@ -60,6 +65,8 @@ class DefinitionController extends Controller
     public function search(Request $request, $sort = null)
     {
 		$sort = intval($sort);
+		
+		$isPost = $request->isMethod('post');		
 		
 		// check if a previous sort was used 
 		if ($sort === 0)
@@ -140,50 +147,6 @@ class DefinitionController extends Controller
 			
 		return $rc;
     }	
-
-    public function indexUser(Request $request)
-    {
-		$parent_id = null;
-
-		$records = Word::getWodIndex();
-
-		return view(PREFIX . '.index', $this->getViewData([
-			'records' => $records,
-			'lesson_id' => $parent_id,
-			'lesson' => isset($parent_id),
-		]));
-    }
-
-    public function indexowner(Request $request, $parent_id = null)
-    {
-		$records = []; // make this countable so view will always work
-		$view = PREFIX . '.indexowner';
-
-		try
-		{
-			if (isset($parent_id))
-			{
-				$parent_id = intval($parent_id);
-				$records = Word::getIndex($parent_id);
-			}
-			else
-			{
-				$records = Word::getWodIndex(['orderBy' => 'id desc']);
-				$view = PREFIX . '.indexadmin';
-			}
-		}
-		catch (\Exception $e)
-		{
-			$msg = 'Error getting ' . $this->title . ' list';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg . ' for parent ' . $parent_id, $parent_id, $e->getMessage());
-			Tools::flash('danger', $msg);
-		}
-
-		return view($view, $this->getViewData([
-			'records' => $records,
-			'lesson_id' => $parent_id,
-		]));
-    }
 
     public function admin(Request $request, $parent_id = null)
     {

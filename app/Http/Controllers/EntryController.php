@@ -220,7 +220,7 @@ class EntryController extends Controller
 				throw new \Exception('Date not set');
 			
 			$entry->save();
-			
+				
 			$msg = 'Entry has been added';
 			$status = 'success';
 			if (strlen($request->description) > MAX_DB_TEXT_COLUMN_LENGTH)
@@ -234,7 +234,7 @@ class EntryController extends Controller
 			
 			Event::logAdd(LOG_MODEL_ENTRIES, $msg . ': ' . $entry->title, $entry->description, $entry->id);
 			
-			return redirect('/articles');
+			return redirect('/entries/' . $entry->permalink);
 		}
 		catch (\Exception $e) 
 		{
