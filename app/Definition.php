@@ -653,6 +653,47 @@ class Definition extends Base
 	}
 	
 	// search checks title and forms
+    static public function searchPartial($word)
+    {
+		$word = Tools::alpha($word);
+		$records = null;
+		
+		if (!isset($word))
+		{
+			// show full list
+			return Definition::getIndex();
+		}
+
+		try
+		{			
+			$records = Definition::select()
+				->where('deleted_at', null)
+				->where(function ($query) use ($word){$query
+					->where('title', 'LIKE', $word . '%')											// exact match of title
+					->orWhere('forms', 'LIKE', '%;' . $word . ';%')					// exact match of ";word;"
+					->orWhere('conjugations_search', 'LIKE', '%;' . $word . '%;%') 	// exact match of ";word;"
+					;})
+				->orderBy('title')
+				->get();
+
+			if (false && !isset($record)) // not yet
+			{
+				$record = self::searchDeeper($word);
+			}
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting word: ' . $word;
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
+		//dd($records);
+
+		return $records;
+	}	
+	
+	// search checks title and forms
     static public function search($word)
     {
 		$word = Tools::alphanum($word, /* strict = */ true);
@@ -668,10 +709,6 @@ class Definition extends Base
 					->orWhere('conjugations_search', 'LIKE', '%;' . $word . ';%') 	// exact match of ";word;"
 					;})
 				->first();
-
-			//todo: need to handle multiple matches
-			//if ($records->count() > 1);
-			//	dd($records);
 			
 			if (!isset($record))
 			{

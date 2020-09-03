@@ -17,7 +17,7 @@ const RUNSTATE_END          = 5;
 var curr = 0;   // current slide
 var max = 0;    // number of slides
 
-var _debug = true;
+var _debug = false;
 var _mute = false;
 var _paused = false;
 var _lastCharIndex = 0;
@@ -121,11 +121,11 @@ function deck() {
     // this shows the current slide
 	this.runSlide = function() {
 
-		//debug("read next: " + curr);
+		//debug("read next: " + curr, _debug);
 
         if (curr < max)
         {
-			//debug("run slide: " + deck.slides[curr].title);
+			//debug("run slide: " + deck.slides[curr].title, _debug);
             loadSlide();
 			deck.readSlide();
         }
@@ -172,7 +172,7 @@ function deck() {
 
 	this.setStates = function(state) {
 
-        //debug("setting state to " + state);
+        //debug("setting state to " + state, _debug);
 
 		this.runState = state;
 
@@ -227,7 +227,7 @@ function deck() {
 	
 	this.readSlide = function() {
 	    var slide = deck.slides[curr];
-        //debug("read slide " + (curr+1) + ": " + slide.description);
+        //debug("read slide " + (curr+1) + ": " + slide.description, _debug);
 		read(slide.description, 0);
 		
         //$("#slideCount").text(slide.number + " of " + deck.slides.length);
@@ -461,7 +461,7 @@ function mute()
         $("#button-mute").addClass("glyphicon-volume-up");
     }
 
-    debug("mute set to " + _mute.toString());
+    //debug("mute set to " + _mute.toString(), _debug);
 }
 
 function playAudioFile(file)
@@ -528,7 +528,7 @@ function read(text, charIndex)
 		
 		if (event.name == "word")
 		{
-			//setDebug(event.charLength + ' / ' + event.wordLength);			
+			//debug(event.charLength + ' / ' + event.wordLength, _debug);
 			var cases = -1; 
 			if (typeof event.charLength !== 'undefined')
 			{
@@ -556,13 +556,13 @@ function read(text, charIndex)
 				cases = 2;
 			}
 
-			//setDebug("Case " + cases);
+			//debug("Case " + cases, _debug);
 			if (cases != 1) // do it the hard way
 			{
 				var start = event.charIndex;
 				_lastCharIndex = start;
 				var word = text.substring(start);
-				//debug(event.name + ': ' + word + ', index:' + event.charIndex + ", charLength: " + event.charLength);
+				//debug(event.name + ': ' + word + ', index:' + event.charIndex + ", charLength: " + event.charLength, _debug);
 				var words = word.split(" ");
 				if (words.length > 0)
 				{
@@ -589,7 +589,7 @@ function read(text, charIndex)
 
 function speechBugWorkaround()
 {		
-	//debug("reset speech");
+	//debug("reset speech", _debug);
 	window.speechSynthesis.resume(); // fix to keep speech from stopping
 	
 	if (window.speechSynthesis.speaking)
@@ -716,7 +716,7 @@ function loadVoices()
 function saveSelectedVoice(voiceIndex)
 {
 	localStorage['readVoiceIndex'] = voiceIndex;
-	//debug("set readVoiceIndex: " + voiceIndex);
+	//debug("set readVoiceIndex: " + voiceIndex, _debug);
 }
 
 function setSelectedVoice(voiceSelect)
@@ -729,7 +729,7 @@ function setSelectedVoice(voiceSelect)
 	}
 
 	voiceSelect.selectedIndex = (voiceIndex < voiceSelect.options.length) ? voiceIndex : 0;
-	//debug("get: readVoiceIndex: " + voiceIndex);
+	//debug("get: readVoiceIndex: " + voiceIndex, _debug);
 }
 
 function changeVoice()
@@ -742,17 +742,12 @@ function changeVoice()
 	if (_utter != null)
 	{
 		_utter.voice = deck.voice;
-		//setDebug(deck.voice.name);
+		//debug(deck.voice.name, _debug);
 		//window.speechSynthesis.pause();
 		//window.speechSynthesis.resume();
 	}
 
 	//$("#language").text("Language: " + deck.voice.lang + ", voice: " + deck.voice.name);
-}
-
-function setDebug(text = null)
-{
-    $("#debug").text(text);
 }
 
 function showSeconds(text = null)
@@ -846,12 +841,6 @@ function touch(q)
 
         //alert('id: ' + q.id + ', word: ' + q.a);
     }
-}
-
-function debug(text)
-{
-    if (_debug)
-        console.log(text);
 }
 
 var _dictionary = "_blank";
@@ -957,7 +946,7 @@ function saveReadLocation(location)
 	if (deck.userId > 0) // if logged in, save read location in db
 		ajaxexec('/entries/set-read-location/' + parseInt(deck.contentId, 10) + '/' + location + '/');
 	deck.readLocationOtherDevice = location;
-	//debug("saveReadLocation: " + location);
+	//debug("saveReadLocation: " + location, _debug);
 }
 
 function getReadLocation()
@@ -982,7 +971,7 @@ function getReadLocation()
 	}
 	
 	$('#readCurrLine').text("Line " + (curr + 1));
-	//debug("getReadLocation: " + location);
+	//debug("getReadLocation: " + location, _debug);
 }
 
 //<div id="panel-run-col-defs" class="col-md-4 mt-3" style="background-color:white; padding:0;">

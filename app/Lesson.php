@@ -356,7 +356,7 @@ class Lesson extends Base
 						// mark the correct button so it can be styled during the quiz
 						$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
 
-						$buttons .= Quiz::formatButton($m, $buttonId++, $buttonClass);
+						$buttons .= self::formatButton($m, $buttonId++, $buttonClass);
 					}
 
 					// put the formatted info back into the quiz
@@ -1075,4 +1075,21 @@ class Lesson extends Base
 		
 		return $rc;
 	}
+	
+	// the new version was moved to Quiz but isn't being used
+	static private function formatButton($text, $id, $class)
+    {
+		$button = '<div><button id="'
+            . $id
+            . '" onclick="checkAnswerMc1('
+            . $id . ', \''
+		    . $text . '\')" class="btn btn-primary btn-quiz-mc3 '
+		    . $class . '">'
+		    . $text
+		    . '</button></div>';
+
+		//dump($button);
+
+		return $button;
+	}	
 }

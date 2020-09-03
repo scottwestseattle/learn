@@ -642,17 +642,28 @@ function onCategoryChange(id)
 	xhttp.send();
 }
 
+function debug(msg, debugOn)
+{
+	if (debugOn)
+		console.log(msg);
+}
+
 function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = null)
 {
 	var xhttp = new XMLHttpRequest();
+	var debugOn = false;
 
+	debug('ajaxexec: url: ' + url, debugOn);
+	//debug('ajaxexec: resultsId: ' + resultsId, debugOn);
+	
 	xhttp.onreadystatechange = function()
 	{
 		//alert(this.status);
 
 		if (this.status == 404) // page not found?
 		{
-			//debug(this.responseText);
+			debug('ajaxexec: 404', debugOn);
+			
 			if (resultsId.length > 0)
 				$(resultsId).text('Server Error 404');
 		}
@@ -669,17 +680,28 @@ function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = n
 					//$(resultsId).text('definition: ' + this.responseText);
 					if (this.responseText.startsWith('<'))
 					{
+						debug('ajaxexec: html returned', debugOn);
+						//debug(this.responseText, debugOn);
+						
 						$(resultsId).html(this.responseText);
 					}
 					else if (resultsInput) // put results in an input
 					{
+						debug('ajaxexec: text for input returned');
+						
 						$(resultsId).val(this.responseText);
 					}
 					else
 					{
+						debug('ajaxexec: text returned', debugOn);
+						
 						$(resultsId).text(this.responseText);
 						$(resultsId).css('color', '#a37800');
 					}
+				}
+				else
+				{
+					debug('ajaxexec: results empty', debugOn);
 				}
 				
 				if (resultsCallback != null)
@@ -689,6 +711,8 @@ function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = n
 			}
 			else
 			{
+				debug('ajaxexec: 500');
+				
 				if (resultsId.length > 0)
 					$(resultsId).text('Server Error ' + this.status);
 			}
@@ -1049,4 +1073,48 @@ function translateOnWebsite(event, destination, text)
 	else // everything else goes to google
 		window.open("https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "");
 }
+
+_delaySearchId = 0;
+_lastSearchWord = '';
+function searchDefinitions(textId, resultsId)
+{
+	var debugOn = false;
+	
+	if (_delaySearchId != 0)
+	{
+		clearTimeout(_delaySearchId);
+		_delaySearchId = 0;
+	}
+
+	var searchText = $(textId).val().trim();
+	debug('search: ' + searchText, debugOn);
+
+	// try to limit the numbre of server calls
+	if (searchText.length > 1 && searchText == _lastSearchWord)
+	{
+		debug('search: not calling duplicate search: ' + _lastSearchWord, debugOn);
+		return;
+	}
+	
+	$(resultsId).html('');	
+
+	//if (searchText.length != 1) // don't use so we can see all the words that start with a letter
+	{		
+		_delaySearchId = setTimeout(function(){
+			debug('search server call on timer: ' + searchText, debugOn);
+			_lastSearchWord = searchText;
+			ajaxexec('/definitions/search-ajax/' + searchText + '', resultsId, false, searchDefinitionsCallack);}
+			, 500
+		);
+	}
+
+}
+
+function searchDefinitionsCallack()
+{
+	// update the results count
+	var count = $('#searchDefinitionsResultsTable tr').length;
+	$('#searchDefinitionsResultsCount').text(count);
+}
+
 

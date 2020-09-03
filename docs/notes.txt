@@ -1,3 +1,13 @@
+SELECT title, description as definition, examples FROM `words`
+where 1
+and title <> ''
+and title not like '%\_%'
+and title not like '%?%'
+and type_flag = 4
+and vocab_list_id <> 21
+group by title, description, examples
+ORDER by title
+limit 2000
 
 SAMPLES
 -------

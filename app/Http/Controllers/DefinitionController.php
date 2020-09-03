@@ -27,7 +27,7 @@ class DefinitionController extends Controller
 	{
         $this->middleware('is_admin')->except([
 			'index', 'view', 'find', 'search', 'conjugationsGen', 
-			'getAjax', 'translateAjax', 'conjugationsGenAjax', 'conjugationsComponentAjax', 'wordExistsAjax',
+			'getAjax', 'translateAjax', 'conjugationsGenAjax', 'conjugationsComponentAjax', 'wordExistsAjax', 'searchAjax',
 			]);
 
 		$this->prefix = PREFIX;
@@ -61,12 +61,38 @@ class DefinitionController extends Controller
 			'records' => $records,
 		]));
     }
+
+    public function searchAjax(Request $request, $text = null)
+    {
+		$text = Tools::getOrSetString(Tools::alpha($text), null);
+
+		try
+		{
+			$records = Definition::searchPartial($text);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting ' . $this->title . ' list';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return view(PREFIX . '.component-search-results', $this->getViewData([
+			'records' => $records,
+			//'isAdmin' => Tools::isAdmin(),
+		]));
+	}
 	
     public function search(Request $request, $sort = null)
     {
 		$sort = intval($sort);
+		$search = '';
 		
-		$isPost = $request->isMethod('post');		
+		if ($request->isMethod('post'))
+		{
+			// search
+			
+		}
 		
 		// check if a previous sort was used 
 		if ($sort === 0)
@@ -89,6 +115,7 @@ class DefinitionController extends Controller
 
 		return view(PREFIX . '.search', $this->getViewData([
 			'records' => $records,
+			'search' => $search,
 		]));
     }
 		

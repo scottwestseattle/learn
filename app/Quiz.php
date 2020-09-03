@@ -144,11 +144,11 @@ class Quiz
 		return $quizNew;
 	}
 	
-	static private function formatButton($text, $id, $class)
+	static public function formatButton($text, $id, $class)
     {
 		$button = '<div><button id="'
             . $id
-            . '" onclick="checkAnswerFromButton(event)"'
+            . '" onclick="checkAnswerFromButtonClick(event)"'
             //. '" onclick="checkAnswerFromButton('
 		   // . $id . ')" class="btn btn-primary btn-quiz-mc3 '
 		    . ' class="btn btn-primary btn-quiz-mc3 '
@@ -161,7 +161,7 @@ class Quiz
 		return $button;
 	}	
 	
-	static private function getCommaSeparatedAnswers($text)
+	static public function getCommaSeparatedAnswers($text)
     {
 		$words = '';
 		$array = [];

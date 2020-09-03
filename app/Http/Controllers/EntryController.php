@@ -701,6 +701,7 @@ class EntryController extends Controller
 			'stats' => $stats,
 			'articleCount' => $articleCount,
 			'possibleVerbs' => $possibleVerbs,
+			'index' => $record->type_flag == ENTRY_TYPE_ARTICLE ? 'articles' : 'books',
 		]));
     }	
 	
