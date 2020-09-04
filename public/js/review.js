@@ -597,7 +597,7 @@ function loadData()
 		quiz.quizTextOverrideWrong = container.data('quiztext-override-wrong') + " (Alt+c)";
 		quiz.quizTextScoreChanged = container.data('quiztext-score-changed');
 		quiz.lessonId = container.data('lessonid');
-		quiz.touchPath = container.data('touchpath');
+		quiz.touchPath = ''; //turned off for the moment: container.data('touchpath');
 
 		i++;
     });
@@ -1248,13 +1248,15 @@ function accentFold (s)
 
 function touch(q)
 {
+	//debug('touching', true);
+	   
     // if it's a word, update it's last display time
     if (quiz.touchPath.length > 0) // if touchPath set
     {
         var path = '/' + quiz.touchPath + '/' + q.id;
         ajaxexec(path);
 
-        //alert('id: ' + q.id + ', word: ' + q.a);
+        debug('touch: id: ' + q.id + ', word: ' + q.a, true);
     }
 }
 

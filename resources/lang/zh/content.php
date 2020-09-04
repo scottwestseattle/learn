@@ -152,4 +152,10 @@ return [
 'I do not know' => '我不知道',
 'Reverse question and answer' => '反问与答',
 'Use definition instead of translation' => '使用定义而不是翻译',
+'End of Review' => '审查结束',
+'Start Review' => '开始审核',
+'Stop Review' => '停止审查',
+'Review was stopped.' => '审查已停止',
+'Latest Results' => '最新结果',
+'No review results yet' => '尚无评价结果',
 ];

@@ -152,4 +152,10 @@ return [
 'I do not know' => 'I do not know',
 'Reverse question and answer' => 'Reverse question and answer',
 'Use definition instead of translation' => 'Use definition instead of translation',
+'End of Review' => 'End of Review',
+'Start Review' => 'Start Review',
+'Stop Review' => 'Stop Review',
+'Review was stopped.' => 'Review was stopped.',
+'Latest Results' => 'Latest Results',
+'No review results yet' => 'No review results yet',
 ];

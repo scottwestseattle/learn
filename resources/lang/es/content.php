@@ -152,4 +152,10 @@ return [
 'I do not know' => 'No lo sé',
 'Reverse question and answer' => 'Invertir pregunta y respuesta',
 'Use definition instead of translation' => 'Usar definición en lugar de traducción',
+'End of Review' => 'Fin de la revisión',
+'Start Review' => 'Iniciar revisión',
+'Stop Review' => 'Detener revisión',
+'Review was stopped.' => 'Se detuvo la revisión.',
+'Latest Results' => 'Últimos resultados',
+'No review results yet' => 'Aún no hay resultados de revisión',
 ];

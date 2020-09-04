@@ -11,7 +11,7 @@
 	<div>
 	@if (isset($records))
 		@foreach($records as $record)			
-		<div class="drop-box-articles mb-4" style="padding:10px 10px 20px 15px;">
+		<div class="drop-box-ghost mb-4" style="padding:10px 10px 20px 15px;">
 			<div style="font-size:1.3em; font-weight:normal;">
 				<a href="/entries/{{$record->permalink}}">{{$record->title}}</a>
 			</div>

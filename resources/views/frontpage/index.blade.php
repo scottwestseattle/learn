@@ -28,7 +28,7 @@
 				<?php $count = 0; ?>
 				@foreach($articles as $record)
 				
-				<tr class="drop-box-articles" style="vertical-align:middle;">
+				<tr class="drop-box-ghost" style="vertical-align:middle;">
 					<td style="min-width:75px; font-size: 1.5em; padding:10px; color: white; background-color: #74b567; margin-bottom:10px;" >
 						<div style="margin:0; padding:0; line-height:100%;">
 							<div style="font-family:impact; font-size:1.7em; margin:10px 0 10px 0;">{{++$count}}</div>

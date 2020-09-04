@@ -10,17 +10,17 @@
 	
 	<div class="row row-course">
 		@foreach($public as $record)			
-		<div class="col-sm-4 col-course"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
+		<div class="col-sm-12 col-lg-6 col-xl-4 col-course"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
 			<div class="card card-course {{$record->getCardColor()}} truncate">
-			<a href="/{{$prefix}}/view/{{$record->id}}">
-				<div class="card-header">
-					<div>{{$record->title}}</div>
-					@component('components.data-sitename', ['isAdmin' => $isAdmin, 'siteId' => $record->site_id])@endcomponent
-				</div>
-				<div class="card-body">
-					<p class="card-text">{{$record->description}}</p>
-				</div>
-			</a>
+				<a href="/{{$prefix}}/view/{{$record->id}}">
+					<div class="card-header">
+						<div>{{$record->title}}</div>
+						@component('components.data-sitename', ['isAdmin' => $isAdmin, 'siteId' => $record->site_id])@endcomponent
+					</div>
+					<div class="card-body">
+						<p class="card-text">{{$record->description}}</p>
+					</div>
+				</a>
 			</div>
 		</div>
 		@endforeach
@@ -31,7 +31,7 @@
 	
 	<div class="row row-course">
 		@foreach($private as $record)			
-		<div class="col-sm-4 col-course"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
+		<div class="col-sm-12 col-lg-6 col-xl-4 col-course"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
 			<div class="card card-course {{$record->getCardColor()}} truncate">
 			<a href="/{{$prefix}}/view/{{$record->id}}">
 				<div class="card-header">

@@ -82,7 +82,7 @@
 
 	@if (isset($quizes))
 	<div class="mb-5">
-		<h3>@LANG('content.Latest Quiz Results')</h3>
+		<h3>@LANG('content.Latest Results')</h3>
 
 		<div class="">
 

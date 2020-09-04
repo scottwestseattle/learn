@@ -145,7 +145,7 @@
 
 		<div class="form-group">
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">@LANG('content.Check Typed Answer')</button>
-			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop Quiz')</button>
+			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop Review')</button>
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); showAnswerOptionButtons()" id="button-show-options">@LANG('content.Show Choices')</button>
 			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); showAnswer()" id="button-show-answer">@LANG('content.Show Answer')</button>
 			<div class="mt-2 ml-1">
@@ -205,7 +205,7 @@
 		</div>
 
 		<div class="btn-panel-bottom pb-2">
-			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Quiz')</button>
+			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Review')</button>
 			<a class="" role="" href="/{{$returnPath}}/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>			
 		</div>
 
@@ -239,9 +239,9 @@
 	<div id="panel-endofquiz" class="quiz-panel text-center">
 
 		<div class="quiz-panel-content">
-			<h1 class="" id="">@LANG('content.End of Quiz')</h1>
+			<h1 class="" id="">@LANG('content.End of Review')</h1>
 			<p id="panelEndofquizFinished">@LANG('content.All questions answered correctly.')</p>
-			<p id="panelEndofquizStopped">@LANG('content.Quiz was stopped.')</p>
+			<p id="panelEndofquizStopped">@LANG('content.Review was stopped.')</p>
 			<!-- span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-thumbs-up bright-blue-fg"></span -->
 			<img style="margin-bottom:20px;" width="100" src="/img/quiz-end.jpg" />
 			<h3>@LANG('content.Scores by Round')</h3>
