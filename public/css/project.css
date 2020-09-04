@@ -1017,6 +1017,11 @@ label.tiny {
 	margin-right: 10px;
 }
 
+.glyphReaderReturn {
+	font-size:18px;
+	color: #286090;
+}
+
 .glyphReaderMove {
 	font-size:2em;
 	display:inline-block;
@@ -1052,3 +1057,9 @@ td.icon {
 .submenu-view td.icon {
 	width: 40px;
 }
+
+.quizStats {
+	font-size:13px;
+	color:#4682b4; /* steelblue */
+}
+

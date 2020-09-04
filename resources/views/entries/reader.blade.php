@@ -49,11 +49,14 @@
 			<span class="glyphReader"><a onclick="event.preventDefault(); reload()" href=""><span id="button-repeat" class="glyphicon glyphicon-repeat"></span></a></span>
 			<span class="glyphReader"><a onclick="zoom(event, -3);" href=""><span class="glyphicon glyphicon-zoom-out"></span></a></span>
 			<span class="glyphReader"><a onclick="zoom(event, 3);" href=""><span class="glyphicon glyphicon-zoom-in"></span></a></span>				
-			<span class="glyphReader"><a onclick="setActiveTab(event, '#tab3', '.tab-body');" href=""><span class="glyphicon glyphicon-cog"></span></a></span>
+			<span class="glyphReader"><a onclick="toggleActiveTab(event, '#tab3', '#tab1', '.tab-body');" href=""><span class="glyphicon glyphicon-cog"></span></a></span>
 			@if (Auth::check())
-				<span class="glyphReader"><a onclick="setActiveTab(event, '#tab2', '.tab-body');" href=""><span class="glyphicon glyphicon-th-list"></span></a></span>
+				<span class="glyphReader"><a onclick="toggleActiveTab(event, '#tab2', '#tab1', '.tab-body');" href=""><span class="glyphicon glyphicon-th-list"></span></a></span>
 			@endif			
+			
+			@if (false)
 			<span class="glyphReader"><a onclick="setActiveTab(event, '#tab1', '.tab-body');" href=""><span class="glyphicon glyphicon-volume-up"></span></a></span>
+			@endif
 		</div>
 	</div>
 

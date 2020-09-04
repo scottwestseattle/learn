@@ -321,7 +321,7 @@ class VocabListController extends Controller
 			'canEdit' => true,
 			'quizText' => $quizText,
 			'isMc' => true,
-			'returnPath' => PREFIX . '/view',
+			'returnPath' => '/' .  PREFIX . '/view/' . $vocabList->id . '',
 			'touchPath' => 'words/touch',
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }

@@ -856,6 +856,21 @@ function setActiveTab(event, tabIdShow, tabBodyClass, tabLinkClass = null)
 	}
 }
 
+function toggleActiveTab(event, tabIdShow, tabIdMain, tabBodyClass)
+{
+	event.preventDefault();
+
+	var idShow = tabIdShow;
+	
+	// if the target is already visible, then toggle to main tab	
+	if ($(tabIdShow).is(':visible')) 
+		idShow = tabIdMain;
+
+	$(tabBodyClass).hide();	// hide all tabs
+	$(idShow).show();		// show the indicated tab
+}
+
+
 function saveAndStay()
 {
 	alert('Not implemented yet');

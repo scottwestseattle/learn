@@ -58,8 +58,11 @@
 		<!-------------------------------------------------------->
 		<!-- Run-time Stats -->
 		<!-------------------------------------------------------->
-		<div style="font-size:.9em;" id="stats">
-			<span id="statsCount"></span>&nbsp;&nbsp;&nbsp;<span id="statsScore"></span>&nbsp;&nbsp;<span id="statsAlert"></span>
+		<div id="stats">
+			<div class="middle mt-1 mr-1"><a href="{{$returnPath}}"><span class="glyphicon glyphReaderReturn glyphicon-circle-arrow-up"></span></a></div>
+			<span id="statsCount" class="mr-2"></span>
+			<span id="statsScore"></span>
+			<span id="statsAlert"></span><!-- what is this? -->
 		</div>
 
 	</div>

@@ -52,15 +52,19 @@
 		<!-- Top Return Button -->
 		<!-------------------------------------------------------->
 		<div style="float:left; margin: 0 5px 0 0;">
-			<span style="font-size:1.3em;" class=""><a class="" role="" href="/{{$returnPath}}/{{$record->id}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
+			<span style="font-size:1.3em;" class=""><a class="" role="" href="{{$returnPath}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
 		</div>
 
 		<!-------------------------------------------------------->
 		<!-- Run-time Stats -->
-		<!-------------------------------------------------------->
-		<div style="font-size:.9em;" id="stats">
-			<span id="statsCount"></span>&nbsp;&nbsp;&nbsp;<span id="statsScore"></span>&nbsp;&nbsp;<span id="statsAlert"></span>
+		<!-------------------------------------------------------->		
+		<div id="stats">
+			<div class="middle mt-1 mr-1"><a href="{{$returnPath}}"><span class="glyphicon glyphReaderReturn glyphicon-circle-arrow-up"></span></a></div>
+			<span id="statsCount" class="mr-2"></span>
+			<span id="statsScore"></span>
+			<span id="statsAlert"></span><!-- what is this? -->
 		</div>
+		
 
 	</div>
 
@@ -206,7 +210,7 @@
 
 		<div class="btn-panel-bottom pb-2">
 			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Review')</button>
-			<a class="" role="" href="/{{$returnPath}}/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>			
+			<a class="" role="" href="{{$returnPath}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>			
 		</div>
 
 	</div>
@@ -251,7 +255,7 @@
 
 		<div class="btn-panel-bottom pb-2">
 			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); startQuiz();" id="button-continue2">@LANG('content.Continue')</button>
-			<a class="" role="" href="/{{$returnPath}}/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>
+			<a class="" role="" href="{{$returnPath}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>
 		</div>
 
 	</div>
