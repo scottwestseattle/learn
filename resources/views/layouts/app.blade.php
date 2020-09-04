@@ -64,7 +64,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 					@if (defined('LOG_MODEL_COURSES') && App\Tools::siteUses(LOG_MODEL_COURSES))
 						<li class="nav-item"><a class="nav-link" href="/courses">@LANG('content.Courses')</a></li>
 					@endif
-					@if (defined('LOG_MODEL_BOOKS') && App\Tools::siteUses(LOG_MODEL_BOOKS))
+					@if ($isAdmin && defined('LOG_MODEL_BOOKS') && App\Tools::siteUses(LOG_MODEL_BOOKS))
 						<li class="nav-item"><a class="nav-link" href="/books">@LANG('ui.Books')</a></li>
 					@endif
 

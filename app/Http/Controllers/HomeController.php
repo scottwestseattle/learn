@@ -70,6 +70,13 @@ class HomeController extends Controller
 	//
 	// word of the day
 	//
+	// this is the main function used in the cron
+	// cron settings: 
+	// Minute: 0
+	// Hour: 7,19
+	// Day/Month/Weekday: *
+	// Command: wget https://learnfast.xyz/send/email
+	//
     public function wod()
     {
 		$users = User::getIndex();
