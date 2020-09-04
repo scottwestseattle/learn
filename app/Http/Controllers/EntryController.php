@@ -161,7 +161,7 @@ class EntryController extends Controller
 	
     public function index($type_flag = null)
     {				
-		$entries = $this->getEntriesByType($type_flag, false, 0, null, false, ORDERBY_DATE);
+		$entries = Entry::getEntriesByType($type_flag, false, 0, null, false, ORDERBY_DATE);
 
 		$vdata = $this->getViewData([
 			'records' => $entries,
@@ -249,10 +249,10 @@ class EntryController extends Controller
     {		
 		$entry = Entry::get($permalink);
 		
-		return $this->getView($entry);
+		return $this->getView($entry, $permalink);
 	}
 	
-    private function getView(Entry $record)
+    private function getView($record, $permalink)
     {
 		$next = null;
 		$prev = null;

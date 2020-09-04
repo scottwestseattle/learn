@@ -93,9 +93,9 @@ Route::group(['prefix' => 'definitions'], function () {
 Route::group(['prefix' => 'entries'], function () {
 	
 	// misc
-	Route::get('/', 'EntryController@index');
-	Route::get('/index/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
-	Route::get('/show/{id}', 'EntryController@show');
+//old	Route::get('/', 'EntryController@index');
+//old	Route::get('/index/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
+//old	Route::get('/show/{id}', 'EntryController@show');
 	Route::get('/read/{entry}', 'EntryController@read');
 	Route::get('/stats/{entry}', 'EntryController@stats');
 	Route::get('/superstats', 'EntryController@superstats');
@@ -123,7 +123,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');	
 	
 	// permalink catch alls
-	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);
+//old	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);
 	Route::get('/{permalink}', ['as' => 'entry.permalink', 'uses' => 'EntryController@permalink']);
 	Route::resource('entry', 'EntryController');		
 });
