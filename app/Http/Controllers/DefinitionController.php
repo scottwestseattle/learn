@@ -513,7 +513,7 @@ class DefinitionController extends Controller
 		{
 			// add the translation to our dictionary for next time
 			$translation = strtolower($rc['data']);
-			$def = Definition::add($text, $translation);
+			$def = Definition::add($text, /* definition = */ null, $translation);
 			
 			// when a user translates a word, add it to his definition list for the entry being read
 			Entry::addDefinitionUserStatic($entryId, $def);

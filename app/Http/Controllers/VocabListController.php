@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 
 use DB;
 use Auth;
-use App\User;
-use App\VocabList;
+use App\Definition;
 use App\Event;
 use App\Lesson;
-use App\Tools;
 use App\Status;
+use App\Tools;
+use App\User;
+use App\VocabList;
 use App\Word;
 
 define('PREFIX', 'vocab-lists');
@@ -136,6 +137,27 @@ class VocabListController extends Controller
 	public function view(VocabList $vocabList)
     {
         $record = $vocabList;
+
+		if (false) // one time code to export list words to the dictionary
+		{
+			foreach($record->words->where('deleted_flag', 0) as $r)
+			{
+				$def = Definition::search($r->title);
+				if (!isset($def))
+				{
+					$def = Definition::add($r->title, $r->description, /* translation = */ null, $r->examples);
+					//dump($r->title);
+					Event::logAdd(LOG_MODEL_DEFINITIONS, $r->title, $r->description, 0);
+				}
+				else
+				{
+					//dump('skipped: ' . $r->title);
+					Event::logAdd(LOG_MODEL_DEFINITIONS, 'skipped: ' . $r->title, $r->description, 0);
+				}
+			}
+		}
+		
+		//dd('done');
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
@@ -275,7 +297,6 @@ class VocabListController extends Controller
 	public function review(VocabList $vocabList, $reviewType = null)
     {
 		$quiz = self::makeQuiz($vocabList->words); // splits text into questions and answers
-		$quiz = Lesson::formatMc3($quiz, LESSONTYPE_QUIZ_MC3); // format the answers according to quiz type
 
 		$options = Tools::getOptionArray('font-size="150%"');
 
@@ -311,9 +332,13 @@ class VocabListController extends Controller
 		$cnt = 0;
 		foreach($records as $record)
 		{
-		    // flip the title and description so title will be the answer
-            $qna[$cnt]['q'] = $record->description;
-            $qna[$cnt]['a'] = $record->title;
+			$question = $record->title;
+			$definition = Tools::getOrSetString($record->description, $question . ': definition not set');
+			
+            $qna[$cnt]['q'] = $question;
+            $qna[$cnt]['a'] = $definition;
+            $qna[$cnt]['definition'] = 'false';
+            $qna[$cnt]['translation'] = '';
             $qna[$cnt]['id'] = $record->id;
             $qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
             $qna[$cnt]['options'] = '';

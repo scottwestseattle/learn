@@ -763,7 +763,7 @@ class Definition extends Base
 		return $record;
 	}
 	
-	static public function add($title, $definition, $examples = null)
+	static public function add($title, $definition, $translation, $examples = null)
 	{
 		$title = mb_strtolower($title);
 	
@@ -772,10 +772,11 @@ class Definition extends Base
 		$record->user_id 		= Auth::id(); // null is ok
 		$record->title 			= $title;
 		$record->forms 			= $title;
-		$record->translation_en = $definition;
+		$record->definition		= $definition;
+		$record->translation_en = $translation;
+		$record->examples		= $examples;
 		$record->language_id	= LANGUAGE_SPANISH;
 		$record->permalink		= Tools::createPermalink($title);
-		$record->examples		= $examples;
 		
 		try
 		{

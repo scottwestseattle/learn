@@ -104,7 +104,6 @@ class EntryController extends Controller
 		$record = $entry;
 	
 		$qna = self::makeQna($record->definitions); // splits text into questions and answers
-		//$qna = Quiz::makeReviewQuiz($qna);			// format the answers according to quiz type
 
 		$options = Tools::getOptionArray('font-size="150%"');
 
@@ -140,7 +139,6 @@ class EntryController extends Controller
 		$cnt = 0;
 		foreach($records as $record)
 		{
-		    // flip the title and description so title will be the answer
 			$question = $record->title;
 			$translation = Tools::getOrSetString($record->translation_en, $question . ': translation not set');
 			$definition = Tools::getOrSetString($record->definition, $question . ': definition not set');

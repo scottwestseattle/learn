@@ -1,4 +1,4 @@
-@extends('layouts.quiz')
+@extends('layouts.review')
 
 @section('content')
 
@@ -34,6 +34,7 @@
 	<div class="data-qna"
 	    data-question="{{$rec['q']}}"
 	    data-answer="{{$rec['a']}}"
+	    data-definition="{{$rec['definition']}}"
 	    data-options="{{$rec['options']}}"
 	    data-id="{{$rec['id']}}"
 	    data-ix="{{$rec['ix']}}" >
@@ -119,8 +120,14 @@
 		<!-------------------------------------------------------->
 		<!-- ANSWER OPTION BUTTONS  -->
 		<!-------------------------------------------------------->
-		<div style="width:100%; min-height:300px;" id="optionButtons"></div>
-
+		<div style="width:100%;" id="optionButtons">
+			<div><button id="0" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="1" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="2" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="3" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="4" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+		</div>
+		
 		</fieldset>
 
 	<!----------------------------------------------------------------------------->
@@ -129,7 +136,7 @@
 
 		<!-- BUTTONS ROW 1 -->
 
-		<div class="btn-panel-bottom">
+		<div class="btn-panel-bottom pb-2">
 			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); nextAttempt()" id="button-next-attempt">@LANG('Next')</button>
 			<input class="btn btn-default btn-quiz " type="button" value="@LANG('content.I KNOW IT') (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
 			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.I DONT KNOW') (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
@@ -141,9 +148,13 @@
 			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop Quiz')</button>
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); showAnswerOptionButtons()" id="button-show-options">@LANG('content.Show Choices')</button>
 			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); showAnswer()" id="button-show-answer">@LANG('content.Show Answer')</button>
+			<div class="mt-2 ml-1">
+				<input type="checkbox" name="checkbox-hide-options" id="checkbox-hide-options" onclick="displayAnswerButtons()" />
+				<label for="checkbox-hide-options" class="checkbox-xs" onclick="displayAnswerButtons()">@LANG('content.Hide choices before answering')</label>
+			</div>
 			<div class="mt-1 ml-1">
-				<input type="checkbox" name="checkbox-hide-options" id="checkbox-hide-options" onclick="hideOptionsClick()" />
-				<label for="checkbox-hide-options" class="checkbox-xs" onclick="hideOptionsClick()">@LANG('content.Hide choices before answering')</label>
+				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="reloadQuestion();" />
+				<label for="checkbox-flip" class="checkbox-xs" onclick="reloadQuestion();">@LANG('content.Reverse question and answer')</label>
 			</div>
 		</div>
 
@@ -193,9 +204,9 @@
 			<h1 id="panelStartCount"></h1>
 		</div>
 
-		<div class="btn-panel-bottom">
+		<div class="btn-panel-bottom pb-2">
 			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); quiz.start()" id="button-start">@LANG('content.Start Quiz')</button>
-			<a class="" role="" href="/{{$returnPath}}/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>
+			<a class="" role="" href="/{{$returnPath}}/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>			
 		</div>
 
 	</div>
@@ -215,7 +226,7 @@
 			<h3 id="panelResultsPercent"></h3>
 		</div>
 
-		<div class="btn-panel-bottom">
+		<div class="btn-panel-bottom pb-2">
 			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); continueQuiz()" id="button-continue">@LANG('content.Continue')</button>
 			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('ui.Quit')</button>
 		</div>
@@ -238,7 +249,7 @@
 			<span id="rounds"></span>
 		</div>
 
-		<div class="btn-panel-bottom">
+		<div class="btn-panel-bottom pb-2">
 			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); startQuiz();" id="button-continue2">@LANG('content.Continue')</button>
 			<a class="" role="" href="/{{$returnPath}}/{{$record->id}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>
 		</div>

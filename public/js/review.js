@@ -339,6 +339,7 @@ function quiz() {
 		var a = getAnswer();
 		var currIndex = quiz.qna[curr].order;
 		var currQuestion = quiz.qna[currIndex];
+		var debugOn = false;
 
 		// show question
 		$("#prompt").html(q);
@@ -389,7 +390,7 @@ function quiz() {
 			answers[correctButton] = currIndex;
 		}
 
-		if (false)
+		if (debugOn)
 		{
 			console.log('choices: ' + choices);
 			console.log('currIndex: ' + currIndex);
@@ -977,7 +978,7 @@ function checkAnswerFromButton(id, showOnly = false)
 		//alert(answer);
 		var timerSeconds = 2;
 		if (!checkAnswer(CHECKANSWER_FROMBUTTON, correctButtonClicked, showOnly))
-		    timerSeconds *= 2; // add extra time for wrong answer
+		    timerSeconds *= 1; // optional: add extra time for wrong answer, make more than 1
 
 		// load next question on a timer
 		nextAttemptTimer = setTimeout(nextAttempt, timerSeconds * 1000 /* make it milliseconds */);
