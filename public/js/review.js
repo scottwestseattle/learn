@@ -107,6 +107,7 @@ function quiz() {
 	this.quizTextOf = 'not set';
 	this.quizTextQuestion = 'not set';
 	this.quizTextCorrectAnswer = 'not set'; // Correct! <- separate for the exclamations in Spanish
+	this.quizTextMarkedWrong = 'not set';
 	this.quizTextWrongAnswer = 'not set';	// Wrong!
 	this.quizTextOverrideCorrect = 'not set';
 	this.quizTextOverrideWrong = 'not set';
@@ -592,6 +593,7 @@ function loadData()
 		quiz.quizTextOf = container.data('quiztext-of');
 		quiz.quizTextQuestion = container.data('quiztext-question');
 		quiz.quizTextCorrectAnswer = container.data('quiztext-correct-answer');
+		quiz.quizTextMarkedWrong =  container.data('quiztext-marked-wrong');
 		quiz.quizTextWrongAnswer = container.data('quiztext-wrong-answer');
 		quiz.quizTextOverrideCorrect = container.data('quiztext-override-correct') + " (Alt+c)";
 		quiz.quizTextOverrideWrong = container.data('quiztext-override-wrong') + " (Alt+c)";
@@ -1050,7 +1052,7 @@ function checkAnswer(checkOptions, correctButtonClicked = false, showOnly = fals
 		{
 			if (showOnly)
 			{
-				result = "Answer marked as wrong";
+				result = quiz.quizTextMarkedWrong;
 				answerColor = 'purple';
 				quiz.qna[quiz.qna[curr].order].correct = false;
 				
@@ -1131,7 +1133,7 @@ function updateScore()
 	var percent = total > 0 ? (right / total) * 100 : 0;
 	percent = percent.toFixed(2).replace(/\.?0*$/,'');
 
-	$("#statsCount").html("<span class='quizStats'>" + quiz.quizTextQuestion + " " + nbr + " of " + statsMax + ",</span>");
+	$("#statsCount").html("<span class='quizStats'>" + quiz.quizTextQuestion + " " + nbr + " " + quiz.quizTextOf + " " + statsMax + ",</span>");
 	$("#statsScore").html("<span class='quizStats'>" + quiz.quizTextCorrect + ": " + right + "/" + total + " (" + percent + "%)</span>");
 	$("#statsDebug").html("<span class='quizStats'>"
 		+ "round=" + round

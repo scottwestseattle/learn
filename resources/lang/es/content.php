@@ -120,7 +120,7 @@ return [
 'Score' => 'Puntuación',
 'No quiz results yet' => 'Aún no hay resultados de practicas',
 'Latest Vocabulary' => 'Nuevo Vocabulario',
-'Site Title Spanish' => 'Título del sitio',
+'Site Title Spanish' => 'Aprende español en 50 lecciones',
 'From' => 'De',
 'To' => 'A',
 'Word of the Day' => 'Palabra del día',
@@ -158,4 +158,5 @@ return [
 'Review was stopped.' => 'Se detuvo la revisión.',
 'Latest Results' => 'Últimos resultados',
 'No review results yet' => 'Aún no hay resultados de revisión',
+'Answer marked as wrong' => 'Respuesta marcada como incorrecta',
 ];

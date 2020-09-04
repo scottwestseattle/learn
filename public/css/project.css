@@ -154,6 +154,35 @@ h1,h3 {
 	color: white;
 }
 
+.green {
+	color:green;
+}
+
+.teal {
+	color:teal;
+}
+
+.white {
+	color:white;
+}
+
+.gold {
+	color:gold;
+}
+
+.steelblue {
+	color:#4682b4;
+}
+
+.mediumgray {
+	color:#989898;
+}
+
+.danger {
+	color:red;
+}
+
+
 .fpheader {
     padding: 2rem 1rem;
     margin-bottom: 2rem;
@@ -866,23 +895,6 @@ h1,h3 {
 .small-thin-hdr {
 	font-size:12px;
 	font-weight:bold;
-}
-
-.green {
-	color:green;
-}
-.teal {
-	color:teal;
-}
-.steelblue {
-	color:#4682b4;
-}
-.mediumgray {
-	color:#989898;
-}
-
-.danger {
-	color:red;
 }
 
 td.article-extra {

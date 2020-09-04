@@ -41,8 +41,15 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
 
-			<div class="mr-2"><a class="" role="" href="/home"><span style="color:white;" class="glyphicon glyphicon-home"></span></a></div>
-			<div {{$isAdmin ? '' : 'hidden'}} class="ml-2 mr-2"><a class="" role="" href="/admin"><span style="color:white;" class="glyphicon glyphicon-cog"></span></a></div>
+			@guest
+			@else
+				@if ($isAdmin)
+					<div class="mr-2"><a href="/admin"><span class="glyphicon glyphicon-user gold"></span></a></div>
+				@else
+					<div class="mr-2"><a href="/admin"><span class="glyphicon glyphicon-user white"></span></a></div>
+				@endif
+			@endguest
+						
 			<div class="ml-2 mr-2"><a href="/search"><span style="color:white;" class="glyphicon glyphicon-search"></span></a></div>
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"

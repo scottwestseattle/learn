@@ -13,13 +13,12 @@
 	data-quiztext-round="@LANG('content.Round')"
 	data-quiztext-correct="@LANG('content.Correct')"
 	data-quiztext-question="@LANG('content.Question')"
-	data-quiztext-correct-answer="@LANG('content.Correct!')"
-	data-quiztext-wrong-answer="@LANG('content.Wrong!')"
 	data-quiztype="{{$record->type_flag}}"
 	data-ismc="{{$isMc}}"
-	data-quiztext-of="@LANG('content.' . $quizText['of'])"
+	data-quiztext-of="@LANG('content.of')"
 	data-quiztext-correct-answer="@LANG('content.Correct!')"
 	data-quiztext-wrong-answer="@LANG('content.Wrong!')"
+	data-quiztext-marked-wrong="@LANG('content.Answer marked as wrong')"	
 	data-quiztext-override-correct="@LANG('content.Change to Correct')"
 	data-quiztext-override-wrong="@LANG('content.Change to Wrong')"
 	data-quiztext-score-changed="@LANG('content.Score Changed')"
@@ -140,7 +139,7 @@
 		<!-- BUTTONS ROW 1 -->
 
 		<div class="btn-panel-bottom pb-2">
-			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); nextAttempt()" id="button-next-attempt">@LANG('Next')</button>
+			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); nextAttempt()" id="button-next-attempt">@LANG('ui.Next')</button>
 			<input class="btn btn-default btn-quiz " type="button" value="@LANG('content.I KNOW IT') (Alt+k)" onclick="checkAnswer(2)" id="button-know" style="display: default; background-color: green; color: white;">
 			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.I DONT KNOW') (Alt+d)" onclick="checkAnswer(3)" id="button-dont-know" style="display: none; background-color: red; color: white;">
 			<input class="btn btn-default btn-quiz" type="button" value="@LANG('content.Change to Wrong') (Alt+c)" onclick="override()" id="button-override" style="display: none;">

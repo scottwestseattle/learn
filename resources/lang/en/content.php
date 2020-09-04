@@ -120,7 +120,7 @@ return [
 'Score' => 'Score',
 'No quiz results yet' => 'No quiz results yet',
 'Latest Vocabulary' => 'Latest Vocabulary',
-'Site Title Spanish' => 'Site Title',
+'Site Title Spanish' => 'Learn Spanish in 50 Lessons',
 'From' => 'From',
 'To' => 'To',
 'Word of the Day' => 'Word of the Day',
@@ -158,4 +158,5 @@ return [
 'Review was stopped.' => 'Review was stopped.',
 'Latest Results' => 'Latest Results',
 'No review results yet' => 'No review results yet',
+'Answer marked as wrong' => 'Answer marked as wrong',
 ];
