@@ -30,11 +30,13 @@
 
 	<!-- Show the record -->
 	@if (isset($record))
-		
-	
-	<div style="mt-3">
+
+	<div>
 		<h3>
-			{{$record->title}}@component('components.badge', ['text' => $record->view_count])@endcomponent
+			<div class="middle">
+				<div class="float-left">{{$record->title}}@component('components.badge', ['text' => $record->view_count])@endcomponent</div>
+				@component($prefix . '.component-search-toolbar', ['isAdmin' => $isAdmin, 'record' => $record, 'id' => 1])@endcomponent
+			</div>
 
 			@if (App\User::isSuperAdmin())
 				@if ($canConjugate)

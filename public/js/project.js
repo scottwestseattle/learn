@@ -1162,11 +1162,11 @@ function toggleWip(event, recordId, resultsId)
 	if ($(target).hasClass('glyphicon-ok-circle'))
 	{
 		$(target).removeClass('glyphicon-ok-circle');
-		$(target).addClass('glyphicon-remove-circle');
+		$(target).addClass('glyphicon-remove-sign');
 	}
 	else
 	{
-		$(target).removeClass('remove-circle');
+		$(target).removeClass('glyphicon-remove-sign');
 		$(target).addClass('glyphicon-ok-circle');
 	}
 }

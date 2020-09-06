@@ -932,7 +932,6 @@ class DefinitionController extends Controller
 	
 	public function toggleWipAjax(Request $request, Definition $definition, $done = true)
     {
-		$rc = '';
 		$record = $definition;
 
 		$rc = $record->toggleWip();
@@ -941,7 +940,8 @@ class DefinitionController extends Controller
 		
 		Event::logInfo(LOG_MODEL, LOG_ACTION_EDIT, $msg);
 
-		$rc = $msg;
+		//$rc = $msg;
+		$rc = '';
 
 		return $rc;
     }

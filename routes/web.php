@@ -33,6 +33,7 @@ Route::get('/sample/', 'FrontPageController@sample');
 Route::get('/authenticated', 'HomeController@authenticated');
 Route::get('/articles', 'EntryController@articles');
 Route::get('/books', 'EntryController@books');
+Route::get('/lists', 'VocabListController@index');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
