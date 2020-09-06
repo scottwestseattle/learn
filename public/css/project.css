@@ -158,6 +158,10 @@ h1,h3 {
 	color:green;
 }
 
+.red {
+	color:red;
+}
+
 .teal {
 	color:teal;
 }
@@ -1017,6 +1021,16 @@ label.tiny {
 .glyphCustom-sm {
 	margin:0 5px;
 	font-size: 14px;
+	color: #286090;
+}
+
+.glyphCustom-md {
+	font-size: 16px;
+	color: #286090;
+}
+
+.glyphCustom-lg {
+	font-size: 19px;
 	color: #286090;
 }
 

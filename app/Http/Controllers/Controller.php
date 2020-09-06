@@ -50,27 +50,27 @@ define('LOG_MODEL_WORDS', 'words');
 
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');
-define('LOG_ACTION_EDIT', 'edit');
 define('LOG_ACTION_DELETE', 'delete');
-define('LOG_ACTION_VIEW', 'view');
-define('LOG_ACTION_SELECT', 'select');
-define('LOG_ACTION_MOVE', 'move');
-define('LOG_ACTION_UPLOAD', 'upload');
-define('LOG_ACTION_MKDIR', 'mkdir');
-define('LOG_ACTION_SCANDIR', 'scandir');
-define('LOG_ACTION_INDEX', 'index');
-define('LOG_ACTION_PERMALINK', 'permalink');
-define('LOG_ACTION_UNDELETE', 'undelete');
-define('LOG_ACTION_PUBLISH', 'publish');
-define('LOG_ACTION_LOGIN', 'login');
-define('LOG_ACTION_LOGOUT', 'logout');
-define('LOG_ACTION_QUIZ', 'quiz');
-define('LOG_ACTION_SEARCH', 'search');
+define('LOG_ACTION_EDIT', 'edit');
 define('LOG_ACTION_EMAIL', 'email');
 define('LOG_ACTION_IMPORT', 'import');
+define('LOG_ACTION_INDEX', 'index');
+define('LOG_ACTION_LOGIN', 'login');
+define('LOG_ACTION_LOGOUT', 'logout');
+define('LOG_ACTION_MOVE', 'move');
+define('LOG_ACTION_MKDIR', 'mkdir');
+define('LOG_ACTION_OTHER', 'other');
+define('LOG_ACTION_PERMALINK', 'permalink');
+define('LOG_ACTION_PUBLISH', 'publish');
+define('LOG_ACTION_QUIZ', 'quiz');
+define('LOG_ACTION_SCANDIR', 'scandir');
+define('LOG_ACTION_SEARCH', 'search');
+define('LOG_ACTION_SELECT', 'select');
 define('LOG_ACTION_TOUCH', 'touch');
 define('LOG_ACTION_TRANSLATE', 'translate');
-define('LOG_ACTION_OTHER', 'other');
+define('LOG_ACTION_UNDELETE', 'undelete');
+define('LOG_ACTION_UPLOAD', 'upload');
+define('LOG_ACTION_VIEW', 'view');
 
 define('LOG_PAGE_INDEX', 'index');
 define('LOG_PAGE_VIEW', 'view');
@@ -95,6 +95,14 @@ define('WIP_DEV', 20);
 define('WIP_TEST', 30);
 define('WIP_FINISHED', 100);
 define('WIP_DEFAULT', WIP_DEV);
+
+// Part of Speech flag
+define('POS_NOTSET', 0);
+define('POS_VERB', 1);
+define('POS_NOUN', 2);
+define('POS_ADJECTIVE', 3);
+define('POS_ADVERB', 4);
+define('POS_OTHER', 20);
 
 // word types
 define('WORDTYPE_LESSONLIST', 1);

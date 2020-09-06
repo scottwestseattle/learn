@@ -64,6 +64,8 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/wordexists/{text}', 'DefinitionController@wordExistsAjax');
 	Route::get('/get/{text}/{entryId?}','DefinitionController@getAjax');
 	Route::get('/translate/{text}/{entryId?}','DefinitionController@translateAjax');
+	Route::get('/heart/{definition}','DefinitionController@heartAjax');
+	Route::get('/unheart/{definition}','DefinitionController@unheartAjax');
 	
 	// search
 	Route::get('/search/{sort?}', 'DefinitionController@search');

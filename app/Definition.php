@@ -33,42 +33,58 @@ class Definition extends Base
 	
     public function tags()
     {
-		return $this->belongsToMany('App\Tag');
+		return $this->belongsToMany('App\Tag')->wherePivot('user_id', Auth::id());
     }	
 
     public function addTagUser($name)
     {
+		$tag = null;
+		
 		if (Auth::check())
 		{
-			$this->addTag($name, Auth::id());
+			$tag = $this->addTag($name, Auth::id());
 		}
+		
+		return $tag;
 	}
 	
     public function addTag($name, $userId = null)
     {
 		$tag = Tag::getOrCreate($name);
+		
 		if (isset($tag))
 		{
 			$this->tags()->detach($tag->id); // if it's already tagged, remove it so it will by updated
 			$this->tags()->attach($tag->id, ['user_id' => $userId]);
 		}
+		
+		return $tag;
     }
 
     public function removeTagUser($name)
     {
+		$rc = false;
+		
 		if (Auth::check())
 		{
-			$this->removeTag($name);
+			$rc = $this->removeTag($name);
 		}
+		
+		return $rc;
 	}
 
     public function removeTag($name)
     {
+		$rc = false;
+		
 		$tag = Tag::get($name);
 		if (isset($tag))
 		{
 			$this->tags()->detach($tag->id);
+			$rc = true;
 		}
+		
+		return $rc;
     }
 	
     static public function getIndex($sort = null, $limit = PHP_INT_MAX)
@@ -127,8 +143,13 @@ class Definition extends Base
 			else if ($sort == 7)
 			{
 				$records = Definition::select()
-					->whereNull('deleted_at')					
-					->whereNotNull('conjugations')
+					->whereNull('deleted_at')
+					->where('wip_flag', '<', WIP_FINISHED)
+					->where(function ($query) {$query
+						->where('title', 'like', '%ar')
+						->orWhere('title', 'like', '%er')
+						->orWhere('title', 'like', '%ir')
+						;})
 					->where(function ($query) {$query
 						->whereNull('conjugations_search')
 						->orWhereRaw('LENGTH(conjugations) < 50')

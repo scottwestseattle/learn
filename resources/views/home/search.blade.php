@@ -42,7 +42,7 @@
 								<td>@LANG('content.Vocabulary')</td>
 								<td>
 								    <a href="/words/view/{{$record->id}}" target="_blank">{{$record->title}}</a>
-								    &nbsp;(<a href="/vocab-lists/view/{{$record->vocab_list_id}}" target="_blank">parent</a>)
+								    &nbsp;(<a href="/vocab-lists/view/{{$record->vocab_list_id}}" target="_blank">@LANG('content.List')</a>)
 								</td>
 							@else
 								<td>@LANG('content.Vocabulary')</td>

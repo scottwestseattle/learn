@@ -30,6 +30,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
     <!-- Custom styles for this template -->
     <link href="/css/project.css" rel="stylesheet">
+    <link href="/css/glyphicons.css" rel="stylesheet">
     <link href="/css/glyphicons-short.css" rel="stylesheet">
 
 </head>

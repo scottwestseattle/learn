@@ -20,6 +20,17 @@ var isMobile = {
     }
 };
 
+function debug(msg, debugOn)
+{
+	if (debugOn)
+		console.log(msg);
+}
+
+function d(msg)
+{
+	console.log(msg);
+}
+
 function clipboardCopy(event, idFlash, id)
 {
 	event.preventDefault();
@@ -642,12 +653,6 @@ function onCategoryChange(id)
 	xhttp.send();
 }
 
-function debug(msg, debugOn)
-{
-	if (debugOn)
-		console.log(msg);
-}
-
 function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = null)
 {
 	var xhttp = new XMLHttpRequest();
@@ -680,21 +685,17 @@ function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = n
 					//$(resultsId).text('definition: ' + this.responseText);
 					if (this.responseText.startsWith('<'))
 					{
-						debug('ajaxexec: html returned', debugOn);
-						//debug(this.responseText, debugOn);
-						
+						debug('ajaxexec: html returned', debugOn);						
 						$(resultsId).html(this.responseText);
 					}
 					else if (resultsInput) // put results in an input
 					{
-						debug('ajaxexec: text for input returned');
-						
+						debug('ajaxexec: text for input returned', debugOn);
 						$(resultsId).val(this.responseText);
 					}
 					else
 					{
 						debug('ajaxexec: text returned', debugOn);
-						
 						$(resultsId).text(this.responseText);
 						$(resultsId).css('color', '#a37800');
 					}
@@ -1132,4 +1133,24 @@ function searchDefinitionsCallack()
 	$('#searchDefinitionsResultsCount').text(count);
 }
 
+function heartDefinition(event, recordId, resultsId)
+{
+	event.preventDefault();	
+	
+	var target = '#' + event.target.id;
+	if ($(target).hasClass('glyphicon-heart-empty'))
+	{
+		// heart it
+		ajaxexec('/definitions/heart/' + recordId + '', resultsId);
+		$(target).removeClass('glyphicon-heart-empty');
+		$(target).addClass('glyphicon-heart');
+	}
+	else
+	{
+		// unheart it
+		ajaxexec('/definitions/unheart/' + recordId + '', resultsId);
+		$(target).removeClass('glyphicon-heart');
+		$(target).addClass('glyphicon-heart-empty');
+	}
+}
 

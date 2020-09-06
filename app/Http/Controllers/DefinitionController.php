@@ -27,7 +27,9 @@ class DefinitionController extends Controller
 	{
         $this->middleware('is_admin')->except([
 			'index', 'view', 'find', 'search', 'conjugationsGen', 
-			'getAjax', 'translateAjax', 'conjugationsGenAjax', 'conjugationsComponentAjax', 'wordExistsAjax', 'searchAjax',
+			'getAjax', 'translateAjax', 'wordExistsAjax', 'searchAjax',
+			'conjugationsGenAjax', 'conjugationsComponentAjax', 
+			'heartAjax', 'unheartAjax',
 			]);
 
 		$this->prefix = PREFIX;
@@ -227,6 +229,7 @@ class DefinitionController extends Controller
 		$record->translation_es	= $request->translation_es;
 		$record->examples		= $request->examples;
 		$record->permalink		= Tools::createPermalink($request->title);
+		$record->wip_flag		= WIP_DEFAULT;
 
 		try
 		{
@@ -329,6 +332,7 @@ class DefinitionController extends Controller
 		$record->translation_en = Tools::copyDirty($record->translation_en, $request->translation_en, $isDirty, $changes);
 		$record->translation_es = Tools::copyDirty($record->translation_es, $request->translation_es, $isDirty, $changes);
 		$record->examples = Tools::copyDirty($record->examples, $request->examples, $isDirty, $changes);
+		//$record->wip_flag = Tools::copyDirty($record->wip_flag, $request->wip_flag, $isDirty, $changes);
 
 		$forms 	= Definition::formatForms($request->forms);
 		$record->forms = Tools::copyDirty($record->forms, $forms, $isDirty, $changes);
@@ -674,6 +678,7 @@ class DefinitionController extends Controller
 				$word->title 		= $record->title;
 				$word->definition	= $record->definition;
 				$word->permalink	= $record->permalink;
+				$word->wip_flag		= WIP_DEFAULT;
 
 				$rc = $this->saveAjax($request, $word);
 			}
@@ -872,4 +877,57 @@ class DefinitionController extends Controller
 
 		return $rc;
     }	
+	
+	public function heartAjax(Request $request, Definition $definition)
+    {
+		$record = $definition;
+        $rc = '';
+
+        if (Auth::check())
+        {
+			$tag = $record->addTagUser('hearts');
+            if (isset($tag))
+            {
+                $rc = '';
+            }
+            else
+            {
+                $rc = 'not hearted: update failed';
+            }
+        }
+        else
+        {
+			$rc = 'favorite not saved - you must log in';
+        }
+
+		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'heart ' . $record->title . ': ' . $rc);
+
+		return $rc;
+    }
+
+	public function unheartAjax(Request $request, Definition $definition)
+    {
+		$record = $definition;
+        $rc = '';
+
+        if (Auth::check())
+        {	
+			if ($record->removeTagUser('hearts'))
+            {
+                $rc = ''; // no msg means, no error
+            }
+            else
+            {
+                $rc = 'not unhearted: update failed';
+            }
+        }
+        else
+        {
+			$rc = 'favorite not removed - you must log in';
+        }
+
+		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'unheart ' . $record->title . ': ' . $rc);
+
+		return $rc;
+    }
 }
