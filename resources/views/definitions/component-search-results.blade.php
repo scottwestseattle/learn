@@ -4,21 +4,14 @@
 			<tbody>
 				@foreach($records as $record)
 				<tr>
-					@if ($isAdmin)
-						<td class="icon"><a href='/definitions/edit/{{$record->id}}'><span class="glyphCustom-md glyphicon glyphicon-edit"></span></a></td>
-					@endif
-					<?php $heart = (count($record->tags) > 0) ? 'heart' : 'heart-empty'; ?>
-					<td class="hidden-xs">
-						<a class="medium-thin-text" href="/definitions/view/{{$record->id}}">{{$record->title}}</a>
-						<div class="middle ml-2"><a href='' onclick="heartDefinition(event, {{$record->id}}, '#heartStatus-{{$record->id}}')"><span id="a{{$record->id}}" class="glyphCustom-md glyphicon glyphicon-{{$heart}}"></span></a></div>
-						<div id="heartStatus-{{$record->id}}" class="small-thin-text red"></div>
+					<td class="large-text hidden-xs">						
+						<a class="float-left" href="/definitions/view/{{$record->id}}">{{$record->title}}</a>
+						@component($prefix . '.component-search-toolbar', ['isAdmin' => $isAdmin, 'record' => $record, 'id' => 1])@endcomponent
 					</td>
 					<td>
 						<div class="large-text hidden-lg hidden-md hidden-sm">
-							<a href="/definitions/view/{{$record->id}}">{{$record->title}}</a>
-							
-							<div class="middle ml-2"><a href='' onclick="heartDefinition(event, {{$record->id}}, '#heartStatus2-{{$record->id}}')"><span id="b{{$record->id}}" class="glyphCustom-md glyphicon glyphicon-{{$heart}}"></span></a></div>
-							<div id="heartStatus2-{{$record->id}}" class="small-thin-text red"></div>							
+							<a class="float-left" href="/definitions/view/{{$record->id}}">{{$record->title}}</a>
+							@component($prefix . '.component-search-toolbar', ['isAdmin' => $isAdmin, 'record' => $record, 'id' => 2])@endcomponent
 						</div>
 						
 						@if (isset($record->definition))
@@ -51,9 +44,6 @@
 						@endif
 						
 					</td>
-					@if ($isAdmin)
-						<td><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
-					@endif
 				</tr>
 				@endforeach
 			</tbody>

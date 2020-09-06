@@ -537,7 +537,6 @@ class DefinitionController extends Controller
 			
 			if (Tools::isAdmin())
 				$rc .= "<div><a class='ml-3' target='_blank' href='/definitions/add/" . $text . "'>Add</a></div>";
-			
 		}
 		
 		return $rc;
@@ -927,6 +926,22 @@ class DefinitionController extends Controller
         }
 
 		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'unheart ' . $record->title . ': ' . $rc);
+
+		return $rc;
+    }
+	
+	public function toggleWipAjax(Request $request, Definition $definition, $done = true)
+    {
+		$rc = '';
+		$record = $definition;
+
+		$rc = $record->toggleWip();
+
+		$msg = 'set to ' . ($rc ? 'finished' : 'unfinished');
+		
+		Event::logInfo(LOG_MODEL, LOG_ACTION_EDIT, $msg);
+
+		$rc = $msg;
 
 		return $rc;
     }

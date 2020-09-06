@@ -1154,3 +1154,20 @@ function heartDefinition(event, recordId, resultsId)
 	}
 }
 
+function toggleWip(event, recordId, resultsId)
+{
+	event.preventDefault();	
+	ajaxexec('/definitions/toggle-wip/' + recordId + '', resultsId);
+	var target = '#' + event.target.id;
+	if ($(target).hasClass('glyphicon-ok-circle'))
+	{
+		$(target).removeClass('glyphicon-ok-circle');
+		$(target).addClass('glyphicon-remove-circle');
+	}
+	else
+	{
+		$(target).removeClass('remove-circle');
+		$(target).addClass('glyphicon-ok-circle');
+	}
+}
+

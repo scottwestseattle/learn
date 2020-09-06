@@ -1192,5 +1192,23 @@ class Definition extends Base
 		if (!$pretty) $rc = ';' . $rc;		
 		
 		return $rc;
-	}	
+	}
+
+    public function toggleWip()
+    {
+		if ($this->isFinished())
+			$this->wip_flag = WIP_DEFAULT;
+		else
+			$this->wip_flag = WIP_FINISHED;
+		
+		$this->save();
+		
+		return $this->isFinished();
+    }
+
+    public function isFinished()
+    {
+    	return ($this->wip_flag == WIP_FINISHED);
+    }
+
 }
