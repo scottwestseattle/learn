@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use App;
+use App\Definition;
 use App\Entry;
 use App\Event;
 use App\Geo;
@@ -98,15 +99,13 @@ class EntryController extends Controller
 			'record' => $record,
 		]));
     }
-
+	
     public function vocabularyReview(Request $request, Entry $entry)
     {
 		$record = $entry;
-	
-		$qna = self::makeQna($record->definitions); // splits text into questions and answers
+		$qna = Definition::makeQna($record->definitions); // splits text into questions and answers
 
 		$options = Tools::getOptionArray('font-size="150%"');
-
 		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
 		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
 		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
@@ -132,33 +131,7 @@ class EntryController extends Controller
 			'touchPath' => '',
 			], LOG_MODEL, LOG_PAGE_VIEW));		
     }
-	
-	public function makeQna($records)
-    {
-		$qna = [];
-		$cnt = 0;
-		foreach($records as $record)
-		{
-			$question = $record->title;
-			$translation = Tools::getOrSetString($record->translation_en, $question . ': translation not set');
-			$definition = Tools::getOrSetString($record->definition, $question . ': definition not set');
-	
-            $qna[$cnt]['q'] = $question;
-            $qna[$cnt]['a'] = $translation;
-            $qna[$cnt]['definition'] = $definition;
-            $qna[$cnt]['translation'] = $translation;
-            $qna[$cnt]['id'] = $record->id;
-            $qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
-            $qna[$cnt]['options'] = '';
 
-			$cnt++;
-		}
-
-		//dd($qna);
-
-		return $qna;
-	}	
-	
     public function index($type_flag = null)
     {				
 		$entries = Entry::getEntriesByType($type_flag, false, 0, null, false, ORDERBY_DATE);

@@ -6,7 +6,65 @@
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
-	<h1>@LANG('content.' . $titlePlural) ({{count($records)}})</h1>
+	<!--------------------------------------------------------------------->
+	<!-- Favorites Lists                                                 -->
+	<!--------------------------------------------------------------------->
+
+	@if (isset($favorites) && count($favorites) > 0)
+	<h1>@LANG('content.' . 'Dictionary Favorites')</h1>
+
+    <div class="card-deck">
+    @foreach($favorites as $record)
+	<div class="col-sm-12 col-lg-6 col-xl-4"><!-- xl = 3 cols, lg = 2 cols, sm = 1 col -->	
+		<div class="mb-3 mr-0">
+			<div class="card-body drop-box-ghost">
+				<h5 class="card-title">
+					<a href="/definitions/list/{{$record->id}}">{{$record->name}}</a>@component('components.badge', ['text' => $record->wc])@endcomponent
+				</h5>
+				<p class="card-text">
+					<a class="btn btn-primary btn-xs" role="button" href="/definitions/review/{{$record->id}}">
+						@LANG('ui.Review')<span class="glyphicon glyphicon-eye-open ml-1"></span>
+					</a>
+				</p>
+			</div>
+		</div>
+	</div>
+    @endforeach
+    </div>
+	@endif
+
+	<!--------------------------------------------------------------------->
+	<!-- Lists from Articles/Books                                       -->
+	<!--------------------------------------------------------------------->
+
+	@if (isset($entries) && count($entries) > 0)
+	<h1>@LANG('content.' . 'Articles')</h1>
+
+    <div class="card-deck">
+    @foreach($entries as $record)
+	<div class="col-sm-12 col-lg-6 col-xl-4"><!-- xl = 3 cols, lg = 2 cols, sm = 1 col -->	
+		<div class="mb-3 mr-0">
+			<div class="card-body drop-box-ghost">
+				<h5 class="card-title">
+					<a href="/entries/vocabulary/{{$record->id}}">{{$record->title}}</a>@component('components.badge', ['text' => $record->wc])@endcomponent
+				</h5>
+				<p class="card-text">
+					<a class="btn btn-primary btn-xs" role="button" href="/entries/review-vocabulary/{{$record->id}}">
+						@LANG('ui.Review')<span class="glyphicon glyphicon-eye-open ml-1"></span>
+					</a>
+				</p>
+			</div>
+		</div>
+	</div>
+    @endforeach
+    </div>
+	@endif
+
+	<!--------------------------------------------------------------------->
+	<!-- Questions and Answers Section                                   -->
+	<!--------------------------------------------------------------------->
+
+	<h1>@LANG('content.' . 'Your Questions and Answers') ({{count($records)}})</h1>
 
     <div class="card-deck">
     @foreach($records as $record)

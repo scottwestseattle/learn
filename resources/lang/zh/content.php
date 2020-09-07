@@ -159,4 +159,8 @@ return [
 'Latest Results' => '最新结果',
 'No review results yet' => '尚无评价结果',
 'Answer marked as wrong' => '答案标记为错误',
+'List' => '清单',
+'Your Questions and Answers' => '您的问题和答案',
+'Dictionary Favorites' => '您最喜欢的话',
+'Back to Lists' => '返回清单',
 ];

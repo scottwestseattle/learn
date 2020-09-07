@@ -64,6 +64,23 @@ class Entry extends Base
 		return $records;
 	}
 
+	static public function getDefinitionsUser()
+	{
+		$records = DB::table('entries')
+			->join('definition_entry', function($join) {
+				$join->on('definition_entry.entry_id', '=', 'entries.id');
+				$join->where('definition_entry.user_id', Auth::id());
+			})
+			->select(DB::raw('entries.id, entries.title, count(definition_entry.entry_id) as wc'))			
+			->where('entries.deleted_flag', 0)
+			->groupBy('entries.id', 'entries.title')
+			->orderBy('entries.title')
+			->get();
+
+		//dd($records);
+
+		return $records;
+	}
 
     static public function addDefinitionUserStatic($entryId, $def)
     {

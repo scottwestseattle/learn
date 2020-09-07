@@ -159,4 +159,8 @@ return [
 'Latest Results' => 'Latest Results',
 'No review results yet' => 'No review results yet',
 'Answer marked as wrong' => 'Answer marked as wrong',
+'List' => 'List',
+'Your Questions and Answers' => 'Your QnA',
+'Dictionary Favorites' => 'Your Favorites',
+'Back to Lists' => 'Back to Lists',
 ];

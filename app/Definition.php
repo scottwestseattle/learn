@@ -776,9 +776,13 @@ class Definition extends Base
 			
 			// we're only looking for verbs at this point
 			$record = Definition::select()
-				->whereNull('deleted_at')
-				->where('conjugations_search', 'LIKE', '%;' . $word . ';%')
-				->first();			
+				->where('deleted_at', null)
+				->where(function ($query) use ($word){$query
+					->where('title', $word)											// exact match of title
+					->orWhere('forms', 'LIKE', '%;' . $word . ';%')					// exact match of ";word;"
+					->orWhere('conjugations_search', 'LIKE', '%;' . $word . ';%') 	// exact match of ";word;"
+					;})
+				->first();
 		}
 
 		return $record;
@@ -1211,4 +1215,29 @@ class Definition extends Base
     	return ($this->wip_flag == WIP_FINISHED);
     }
 
+	static public function makeQna($records)
+    {
+		$qna = [];
+		$cnt = 0;
+		foreach($records as $record)
+		{
+			$question = $record->title;
+			$translation = Tools::getOrSetString($record->translation_en, $question . ': translation not set');
+			$definition = Tools::getOrSetString($record->definition, $question . ': definition not set');
+	
+            $qna[$cnt]['q'] = $question;
+            $qna[$cnt]['a'] = $translation;
+            $qna[$cnt]['definition'] = $definition;
+            $qna[$cnt]['translation'] = $translation;
+            $qna[$cnt]['id'] = $record->id;
+            $qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
+            $qna[$cnt]['options'] = '';
+
+			$cnt++;
+		}
+
+		//dd($qna);
+
+		return $qna;
+	}	
 }

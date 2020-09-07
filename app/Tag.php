@@ -21,6 +21,12 @@ class Tag extends Base
 		// many to many
         return $this->belongsToMany('App\Definition')->orderBy('title');
     }
+	
+    public function definitionsUser()
+    {
+		return $this->belongsToMany('App\Definition')->wherePivot('user_id', Auth::id())->orderBy('title');
+    }	
+	
 
 	// add or update 'recent' tag for entries.
 	// this lets us order by most recent entries
@@ -132,18 +138,6 @@ class Tag extends Base
 		return $record;
 	}
 	
-    static public function get($name)
-    {
-		$name = Tools::alphanum($name, true);
-
-		$record = $record = Tag::select()
-				->where('deleted_at', null)
-				->where('name', $name)
-				->first();
-
-		return $record;
-    }
-	
     static public function addTag($name)
     {
 		$record = null;
@@ -176,4 +170,73 @@ class Tag extends Base
 		
 		return $record;
     }
+	
+    static public function get($name)
+    {
+		$name = Tools::alphanum($name, true);
+
+		$record = $record = Tag::select()
+				->where('deleted_at', null)
+				->where('name', $name)
+				->first();
+
+		return $record;
+    }
+
+    static public function getById($id)
+    {
+		$id = intval($id);
+
+		$record = $record = Tag::select()
+				->where('deleted_at', null)
+				->where('id', $id)
+				->first();
+
+		return $record;
+    }
+
+    static public function getTagUser($name)
+    {
+		$name = Tools::alphanum($name, true);
+		$record = null;
+
+		$tag = DB::table('tags')
+			->join('definition_tag', function($join) {
+				$join->on('definition_tag.tag_id', '=', 'tags.id');
+				$join->where('definition_tag.user_id', Auth::id());
+			})	
+			->select('tags.*')
+			->where('deleted_at', null)
+			->where('tags.name', $name)
+			->first();
+
+		if (isset($tag))
+		{
+			// get it the laravel way so it will include the definitions list for the user
+			$record = Tag::select()
+					->where('id', $tag->id)
+					->first();
+					
+			//if (isset($record))
+			//	$records = $record->definitionsUser;
+		}
+
+		return $record;
+    }
+	
+    static public function getTagsUser()
+    {
+		$records = DB::table('tags')
+			->join('definition_tag', function($join) {
+				$join->on('definition_tag.tag_id', '=', 'tags.id');
+				$join->where('definition_tag.user_id', Auth::id());
+			})	
+			//->select('tags.id', 'tags.name', 'tags.user_id')
+			->select(DB::raw('tags.id, tags.name, tags.user_id, count(definition_tag.tag_id) as wc'))
+			->where('deleted_at', null)
+			->groupBy('tags.id', 'tags.name', 'tags.user_id')
+			->get();
+
+		return $records;
+    }		
 }

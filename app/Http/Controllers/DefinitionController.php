@@ -9,6 +9,7 @@ use Auth;
 use App\Definition;
 use App\Entry;
 use App\Event;
+use App\Tag;
 use App\Tools;
 use App\User;
 use App\VocabList;
@@ -44,7 +45,7 @@ class DefinitionController extends Controller
 		return $this->search($request);
     }
 
-    public function indexOldWithPills(Request $request)
+    public function indexPills(Request $request)
     {
 		$records = []; // make this countable so view will always work
 
@@ -831,26 +832,6 @@ class DefinitionController extends Controller
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
-	public function review()
-    {
-		$words = Word::getIndex();
-
-		$options = [];
-
-		$options['prompt'] = 'Select the correct answer';
-		$options['prompt-reverse'] = 'Select the correct question';
-		$options['question-count'] = count($words);
-		$options['font-size'] = '120%';
-
-		return view(PREFIX . '.review', $this->getViewData([
-			'records' => $words,
-			'options' => $options,
-			'canEdit' => false,
-			'quizText' => null,
-			'isMc' => false,
-			], LOG_MODEL, LOG_PAGE_VIEW));
-    }
-
 	public function touch(Word $word)
     {
         $rc = 'not touched';
@@ -884,14 +865,14 @@ class DefinitionController extends Controller
 
         if (Auth::check())
         {
-			$tag = $record->addTagUser('hearts');
+			$tag = $record->addTagUser('Favorites');
             if (isset($tag))
             {
                 $rc = '';
             }
             else
             {
-                $rc = 'not hearted: update failed';
+                $rc = 'not favorited: update failed';
             }
         }
         else
@@ -899,7 +880,7 @@ class DefinitionController extends Controller
 			$rc = 'favorite not saved - you must log in';
         }
 
-		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'heart ' . $record->title . ': ' . $rc);
+		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'favorite ' . $record->title . ': ' . $rc);
 
 		return $rc;
     }
@@ -911,13 +892,13 @@ class DefinitionController extends Controller
 
         if (Auth::check())
         {	
-			if ($record->removeTagUser('hearts'))
+			if ($record->removeTagUser('Favorites'))
             {
                 $rc = ''; // no msg means, no error
             }
             else
             {
-                $rc = 'not unhearted: update failed';
+                $rc = 'not unfavorited: update failed';
             }
         }
         else
@@ -925,7 +906,7 @@ class DefinitionController extends Controller
 			$rc = 'favorite not removed - you must log in';
         }
 
-		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'unheart ' . $record->title . ': ' . $rc);
+		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'unfavorite ' . $record->title . ': ' . $rc);
 
 		return $rc;
     }
@@ -945,4 +926,56 @@ class DefinitionController extends Controller
 
 		return $rc;
     }
+
+    public function list(Request $request, Tag $tag)
+    {
+		$records = []; // make this countable so view will always work
+		try
+		{
+			$records = $tag->definitionsUser;
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting ' . $this->title . ' list';
+			Event::logException(LOG_MODEL, LOG_ACTION_OTHER, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return view(PREFIX . '.list', $this->getViewData([
+			'records' => $records,
+			'tag' => $tag,
+		]));
+    }	
+	
+    public function review(Request $request, Tag $tag)
+    {
+		$record = $tag;
+		$qna = Definition::makeQna($record->definitionsUser); // splits text into questions and answers
+
+		$options = Tools::getOptionArray('font-size="150%"');
+		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
+		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
+		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
+		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
+
+		$qnaText = [
+			'Round' => 'Round',
+			'Correct' => 'Correct',
+			'TypeAnswers' => 'Type the Answer',
+			'Wrong' => 'Wrong',
+			'of' => 'of',
+		];
+
+		return view('definitions.review', $this->getViewData([
+			'titleList' => $record->name,
+			'sentenceCount' => count($qna),
+			'records' => $qna,
+			'options' => $options,
+			'canEdit' => true,
+			'quizText' => $qnaText,
+			'isMc' => true,
+			'returnPath' => '/definitions/list/' . $record->id . '',
+			'touchPath' => '',
+			], LOG_MODEL, LOG_PAGE_VIEW));		
+    }	
 }

@@ -100,7 +100,7 @@ function quiz() {
 	this.runState = RUNSTATE_START;
 
 	//new:
-	this.quizType = 0;
+	//this.quizType = 0;
 	this.isMc = 0;
 	this.quizTextRound = 'not set';
 	this.quizTextCorrect = 'not set';
@@ -112,7 +112,7 @@ function quiz() {
 	this.quizTextOverrideCorrect = 'not set';
 	this.quizTextOverrideWrong = 'not set';
 	this.quizTextScoreChanged = 'not set';
-	this.lessonId = 'not set';
+	//this.lessonId = 'not set';
 
 	this.getQuestionId = function(index) {
 		return this.qna[this.qna[index].order].id;
@@ -156,8 +156,8 @@ function quiz() {
 				$("#panelResultsCount").text(count);
 
 				// log the quiz round
-				if (parseInt(round) == 1)
-					ajaxexec('/lessons/log-quiz/' + this.lessonId + '/' + fScore);
+				//if (parseInt(round) == 1)
+				//	ajaxexec('/lessons/log-quiz/' + this.lessonId + '/' + fScore);
 
 				break;
 			}
@@ -586,7 +586,7 @@ function loadData()
 		quiz.promptQuestion = quiz.promptQuestionNormal;
 
 		// new settings
-		quiz.quizType = container.data('quiztype');
+		//quiz.quizType = container.data('quiztype');
 		quiz.isMc = container.data('ismc');
 		quiz.quizTextRound = container.data('quiztext-round');
 		quiz.quizTextCorrect = container.data('quiztext-correct');
@@ -598,7 +598,7 @@ function loadData()
 		quiz.quizTextOverrideCorrect = container.data('quiztext-override-correct') + " (Alt+c)";
 		quiz.quizTextOverrideWrong = container.data('quiztext-override-wrong') + " (Alt+c)";
 		quiz.quizTextScoreChanged = container.data('quiztext-score-changed');
-		quiz.lessonId = container.data('lessonid');
+		//quiz.lessonId = container.data('lessonid');
 		quiz.touchPath = ''; //turned off for the moment: container.data('touchpath');
 
 		i++;

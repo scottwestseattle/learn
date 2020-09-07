@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use App\Definition;
+use App\Entry;
 use App\Event;
 use App\Lesson;
 use App\Status;
+use App\Tag;
 use App\Tools;
 use App\User;
 use App\VocabList;
@@ -38,10 +40,19 @@ class VocabListController extends Controller
 
     public function index(Request $request)
     {
+		// qna lists
         $records = VocabList::getIndex(['ownedOrPublic']);
 
+		// defintions favorites
+		$favorites = Tag::getTagsUser();
+
+		// articles/books look ups
+		$entries = Entry::getDefinitionsUser();
+
 		return view(PREFIX . '.index', $this->getViewData([
+			'favorites' => $favorites,
 			'records' => $records,
+			'entries' => $entries,
 		]));
     }
 
