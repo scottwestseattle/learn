@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 use DB;
 use Auth;
-use App\User;
+use App\Definition;
 use App\Event;
 use App\Tools;
-use App\Definition;
+use App\User;
 
 define('CONJ_PARTICIPLE', 'participle');
 define('CONJ_IND_PRESENT', 'ind_pres');
@@ -51,7 +51,7 @@ class Definition extends Base
     public function addTag($name, $userId = null)
     {
 		$tag = Tag::getOrCreate($name);
-		
+
 		if (isset($tag))
 		{
 			$this->tags()->detach($tag->id); // if it's already tagged, remove it so it will by updated
@@ -116,6 +116,9 @@ class Definition extends Base
 			case 7: // missing conjugation
 				$orderBy = 'title';
 				break;
+			case 7: // not finished
+				$orderBy = 'title';
+				break;
 			default:
 				break;
 		}
@@ -154,6 +157,15 @@ class Definition extends Base
 						->whereNull('conjugations_search')
 						->orWhereRaw('LENGTH(conjugations) < 50')
 						;})
+					->orderByRaw($orderBy)
+					->limit($limit)
+					->get();
+			}
+			else if ($sort == 8) // not finished
+			{
+				$records = Definition::select()
+					->whereNull('deleted_at')
+					->where('wip_flag', '<', WIP_FINISHED)
 					->orderByRaw($orderBy)
 					->limit($limit)
 					->get();
@@ -756,7 +768,8 @@ class Definition extends Base
 	// haganme, haganmelo, haganse, haganselo
 	// hacerme, hacermelo, hacernos, hacernoslo, hacerse, hacerselo	
 	static public function searchDeeper($word)
-	{	
+	{
+		$wordRaw = $word;
 		$record = null;
 
 		$suffixes = [
@@ -772,17 +785,23 @@ class Definition extends Base
 		{
 			// trim off the suffix and search for the stem which should be the imperative
 			$word = rtrim($word, $suffixes[$any]);
+			$wordReflexive = $word . 'se';
+			
 			//dump($any . ': ' . $suffixes[$any] . ', word: ' . $word);
 			
 			// we're only looking for verbs at this point
 			$record = Definition::select()
 				->where('deleted_at', null)
-				->where(function ($query) use ($word){$query
+				->where(function ($query) use ($word, $wordReflexive){$query
 					->where('title', $word)											// exact match of title
+					->orWhere('title', $wordReflexive)								// exact match of reflexive
 					->orWhere('forms', 'LIKE', '%;' . $word . ';%')					// exact match of ";word;"
 					->orWhere('conjugations_search', 'LIKE', '%;' . $word . ';%') 	// exact match of ";word;"
 					;})
 				->first();
+				
+			if (!isset($record))
+				Event::logInfo(LOG_MODEL, LOG_ACTION_SEARCH, 'searchDeeper, not found: ' . $wordRaw . ', search word: ' . $word);
 		}
 
 		return $record;
@@ -1068,6 +1087,15 @@ class Definition extends Base
 			}
 			// Case 5: regular AR verbs that don't match a pattern yet
 			else if (in_array($text, self::$_regularVerbsAr))
+			{
+				$stem = 'ar';
+				$middle = '';
+				$endings = self::$_verbEndings[$stem];
+				
+				$records = self::conjugateAr($text, $endings, $stem, $middle);
+			}
+			// Case 6: conjugate all AR verbs as regular
+			else if (Tools::endsWith($text, 'ar'))
 			{
 				$stem = 'ar';
 				$middle = '';
