@@ -85,16 +85,22 @@ class Definition extends Base
     {		
 		if (Auth::check())
 		{
-			$this->tags()->detach($tagId); // if it's already tagged, remove it so it will by updated
-			$this->tags()->attach($tagId, ['user_id' => Auth::id()]);
+			// 0 is okay so we can use the same flow when removing a tag
+			if ($tagId > 0) 
+			{
+				$this->tags()->detach($tagId); // if it's already tagged, remove it so it will by updated
+				$this->tags()->attach($tagId, ['user_id' => Auth::id()]);
+			}
 		}
     }
 
     public function removeTag($tagId)
-    {		
+    {
 		if (Auth::check())
 		{
-			$this->tags()->detach($tagId);
+			// 0 is okay so we can use the same flow for adding first tag
+			if ($tagId > 0) 
+				$this->tags()->detach($tagId);
 		}
     }
 	

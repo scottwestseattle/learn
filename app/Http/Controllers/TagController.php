@@ -23,7 +23,8 @@ class TagController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['add']);
+		// no public pages
+        $this->middleware('is_admin')->except(['addUserFavoriteList', 'createUserFavoriteList']);
 		$this->middleware('auth');
 
 		$this->prefix = PREFIX;
@@ -66,7 +67,7 @@ class TagController extends Controller
 			$record->save();
 
 			Event::logAdd(LOG_MODEL, $record->name, '', $record->id);
-			Tools::flash('success', Lang::get('flash.New list has been added'));
+			Tools::flash('success', 'New list has been added');
 		}
 		catch (\Exception $e)
 		{
@@ -96,18 +97,16 @@ class TagController extends Controller
 			$record->save();
 
 			Event::logAdd(LOG_MODEL, $record->name, '', $record->id);
-			Tools::flash('success', Lang::get('flash.New list has been added'));
+			Tools::flash('success', 'New list has been added');
 		}
 		catch (\Exception $e)
 		{
 			$msg = 'Error adding new ' . TITLE_LC;
 			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->mag, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
-
-			return back();
 		}
 				
-    	return redirect('/vocabulary'); 
+		return back();
     }
 
     public function edit(Tag $tag)

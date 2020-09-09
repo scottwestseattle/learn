@@ -29,7 +29,7 @@
 
 	<div id="searchResults" class="row">
 
-		@component($prefix . '.component-search-results', ['prefix' => $prefix, 'isAdmin' => $isAdmin, 'records' => $records])@endcomponent
+		@component($prefix . '.component-search-results', ['prefix' => $prefix, 'isAdmin' => $isAdmin, 'records' => $records, 'favoriteLists' => $favoriteLists])@endcomponent
 
 	</div>
 </div>

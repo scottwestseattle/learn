@@ -6,12 +6,12 @@
 				<tr>
 					<td class="large-text hidden-xs">						
 						<a class="float-left" href="/definitions/view/{{$record->id}}">{{$record->title}}</a>
-						@component($prefix . '.component-search-toolbar', ['isAdmin' => $isAdmin, 'record' => $record, 'id' => 1])@endcomponent
+						@component($prefix . '.component-search-toolbar', ['isAdmin' => $isAdmin, 'record' => $record, 'id' => 1, 'lists' => $favoriteLists])@endcomponent
 					</td>
 					<td>
 						<div class="large-text hidden-lg hidden-md hidden-sm">
 							<a class="float-left" href="/definitions/view/{{$record->id}}">{{$record->title}}</a>
-							@component($prefix . '.component-search-toolbar', ['isAdmin' => $isAdmin, 'record' => $record, 'id' => 2])@endcomponent
+							@component($prefix . '.component-search-toolbar', ['isAdmin' => $isAdmin, 'record' => $record, 'id' => 2, 'lists' => $favoriteLists])@endcomponent
 						</div>
 						
 						@if (isset($record->definition))

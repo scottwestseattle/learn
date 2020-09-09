@@ -29,10 +29,13 @@ class DefinitionController extends Controller
 		$public = [
 			'index', 'view', 'find', 'search', 'list', 
 			'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponentAjax', 
-			'getAjax', 'translateAjax', 'wordExistsAjax', 'searchAjax',	'heartAjax', 'unheartAjax',
+			'getAjax', 'translateAjax', 'wordExistsAjax', 'searchAjax',	
+			'heartAjax', 'unheartAjax', // leave these as public so everyone can see the option
+			'setFavoriteList',
 		];
 		
         $this->middleware('is_admin')->except($public);
+        $this->middleware('auth')->only('setFavoriteList');
 			
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -78,6 +81,7 @@ class DefinitionController extends Controller
 
 		try
 		{
+			session(['definitionSearch' => $text]);
 			$records = Definition::searchPartial($text);
 		}
 		catch (\Exception $e)
@@ -89,12 +93,12 @@ class DefinitionController extends Controller
 
 		return view(PREFIX . '.component-search-results', $this->getViewData([
 			'records' => $records,
-			//'isAdmin' => Tools::isAdmin(),
+			'favoriteLists' => Definition::getUserFavoriteLists(),
 		]));
 	}
 	
 	//
-	// This is now the index/search page
+	// This is now the main index/search page
 	//
     public function search(Request $request, $sort = null)
     {
@@ -106,6 +110,9 @@ class DefinitionController extends Controller
 			$sort = session('definitionSort', 0);
 		else // save current sort value for next time
 			session(['definitionSort' => $sort]);
+
+		// check if a previous search word was used
+		$search = session('definitionSearch', '');
 
 		$records = null;
 
@@ -123,6 +130,7 @@ class DefinitionController extends Controller
 		return view(PREFIX . '.search', $this->getViewData([
 			'records' => $records,
 			'search' => $search,
+			'favoriteLists' => Definition::getUserFavoriteLists(),
 		]));
     }
 		
@@ -833,6 +841,7 @@ class DefinitionController extends Controller
 			'next' => $next,
 			'prev' => $prev,
 			'canConjugate' => $canConjugate,
+			'favoriteLists' => Definition::getUserFavoriteLists(),
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
@@ -862,15 +871,15 @@ class DefinitionController extends Controller
 		return $rc;
     }	
 	
-	public function setFavoriteList(Request $request, Definition $definition, $tagFrom, $tagTo)
+	public function setFavoriteList(Request $request, Definition $definition, $tagFromId, $tagToId)
     {
 		$record = $definition;
         $rc = '';
 
         if (Auth::check())
         {
-			$record->removeTag($tagFrom);
-			$record->addTag($tagTo);
+			$record->removeTag($tagFromId);
+			$record->addTag($tagToId);
         }
         else
         {
@@ -969,7 +978,7 @@ class DefinitionController extends Controller
 			'records' => $records,
 			'tag' => $tag,
 			'lists' => Definition::getUserFavoriteLists(),
-			'favoriteListsOptions' => Definition::getUserFavoriteListsOptions(),
+//			'favoriteListsOptions' => Definition::getUserFavoriteListsOptions(),
 		]));
     }	
 	

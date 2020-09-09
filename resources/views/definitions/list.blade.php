@@ -24,36 +24,38 @@
 			<tr id="row{{$record->id}}">
 				<td style="width:100%;">
 				    <a href="/definitions/view/{{$record->id}}">{{$record->title}}</a>
-					<a href="" onclick="event.preventDefault(); $('#selectList{{$record->id}}').show(); "><div class="glyphCustom-md glyphicon glyphicon-heart"></div></a>
-					
-				<div class="dropdown" >
-					<a  style="font-size:12px;"href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">{{$tag->name}}</a>
-					<ul class="dropdown-menu">
-						@foreach($lists as $list)
-							<li><a href="/definitions/set-favorite-list/{{$record->id}}/{{$tag->id}}/{{$list->id}}">{{$list->name}}</a></li>
-						@endforeach
-					</ul>
-				</div>						
-					
-			
-				<div id="selectList{{$record->id}}" class="form-group hidden">
-					@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix, 
-						'options' => $favoriteListsOptions,
-						'selected_option' => $tag->id,
-						'field_name' => 'type_flag',
-						'prompt_div' => true,
-						'select_class' => 'form-control form-control-sm',
-						'onchange' => "$('#selectList" . $record->id . "').hide();",
-					])@endcomponent
-				</div>
-					
-				<div>{{$record->definition}}</div>
+					<div>{{$record->definition}}</div>
 				</td>
+
+				@if (count($lists) > 1)
+				<td class="icon mr-2">
+					<div class="dropdown" >
+						<!-- removed 'dropdown-toggle' class to remove the down arrow graphic -->
+						<a class="" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"	href="" onclick="">
+							<div class="glyphCustom-md glyphicon glyphicon-heart"></div>
+						</a>
+						
+						<ul class="small-thin-text dropdown-menu dropdown-menu-right">
+							@foreach($lists as $list)
+								@if ($tag->id != $list->id)
+									<li><a class="dropdown-item" href="/definitions/set-favorite-list/{{$record->id}}/{{$tag->id}}/{{$list->id}}">{{$list->name}}</a></li>
+								@endif
+							@endforeach
+						</ul>
+					</div>
+				</td>
+				@endif
 				
 				<td class="icon mr-3">
-					<a href='' onclick="unheartDefinition(event, {{$record->id}}, '#removeStatus'); $('#row{{$record->id}}').hide();">
-						<span id="heart" class="glyphCustom-md glyphicon glyphicon-remove"></span>
-					</a>
+					<div class="dropdown" >
+						<a class="" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"	href="" onclick="">
+							<div class="glyphCustom-md glyphicon glyphicon-remove"></div>
+						</a>
+						
+						<ul class="small-thin-text dropdown-menu dropdown-menu-right">
+							<li><a class="dropdown-item" href="" onclick="unheartDefinition(event, {{$record->id}}, '#removeStatus'); $('#row{{$record->id}}').hide();">@LANG('content.Remove from List')</a></li>
+						</ul>
+					</div>				
 				</td>
 				
 			</tr>
