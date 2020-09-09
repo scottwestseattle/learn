@@ -1000,19 +1000,20 @@ function conjugationsGen(fromId, toId)
 	ajaxexec('/definitions/conjugationsgenajax/' + title.trim(), toId, true);
 }
 
-function wordFormsGen(event, fromId, toId)
+function wordFormsGen(event, fromId, toId, pluralOnly = false)
 {
 	event.preventDefault();
 	var word = $(fromId).val();
 	var wordForms = $(toId).val(); // get current forms so we don't wipe them out
-	var wordForms = getWordForms(word, wordForms);
+	var wordForms = getWordForms(word, wordForms, pluralOnly);
 	$(toId).val(wordForms);
 }
 
-function getWordForms(word, wordForms)
+function getWordForms(word, wordForms, pluralOnly)
 {
 	var gen = '';
 	var root = word.substring(0, word.length - 1);
+	word = word.trim();
 	wordForms = wordForms.trim();
 	
 	// if it ends in a consonant, add 'as', else add 's'
@@ -1022,10 +1023,17 @@ function getWordForms(word, wordForms)
 	// reloj = relojes
 	if (word.endsWith('o') || word.endsWith('a'))
 	{
-		gen += root + 'o';
-		gen += ', ' + root + 'os';
-		gen += ', ' + root + 'a';
-		gen += ', ' + root + 'as';
+		if (pluralOnly)
+		{
+			gen += word + 's';
+		}
+		else
+		{
+			gen += root + 'o';
+			gen += ', ' + root + 'os';
+			gen += ', ' + root + 'a';
+			gen += ', ' + root + 'as';
+		}
 	}
 	else if (word.endsWith('e'))
 	{
@@ -1152,6 +1160,13 @@ function heartDefinition(event, recordId, resultsId)
 		$(target).removeClass('glyphicon-heart');
 		$(target).addClass('glyphicon-heart-empty');
 	}
+}
+
+function unheartDefinition(event, recordId, resultsId)
+{
+	event.preventDefault();		
+	var target = '#' + event.target.id;
+	ajaxexec('/definitions/unheart/' + recordId + '', resultsId);
 }
 
 function toggleWip(event, recordId, resultsId)

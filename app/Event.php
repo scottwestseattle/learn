@@ -125,10 +125,10 @@ class Event extends Base
 
 		$record->title 			= isset($title) && strlen($title) > 0 ? $title : '(Empty Title)';
 
-		$record->description	= mb_substr($description, 0, 100); // max 1000
+		$record->description	= mb_substr($description, 0, 1000); // max 1000
 		$record->record_id 		= intval($record_id);
-		$record->error 			= mb_substr($error, 0, 100); // max 1000
-		$record->updates 		= mb_substr($changes, 0, 100); // max 1000
+		$record->error 			= mb_substr($error, 0, 1000); // max 1000
+		$record->updates 		= mb_substr($changes, 0, 1000); // max 1000
 		$record->extraInfo		= $extraInfo;
 
 		try

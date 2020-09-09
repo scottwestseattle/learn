@@ -31,61 +31,76 @@ class Definition extends Base
 		return $this->belongsToMany('App\Entry');
     }	
 	
+	//////////////////////////////////////////////////////////////////////
+	//
+	// Tags - User Definition Favorite lists
+	//
+	//////////////////////////////////////////////////////////////////////
+	
     public function tags()
     {
 		return $this->belongsToMany('App\Tag')->wherePivot('user_id', Auth::id());
     }	
 
-    public function addTagUser($name)
+    public function addTagFavorite()
     {
-		$tag = null;
+		$tag = false;
+		$name = 'Favorites';
 		
 		if (Auth::check())
 		{
-			$tag = $this->addTag($name, Auth::id());
+			$tag = Tag::getOrCreate($name, TAG_TYPE_DEFINITION_FAVORITE, Auth::id());
+			if (isset($tag))
+			{
+				$this->tags()->detach($tag->id); // if it's already tagged, remove it so it will by updated
+				$this->tags()->attach($tag->id, ['user_id' => Auth::id()]);
+				$this->refresh();
+				//dump($tag);
+				//dd($this->tags);
+			}
 		}
 		
 		return $tag;
-	}
+    }
+
+    public function removeTagFavorite()
+    {
+		$rc = false;
+		
+		if (Auth::check())
+		{
+			$name = 'Favorites';
+			$tag = Tag::get($name, TAG_TYPE_DEFINITION_FAVORITE, Auth::id());
+			if (isset($tag))
+			{
+				$this->tags()->detach($tag->id);
+				$rc = true;
+			}
+		}
+		
+		return $rc;
+    }
 	
-    public function addTag($name, $userId = null)
+    static public function getUserFavoriteLists()
     {
-		$tag = Tag::getOrCreate($name);
+		$records = DB::table('tags')
+			->leftJoin('definition_tag', function($join) {
+				$join->on('definition_tag.tag_id', '=', 'tags.id');
+				$join->where('definition_tag.user_id', Auth::id());
+			})	
+			->select(DB::raw('tags.id, tags.name, tags.user_id, count(definition_tag.tag_id) as wc'))
+			->where('tags.deleted_at', null)
+			->where('tags.user_id', Auth::id())
+			->where('type_flag', TAG_TYPE_DEFINITION_FAVORITE)
+			->groupBy('tags.id', 'tags.name', 'tags.user_id')
+			->get();
 
-		if (isset($tag))
-		{
-			$this->tags()->detach($tag->id); // if it's already tagged, remove it so it will by updated
-			$this->tags()->attach($tag->id, ['user_id' => $userId]);
-		}
-		
-		return $tag;
-    }
-
-    public function removeTagUser($name)
-    {
-		$rc = false;
-		
-		if (Auth::check())
-		{
-			$rc = $this->removeTag($name);
-		}
-		
-		return $rc;
-	}
-
-    public function removeTag($name)
-    {
-		$rc = false;
-		
-		$tag = Tag::get($name);
-		if (isset($tag))
-		{
-			$this->tags()->detach($tag->id);
-			$rc = true;
-		}
-		
-		return $rc;
-    }
+		return $records;
+    }	
+	
+	//////////////////////////////////////////////////////////////////////
+	// End of Tag Functions
+	//////////////////////////////////////////////////////////////////////
 	
     static public function getIndex($sort = null, $limit = PHP_INT_MAX)
 	{

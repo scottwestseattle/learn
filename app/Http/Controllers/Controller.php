@@ -43,6 +43,7 @@ define('LOG_MODEL_EVENTS', 'events');
 define('LOG_MODEL_HOME', 'home');
 define('LOG_MODEL_LESSONS', 'lessons');
 define('LOG_MODEL_SITES', 'sites');
+define('LOG_MODEL_TAGS', 'tags');
 define('LOG_MODEL_TRANSLATIONS', 'translations');
 define('LOG_MODEL_USERS', 'users');
 define('LOG_MODEL_VISITORS', 'visitors');
@@ -134,6 +135,15 @@ define('LANGUAGE_SPANISH', 1);
 // Tags
 define('TAG_RECENT', 'recent');
 define('TAG_BOOK', 'book');
+
+// Tag types
+define('TAG_TYPE_NOTSET',			   	0);
+define('TAG_TYPE_SYSTEM',				1); // one for everybody, ex: recent article
+//define('TAG_TYPE_RECENT_ARTICLE',	   	1); // old way
+define('TAG_TYPE_BOOK',				   	2); //not implented yet: need one per book
+define('TAG_TYPE_DEFINITION_FAVORITE', 	3); // one per user so we have empty favorites list
+define('TAG_TYPE_OTHER',			   	99);
+//define('TAG_TYPE_DEFAULT', TAG_TYPE_SYSTEM); // need this?
 
 class Controller extends BaseController
 {

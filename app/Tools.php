@@ -101,6 +101,15 @@ class Tools
         return $r;
     }
 
+	// if n isn't null then return intval
+    static public function intOrNull($n)
+    {
+		if (isset($n))
+			$n = intval($n);
+		
+		return($n);
+	}
+
     static public function itoa($n)
     {
 		$rc = '';
@@ -1029,4 +1038,8 @@ class Tools
 		return ((isset($text) && strlen($text) > 0) ? $text : $default);
 	}
 	
+	static public function getSafeUserId()
+    {
+		return (Auth::check() ? Auth::id() : 'not logged in');
+	}
 }

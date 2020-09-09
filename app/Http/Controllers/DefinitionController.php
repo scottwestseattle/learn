@@ -26,13 +26,14 @@ class DefinitionController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except([
-			'index', 'view', 'find', 'search', 'conjugationsGen', 
-			'getAjax', 'translateAjax', 'wordExistsAjax', 'searchAjax',
-			'conjugationsGenAjax', 'conjugationsComponentAjax', 
-			'heartAjax', 'unheartAjax',
-			]);
-
+		$public = [
+			'index', 'view', 'find', 'search', 'list', 
+			'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponentAjax', 
+			'getAjax', 'translateAjax', 'wordExistsAjax', 'searchAjax',	'heartAjax', 'unheartAjax',
+		];
+		
+        $this->middleware('is_admin')->except($public);
+			
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
 		$this->titlePlural = TITLE_PLURAL;
@@ -40,6 +41,9 @@ class DefinitionController extends Controller
 		parent::__construct();
 	}
 
+	//
+	// index and search are now the same page
+	//
     public function index(Request $request)
     {
 		return $this->search($request);
@@ -65,6 +69,9 @@ class DefinitionController extends Controller
 		]));
     }
 
+	//
+	// This handles the search form from the index/search page
+	//
     public function searchAjax(Request $request, $text = null)
     {
 		$text = Tools::getOrSetString(Tools::alpha($text), null);
@@ -86,16 +93,13 @@ class DefinitionController extends Controller
 		]));
 	}
 	
+	//
+	// This is now the index/search page
+	//
     public function search(Request $request, $sort = null)
     {
 		$sort = intval($sort);
 		$search = '';
-		
-		if ($request->isMethod('post'))
-		{
-			// search
-			
-		}
 		
 		// check if a previous sort was used 
 		if ($sort === 0)
@@ -865,7 +869,7 @@ class DefinitionController extends Controller
 
         if (Auth::check())
         {
-			$tag = $record->addTagUser('Favorites');
+			$tag = $record->addTagFavorite();
             if (isset($tag))
             {
                 $rc = '';
@@ -880,7 +884,7 @@ class DefinitionController extends Controller
 			$rc = 'favorite not saved - you must log in';
         }
 
-		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'favorite ' . $record->title . ': ' . $rc);
+		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'favorite ' . $record->title . ' (' . $record->id . ') ' . $rc);
 
 		return $rc;
     }
@@ -892,7 +896,7 @@ class DefinitionController extends Controller
 
         if (Auth::check())
         {	
-			if ($record->removeTagUser('Favorites'))
+			if ($record->removeTagFavorite())
             {
                 $rc = ''; // no msg means, no error
             }
@@ -906,7 +910,7 @@ class DefinitionController extends Controller
 			$rc = 'favorite not removed - you must log in';
         }
 
-		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'unfavorite ' . $record->title . ': ' . $rc);
+		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'unfavorite ' . $record->title . ' (' . $record->id . ') ' . $rc);
 
 		return $rc;
     }
@@ -917,7 +921,7 @@ class DefinitionController extends Controller
 
 		$rc = $record->toggleWip();
 
-		$msg = 'set to ' . ($rc ? 'finished' : 'unfinished');
+		$msg = $record->title . ' (' . $record->id . ') ' . ' set to ' . ($rc ? 'finished' : 'unfinished');
 		
 		Event::logInfo(LOG_MODEL, LOG_ACTION_EDIT, $msg);
 

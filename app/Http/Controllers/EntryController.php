@@ -63,7 +63,7 @@ class EntryController extends Controller
     {		
 		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
 	
-		$records = Entry::getArticlesRecent();
+		$records = Entry::getRecentList(ENTRY_TYPE_ARTICLE);
 		
 		$vdata = $this->getViewData([
 			'records' => $records,
@@ -79,7 +79,7 @@ class EntryController extends Controller
     {		
 		$this->saveVisitor(LOG_MODEL_BOOKS, LOG_PAGE_INDEX);
 	
-		$records = Entry::getRecent(TAG_BOOK);
+		$records = Entry::getRecentList(ENTRY_TYPE_BOOK);
 		
 		$vdata = $this->getViewData([
 			'records' => $records,
@@ -238,7 +238,7 @@ class EntryController extends Controller
 
 		if (isset($record))
 		{
-			Tag::recent($record); // tag it as recent for the user so it will move to the top of the list
+			$record->tagRecent(); // tag it as recent for the user so it will move to the top of the list
 			Entry::countView($record);
 			$wordCount = str_word_count($record->description); // count it before <br/>'s are added
 			$record->description = nl2br($record->description);
@@ -532,7 +532,8 @@ class EntryController extends Controller
 			return $this->pageNotFound404('read/' . $entry->id);			
 		}
 				
-		$readLocation = Tag::recent($entry); // tag it as recent for logged-in user so it will move to the top of the list
+		$readLocation = $entry->tagRecent(); // tag it as recent for the user so it will move to the top of the list
+		
 		Entry::countView($entry);
 		
 		$record = $entry;
@@ -604,7 +605,7 @@ class EntryController extends Controller
     {	
 		$location = intval($location);
 		
-		$rc = Tag::setReadLocation($entry, $location);
+		$rc = $entry->setReadLocation($location);
 		
 		return ($rc ? 'read location saved' : 'read location not saved - user id: ' . Auth::id());
 	}
@@ -613,7 +614,7 @@ class EntryController extends Controller
     {	
 		$record = $entry;
 		
-		Tag::recent($entry); // tag it as recent for the user so it will move to the top of the list
+		$record->tagRecent(); // tag it as recent for the user so it will move to the top of the list		
 		
 		$stats = Tools::getWordStats($record->description);
 		
@@ -641,7 +642,7 @@ class EntryController extends Controller
 		$articleCount = 0;
 		$stats = null;
 
-		$records = Entry::getRecent(TAG_BOOK);
+		$records = Entry::getBooksRecent();
 		foreach($records as $record)
 		{
 			if ($record->language_flag == LANGUAGE_SPANISH)

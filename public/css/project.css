@@ -1089,3 +1089,8 @@ td.icon {
 	color:#4682b4; /* steelblue */
 }
 
+.type-not-set-color {
+	background-color: red;
+	color: white;
+	border: DarkRed;
+}

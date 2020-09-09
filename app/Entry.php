@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
 use DateTime;
+use Session;
 
 use App\Definition;
 use App\Status;
@@ -25,6 +26,11 @@ class Entry extends Base
 	static public function getEntryTypes()
 	{		
 		return self::$entryTypes;
+	}
+
+	static public function getTypeFlagName($type)
+	{		
+		return self::$entryTypes[$type];
 	}
 	
     public function user()
@@ -73,6 +79,8 @@ class Entry extends Base
 			})
 			->select(DB::raw('entries.id, entries.title, count(definition_entry.entry_id) as wc'))			
 			->where('entries.deleted_flag', 0)
+			->whereIn('entries.type_flag', array(ENTRY_TYPE_ARTICLE, ENTRY_TYPE_BOOK))
+			->where('entries.release_flag', '>=', RELEASE_PUBLIC)
 			->groupBy('entries.id', 'entries.title')
 			->orderBy('entries.title')
 			->get();
@@ -186,7 +194,7 @@ class Entry extends Base
 	// tags should be generic
 	// **NOT USED YET**
 	//
-    public function addTagUser($name)
+    public function addTagUserSbw($name)
     {
 		if (Auth::check())
 		{
@@ -194,7 +202,7 @@ class Entry extends Base
 		}
 	}
 	
-    public function addTag($name, $userId = null)
+    public function addTagSbw($name, $userId = null)
     {
 		$tag = Tag::getOrCreate($name);
 		if (isset($tag))
@@ -204,7 +212,7 @@ class Entry extends Base
 		}
     }
 
-    public function removeTagUser($name)
+    public function removeTagUserSBW($name)
     {
 		if (Auth::check())
 		{
@@ -212,7 +220,7 @@ class Entry extends Base
 		}
 	}
 
-    public function removeTag($name)
+    public function removeTagSBW($name)
     {
 		$tag = Tag::get($name);
 		if (isset($tag))
@@ -276,55 +284,6 @@ class Entry extends Base
 		return $records;
 	}
 
-	static public function getRecent($tag, $limit = PHP_INT_MAX)
-	{
-		$tag = Tag::getOrCreate($tag);
-		$records = null;
-		if (isset($tag))
-		{
-			$tagRecent = Tag::getRecent();
-			$records = DB::table('entries')
-				->join('entry_tag', function($join) use ($tag) {
-					$join->on('entry_tag.entry_id', '=', 'entries.id');
-					$join->where('entry_tag.tag_id', $tag->id);
-				})	
-				->leftJoin('entry_tag as recent_tag', function($join) use ($tagRecent) {
-					$join->on('recent_tag.entry_id', '=', 'entries.id');
-					$join->where('recent_tag.user_id', Auth::id());
-					$join->where('recent_tag.tag_id', $tagRecent->id);
-				})							
-				->select('entries.*')
-				->where('entries.deleted_flag', 0)
-				->where('entries.release_flag', '>=', self::getReleaseFlag())
-				->orderByRaw('recent_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
-				->get($limit);
-		}
-
-		return $records;
-	}
-
-	static public function getArticlesRecent($limit = PHP_INT_MAX)
-	{			
-		$tag = Tag::getRecent();
-		
-		$records = DB::table('entries')
-			->leftJoin('entry_tag', function($join) use ($tag) {
-				$join->on('entry_tag.entry_id', '=', 'entries.id');
-				$join->where('entry_tag.user_id', Auth::id());
-				$join->where('entry_tag.tag_id', $tag->id);
-			})			
-			->select('entries.*')
-			->where('entries.deleted_flag', 0)
-			->where('entries.site_id', Tools::getSiteId())
-			->where('entries.type_flag', ENTRY_TYPE_ARTICLE)
-			->where('entries.release_flag', '>=', self::getReleaseFlag())
-			->orderByRaw('entry_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
-			->limit($limit)
-			->get();
-
-		return $records;
-	}
-	
 	static public function getArticles($limit = PHP_INT_MAX)
 	{			
 		$records = $record = Entry::select()
@@ -616,169 +575,152 @@ class Entry extends Base
 		return $values;
 	}
 
-	static protected function getLocationsFromEntries($standardCountryNames)
-	{
-		$q = '
-SELECT e.title, e.display_date, country.name FROM entries AS e
-LEFT JOIN locations AS city
-	ON city.id = e.location_id AND city.deleted_flag = 0
-LEFT JOIN locations as country
-	ON country.id = city.parent_id AND country.deleted_flag = 0
-WHERE 1=1
-AND e.type_flag = 4
-AND e.deleted_flag = 0
-AND e.release_flag = 1
-AND city.name IS NOT NULL
-AND country.name IS NOT NULL
-AND YEAR(e.display_date) >= 2018
-ORDER BY e.display_date DESC
-;
-		';
+	//////////////////////////////////////////////////////////////////////
+	//
+	// Tag functions: recent tag and read location
+	//
+	//////////////////////////////////////////////////////////////////////
 
-		$records = null;
-		try {		
-			$records = DB::select($q);
-		}
-		catch(\Exception $e)
-		{
-			// todo: log me
-		}
+	// add or update system 'recent' tag for entries.
+	// this lets us order by most recent entries
+    public function tagRecent()
+    {
+		$readLocation = 0;
 		
-		$locations = [];
-		$cnt = 0;
-		foreach($records as $record)
+		if (Auth::check()) // only for logged in users
 		{
-			$country = Tools::getStandardCountryName($standardCountryNames, $record->name);
-		
-			//if ($country == 'Washington')
-			//	dump($record);
-				
-			if (!array_key_exists($country, $locations))
+			$recent = self::getRecentTag();
+			if (isset($recent)) // replace old one if exists
 			{
-				$record->display_date = new DateTime($record->display_date);
-				$record->name = $country;
-				
-				$locations[$country] = $record;
+				$readLocation = $this->getReadLocation($recent->id);
+				$this->tags()->detach($recent->id, ['user_id' => Auth::id()]);
 			}
-		}
-		
-		//dd('stop');
-
-		return $locations;
-	}
-	
-	static protected function getLocationsFromSettings($standardCountryNames)
-	{		
-		$record = null;
-		try {		
-			$record = Entry::select()
-				->where('permalink', '=', 'settings-country-list')
-				->where('deleted_flag', 0)
-				->first();
-		}
-		catch(\Exception $e)
-		{
-			// todo: log me
-			//dump($e);
-		}
-	
-		$locations = [];
-		if (isset($record))
-		{
-			$lines = preg_split('/\r\n+/', $record->description, -1, PREG_SPLIT_NO_EMPTY);
-
-			foreach($lines as $country)
-			{
-				$country = Tools::getStandardCountryName($standardCountryNames, $country);
 			
-				if (!array_key_exists($country, $locations))
-					$locations[$country] = $country;
-			}
+			$this->tags()->attach($recent->id, ['user_id' => Auth::id(), 'read_location' => $readLocation]);
+			$this->refresh();
 		}
+		
+		return $readLocation;
+    }
 
-		return $locations;
+    static public function getRecentTag()
+    {
+		return Tag::getOrCreate('recent', TAG_TYPE_SYSTEM);
 	}
 	
-	protected function getLatestLocationsFromBlogEntries()
-	{
-		$q = '
-SELECT country.name, photos.filename, photos.parent_id 
-FROM entries AS e
-LEFT JOIN locations AS city
-	ON city.id = e.location_id AND city.deleted_flag = 0
-LEFT JOIN locations as country
-	ON country.id = city.parent_id AND country.deleted_flag = 0
-LEFT JOIN photos
-	ON photos.id = e.photo_id AND photos.deleted_flag = 0
-WHERE 1=1
-AND e.type_flag = 4
-AND e.deleted_flag = 0
-AND e.release_flag = 1
-AND city.name IS NOT NULL
-AND country.name IS NOT NULL
-ORDER BY e.display_date DESC
-;
-		';
-
-		$records = null;
-		$domainName = null;
-		try {		
-			$records = DB::select($q);
-		}
-		catch(\Exception $e)
+    public function setReadLocation($readLocation)
+    {
+		$rc = false;
+		
+		if (Auth::check())
 		{
-			// todo: log me
-			//dump($e);
+			$recent = self::getRecentTag();
+			if (isset($recent)) // replace old one if exists
+				$this->tags()->detach($recent->id, ['user_id' => Auth::id()]);
+			
+			$this->tags()->attach($recent->id, ['user_id' => Auth::id(), 'read_location' => $readLocation]);
+			$this->refresh();
+			$rc = true;
 		}
 		
-		$locations = [];			// only used for uniqueness and count
-		$currentLocation = null;	// first location is the current location
-		$recentLocations = '';		// recent locations are the next 10 unique location names
-		
-		foreach($records as $record)
-		{
-			// only add entries once
-			if (!array_key_exists($record->name, $locations))
-			{
-				if (isset($currentLocation))
-				{
-					// locations 2 - 11 are the recent locations
-					$recentLocations .= trans('geo.' . $record->name) . '<br>';
-				}
-				else
-				{
-					// first location is the current location	
-						
-					$currentLocation = $record->name;
-					
-					$currentLocationPhoto = null;
-					if (isset($record->filename))
-					{
-						$currentLocationPhoto = '/img/entries/' . $record->parent_id . '/' . $record->filename;
-					}
-					else
-					{
-						if (!isset($domainName))
-							$domainName = Tools::getServerName();
-					
-						$currentLocationPhoto = '/img/theme1/' . PHOTOS_PLACEHOLDER_PREFIX . $domainName . '.jpg';
-					}
-				}
-				
-				$locations[$record->name] = $record->name;
-			}
-				
-			if (count($locations) == 11)
-				break;
-		}
-		
-		// pack up the return values
-		$rc['currentLocation'] = $currentLocation;
-		$rc['currentLocationPhoto'] = $currentLocationPhoto;
-		$rc['recentLocations'] = $recentLocations;
-		
-		//dd($rc);
-
 		return $rc;
 	}
+
+    private function getReadLocation($tagId)
+    {
+		$readLocation = 0;
+		
+		if (Auth::check())
+		{
+			$record = DB::table('entry_tag')
+					->where('tag_id', $tagId)
+					->where('entry_id', $this->id)
+					->where('user_id', Auth::id())
+					->first();
+					
+			if (isset($record))
+			{
+				$readLocation = $record->read_location;
+			}
+		}
+		
+		return intval($readLocation);
+	}	
+
+	static public function getRecentList($type, $limit = PHP_INT_MAX)
+	{			
+		$type = intval($type);
+		$records = [];
+		$tag = self::getRecentTag();
+		$logInfo = 'type_flag: ' . self::getTypeFlagName($type);
+		
+		if (isset($tag)) // should always exist
+		{
+			try
+			{
+				$records = DB::table('entries')
+					->leftJoin('entry_tag', function($join) use ($tag) {
+						$join->on('entry_tag.entry_id', '=', 'entries.id');
+						$join->where('entry_tag.user_id', Auth::id()); // works for users not logged in
+						$join->where('entry_tag.tag_id', $tag->id);
+					})			
+					->select('entries.*')
+					->where('entries.deleted_flag', 0)
+					->where('entries.site_id', Tools::getSiteId())
+					->where('entries.type_flag', $type)
+					->where('entries.release_flag', '>=', self::getReleaseFlag())
+					->orderByRaw('entry_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
+					->limit($limit)
+					->get();					
+			}
+			catch (\Exception $e)
+			{
+				$msg = 'Error getting recent list';
+				Event::logException(LOG_MODEL, LOG_ACTION_INDEX, 'getRecentList', $msg . ', ' . $logInfo, $e->getMessage());
+				Session::flash('message.level', 'danger');
+				Session::flash('message.content', $msg);				
+			}	
+		}
+		else
+		{
+			$msg = 'Error getting recent list, recent tag not found';
+			Event::logError(LOG_MODEL, LOG_ACTION_INDEX, 'getRecentList', $msg . ', ' . $logInfo);
+			Session::flash('message.level', 'danger');
+			Session::flash('message.content', $msg);				
+		}
+
+		return $records;
+	}
+		
+	static public function getBooksRecentOLD_NOT_USED($limit = PHP_INT_MAX) // need this?
+	{
+		$tag = Tag::getOrCreate(TAG_BOOK, TAG_TYPE_BOOK);
+		$records = null;
+		if (isset($tag))
+		{
+			$tagRecent = self::getRecentTag();
+			$records = DB::table('entries')
+				->join('entry_tag', function($join) use ($tag) {
+					$join->on('entry_tag.entry_id', '=', 'entries.id');
+					$join->where('entry_tag.tag_id', $tag->id);
+				})	
+				->leftJoin('entry_tag as recent_tag', function($join) use ($tagRecent) {
+					$join->on('recent_tag.entry_id', '=', 'entries.id');
+					$join->where('recent_tag.user_id', Auth::id());
+					$join->where('recent_tag.tag_id', $tagRecent->id);
+				})							
+				->select('entries.*')
+				->where('entries.deleted_flag', 0)
+				->where('entries.release_flag', '>=', self::getReleaseFlag())
+				->orderByRaw('recent_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
+				->get($limit);
+		}
+
+		return $records;
+	}		
+
+	//////////////////////////////////////////////////////////////////////
+	// End of Specialized - Recent Articles Tag
+	//////////////////////////////////////////////////////////////////////
+	
 }

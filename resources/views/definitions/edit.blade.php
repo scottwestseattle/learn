@@ -23,13 +23,14 @@
 				<a onclick="translateOnWebsite(event, 'wordreference', $('#title').val());" href="" tabindex="-1"  class="small-thin-text ml-2">WR</a>
 			</div>
 			
-			<label for="forms" class="control-label mr-3">@LANG('content.Word Forms'): <span class="small-thin-text">( with comma or semi-colon)</span></label>
+			<label for="forms" class="control-label mr-3">@LANG('content.Word Forms'): <span class="small-thin-text">(with comma or semi-colon)</span></label>
+			<a onclick="wordFormsGen(event, '#title', '#forms', true);" href="" tabindex="-1" class="ml-2"><div class="middle mb-2"><b>+s</b></div></a>
 			<a onclick="wordFormsGen(event, '#title', '#forms');" href="" tabindex="-1" class="ml-2"><span class="glyphicon glyphicon-plus-sign" ></span></a>			
 			<a onclick="event.preventDefault(); $('#forms').val(''); $('#forms').focus();" href="" tabindex="-1" class="ml-2"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<input type="text" rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))" value="{{$formsPretty}}" />
 			<div class="small-thin-text mb-2 ml-2">{{$record->forms}}</div>
 
-			<label for="conjugations" class="control-label mr-3">@LANG('content.Conjugations'):</label>
+			<label for="conjugations" class="control-label mr-3">@LANG('content.Conjugations'):  <span class="small-thin-text">(Regular -AR verbs ony)</span></label></label>
 			<a onclick="event.preventDefault(); conjugationsGen('#title', '#conjugations');" href="" tabindex="-1" class="ml-2"><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
 			<a onclick="event.preventDefault(); $('#conjugations').val(''); $('#conjugations').focus();" href="" tabindex="-1" class="ml-2"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<textarea rows="3" name="conjugations" id="conjugations" class="form-control" autocomplete="off" onfocus="setFocus($(this))" >{{$record->conjugations}}</textarea>

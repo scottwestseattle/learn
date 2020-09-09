@@ -43,8 +43,8 @@ class VocabListController extends Controller
 		// qna lists
         $records = VocabList::getIndex(['ownedOrPublic']);
 
-		// defintions favorites
-		$favorites = Tag::getTagsUser();
+		// definitions favorites
+		$favorites = Definition::getUserFavoriteLists();
 
 		// articles/books look ups
 		$entries = Entry::getDefinitionsUser();

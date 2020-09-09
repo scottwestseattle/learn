@@ -10,6 +10,37 @@ use App\Entry;
 
 class Tag extends Base
 {	
+	const _typeFlags = [
+        TAG_TYPE_NOTSET => 'Not Set',
+        TAG_TYPE_SYSTEM => 'system',
+        TAG_TYPE_BOOK => 'book',
+        TAG_TYPE_DEFINITION_FAVORITE => 'Favorites',
+        TAG_TYPE_OTHER => 'Other',
+	];
+
+    static public function getTypeFlags()
+	{
+		return self::_typeFlags;
+	}
+
+    public function getTypeFlagName()
+	{
+		$typeFlag = intval($this->type_flag); // in case it's null
+		return self::_typeFlags[$typeFlag];
+	}
+
+    public function isTypeFlagSet()
+	{
+		$typeFlag = intval($this->type_flag); // in case it's null
+		return ($typeFlag > TAG_TYPE_NOTSET);
+	}
+
+    public function getTypeButtonColor()
+	{
+		// if type flag is set use the default color
+		return ($this->isTypeFlagSet() ? '' : 'type-not-set-color');
+	}
+
     public function entries()
     {
 		// many to many
@@ -27,162 +58,116 @@ class Tag extends Base
 		return $this->belongsToMany('App\Definition')->wherePivot('user_id', Auth::id())->orderBy('title');
     }	
 	
+	//////////////////////////////////////////////////////////////////////
+	//
+	// the basic CRUD functions
+	//
+	//////////////////////////////////////////////////////////////////////
 
-	// add or update 'recent' tag for entries.
-	// this lets us order by most recent entries
-    static public function recent(Entry $entry)
-    {
-		$readLocation = 0;
-		
-		if (Auth::check())
-		{
-			$recent = self::getRecent();
-			if (isset($recent)) // replace old one if exists
-			{
-				$readLocation = self::getReadLocation($recent->id, $entry->id);
-				$entry->tags()->detach($recent->id, ['user_id' => Auth::id()]);
-			}
-			
-			$entry->tags()->attach($recent->id, ['user_id' => Auth::id(), 'read_location' => $readLocation]);
-			$entry->refresh();
-		}
-		
-		return $readLocation;
-    }
-
-    static public function setReadLocation(Entry $entry, $readLocation)
-    {
-		$rc = false;
-		
-		if (Auth::check())
-		{
-			$recent = self::getRecent();
-			if (isset($recent)) // replace old one if exists
-				$entry->tags()->detach($recent->id, ['user_id' => Auth::id()]);
-			
-			$entry->tags()->attach($recent->id, ['user_id' => Auth::id(), 'read_location' => $readLocation]);
-			$entry->refresh();
-			$rc = true;
-		}
-		
-		return $rc;
-	}
-
-    static public function getReadLocation($tagId, $entryId)
-    {
-		$readLocation = 0;
-		
-		if (Auth::check())
-		{
-			$record = DB::table('entry_tag')
-					->where('tag_id', $tagId)
-					->where('entry_id', $entryId)
-					->where('user_id', Auth::id())
-					->first();
-					
-			if (isset($record))
-			{
-				$readLocation = $record->read_location;
-			}
-		}
-		
-		return intval($readLocation);
-	}
-
-	// tag the specified entry with the named tag
-	// if it doesn't exist create it.
-    static public function tag(Entry $entry, $name, $userId = null)
-    {
-		if (Auth::check())
-		{
-			$tag = self::getOrCreate($name);
-			if (isset($tag))
-			{
-				$entry->tags()->detach($tag->id);
-				$entry->tags()->attach($tag->id, ['user_id' => $userId]);
-			}
-		}
-    }
-
-    static public function remove(Entry $entry, $name, $userId = null)
-    {
-		if (Auth::check())
-		{
-			$tag = self::get($name);
-			if (isset($tag))
-			{
-				$entry->tags()->detach($tag->id);
-			}
-		}
-    }
-	
-    static public function getRecent()
+    static public function getOrCreate($name, $type, $userId = null)
 	{
-		$record = self::get('recent');
+		$record = self::get($name, $type, $userId);
+		
+		// if not found, add it
 		if (!isset($record))
 		{
-			$record = self::addTag('recent');
-		}
-		
-		return $record;
-	}
-
-    static public function getOrCreate($name)
-	{
-		$record = self::get($name);
-		if (!isset($record))
-		{
-			$record = self::addTag($name);
+			$record = self::add($name, $type, $userId);
 		}
 		
 		return $record;
 	}
 	
-    static public function addTag($name)
+    static public function get($name, $type, $userId = null)
     {
 		$record = null;
 		$name = Tools::alphanum($name, true);
-		if (isset($name) && strlen($name) > 0) // if anything is left
-		{		
-			if (Auth::check())
-			{
-				$record = new Tag();
-				$record->user_id = Auth::id();
-				$record->name 	 = $name;
-				
-				try
-				{
-					$record->save();
-					Event::logAdd(LOG_MODEL, $record->name, $record->user_id, $record->id);
-				}
-				catch (\Exception $e)
-				{
-					$msg = 'Error adding ' . LOG_MODEL . ': ' . $record->name . ' for user ' . Auth::id();
-					Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->name, null, $msg . ': ' . $e->getMessage());
-				}	
-			}
+
+		if (isset($userId))
+		{			
+			$record = $record = Tag::select()
+					->where('deleted_at', null)
+					->where('name', $name)
+					->where('type_flag', $type)
+					->where('user_id', $userId)
+					->first();
 		}
 		else
 		{
-			$msg = 'Error adding ' . LOG_MODEL . ': invalid name, user_id = ' . Auth::id();
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'inavalid name', null, $msg . ': ' . $e->getMessage());
+			$record = $record = Tag::select()
+					->where('deleted_at', null)
+					->where('name', $name)
+					->where('type_flag', $type)
+					->first();
+		}
+
+		return $record;
+    }
+	
+    static public function getOld($name, $type, $userId = null)
+    {
+		$record = null;
+		$name = Tools::alphanum($name, true);
+		
+		$tag = DB::table('tags')
+			->join('definition_tag', function($join) use($userId) {
+				$join->on('definition_tag.tag_id', '=', 'tags.id');
+				$join->where('definition_tag.user_id', $userId);
+			})	
+			->select('tags.*')
+			->where('deleted_at', null)
+			->where('tags.name', $name)
+			->where('tags.type_flag', $type)
+			->where('tags.user_id', $userId)
+			->first();
+
+		if (isset($tag))
+		{
+			// get it the laravel way so it will include the definitions list for the user
+			$record = Tag::select()
+					->where('id', $tag->id)
+					->first();
+		}	
+
+		return $record;
+	}	
+
+    static public function add($name, $type, $userId = null)
+    {
+		$record = null;
+		$type = intval($type);
+		$name = Tools::alphanum($name, true);
+		if (!isset($name) || strlen($name) === 0) // if nothing is left
+		{
+			$msg = 'Error adding tag: invalid name, user_id: ' . intval($userId) . '';
+			Event::logError(LOG_MODEL_TAGS, LOG_ACTION_ADD, $msg, null);
+		}
+		else if ($type <= 0) // type_flag is required
+		{
+			$msg = 'Error adding tag: invalid type_flag: ' . $type . ', tag name: . ' . $name . ', user_id: . ' . intval($userId) . '';
+			Event::logError(LOG_MODEL_TAGS, LOG_ACTION_ADD, $name, $msg);
+		}
+		else
+		{
+			$record = new Tag();
+			$record->user_id 	= Tools::intOrNull($userId);
+			$record->type_flag 	= $type;
+			$record->name 	 	= $name;
+
+			try
+			{
+				$record->save();
+				Event::logAdd(LOG_MODEL_TAGS, $record->name, $record->user_id, $record->id);
+			}
+			catch (\Exception $e)
+			{
+				$msg = 'Error adding tag: ' . $record->name . ', userId: ' . intval($userId);
+				Event::logException(LOG_MODEL_TAGS, LOG_ACTION_ADD, $record->name, $msg, $e->getMessage());
+			}	
 		}
 		
 		return $record;
     }
 	
-    static public function get($name)
-    {
-		$name = Tools::alphanum($name, true);
-
-		$record = $record = Tag::select()
-				->where('deleted_at', null)
-				->where('name', $name)
-				->first();
-
-		return $record;
-    }
-
     static public function getById($id)
     {
 		$id = intval($id);
@@ -194,49 +179,4 @@ class Tag extends Base
 
 		return $record;
     }
-
-    static public function getTagUser($name)
-    {
-		$name = Tools::alphanum($name, true);
-		$record = null;
-
-		$tag = DB::table('tags')
-			->join('definition_tag', function($join) {
-				$join->on('definition_tag.tag_id', '=', 'tags.id');
-				$join->where('definition_tag.user_id', Auth::id());
-			})	
-			->select('tags.*')
-			->where('deleted_at', null)
-			->where('tags.name', $name)
-			->first();
-
-		if (isset($tag))
-		{
-			// get it the laravel way so it will include the definitions list for the user
-			$record = Tag::select()
-					->where('id', $tag->id)
-					->first();
-					
-			//if (isset($record))
-			//	$records = $record->definitionsUser;
-		}
-
-		return $record;
-    }
-	
-    static public function getTagsUser()
-    {
-		$records = DB::table('tags')
-			->join('definition_tag', function($join) {
-				$join->on('definition_tag.tag_id', '=', 'tags.id');
-				$join->where('definition_tag.user_id', Auth::id());
-			})	
-			//->select('tags.id', 'tags.name', 'tags.user_id')
-			->select(DB::raw('tags.id, tags.name, tags.user_id, count(definition_tag.tag_id) as wc'))
-			->where('deleted_at', null)
-			->groupBy('tags.id', 'tags.name', 'tags.user_id')
-			->get();
-
-		return $records;
-    }		
 }

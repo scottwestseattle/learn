@@ -15,17 +15,24 @@
 	    </a>
 	</div>
 
-	<h3 name="" class="" style="margin-bottom:10px;">{{$tag->name}}@component('components.badge', ['text' => count($records)])@endcomponent
-	</h3>
+	<h3 name="" class="" style="margin-bottom:10px;">{{$tag->name}}@component('components.badge', ['text' => count($records)])@endcomponent</h3>
+	<div id="removeStatus"></div>
 
-	<table class="table xtable-responsive table-striped">
+	<table style="width:100%;" class="table xtable-striped">
 		<tbody>
 		@foreach($records as $r)
-			<tr>
-				<td>
+			<tr id="row{{$r->id}}">
+				<td style="width:100%;">
 				    <a href="/definitions/view/{{$r->id}}">{{$r->title}}</a>
 				    <div>{{substr($r->definition, 0, 200)}}</div>
 				</td>
+				
+				<td class="icon mr-3">
+					<a href='' onclick="unheartDefinition(event, {{$r->id}}, '#removeStatus'); $('#row{{$r->id}}').hide();">
+						<span id="heart" class="glyphCustom-md glyphicon glyphicon-remove"></span>
+					</a>
+				</td>
+				
 			</tr>
 		@endforeach
 		</tbody>

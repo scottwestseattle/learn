@@ -33,7 +33,7 @@ Route::get('/sample/', 'FrontPageController@sample');
 Route::get('/authenticated', 'HomeController@authenticated');
 Route::get('/articles', 'EntryController@articles');
 Route::get('/books', 'EntryController@books');
-Route::get('/lists', 'VocabListController@index');
+Route::get('/vocabulary', 'VocabListController@index');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
@@ -55,7 +55,30 @@ Route::get('/send/wod', 'HomeController@wod');
 Route::get('/lessons/rss-reader/{lesson}/', 'LessonController@rssReader');
 Route::get('/courses/rss-reader', 'CourseController@rssReader');
 
-// Entries
+// Tags
+Route::group(['prefix' => 'tags'], function () {
+	
+	// index
+	Route::get('/', 'TagController@index');
+	Route::get('/view/{tag}', 'TagController@view');
+
+	// add/create
+	Route::get('/add','TagController@add');
+	Route::post('/create','TagController@create');
+	Route::get('/add-user-favorite-list','TagController@addUserFavoriteList');
+	Route::post('/create-user-favorite-list','TagController@createUserFavoriteList');
+
+	// edit/update
+	Route::get('/edit/{tag}','TagController@edit');
+	Route::post('/update/{tag}','TagController@update');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{tag}','TagController@confirmdelete');
+	Route::post('/delete/{tag}','TagController@delete');
+	
+});
+
+// Definitions
 Route::group(['prefix' => 'definitions'], function () {
 	
 	Route::get('/', 'DefinitionController@index');
