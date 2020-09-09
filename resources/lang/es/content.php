@@ -163,4 +163,8 @@ return [
 'Your Questions and Answers' => 'Sus Preguntas',
 'Dictionary Favorites' => 'Favoritos',
 'Back to Lists' => 'Volver a listas',
+'This Tag is in use and cannot be deleted' => 'Esta etiqueta está en uso y no se puede eliminar',
+'This Tag is not in use' => 'Esta etiqueta no está en uso',
+'Entry Tags' => 'Etiquetas de entrada',
+'Definition Tags' => 'Etiquetas de diccionario',
 ];

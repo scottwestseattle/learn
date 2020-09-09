@@ -80,23 +80,67 @@ class Definition extends Base
 		
 		return $rc;
     }
+
+    public function addTag($tagId)
+    {		
+		if (Auth::check())
+		{
+			$this->tags()->detach($tagId); // if it's already tagged, remove it so it will by updated
+			$this->tags()->attach($tagId, ['user_id' => Auth::id()]);
+		}
+    }
+
+    public function removeTag($tagId)
+    {		
+		if (Auth::check())
+		{
+			$this->tags()->detach($tagId);
+		}
+    }
 	
     static public function getUserFavoriteLists()
     {
-		$records = DB::table('tags')
-			->leftJoin('definition_tag', function($join) {
-				$join->on('definition_tag.tag_id', '=', 'tags.id');
-				$join->where('definition_tag.user_id', Auth::id());
-			})	
-			->select(DB::raw('tags.id, tags.name, tags.user_id, count(definition_tag.tag_id) as wc'))
-			->where('tags.deleted_at', null)
-			->where('tags.user_id', Auth::id())
-			->where('type_flag', TAG_TYPE_DEFINITION_FAVORITE)
-			->groupBy('tags.id', 'tags.name', 'tags.user_id')
-			->get();
+		$records = null;
+		
+		try
+		{
+			$records = DB::table('tags')
+				->leftJoin('definition_tag', function($join) {
+					$join->on('definition_tag.tag_id', '=', 'tags.id');
+					$join->where('definition_tag.user_id', Auth::id());
+				})	
+				->select(DB::raw('tags.id, tags.name, tags.user_id, count(definition_tag.tag_id) as wc'))
+				->where('tags.deleted_at', null)
+				->where('tags.user_id', Auth::id())
+				->where('type_flag', TAG_TYPE_DEFINITION_FAVORITE)
+				->groupBy('tags.id', 'tags.name', 'tags.user_id')
+				->get();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting favorite lists';
+			Event::logException(LOG_MODEL_TAGS, LOG_ACTION_SELECT, 'getUserFavoriteLists', $msg, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}		
 
 		return $records;
     }	
+
+    static public function getUserFavoriteListsOptions()
+    {
+		$options = [];
+		
+		$records = self::getUserFavoriteLists();
+		if (isset($records))
+		{
+			foreach($records as $record)
+			{
+				$options[$record->id] = $record->name;
+			}
+		}
+		
+		return $options;
+	}
 	
 	//////////////////////////////////////////////////////////////////////
 	// End of Tag Functions

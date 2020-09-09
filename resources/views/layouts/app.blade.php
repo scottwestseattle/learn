@@ -28,6 +28,9 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet">
 
+	<!-- laravel css -->
+    <!-- link href="/css/app.css" rel="stylesheet" --><!-- doesn't seeme to be needed-->
+
     <!-- Custom styles for this template -->
     <link href="/css/project.css" rel="stylesheet">
     <link href="/css/glyphicons.css" rel="stylesheet">

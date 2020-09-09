@@ -116,4 +116,7 @@ return [
 'views' => 'conteo de visitas',
 'Books' => 'Libros',
 'Review' => 'Revisar',
+'Tag' => 'Etiqueta',
+'Tags' => 'Etiquetas',
+'User' => 'Usuario',
 ];

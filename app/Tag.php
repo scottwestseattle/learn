@@ -103,6 +103,34 @@ class Tag extends Base
 		return $record;
     }
 	
+    static public function getPivot($name, $type, $userId = null)
+    {
+		$record = null;
+		$name = Tools::alphanum($name, true);
+		
+		$tag = DB::table('tags')
+			->join('definition_tag', function($join) use($userId) {
+				$join->on('definition_tag.tag_id', '=', 'tags.id');
+				$join->where('definition_tag.user_id', $userId);
+			})	
+			->select('tags.*')
+			->where('deleted_at', null)
+			->where('tags.name', $name)
+			->where('tags.type_flag', $type)
+			->where('tags.user_id', $userId)
+			->first();
+
+		if (isset($tag))
+		{
+			// get it the laravel way so it will include the definitions list for the user
+			$record = Tag::select()
+					->where('id', $tag->id)
+					->first();
+		}	
+
+		return $record;
+	}
+	
     static public function getOld($name, $type, $userId = null)
     {
 		$record = null;

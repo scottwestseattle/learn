@@ -116,4 +116,7 @@ return [
 'views' => 'views',
 'Books' => 'Books',
 'Review' => 'Review',
+'Tag' => 'Tag',
+'Tags' => 'Tags',
+'User' => 'User',
 ];

@@ -86,6 +86,7 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/view/{definition}', 'DefinitionController@view');
 	Route::get('/list/{tag}', 'DefinitionController@list');
 	Route::get('/review/{tag}', 'DefinitionController@review');
+	Route::get('/set-favorite-list/{definition}/{tagFrom}/{tagTo}','DefinitionController@setFavoriteList');
 
 	// ajax calls
 	Route::get('/find/{text}', 'DefinitionController@find');

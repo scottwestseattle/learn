@@ -163,4 +163,8 @@ return [
 'Your Questions and Answers' => 'Your QnA',
 'Dictionary Favorites' => 'Your Favorites',
 'Back to Lists' => 'Back to Lists',
+'This Tag is in use and cannot be deleted' => 'This Tag is in use and cannot be deleted',
+'This Tag is not in use' => 'This Tag is not in use',
+'Entry Tags' => 'Entry Tags',
+'Definition Tags' => 'Dictionary Tags',
 ];

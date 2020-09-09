@@ -862,6 +862,26 @@ class DefinitionController extends Controller
 		return $rc;
     }	
 	
+	public function setFavoriteList(Request $request, Definition $definition, $tagFrom, $tagTo)
+    {
+		$record = $definition;
+        $rc = '';
+
+        if (Auth::check())
+        {
+			$record->removeTag($tagFrom);
+			$record->addTag($tagTo);
+        }
+        else
+        {
+			$rc = 'favorite not saved - you must log in';
+        }
+
+		Event::logInfo(LOG_MODEL, LOG_ACTION_OTHER, 'favorite ' . $record->title . ' (' . $record->id . ') ' . $rc);
+
+		return back();
+    }
+	
 	public function heartAjax(Request $request, Definition $definition)
     {
 		$record = $definition;
@@ -948,6 +968,8 @@ class DefinitionController extends Controller
 		return view(PREFIX . '.list', $this->getViewData([
 			'records' => $records,
 			'tag' => $tag,
+			'lists' => Definition::getUserFavoriteLists(),
+			'favoriteListsOptions' => Definition::getUserFavoriteListsOptions(),
 		]));
     }	
 	

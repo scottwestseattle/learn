@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use DB;
 use Lang;
 
 use App\Event;
@@ -22,8 +23,8 @@ class TagController extends Controller
 {
 	public function __construct ()
 	{
-        //$this->middleware('is_admin')->except(['add']);
-        $this->middleware('auth')->except(['add']);
+        $this->middleware('is_admin')->except(['add']);
+		$this->middleware('auth');
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -49,7 +50,7 @@ class TagController extends Controller
     	return view('entries.index', ['entries' => $tag->entries]);
     }
 	
-    public function add()
+    public function add(Request $request)
     {		
     	return view('tags.add', $this->getViewData());
     }
@@ -79,9 +80,9 @@ class TagController extends Controller
     	return redirect('/vocabulary'); 
     }
 	
-    public function addUserFavoriteList()
+    public function addUserFavoriteList(Request $request)
     {		
-    	return view('tags.add', $this->getViewData());
+    	return view('tags.add-user-favorite-list', $this->getViewData());
     }
 
     public function createUserFavoriteList(Request $request)
@@ -129,22 +130,27 @@ class TagController extends Controller
 
     public function confirmdelete(Tag $tag)
     {	
-    	if (Auth::check())
-        {			
-			return view('tags.confirmdelete', $this->getViewData());				
-        }           
-        else 
-		{
-             return redirect('/tags');
-		}            	
+		$countDefinitions = DB::table('definition_tag')
+			->select()
+			->where('tag_id', $tag->id)
+			->count();
+
+		$countEntries = DB::table('entry_tag')
+			->select()
+			->where('tag_id', $tag->id)
+			->count();
+	
+		return view('tags.confirmdelete', $this->getViewData([
+			'record' => $tag,
+			'countDefinitions' => $countDefinitions,
+			'countEntries' => $countEntries,
+			'cantDelete' => ($countDefinitions > 0 || $countEntries > 0),
+		]));
     }
 	
-    public function delete(Tag $tag)
-    {		
-    	if (Auth::check())
-        {			
-			$tag->delete();
-		}
+    public function delete(Request $request, Tag $tag)
+    {			
+		$tag->deleteSafe();
 		
 		return redirect('/tags');
     }	

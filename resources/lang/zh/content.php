@@ -163,4 +163,8 @@ return [
 'Your Questions and Answers' => '您的问题和答案',
 'Dictionary Favorites' => '您最喜欢的话',
 'Back to Lists' => '返回清单',
+'This Tag is in use and cannot be deleted' => '此标签正在使用中，无法删除',
+'This Tag is not in use' => '该标签未使用',
+'Entry Tags' => '条目标签',
+'Definition Tags' => '定义标签',
 ];
