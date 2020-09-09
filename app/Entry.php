@@ -80,7 +80,6 @@ class Entry extends Base
 			->select(DB::raw('entries.id, entries.title, count(definition_entry.entry_id) as wc'))			
 			->where('entries.deleted_flag', 0)
 			->whereIn('entries.type_flag', array(ENTRY_TYPE_ARTICLE, ENTRY_TYPE_BOOK))
-			->where('entries.release_flag', '>=', RELEASE_PUBLIC)
 			->groupBy('entries.id', 'entries.title')
 			->orderBy('entries.title')
 			->get();

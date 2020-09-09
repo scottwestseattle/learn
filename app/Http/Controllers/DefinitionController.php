@@ -480,7 +480,7 @@ class DefinitionController extends Controller
 		$record = Definition::search($text);
 		if (isset($record))
 		{
-			// when a user looks up a word, add it to his definition list for the entry being read
+			// when a user looks up a word, add it to his def list for the entry being read
 			Entry::addDefinitionUserStatic($entryId, $record);
 			
 			$xlate = null;
@@ -532,7 +532,7 @@ class DefinitionController extends Controller
 			$translation = strtolower($rc['data']);
 			$def = Definition::add($text, /* definition = */ null, $translation);
 			
-			// when a user translates a word, add it to his definition list for the entry being read
+			// when a user translates a word, add it to his def list for the entry being read
 			Entry::addDefinitionUserStatic($entryId, $def);
 			
 			if (isset($def))

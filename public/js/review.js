@@ -70,6 +70,19 @@ $(document).keydown(function(event) {
 
 $( document ).ready(function() {
 
+	//
+	// set the checkboxes to their previous values
+	//
+	var checked = (localStorage.getItem('checkbox-hide-options') == 'true');
+	$('#checkbox-hide-options').prop('checked', checked);
+
+	checked = (localStorage.getItem('checkbox-flip') == 'true');
+	$('#checkbox-flip').prop('checked', checked);
+
+	checked = (localStorage.getItem('checkbox-use-definition') == 'true');
+	$('#checkbox-use-definition').prop('checked', checked);
+
+	// do other stuff
 	quiz.setButtonStates(RUNSTATE_START);
 	quiz.setControlStates();
 	loadData();
@@ -810,6 +823,9 @@ function displayAnswerButtons()
 		$("#button-show-options").hide();
 		$("#button-show-answer").show();
 	}
+	
+	var checked = $('#checkbox-hide-options').prop('checked') ? 'true' : '';
+	localStorage.setItem('checkbox-hide-options', checked);
 }
 
 function resetQuiz()
@@ -907,6 +923,13 @@ function loadQuestion()
 function reloadQuestion()
 {
 	quiz.showQuestion();
+	
+	// one of these triggered this call so save the state
+	var checked = $('#checkbox-flip').prop('checked') ? 'true' : '';
+	localStorage.setItem('checkbox-flip', checked);
+		
+	var checked = $('#checkbox-use-definition').prop('checked') ? 'true' : '';
+	localStorage.setItem('checkbox-use-definition', checked);
 }
 
 function toStringBoolArray(a)

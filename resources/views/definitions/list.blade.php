@@ -24,7 +24,7 @@
 			<tr id="row{{$record->id}}">
 				<td style="width:100%;">
 				    <a href="/definitions/view/{{$record->id}}">{{$record->title}}</a>
-					<div>{{$record->definition}}</div>
+					<div>{{$record->translation_en}}</div>
 				</td>
 
 				@if (count($lists) > 1)
