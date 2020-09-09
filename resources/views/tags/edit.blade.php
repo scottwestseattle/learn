@@ -13,18 +13,22 @@
 		<label for="name" class="control-label">@LANG('gen.Name'):</label>
 		<input type="text" name="name" class="form-control" value="{{$record->name}}" autofocus></input>	
 		
-		<div class="form-group">
-		@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix, 
-			'isAdmin' => $isAdmin, 
-			'prompt' => 'Type: ',
-			'empty' => 'Select Type',
-			'options' => App\Tag::getTypeFlags(),
-			'selected_option' => $record->type_flag,
-			'field_name' => 'type_flag',
-			'prompt_div' => true,
-			'select_class' => 'form-control form-control-sm',
-		])@endcomponent
-		</div>
+		@if ($allowTypeChange)
+			<div class="form-group">
+			@component('components.control-dropdown-menu', ['record' => $record, 'prefix' => $prefix, 
+				'isAdmin' => $isAdmin, 
+				'prompt' => 'Type: ',
+				'empty' => 'Select Type',
+				'options' => App\Tag::getTypeFlags(),
+				'selected_option' => $record->type_flag,
+				'field_name' => 'type_flag',
+				'prompt_div' => true,
+				'select_class' => 'form-control form-control-sm',
+			])@endcomponent
+			</div>
+		@else
+			<input name="type_flag" type="hidden" value={{$record->type_flag}} />
+		@endif
 
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>

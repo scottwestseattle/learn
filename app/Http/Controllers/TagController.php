@@ -24,7 +24,7 @@ class TagController extends Controller
 	public function __construct ()
 	{
 		// no public pages
-        $this->middleware('is_admin')->except(['addUserFavoriteList', 'createUserFavoriteList']);
+        $this->middleware('is_admin')->except(['addUserFavoriteList', 'createUserFavoriteList', 'confirmUserFavoriteListDelete', 'delete']);
 		$this->middleware('auth');
 
 		$this->prefix = PREFIX;
@@ -106,15 +106,26 @@ class TagController extends Controller
 			Tools::flash('danger', $msg);
 		}
 				
-		return back();
+		return redirect('/vocabulary');
     }
 
+    public function editUserFavoriteList(Tag $tag)
+    {
+		$record = $tag;
+		
+		return view('tags.edit', $this->getViewData([
+			'record' => $record,
+			'allowTypeChange' => false,
+		]));		
+	}
+	
     public function edit(Tag $tag)
     {
 		$record = $tag;
 		
 		return view('tags.edit', $this->getViewData([
 			'record' => $record,
+			'allowTypeChange' => true,
 		]));
     }
 	
@@ -125,6 +136,19 @@ class TagController extends Controller
 		$tag->save();
 		
 		return redirect('/tags/'); 
+    }
+
+    public function confirmUserFavoriteListDelete(Tag $tag)
+    {	
+		$count = DB::table('definition_tag')
+			->select()
+			->where('tag_id', $tag->id)
+			->count();
+
+		return view('tags.confirm-user-favorite-list-delete', $this->getViewData([
+			'record' => $tag,
+			'count' => $count,
+		]));
     }
 
     public function confirmdelete(Tag $tag)
@@ -148,10 +172,16 @@ class TagController extends Controller
     }
 	
     public function delete(Request $request, Tag $tag)
-    {			
-		$tag->deleteSafe();
+    {
+		//dd($tag->definitionsUser);
+		foreach($tag->definitionsUser as $record)
+		{
+			$tag->definitionsUser()->detach($record->id);
+		}
 		
-		return redirect('/tags');
+		$tag->delete();
+		
+		return redirect('/vocabulary');
     }	
 }
 

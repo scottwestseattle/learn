@@ -71,9 +71,11 @@ Route::group(['prefix' => 'tags'], function () {
 	// edit/update
 	Route::get('/edit/{tag}','TagController@edit');
 	Route::post('/update/{tag}','TagController@update');
+	Route::get('/edit-user-favorite-list/{tag}','TagController@editUserFavoriteList');
 
 	// delete / confirm delete
 	Route::get('/confirmdelete/{tag}','TagController@confirmdelete');
+	Route::get('/confirm-user-favorite-list-delete/{tag}','TagController@confirmUserFavoriteListDelete');
 	Route::post('/delete/{tag}','TagController@delete');
 	
 });
