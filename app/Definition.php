@@ -24,6 +24,17 @@ define('CONJ_SUB_FUTURE', 'sub_fut');
 define('CONJ_IMP_AFFIRMATIVE', 'imp_pos');
 define('CONJ_IMP_NEGATIVE', 'imp_neg');
 
+define('DEFINITIONS_SEARCH_ALPHA', 1);
+define('DEFINITIONS_SEARCH_REVERSE', 2);
+define('DEFINITIONS_SEARCH_NEWEST', 3);
+define('DEFINITIONS_SEARCH_RECENT', 4);
+define('DEFINITIONS_SEARCH_MISSING_TRANSLATION', 5);
+define('DEFINITIONS_SEARCH_MISSING_DEFINITION', 6);
+define('DEFINITIONS_SEARCH_MISSING_CONJUGATION', 7);
+define('DEFINITIONS_SEARCH_WIP_NOTFINISHED', 8);
+define('DEFINITIONS_SEARCH_VERBS', 9);
+define('DEFINITIONS_SEARCH_ALL', 10);
+
 class Definition extends Base
 {
     public function entries()
@@ -160,23 +171,30 @@ class Definition extends Base
 		$orderBy = 'title';
 		switch($sort)
 		{
-			case 2:
+			case DEFINITIONS_SEARCH_REVERSE:
 				$orderBy = 'title desc';
 				break;
-			case 3:
+			case DEFINITIONS_SEARCH_NEWEST:
 				$orderBy = 'id desc';
 				break;
-			case 4:
+			case DEFINITIONS_SEARCH_RECENT:
 				$orderBy = 'updated_at desc';
 				break;
+			case DEFINITIONS_SEARCH_ALL:
+			case DEFINITIONS_SEARCH_VERBS:
+			case DEFINITIONS_SEARCH_MISSING_TRANSLATION:
+			case DEFINITIONS_SEARCH_MISSING_DEFINITION:
+			case DEFINITIONS_SEARCH_MISSING_CONJUGATION:
+			case DEFINITIONS_SEARCH_WIP_NOTFINISHED:
+				$limit = PHP_INT_MAX;
+				break;
 			default:
-				$orderBy = 'title';
 				break;
 		}
 
 		try
 		{
-			if ($sort === 5)
+			if ($sort === DEFINITIONS_SEARCH_MISSING_TRANSLATION)
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')
@@ -185,7 +203,7 @@ class Definition extends Base
 					->limit($limit)
 					->get();
 			}
-			else if ($sort == 6)
+			else if ($sort == DEFINITIONS_SEARCH_MISSING_DEFINITION)
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')
@@ -194,7 +212,7 @@ class Definition extends Base
 					->limit($limit)
 					->get();
 			}
-			else if ($sort == 7)
+			else if ($sort == DEFINITIONS_SEARCH_MISSING_CONJUGATION)
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')
@@ -212,7 +230,7 @@ class Definition extends Base
 					->limit($limit)
 					->get();
 			}
-			else if ($sort == 8) // not finished
+			else if ($sort == DEFINITIONS_SEARCH_WIP_NOTFINISHED)
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')
@@ -221,7 +239,7 @@ class Definition extends Base
 					->limit($limit)
 					->get();
 			}
-			else if ($sort == 9) // verbs
+			else if ($sort == DEFINITIONS_SEARCH_VERBS)
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')

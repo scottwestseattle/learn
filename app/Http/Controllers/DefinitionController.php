@@ -118,7 +118,7 @@ class DefinitionController extends Controller
 
 		try
 		{
-			$records = Definition::getIndex($sort);
+			$records = Definition::getIndex($sort, 20);
 		}
 		catch (\Exception $e)
 		{
