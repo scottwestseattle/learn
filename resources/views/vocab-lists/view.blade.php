@@ -31,19 +31,19 @@
 		@endif
 	</h3>
 
-	<table class="table table-responsive table-striped">
+	<table class="table table-striped">
 		<tbody>
 		@foreach($record->words->where('deleted_flag', 0) as $r)
 			<tr>
             @if (App\User::isOwner($record->user_id))
-				<td><a href="/{{$prefixWord}}/edit-user/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
+				<td class="icon"><a href="/{{$prefixWord}}/edit-user/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
             @endif
 				<td>
 				    <a href="/{{$prefixWord}}/view/{{$r->id}}">{{$r->title}}</a>
 				    <div>{{substr($r->description, 0, 200)}}</div>
 				</td>
             @if (App\User::isOwner($record->user_id))
-				<td><a href="/{{$prefixWord}}/confirmdelete/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
+				<td class="icon"><a href="/{{$prefixWord}}/confirmdelete/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
             @endif
 			</tr>
 		@endforeach

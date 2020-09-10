@@ -59,7 +59,7 @@
 	@if (isset($favorites))
 	<h1 class="mb-0">@LANG('content.' . 'Dictionary Favorites')
 		<a class="btn btn-info btn-xs" role="button" href="/tags/add-user-favorite-list">
-			@LANG('ui.Add List')<span class="glyphicon glyphicon-plus-sign ml-1"></span>
+			@LANG('ui.Add') @LANG('ui.List')<span class="glyphicon glyphicon-plus-sign ml-1"></span>
 		</a>
 	</h1>
 	<div class="mb-2 small-thin-text">Vocabulary favorited from dictionary</div>

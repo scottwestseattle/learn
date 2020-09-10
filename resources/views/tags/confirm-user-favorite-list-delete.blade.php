@@ -21,7 +21,8 @@
 			<button type="submit" class="btn btn-primary">@LANG('ui.Confirm Delete')</button>
 		</div>
 
-	{{ csrf_field() }}
+		{{ csrf_field() }}
+		{{$referrer}}
 	</form>
 </div>
 @endsection

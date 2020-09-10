@@ -282,17 +282,6 @@ class EntryController extends Controller
 		
 		return view('entries.view', $vdata);		
 	}	
-
-    public function pageNotFound404($address)
-    {
-		$msg = 'Page Not Found (404) - /entries/' . $address;			
-		$geo = new Geo;
-		$desc = $geo->visitorInfoDebug();
-		Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg, $desc);			
-		$data['title'] = '404';
-		$data['name'] = 'Page not found';
-		return response()->view('errors.404', $data, 404);		
-	}
 	
     public function view($title, $id)
     {

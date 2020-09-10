@@ -8,10 +8,11 @@
 	
 	<h1>@LANG('content.Dictionary') (<span id="searchDefinitionsResultsCount">{{count($records)}}</span>)
 		<span style="" class="small-thin-text mb-2">
-			<a href="/definitions/search/1">{{'A-Z'}}</a>
-			<a class="ml-2" href="/definitions/search/2">{{'Z-A'}}
-			<a class="ml-2" href="/definitions/search/3">{{'newest'}}</a>
-			<a class="ml-2" href="/definitions/search/4">{{'recent'}}</a>
+			<a href="/definitions/search/1">A-Z</a>
+			<a class="ml-2" href="/definitions/search/2">Z-A</a>
+			<a class="ml-2" href="/definitions/search/9">verbs</a>
+			<a class="ml-2" href="/definitions/search/3">newest</a>
+			<a class="ml-2" href="/definitions/search/4">recent</a>
 			@if ($isAdmin)
 				<a class="ml-2" href="/definitions/search/8">{{'not finished'}}</a>
 				<a class="ml-2" href="/definitions/search/5">{{'missing translation'}}</a>

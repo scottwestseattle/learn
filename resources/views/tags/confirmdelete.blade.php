@@ -37,7 +37,9 @@
 		</div>
 
 		
-	{{ csrf_field() }}
+		{{ csrf_field() }}
+		{{$referrer}}
+	
 	</form>
 </div>
 @endsection

@@ -2,9 +2,12 @@
 
 namespace App;
 
+use Illuminate\Support\HtmlString;
+
+use App;
 use Auth;
 use Lang;
-use App;
+
 use App\User;
 use DateTime;
 
@@ -1041,5 +1044,18 @@ class Tools
 	static public function getSafeUserId()
     {
 		return (Auth::check() ? Auth::id() : 'not logged in');
+	}
+	
+	static public function getReferrer()
+    {
+		$rc = null;
+		
+		if (isset($_SERVER["HTTP_REFERER"]))
+		{
+			$rc = $_SERVER["HTTP_REFERER"];
+			$rc = "<input name='referrer' type='hidden' value='" . $rc . "' />";
+		}
+		
+		return new HtmlString($rc);
 	}
 }

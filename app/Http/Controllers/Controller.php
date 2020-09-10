@@ -206,7 +206,8 @@ class Controller extends BaseController
 		$this->viewData['titlePlural'] = $this->titlePlural;
 		$this->viewData['isAdmin'] = Tools::isAdmin();
 		$this->viewData['isSuperAdmin'] = Tools::isSuperAdmin();
-
+		$this->viewData['referrer'] = Tools::getReferrer();
+		
 		if ($this->getDomainName() == 'localhost')
 			$this->viewData['localhost'] = true;
 
@@ -496,4 +497,28 @@ class Controller extends BaseController
 		return $parts;
 	}
 
+    public function pageNotFound404($model, $view = null, $parameters = null)
+    {
+		$title = 'Page Not Found (404)';
+		$description = $model . '/' . $view . '/' . $parameters;			
+		//$geo = new Geo;
+		//$desc = $geo->visitorInfoDebug();
+		Event::logError('controller', LOG_ACTION_VIEW, $title, $description);			
+		$data['title'] = '404';
+		$data['name'] = 'Page not found';
+		
+		return response()->view('errors.404', $data, 404);		
+	}
+
+	// can't use 'Request $request' because multiple Request classes are used
+    protected function getReferrer($request, $default)
+    {
+		$rc = $default;
+		if (isset($request) && isset($request->referrer))
+		{
+			$rc = $request->referrer;
+		}
+		
+		return $rc;
+	}
 }

@@ -23,8 +23,16 @@ class TagController extends Controller
 {
 	public function __construct ()
 	{
-		// no public pages
-        $this->middleware('is_admin')->except(['addUserFavoriteList', 'createUserFavoriteList', 'confirmUserFavoriteListDelete', 'delete']);
+        $this->middleware('is_admin')->except([
+			'addUserFavoriteList', 'createUserFavoriteList',
+			'confirmUserFavoriteListDelete', 'delete',
+			'editUserFavoriteList', 'update',
+		]);
+
+		// all owner except for adds
+		$this->middleware('is_owner')->except('addUserFavoriteList', 'createUserFavoriteList');
+		
+		// no public pages, only owner or logged in user pages
 		$this->middleware('auth');
 
 		$this->prefix = PREFIX;
@@ -78,7 +86,7 @@ class TagController extends Controller
 			return back();
 		}
 				
-    	return redirect('/vocabulary'); 
+		return redirect($this->getReferrer($request, '/vocabulary'));
     }
 	
     public function addUserFavoriteList(Request $request)
@@ -106,23 +114,23 @@ class TagController extends Controller
 			Tools::flash('danger', $msg);
 		}
 				
-		return redirect('/vocabulary');
+		return redirect($this->getReferrer($request, '/vocabulary')); 				
     }
 
-    public function editUserFavoriteList(Tag $tag)
+    public function editUserFavoriteList(Request $request, Tag $tag)
     {
 		$record = $tag;
-		
+			
 		return view('tags.edit', $this->getViewData([
 			'record' => $record,
 			'allowTypeChange' => false,
-		]));		
+		]));
 	}
 	
     public function edit(Tag $tag)
     {
 		$record = $tag;
-		
+			
 		return view('tags.edit', $this->getViewData([
 			'record' => $record,
 			'allowTypeChange' => true,
@@ -135,7 +143,7 @@ class TagController extends Controller
 		$tag->type_flag = $request->type_flag;
 		$tag->save();
 		
-		return redirect('/tags/'); 
+		return redirect($this->getReferrer($request, '/vocabulary')); 
     }
 
     public function confirmUserFavoriteListDelete(Tag $tag)
@@ -181,7 +189,7 @@ class TagController extends Controller
 		
 		$tag->delete();
 		
-		return redirect('/vocabulary');
+		return redirect($this->getReferrer($request, '/vocabulary')); 
     }	
 }
 

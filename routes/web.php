@@ -34,6 +34,7 @@ Route::get('/authenticated', 'HomeController@authenticated');
 Route::get('/articles', 'EntryController@articles');
 Route::get('/books', 'EntryController@books');
 Route::get('/vocabulary', 'VocabListController@index');
+Route::get('/404/{model}/{view}/{parameters}', 'Controller@pageNotFound404');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');

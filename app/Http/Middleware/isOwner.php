@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Auth;
+use App\User;
 
 class isOwner
 {
@@ -14,22 +15,32 @@ class isOwner
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $id = null)
+    public function handle($request, Closure $next)
     {
+		//
+		// This only works when the full model is passed as a parameter
+		//
 		if (Auth::check())
 		{
+			if (User::isAdmin())
+				return $next($request);
+			
 			$p = $request->route()->parameters();
-			if (isset($p) && array_key_exists('word', $p))
+			if (isset($p))
 			{
-				$record = $p['word'];
-
-				if (isset($record) && $record->user_id == Auth::id())
+				foreach($p as $record)
 				{
-					return $next($request);
+					if (isset($record->user_id) && $record->user_id == Auth::id())
+					{
+						return $next($request);
+					}
 				}
 			}
+			
+			// user logged in but he's not the owner			
+			return redirect('/404/' . $request->route()->uri() . ' - not owner');  
 		}
 
-        return redirect('/login');
+		return redirect('/login'); // not logged in
     }
 }

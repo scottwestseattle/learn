@@ -22,6 +22,7 @@
 		</div>
 		
 		{{ csrf_field() }}
+		{{$referrer}}
 
 	</form>
 

@@ -160,9 +160,6 @@ class Definition extends Base
 		$orderBy = 'title';
 		switch($sort)
 		{
-			case 1:
-				$orderBy = 'title';
-				break;
 			case 2:
 				$orderBy = 'title desc';
 				break;
@@ -172,19 +169,8 @@ class Definition extends Base
 			case 4:
 				$orderBy = 'updated_at desc';
 				break;
-			case 5: // missing translation
-				$orderBy = 'title';
-				break;
-			case 6: // missing definition
-				$orderBy = 'title';
-				break;
-			case 7: // missing conjugation
-				$orderBy = 'title';
-				break;
-			case 7: // not finished
-				$orderBy = 'title';
-				break;
 			default:
+				$orderBy = 'title';
 				break;
 		}
 
@@ -231,6 +217,21 @@ class Definition extends Base
 				$records = Definition::select()
 					->whereNull('deleted_at')
 					->where('wip_flag', '<', WIP_FINISHED)
+					->orderByRaw($orderBy)
+					->limit($limit)
+					->get();
+			}
+			else if ($sort == 9) // verbs
+			{
+				$records = Definition::select()
+					->whereNull('deleted_at')
+					->where(function ($query) {$query
+						->where('title', 'like', '%ar')
+						->orWhere('title', 'like', '%er')
+						->orWhere('title', 'like', '%ir')
+						;})
+					->whereNotNull('conjugations_search')
+					->whereNotNull('conjugations')
 					->orderByRaw($orderBy)
 					->limit($limit)
 					->get();

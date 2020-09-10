@@ -6,11 +6,11 @@
 
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin])@endcomponent
 
-	<h1>@LANG('ui.Edit') @LANG('content.' . $title)</h1>
+	<h1>@LANG('ui.Edit') @LANG('ui.Tag')</h1>
 
 	<form method="POST" id="form-edit" action="/{{$prefix}}/update/{{$record->id}}">
 
-		<label for="name" class="control-label">@LANG('gen.Name'):</label>
+		<label for="name" class="control-label">@LANG('ui.Name'):</label>
 		<input type="text" name="name" class="form-control" value="{{$record->name}}" autofocus></input>	
 		
 		@if ($allowTypeChange)
@@ -33,6 +33,8 @@
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
 		</div>
+
+		{{$referrer}}
 
 		{{ csrf_field() }}
 		

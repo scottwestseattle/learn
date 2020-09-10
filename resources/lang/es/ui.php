@@ -119,4 +119,5 @@ return [
 'Tag' => 'Etiqueta',
 'Tags' => 'Etiquetas',
 'User' => 'Usuario',
+'List' => 'Lista',
 ];
