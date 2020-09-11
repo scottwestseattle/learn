@@ -1,9 +1,9 @@
+<!doctype html>
 <?php
 $domainName = isset($domainName) ? $domainName : App\Tools::getDomainName();
 $siteTitle = isset($siteTitle) ? $siteTitle : App\Tools::getSiteTitle();
 $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitle(false);
 ?>
-<!doctype html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -39,7 +39,6 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 </head>
 
 <body>
-
 	<header>
 		<nav style="" class="navbar navbar-expand-md navbar-dark fixed-top power-purple">
 
@@ -183,3 +182,4 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 </body>
 </html>
+<

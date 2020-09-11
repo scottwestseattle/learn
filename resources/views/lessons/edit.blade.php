@@ -36,7 +36,7 @@
 
 		<div style="{{$record->isText() ? 'display:none;' : ''}}" id="tab-title">
 
-            @if ($record->isTimedSlides())
+        @if ($record->isTimedSlides())
 			<!--------------------------------------------------------------------------->
 			<!-- Main Photo -->
 			<!--------------------------------------------------------------------------->
@@ -94,7 +94,7 @@
                 <button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
             </div>
 
-            @else
+        @else
 
 			<div class="form-group">
 				<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
@@ -111,7 +111,7 @@
 				<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}"></input>
 			</div>
 
-            @endif
+        @endif
 
 			<!--------------------------------------------------------------------------->
 			<!-- Chapter / Section -->
@@ -162,7 +162,6 @@
 	    		<input type="text" name="options" class="form-control" value="{{$record->options}}" />
             </div>
 
-
             @if ($record->isTimedSlides())
 
 			<div class="form-group">
@@ -199,7 +198,7 @@
     @if ($record->isText())
 		<div id="tab-text">
 
-			<div id ="rich" style="clear:both;display:default;">
+			<div id="rich" style="clear:both;display:default;">
 				<textarea style="height:500px" name="text" id="text" class="form-control big-text">{{$record->text}}</textarea>
 			</div>
 
@@ -225,6 +224,7 @@
 
 @endsection
 
+@if (false)
 <script>
 
 function showMainPhoto(id)
@@ -233,3 +233,4 @@ function showMainPhoto(id)
 }
 
 </script>
+@endif
