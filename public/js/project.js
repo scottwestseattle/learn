@@ -1098,10 +1098,43 @@ function translateOnWebsite(event, destination, text)
 		window.open("https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "");
 }
 
+function isAlphanum(keyCode)
+{	
+	if (keyCode >= 65 && keyCode <= 90) // a-z, A-Z
+		return true;
+
+	if (keyCode == 32)
+		return true;
+
+	if (keyCode >= 48 && keyCode <= 57) // 0-9
+		return true;
+	
+	return false;
+}
+
+function isDelete(keyCode)
+{	
+	if (keyCode == 8) // backspace
+		return true;
+
+	if (keyCode == 46) // delete
+		return true;
+	
+	return false;
+}
+
 _delaySearchId = 0;
 _lastSearchWord = '';
-function searchDefinitions(textId, resultsId)
+function searchDefinitions(event, textId, resultsId)
 {
+	// only search when alphanum char is pressed or removed with backspace/delete
+	// note that: ctrl-v and ctrl-x still work because the 'v' and 'x' are caught
+	// before it was searching on arrows, page up/down, etc
+	var doit = isAlphanum(event.keyCode) || isDelete(event.keyCode); 
+	//d('onkeyup: ' + event.keyCode + ', alphanum or delete: ' + doit);
+	if (!doit)
+		return;
+	
 	var debugOn = false;
 	
 	if (_delaySearchId != 0)
