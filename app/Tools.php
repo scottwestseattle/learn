@@ -1048,14 +1048,15 @@ class Tools
 	
 	static public function getReferrer()
     {
-		$rc = null;
+		$rc['input'] = '';
+		$rc['url'] = '';
 		
 		if (isset($_SERVER["HTTP_REFERER"]))
 		{
-			$rc = $_SERVER["HTTP_REFERER"];
-			$rc = "<input name='referrer' type='hidden' value='" . $rc . "' />";
+			$rc['url'] = $_SERVER["HTTP_REFERER"];
+			$rc['input'] = new HtmlString("<input name='referrer' type='hidden' value='" . $rc['url'] . "' />");
 		}
 		
-		return new HtmlString($rc);
+		return $rc;
 	}
 }

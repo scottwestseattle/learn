@@ -7,7 +7,7 @@
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix, 'isAdmin' => $isAdmin, 'isIndex' => true])@endcomponent
 	
 	<div class="page-nav-buttons">
-		<a class="btn btn-success btn-sm btn-nav-top" role="button" href="/entries/{{$record->permalink}}/">
+		<a class="btn btn-success btn-sm btn-nav-top" role="button" href="{{$referrerUrl}}">
 		    @LANG('content.Back')<span class="glyphicon glyphicon-button-back-to"></span>
 		</a>
 	    <a class="btn btn-primary btn-sm btn-nav-top" role="button" href="/entries/review-vocabulary/{{$record->id}}">

@@ -148,9 +148,9 @@ class Quiz
     {
 		$button = '<div><button id="'
             . $id
-            . '" onclick="checkAnswerFromButtonClick(event)"'
-            //. '" onclick="checkAnswerFromButton('
-		   // . $id . ')" class="btn btn-primary btn-quiz-mc3 '
+            //new way. '" onclick="checkAnswerFromButtonClick(event)"'
+            . '" onclick="checkAnswerMc1('
+		    . $id . ')" class="btn btn-primary btn-quiz-mc3 '
 		    . ' class="btn btn-primary btn-quiz-mc3 '
 		    . $class . '">'
 		    . $text

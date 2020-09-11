@@ -49,14 +49,12 @@
 		@endif
 	</div>
 
-	@if ($isAdmin)
 	<h3 name="title" class="mb-2">
 	    {{$record->title }}
-	    @if ($record->isText())
+	    @if (false && $record->isText())
             <div><a href="/lessons/convert-to-list/{{$record->id}}"><button class="btn btn-info btn-xs">Convert</button></a></div>
         @endif
     </h3>
-    @endif
 
     @if ($record->isTimedSlides() && isset($record->main_photo))
         <div>
@@ -229,7 +227,7 @@
 		<!------------------------------------------------------------------------------->
 		<p>{!! $record->text !!}</p>
 
-        @if ($record->isText())
+        @if (false && $record->isText())
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <div class="input-group-text">

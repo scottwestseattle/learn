@@ -118,7 +118,10 @@ class DefinitionController extends Controller
 
 		try
 		{
-			$records = Definition::getIndex($sort, 20);
+			if (isset($search) && strlen($search) > 0)
+				$records = Definition::searchPartial($search);
+			else
+				$records = Definition::getIndex($sort, 20);
 		}
 		catch (\Exception $e)
 		{

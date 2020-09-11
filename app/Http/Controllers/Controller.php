@@ -206,7 +206,10 @@ class Controller extends BaseController
 		$this->viewData['titlePlural'] = $this->titlePlural;
 		$this->viewData['isAdmin'] = Tools::isAdmin();
 		$this->viewData['isSuperAdmin'] = Tools::isSuperAdmin();
-		$this->viewData['referrer'] = Tools::getReferrer();
+		
+		$referrer = Tools::getReferrer();
+		$this->viewData['referrer'] = $referrer['input'];
+		$this->viewData['referrerUrl'] = $referrer['url'];
 		
 		if ($this->getDomainName() == 'localhost')
 			$this->viewData['localhost'] = true;

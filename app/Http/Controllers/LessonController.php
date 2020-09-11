@@ -516,7 +516,7 @@ class LessonController extends Controller
 		foreach($records as $record)
 		{
 		    // had to do this because html_entity_decode() wouldn't work in explode
-		    $line = mb_eregi_replace('&nbsp;', ' ', htmlentities($record[1]));
+		    $line = str_replace('&nbsp;', ' ', htmlentities($record[1]));
             $line = html_entity_decode($line); // decode it back
 
             // this doesn't work

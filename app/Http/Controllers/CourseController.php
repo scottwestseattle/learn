@@ -177,7 +177,7 @@ class CourseController extends Controller
 
 		$firstId = (count($records) > 0) ? $records->first()[0]->id : 0; // collection index starts at 1
 
-		return view(PREFIX . '.view', $this->getViewData([
+		return view(PREFIX . '.view-flat', $this->getViewData([
 			'record' => $record,
 			'records' => $records,
 			'disabled' => $disabled,
