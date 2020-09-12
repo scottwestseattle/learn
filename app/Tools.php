@@ -259,12 +259,70 @@ class Tools
 		return $v;
 	}
 
+	// <div role="table3arrow">
     static public function convertToHtml($text)
     {
 		$v = $text;
-
-		// check for HTML
-		if (strpos($v, '[') !== false)
+		$f = '';
+		// check for custom formatting HTML tags
+		$table3arrowStart = 'table3arrow';
+		$table3arrowEnd = '</div>';
+		if (strpos($v, $table3arrowStart) !== false)
+		{
+			// do the fancy formatting
+			$lines = explode("\r\n", $text);
+			$inTable = false;
+			foreach($lines as $line)
+			{
+				if ($inTable)
+				{
+					$col1 = null;
+					$col2 = '→';
+					$col3 = null;
+					
+					$parts = explode('|', strip_tags($line));
+					if (count($parts) > 1)
+					{
+						$col1 = trim($parts[0]);
+						$col3 = trim($parts[1]);
+					}
+					
+					if (isset($col1) && isset($col3))
+					{
+						$row = '<tr>';
+						$row .= '<td>' . $col1 . '</td>';
+						$row .= '<td>' . $col2 . '</td>';
+						$row .= '<td>' . $col3 . '</td>';
+						$row .= '</tr>';
+						$f .= $row;
+					}
+					else
+					{
+						$f .= $line;
+					}
+					
+				}
+				else
+				{
+					$f .= $line;
+				}
+				
+				if (strpos($line, $table3arrowStart) !== false)
+				{
+					$inTable = true;
+					$f .= '<table class="table table-borderless lesson-table-xs">';
+				}				
+				else if (strpos($line, $table3arrowEnd) !== false)
+				{
+					$inTable = false;
+					$f .= '</table>';
+				}				
+			}
+			//dd($table);
+			$v = $f;
+			//dd($v);
+		}
+		else if (strpos($v, '[') !== false)
 		{
 			//$v = str_replace('[', '<', $v);
 			//$v = str_replace(']', '>', $v);
@@ -278,6 +336,11 @@ class Tools
 			// no html so add br's
 			$v = nl2br($v);
 		}
+
+		// do custom word replacements
+		$v = str_replace('(irregular)', '<span class="irregular">irregular</span>', $v); // make (irregular) fancy
+		// make numbers fancy from "FN1. "
+		$v = preg_replace('/FN([0-9]*)\.([ ]*)/', '<span class="fn">$1</span>', $v); //  $1 resolves to the part matched in the parenthesis
 
 		return $v;
 	}

@@ -123,7 +123,7 @@ class Event extends Base
 		$record->model_flag		= $model;
 		$record->action_flag	= $action;
 
-		$record->title 			= isset($title) && strlen($title) > 0 ? $title : '(Empty Title)';
+		$record->title 			= isset($title) && strlen($title) > 0 ? mb_substr($title, 0, 255) : '(Empty Title)';
 
 		$record->description	= mb_substr($description, 0, 1000); // max 1000
 		$record->record_id 		= intval($record_id);

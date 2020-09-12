@@ -272,7 +272,7 @@ class Word extends Model
 			{
 				// check if this word already belongs to any lesson in the course
 				$words = DB::table('words')
-					->join('lessons', 'lessons.id', '=', 'words.parent_id')
+					->join('lessons', 'lessons.id', '=', 'words.lesson_id')
 					->select('words.*', 'lessons.id as lessonId', 'lessons.title as lessonTitle', 'lessons.lesson_number', 'lessons.section_number')
 					->where('words.type_flag', WORDTYPE_LESSONLIST)
 					->where('lessons.parent_id', $parent->parent_id) // only lessons of this course

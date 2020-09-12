@@ -770,7 +770,7 @@ h1,h3 {
 .lesson-table,
 .lesson-table td,
 .lesson-table th {
-    xborder: 1px solid #dee2e6
+    xborder: 1px solid #dee2e6;
 }
 
 .lesson-table thead td,
@@ -784,16 +784,15 @@ h1,h3 {
 .lesson-table th {
     background-color: #eff7f0;
 	font-weight: bold;
-	text-align: center;
+	text-align: center;	
 }
-
 
 .lesson-table, .lesson-table input
 {
 	width: 100%;
 }
 
-.lesson-table, .lesson-table-sm {
+.lesson-table-sm {
 	max-width:400px;
 }
 
@@ -801,13 +800,24 @@ h1,h3 {
 	max-width:300px;
 }
 
-.lesson-table-md {
+.lesson-table, .lesson-table-md {
 	max-width:600px;
 }
 
 .lesson-table-lg {
 	max-width:800px;
 }
+
+.lesson-table-fancy th {
+	background-color: #5CB85C;
+	color:white;
+	padding:5px;
+	text-align:center;
+	font-weight:600;
+	border: 2px solid white;
+	border-radius:7px;
+}
+
 
 .bs-callout-no-border {
     padding: 10px 15px;
@@ -1093,4 +1103,26 @@ td.icon {
 	background-color: red;
 	color: white;
 	border: DarkRed;
+}
+
+h6 {
+	font-size:1em;
+	xfont-weight:300;
+	margin-top:30px;
+	margin-bottom:20px;
+}
+
+.fn, .fancy-number {
+	font-weight:bold;
+	background-color:#5CB85C;
+	color:white;
+	border-radius:5px;
+	padding:0 10px;
+	margin-right:5px;
+}
+
+.irregular {
+	color:#5CB85C; /* minty green */
+	font-size:.8em;
+	font-style: italic;
 }

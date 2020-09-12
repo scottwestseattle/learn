@@ -165,7 +165,10 @@ class WordController extends Controller
 
     public function add($lesson_id = null)
     {
-		$words = isset($lesson_id) ? Word::getCourseWords($lesson_id, 'lesson_number, section_number, id')->groupBy('lesson_id') : null;
+		$words = isset($lesson_id) ? Word::getCourseWords($lesson_id, 'lesson_number, section_number, id') : null;
+		if (count($words) > 0)
+			$words = $words->groupBy('lesson_id');
+		//dd($words);
 
 		return view(PREFIX . '.add', $this->getViewData([
 			'lesson_id' => $lesson_id,
