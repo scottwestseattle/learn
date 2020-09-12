@@ -79,16 +79,19 @@ class EntryController extends Controller
     {		
 		$this->saveVisitor(LOG_MODEL_BOOKS, LOG_PAGE_INDEX);
 	
-		$records = Entry::getRecentList(ENTRY_TYPE_BOOK);
+		$records = Entry::getRecentList(ENTRY_TYPE_BOOK, 5);
+		
+		$books = Entry::getBookTags();
 		
 		$vdata = $this->getViewData([
+			'books' => $books,
 			'records' => $records,
 			'page_title' => 'Books',
 			'index' => 'books',
 			'isIndex' => true,
 		]);
 			
-    	return view('entries.articles', $vdata);
+    	return view('entries.books', $vdata);
     }
  
     public function vocabulary(Request $request, Entry $entry)
@@ -162,18 +165,19 @@ class EntryController extends Controller
 		
 		$entry->site_id = Tools::getSiteId();		
 		$entry->user_id = Auth::id();
-		$entry->type_flag = $request->type_flag;
 
 		$entry->parent_id 			= $request->parent_id;		
 		$entry->title 				= Tools::trimNull($request->title);
 		$entry->description_short	= Tools::trimNull($request->description_short);
 		$entry->description			= Tools::getMaxText($request->description);
+		$entry->source				= Tools::trimNull($request->source);
 		$entry->source_credit		= Tools::trimNull($request->source_credit);
 		$entry->source_link			= Tools::trimNull($request->source_link);
 		$entry->display_date 		= Controller::getSelectedDate($request);
 		$entry->release_flag 		= RELEASE_PUBLIC;
 		$entry->wip_flag 			= WIP_FINISHED;
-		$entry->language_flag		= Tools::getLanguageFlag();
+		$entry->language_flag		= Tools::getLanguageFlag();		
+		$entry->type_flag 			= $request->type_flag;
 
 		$entry->permalink			= Tools::trimNull($request->permalink);
 		if (!isset($entry->permalink))
@@ -191,7 +195,10 @@ class EntryController extends Controller
 				throw new \Exception('Date not set');
 			
 			$entry->save();
-				
+			
+			// set up the book tag (if it's a book).  has to be done after the entry is created and has an id
+			$entry->updateBookTag();
+
 			$msg = 'Entry has been added';
 			$status = 'success';
 			if (strlen($request->description) > MAX_DB_TEXT_COLUMN_LENGTH)
@@ -424,16 +431,14 @@ class EntryController extends Controller
 		$record->permalink			= Tools::trimNull($request->permalink);
 		$record->description_short	= Tools::trimNull($request->description_short);
 		$record->description		= Tools::getMaxText($request->description);
+		$record->source				= Tools::trimNull($request->source);
 		$record->source_credit		= Tools::trimNull($request->source_credit);
 		$record->source_link		= Tools::trimNull($request->source_link);
 		$record->display_date 		= Controller::getSelectedDate($request);		
 		$record->language_flag		= Tools::getLanguageFlag();
 
 		$record->type_flag 			= intval($request->type_flag);
-		if ($record->type_flag === ENTRY_TYPE_BOOK)
-			Tag::tag($record, TAG_BOOK);
-		else
-			Tag::remove($record, TAG_BOOK);
+		$record->updateBookTag();
 			
 		try
 		{

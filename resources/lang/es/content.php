@@ -167,4 +167,8 @@ return [
 'This Tag is not in use' => 'Esta etiqueta no está en uso',
 'Entry Tags' => 'Etiquetas de entrada',
 'Definition Tags' => 'Etiquetas de diccionario',
+'Are you sure you want to delete it?' => 'Quieres eliminarla?',
+'This list has' => 'La lista contiene',
+'Latest Chapters Viewed' => 'Últimos capítulos vistos',
+'chapters' => 'capítulos',
 ];

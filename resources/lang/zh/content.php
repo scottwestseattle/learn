@@ -167,4 +167,8 @@ return [
 'This Tag is not in use' => '该标签未使用',
 'Entry Tags' => '条目标签',
 'Definition Tags' => '定义标签',
+'Are you sure you want to delete it?' => '你确定要删除吗？',
+'This list has' => '这个清单有',
+'Latest Chapters Viewed' => '最新章节浏览',
+'chapters' => '章节',
 ];

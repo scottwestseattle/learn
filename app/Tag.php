@@ -47,6 +47,12 @@ class Tag extends Base
         return $this->belongsToMany('App\Entry')->orderBy('created_at');
     }
 
+    public function books()
+    {
+		// many to many
+        return $this->belongsToMany('App\Entry')->orderBy('display_date');
+    }
+
     public function definitions()
     {
 		// many to many
@@ -66,12 +72,23 @@ class Tag extends Base
 
     static public function getOrCreate($name, $type, $userId = null)
 	{
-		$record = self::get($name, $type, $userId);
+		$name = Tools::alphanum($name);
+		$record = null;
 		
-		// if not found, add it
-		if (!isset($record))
+		if (isset($name) && strlen($name) > 0)
 		{
-			$record = self::add($name, $type, $userId);
+			$record = self::get($name, $type, $userId);
+			
+			// if not found, add it
+			if (!isset($record))
+			{
+				$record = self::add($name, $type, $userId);
+			}
+		}
+		else
+		{
+			$msg = 'error getting tag: invalid name filtered to nothing';
+			Event::logError(LOG_MODEL_TAGS, LOG_ACTION_SELECT, 'getOrCreate()', $msg);			
 		}
 		
 		return $record;
@@ -207,4 +224,16 @@ class Tag extends Base
 
 		return $record;
     }
+	
+    static public function getByType($type)
+    {
+		$type = intval($type);
+
+		$records = $record = Tag::select()
+				->where('deleted_at', null)
+				->where('type_flag', $type)
+				->get();
+
+		return $record;
+    }	
 }

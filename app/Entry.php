@@ -684,8 +684,7 @@ class Entry extends Base
 		{
 			$msg = 'Error getting recent list, recent tag not found';
 			Event::logError(LOG_MODEL, LOG_ACTION_INDEX, 'getRecentList', $msg . ', ' . $logInfo);
-			Session::flash('message.level', 'danger');
-			Session::flash('message.content', $msg);				
+			Tools::flash('danger', $msg);
 		}
 
 		return $records;
@@ -716,7 +715,60 @@ class Entry extends Base
 		}
 
 		return $records;
-	}		
+	}	
+
+	// add or update system 'book' tag for entries.
+	// this is how book chapters are linked together
+	// update is the only public one so all calls come through here where type is checked
+    public function updateBookTag()
+    {		
+		if (intval($this->type_flag) === ENTRY_TYPE_BOOK)
+		{
+			// non-book may have been changed to book
+			$this->addBookTag();
+		}
+		else
+		{
+			// in case book was changed to non-book
+			$this->removeBookTag();
+		}
+	}
+
+    private function addBookTag()
+    {		
+		if (Tools::isAdmin()) // for now only admin can update a book
+		{
+			$tag = $this->getBookTag();
+			if (isset($tag)) // replace old one if exists
+			{
+				$this->tags()->detach($tag->id);
+				$this->tags()->attach($tag->id);
+			}
+		}
+    }
+	
+    private function removeBookTag()
+    {		
+		if (Tools::isAdmin()) // for now only admin can update a book
+		{
+			$tag = $this->getBookTag();
+			if (isset($tag))
+			{
+				$this->tags()->detach($tag->id);
+			}
+		}
+    }
+	
+    static public function getBookTags()
+    {
+		return Tag::getByType(TAG_TYPE_BOOK);
+	}
+	
+    private function getBookTag()
+    {
+		$name = $this->source;
+		return Tag::getOrCreate($name, TAG_TYPE_BOOK);
+	}
 
 	//////////////////////////////////////////////////////////////////////
 	// End of Specialized - Recent Articles Tag

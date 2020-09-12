@@ -259,64 +259,113 @@ class Tools
 		return $v;
 	}
 
-	// <div role="table3arrow">
+	// <div role="fancy-table-xs-border-header">
     static public function convertToHtml($text)
     {
 		$v = $text;
 		$f = '';
 		// check for custom formatting HTML tags
-		$table3arrowStart = 'table3arrow';
-		$table3arrowEnd = '</div>';
-		if (strpos($v, $table3arrowStart) !== false)
+		$fancyTableTag = 'fancy-table';
+		$endTag = '</div>';
+		if (strpos($v, $fancyTableTag) !== false)
 		{
 			// do the fancy formatting
 			$lines = explode("\r\n", $text);
-			$inTable = false;
+			$inTableLine = 0;
+			$header = false; // default
 			foreach($lines as $line)
 			{
-				if ($inTable)
+				$pos = strpos($line, $fancyTableTag);
+				if ($pos !== false)
+				{				
+					$inTableLine++;
+					
+					// get table attributes, looks like: "fancy-table-xs-border-header"
+					$attr = substr($line, $pos);
+					$parts = explode('-', $attr);
+					$border = 'table-borderless'; // default
+					$size = 'lesson-table-xs';	  // default
+					if (count($parts) > 4) // header
+						$header = (trim($parts[4], '">') == 'header');
+					if (count($parts) > 3) // border
+						$border = Tools::startsWith(trim($parts[3], '">'), 'borderless') ? 'table-borderless' : '';
+					if (count($parts) > 2) // size
+						$size = 'lesson-table-' . trim($parts[2], '">');
+					
+					$table = '<table class="table lesson-table ' . $border . ' ' . ' ' . $size . '">';
+					
+					//dump($parts);
+					//dump($header);
+					$f .= $table;
+				}									
+				else if (strpos($line, $endTag) !== false)
 				{
+					$inTableLine = 0;
+					$header = false;
+					$f .= '</table>';
+				}								
+				else if ($inTableLine > 0)
+				{					
 					$col1 = null;
-					$col2 = '→';
+					$col2 = null;
 					$col3 = null;
 					
-					$parts = explode('|', strip_tags($line));
-					if (count($parts) > 1)
-					{
-						$col1 = trim($parts[0]);
-						$col3 = trim($parts[1]);
-					}
+					// clean up the line but don't removing styling
+					$line = str_replace('<p>', '', $line);
+					$line = str_replace('</p>', '', $line);
+					$line = str_replace('&nbsp;', '', $line);
+					$line = str_replace('<br />', '', $line);
 					
-					if (isset($col1) && isset($col3))
-					{
-						$row = '<tr>';
-						$row .= '<td>' . $col1 . '</td>';
-						$row .= '<td>' . $col2 . '</td>';
-						$row .= '<td>' . $col3 . '</td>';
-						$row .= '</tr>';
+					$parts = explode('|', $line);
+					if (count($parts) > 2)
+						$col3 = trim($parts[2]);
+					if (count($parts) > 1)
+						$col2 = trim($parts[1]);
+					if (count($parts) > 0)
+						$col1 = trim($parts[0]);
+
+					if (count($parts) > 0)
+					{						
+						$rowStart = '<tr>';
+						$rowEnd = '</tr>';
+						$colStartTag = '<td>';
+						$colEndTag = '</td>';
+						
+						if ($header && $inTableLine == 1)
+						{
+							$rowStart = '<thead><tr>';
+							$rowEnd = '</tr></thead>';
+							$colStartTag = '<th>';
+							$colEndTag = '</th>';
+						}
+					
+						$row = $rowStart;
+					
+						if (isset($col1))
+							$row .= $colStartTag . $col1 . $colEndTag;
+					
+						if (isset($col2))
+							$row .= $colStartTag . $col2 . $colEndTag;
+						
+						if (isset($col3))
+							$row .= $colStartTag . $col3 . $colEndTag;
+						
+						$row .= $rowEnd;
 						$f .= $row;
+						//dd($row);
 					}
 					else
 					{
 						$f .= $line;
 					}
 					
+					$inTableLine++;					
 				}
 				else
 				{
 					$f .= $line;
 				}
 				
-				if (strpos($line, $table3arrowStart) !== false)
-				{
-					$inTable = true;
-					$f .= '<table class="table table-borderless lesson-table-xs">';
-				}				
-				else if (strpos($line, $table3arrowEnd) !== false)
-				{
-					$inTable = false;
-					$f .= '</table>';
-				}				
 			}
 			//dd($table);
 			$v = $f;
@@ -338,7 +387,7 @@ class Tools
 		}
 
 		// do custom word replacements
-		$v = str_replace('(irregular)', '<span class="irregular">irregular</span>', $v); // make (irregular) fancy
+		$v = str_ireplace('(irregular)', '<span class="irregular">irregular</span>', $v); // make (irregular) fancy
 		// make numbers fancy from "FN1. "
 		$v = preg_replace('/FN([0-9]*)\.([ ]*)/', '<span class="fn">$1</span>', $v); //  $1 resolves to the part matched in the parenthesis
 

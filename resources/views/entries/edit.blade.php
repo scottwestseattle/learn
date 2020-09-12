@@ -38,11 +38,16 @@
 				<div class="entry-title-div mb-3">
 					<input tabindex="-1" type="text" id="permalink" name="permalink" class="form-control" value="{{ $record->permalink }}"  placeholder="Permalink" />
 				</div>
+
+				<div class="entry-title-div mb-3">
+					<label class="tiny">Source</label>
+					@component('components.control-accent-chars-esp', ['visible' => true, 'flat' => true])@endcomponent																		
+					<input type="text" id="source" name="source" placeholder="Source" class="form-control" onfocus="setFocus($(this))" value="{{$record->source}}" />
+				</div>
 						
 				<div class="entry-title-div mb-3">
-					<label class="tiny">Credit</label>
-					@component('components.control-accent-chars-esp', ['visible' => true, 'flat' => true])@endcomponent																		
-					<input type="text" id="source_credit" name="source_credit" placeholder="Source Credit" class="form-control" onfocus="setFocus($(this))" value="{{$record->source_credit}}" />
+					<label class="tiny">Author</label>
+					<input type="text" id="source_credit" name="source_credit" placeholder="Author" class="form-control" onfocus="setFocus($(this))" value="{{$record->source_credit}}" />
 				</div>
 
 				<div class="entry-title-div mb-3">

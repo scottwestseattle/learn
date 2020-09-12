@@ -71,9 +71,11 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 Latest DB Changes:
 
 Today:
-ALTER TABLE `tags` CHANGE `user_id` `user_id` INT(10) UNSIGNED NULL; 
+ALTER TABLE `entries` ADD `display_order` SMALLINT NULL AFTER `display_date`;
+ALTER TABLE `entries` ADD `source` VARCHAR(255) NULL COMMENT 'name of web site or book where entry came from' AFTER `description`; 
 
 Sep, 2020
+ALTER TABLE `tags` CHANGE `user_id` `user_id` INT(10) UNSIGNED NULL; 
 ALTER TABLE `tags` ADD `type_flag` TINYINT NOT NULL COMMENT 'see \'TAG_TYPE_*\'' AFTER `name`; 
 ALTER TABLE `definitions` CHANGE `wip_flag` `wip_flag` TINYINT(4) NULL; 
 update definitions set wip_flag = 100 WHERE 1 AND definition is not null AND translation_en is not null AND LENGTH(conjugations) > 50 AND deleted_at is null

@@ -167,4 +167,8 @@ return [
 'This Tag is not in use' => 'This Tag is not in use',
 'Entry Tags' => 'Entry Tags',
 'Definition Tags' => 'Dictionary Tags',
+'Are you sure you want to delete it?' => 'Are you sure you want to delete it?',
+'This list has' => 'This list has',
+'Latest Chapters Viewed' => 'Latest Chapters Viewed',
+'chapters' => 'chapters',
 ];

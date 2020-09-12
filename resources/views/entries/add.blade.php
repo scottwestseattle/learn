@@ -36,7 +36,11 @@
 
 			<div class="entry-title-div mb-3">
 				@component('components.control-accent-chars-esp', ['visible' => true, 'flat' => true])@endcomponent																						
-				<input type="text" id="source_credit" name="source_credit" placeholder="Source Credit" onfocus="setFocus($(this))" class="form-control" />
+				<input type="text" id="source" name="source" placeholder="Source" onfocus="setFocus($(this))" class="form-control" />
+			</div>
+
+			<div class="entry-title-div mb-3">
+				<input type="text" id="source_credit" name="source_credit" placeholder="Author" onfocus="setFocus($(this))" class="form-control" />
 			</div>
 
 			<div class="entry-title-div mb-3">
