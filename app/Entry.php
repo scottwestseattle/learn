@@ -751,7 +751,9 @@ class Entry extends Base
     {		
 		if (Tools::isAdmin()) // for now only admin can update a book
 		{
-			$tag = $this->getBookTag();
+			// don't use getOrCreate() because it doesn't have to exist
+			$name = $this->source;
+			$tag = Tag::get($name, TAG_TYPE_BOOK);
 			if (isset($tag))
 			{
 				$this->tags()->detach($tag->id);

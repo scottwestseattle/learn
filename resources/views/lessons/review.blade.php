@@ -8,7 +8,6 @@
 <div class="data-misc"
 	data-max="{{$sentenceCount}}"
 	data-prompt="@LANG('lesson.' . $options['prompt'])"
-	
 	data-prompt-reverse="@LANG('lesson.' . $options['prompt-reverse'])"
 	data-question-count="{{$options['question-count']}}"
 	data-quiztext-round="@LANG('content.Round')"
