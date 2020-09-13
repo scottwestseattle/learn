@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use DB;
 use Auth;
 use App\Definition;
+use App\Entry;
 use App\Event;
 use App\Tools;
 use App\User;
@@ -37,10 +39,20 @@ define('DEFINITIONS_SEARCH_ALL', 10);
 
 class Definition extends Base
 {
+    use SoftDeletes;
+	
     public function entries()
     {
 		return $this->belongsToMany('App\Entry');
     }	
+	
+	public function removeEntries()
+	{
+		foreach($this->entries as $entry)
+		{
+			$this->entries()->detach($entry->id);
+		}
+	}
 	
 	//////////////////////////////////////////////////////////////////////
 	//
@@ -105,6 +117,14 @@ class Definition extends Base
 		}
     }
 
+    public function removeTags()
+    {
+		foreach($this->tags as $tag)
+		{
+			$this->removeTag($tag->id);
+		}
+	}
+	
     public function removeTag($tagId)
     {
 		if (Auth::check())

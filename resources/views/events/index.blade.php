@@ -12,7 +12,7 @@
 		
 	<div class="table-responsive">
 		
-		<table style="width:100%;" class="xtable xtable-striped">
+		<table style="width:100%;" class="">
 			<tbody>
 			<?php $cnt = 0; ?>
 			@foreach($records as $record)
@@ -48,8 +48,8 @@
 								<td>{{$record->action_flag}}</td>
 							</tr>
 						</table>
-						@if (isset($record->updates))
-							<?php $parts = explode('  ', $record->updates); ?>
+						@if (isset($record->updates) && strlen(trim($record->updates)) > 0)
+							<?php $parts = explode('  ', trim($record->updates)); ?>
 							<div style="padding:0px 5px 10px 5px;">
 								Updates:|From|To|<br/>
 								@foreach($parts as $part)
@@ -58,16 +58,19 @@
 							</div>
 						@endif
 						@if (isset($record->title))
-							<div style="padding:0px 5px 10px 5px;">{{$record->title}}</div>
+							<div style="">{{$record->title}}</div>
 						@endif
 						@if (isset($record->description))
-							<div style="padding:0px 5px 10px 5px;">{{$record->description}}</div>
+							<div style="">{{$record->description}}</div>
 						@endif
 						@if (isset($record->updates))
-							<div style="padding:0px 5px 10px 5px;">{{$record->updates}}</div>
+							<div style="">{{$record->updates}}</div>
 						@endif
 						@if (isset($record->error))
-							<div style="padding:0px 5px 10px 5px;">{{$record->error}}</div>
+							<div style="">{{$record->error}}</div>
+						@endif
+						@if (isset($record->record_id) && $record->record_id > 0)
+							<div style="">Record Id: {{$record->record_id}}</div>
 						@endif
 					</td>
 				</tr>

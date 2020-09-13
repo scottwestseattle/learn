@@ -732,7 +732,7 @@ class DefinitionController extends Controller
 	}
 
     public function confirmdelete(Definition $definition)
-    {
+    {		
 		return view(PREFIX . '.confirmdelete', $this->getViewData([
 			'record' => $definition,
 		]));
@@ -744,6 +744,9 @@ class DefinitionController extends Controller
 
 		try
 		{
+			$record->removeTags();
+			$record->removeEntries();
+				
 			$record->delete();
 			Event::logDelete(LOG_MODEL, $record->title, $record->id);
 			Tools::flash('success', 'Record has been deleted');

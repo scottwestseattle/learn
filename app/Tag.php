@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Auth;
 use DB;
 
@@ -10,6 +12,8 @@ use App\Entry;
 
 class Tag extends Base
 {	
+    use SoftDeletes;
+
 	const _typeFlags = [
         TAG_TYPE_NOTSET => 'Not Set',
         TAG_TYPE_SYSTEM => 'system',

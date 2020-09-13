@@ -140,6 +140,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/set-read-location/{entry}/{location}', 'EntryController@setReadLocationAjax');
 	Route::get('/vocabulary/{entry}', 'EntryController@vocabulary');
 	Route::get('/review-vocabulary/{entry}', 'EntryController@vocabularyReview');
+	Route::get('/remove-vocabulary-list/{entry}', 'EntryController@removeVocabularyList');
 
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');

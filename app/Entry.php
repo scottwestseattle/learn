@@ -45,7 +45,6 @@ class Entry extends Base
     public function definitions()
     {
 		return $this->belongsToMany('App\Definition')->wherePivot('user_id', Auth::id())->orderBy('title');
-		//return $this->belongsToMany('App\Definition')->orderBy('title');
     }	
 
 	public function getDefinitions($userId)
@@ -139,7 +138,7 @@ class Entry extends Base
 		{
 			$this->definitions()->detach($def->id); // if it's already tagged, remove it so it will by updated
 			$this->definitions()->attach($def->id, ['user_id' => $userId]);
-			Event::logAdd(LOG_MODEL_ENTRIES, 'added definition: "' . $def->title . '" to entry', 'user id: ' . $userId, $def->id);			
+			Event::logAdd(LOG_MODEL_ENTRIES, $def->title, 'added definition to entry', $def->id);			
 		}
 		else
 		{
@@ -178,6 +177,27 @@ class Entry extends Base
 		$this->definitions()->detach($def->id);
     }
 
+    public function removeDefinitions()
+    {
+		try 
+		{
+			$cnt = 0;
+			foreach($this->definitions as $record)
+			{
+				$this->definitions()->detach($record->id);
+				$cnt++;
+			}
+				
+			Event::logDelete(LOG_MODEL_ENTRIES, 'removeDefinitions - removed ' . $cnt . ' definitions from entry', $this->id);			
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error removing words from vocabulary list';
+			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, 'removeDefinitions()', $msg, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}	
+    }
+
 	//////////////////////////////////////////////////////////////////
 	// Tags - many to many
 	//////////////////////////////////////////////////////////////////
@@ -187,47 +207,6 @@ class Entry extends Base
 		return $this->belongsToMany('App\Tag');
     }	
 
-	//
-	// todo: this is how the article tags should be used
-	// this code is currently in the tags
-	// tags should be generic
-	// **NOT USED YET**
-	//
-    public function addTagUserSbw($name)
-    {
-		if (Auth::check())
-		{
-			$this->addTag($name, Auth::id());
-		}
-	}
-	
-    public function addTagSbw($name, $userId = null)
-    {
-		$tag = Tag::getOrCreate($name);
-		if (isset($tag))
-		{
-			$this->tags()->detach($tag->id); // if it's already tagged, remove it so it will by updated
-			$this->tags()->attach($tag->id, ['user_id' => $userId]);
-		}
-    }
-
-    public function removeTagUserSBW($name)
-    {
-		if (Auth::check())
-		{
-			$this->removeTag($name);
-		}
-	}
-
-    public function removeTagSBW($name)
-    {
-		$tag = Tag::get($name);
-		if (isset($tag))
-		{
-			$this->tags()->detach($tag->id);
-		}
-    }
-	
 	//
 	// End of new tag code
 	//

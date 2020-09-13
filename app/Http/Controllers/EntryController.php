@@ -33,7 +33,11 @@ class EntryController extends Controller
 	{
         $this->middleware('is_admin')->except([
 			'read', 'articles', 'books', 'stats', 'index', 'view', 'permalink', 'rss', 'vocabulary', 'vocabularyReview', 'removeDefinitionUser',
-			'getDefinitionsUserAjax', 'removeDefinitionUserAjax', 'setReadLocationAjax',
+			'getDefinitionsUserAjax', 'removeDefinitionUserAjax', 'setReadLocationAjax', 'removeVocabularyList',
+		]);
+
+        $this->middleware('is_owner')->only([
+			'removeVocabularyList',		
 		]);
 
 		$this->prefix = 'entries';
@@ -134,6 +138,13 @@ class EntryController extends Controller
 			'touchPath' => '',
 			], LOG_MODEL, LOG_PAGE_VIEW));		
     }
+	
+    public function removeVocabularyList(Request $request, Entry $entry)
+    {		
+		$entry->removeDefinitions();
+
+		return redirect('/vocabulary');
+	}	
 
     public function index($type_flag = null)
     {				

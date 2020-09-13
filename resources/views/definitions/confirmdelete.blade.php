@@ -16,6 +16,24 @@
 		<p>{{$record->translation_en}}</p>
 		<p>{{$record->examples}}</p>
 		
+		@if (count($record->entries) > 0)
+			<p>
+			<div>Word is used in {{count($record->entries)}} entry/entries and will be removed</div>
+			@foreach($record->entries as $r)
+				<div><a target="_blank" href="/entries/{{$r->permalink}}">{{$r->title}}</a></div>
+			@endforeach	
+			</p>
+		@endif
+		
+		@if (count($record->tags) > 0)
+			<p>
+			<div>Word is used in {{count($record->tags)}} favorite list(s) and will be removed</div>
+			@foreach($record->tags as $r)
+				<div><a target="_blank" href="/definitions/list/{{$r->id}}">{{$r->name}}</a></div>
+			@endforeach	
+			</p>
+		@endif
+		
 		<div class="submit-button">
 			<button type="submit" class="btn btn-primary">@LANG('ui.Confirm Delete')</button>
 		</div>
