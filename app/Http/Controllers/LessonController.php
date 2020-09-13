@@ -257,9 +257,15 @@ class LessonController extends Controller
 		$next = Lesson::getNext($lesson);
 		$nextChapter = $lesson->getNextChapter();
 
-		// count the paragraphs as sentences
-		//preg_match_all('#<p>(.*?)</p>#is', $lesson->text, $matches, PREG_SET_ORDER);
+		// count the <p>'s as sentences
 		preg_match_all('#<p>#is', $lesson->text, $matches, PREG_SET_ORDER);
+		$sentenceCount = count($matches);
+		// if there's a table, count the rows, add it to the count
+		if (strpos($lesson->text, '<table') !== false)
+		{
+			preg_match_all('#<tr#is', $lesson->text, $matches, PREG_SET_ORDER); // a formatted table not using <p>'s
+			$sentenceCount += count($matches);
+		}
 
 		// only vocab pages may have vocab
 		$vocab = $lesson->getVocab();
@@ -504,6 +510,7 @@ class LessonController extends Controller
 		return redirect('/lessons/view/' . $lesson->id);
     }
 
+	// this is the original way
 	public function makeQuiz($text)
     {
 		$records = [];
@@ -543,7 +550,47 @@ class LessonController extends Controller
 		return $records;
 	}
 
-	public function review(Lesson $lesson, $reviewType = null)
+	//
+	// this is the new way, updated for review.js
+	//
+	public function makeQna($text)
+    {
+		$records = [];
+
+		// count the paragraphs as sentences
+		preg_match_all('#<p>(.*?)</p>#is', $text, $records, PREG_SET_ORDER);
+
+		$qna = [];
+		$cnt = 0;
+		foreach($records as $record)
+		{
+		    // had to do this because html_entity_decode() wouldn't work in explode
+		    $line = str_replace('&nbsp;', ' ', htmlentities($record[1]));
+            $line = html_entity_decode($line); // decode it back
+
+			$parts = explode(' | ', $line); // split the line into q and a, looks like: "question text - correct answer text"
+            //dd($parts);
+
+			if (count($parts) > 0)
+			{
+				$qna[$cnt]['q'] = trim($parts[0]);
+				$qna[$cnt]['a'] = array_key_exists(1, $parts) ? trim($parts[1]) : '';
+				$qna[$cnt]['definition'] = 'false';
+				$qna[$cnt]['translation'] = '';
+				$qna[$cnt]['id'] = $cnt;
+				$qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
+				$qna[$cnt]['options'] = '';
+			}
+
+			$cnt++;
+		}
+
+		//dd($qna);
+
+		return $qna;
+	}
+	
+	public function reviewOrig(Lesson $lesson, $reviewType = null)
     {
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
@@ -560,7 +607,7 @@ class LessonController extends Controller
 			'of' => 'of',
 		];
 
-		return view(PREFIX . '.review', $this->getViewData([
+		return view(PREFIX . '.review-orig', $this->getViewData([
 			'record' => $lesson,
 			'prev' => $prev,
 			'next' => $next,
@@ -609,6 +656,46 @@ class LessonController extends Controller
 			'quizText' => $quizText,
 			'isMc' => $lesson->isMc($reviewType),
             'returnPath' => PREFIX . '/view',
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
+	//
+	// this is the version updated to work with review.js
+	//
+	public function review(Lesson $lesson)
+    {
+		$prev = Lesson::getPrev($lesson);
+		$next = Lesson::getNext($lesson);
+
+		$quiz = self::makeQna($lesson->text); // split text into questions and answers
+
+		//todo: not working yet
+		$quizText = [
+			'Round' => 'Round',
+			'Correct' => 'Correct',
+			'TypeAnswers' => 'Type the Answer',
+			'Wrong' => 'Wrong',
+			'of' => 'of',
+		];
+
+		$options = Tools::getOptionArray($lesson->options);
+
+		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
+		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
+		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
+		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
+
+		return view(PREFIX . '.review', $this->getViewData([
+			'record' => $lesson,
+			'prev' => $prev,
+			'next' => $next,
+			'sentenceCount' => count($quiz),
+			'records' => $quiz,
+			'options' => $options,
+			'canEdit' => true,
+			'quizText' => $quizText,
+			'isMc' => true, //$lesson->isMc($reviewType),
+            'returnPath' => '/' . PREFIX . '/view/' . $lesson->id,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

@@ -280,8 +280,9 @@ Route::group(['prefix' => 'lessons'], function () {
 	Route::get('/admin/{course_id?}', 'LessonController@admin');
 	Route::get('/view/{lesson}','LessonController@view');
 	Route::post('/view/{lesson}','LessonController@view'); // just in case they hit enter on the ajax form
-	Route::get('/review/{lesson}/{reviewType?}','LessonController@review');
+	Route::get('/review-orig/{lesson}/{reviewType?}','LessonController@reviewOrig');
 	Route::get('/reviewmc/{lesson}/{reviewType?}','LessonController@reviewmc');
+	Route::get('/review/{lesson}','LessonController@review');
 	Route::get('/log-quiz/{lessonId}/{score}', 'LessonController@logQuiz');
 	Route::get('/start/{lesson}/', 'LessonController@start');
 	Route::get('/rss/{lesson}/', 'LessonController@rss');
