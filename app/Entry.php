@@ -28,9 +28,19 @@ class Entry extends Base
 		return self::$entryTypes;
 	}
 
+	public function getTypeName()
+	{		
+		return self::$entryTypes[$this->type_flag];
+	}
+
 	static public function getTypeFlagName($type)
 	{		
 		return self::$entryTypes[$type];
+	}
+	
+	public function isBook()
+	{
+		return($this->type_flag == ENTRY_TYPE_BOOK);
 	}
 	
     public function user()
@@ -585,6 +595,27 @@ class Entry extends Base
     {
 		return Tag::getOrCreate('recent', TAG_TYPE_SYSTEM);
 	}
+	
+    public function removeTags()
+    {
+		try 
+		{
+			$cnt = 0;
+			foreach($this->tags as $record)
+			{
+				$this->tags()->detach($record->id);
+				$cnt++;
+			}
+
+			Event::logDelete(LOG_MODEL_ENTRIES, '' . $cnt . ' tags removed before deleting: ' . $this->title, $this->id);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error removing tags from entry';
+			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $this->title, $msg, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}	
+    }	
 	
     public function setReadLocation($readLocation)
     {

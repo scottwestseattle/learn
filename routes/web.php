@@ -156,7 +156,8 @@ Route::group(['prefix' => 'entries'], function () {
 
 	// delete / confirm delete
 	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
-	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');	
+	Route::post('/delete/{entry}','EntryController@delete')->middleware('is_owner');	
+	Route::get('/delete/{entry}','EntryController@delete')->middleware('is_owner');	
 	
 	// permalink catch alls
 //old	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);

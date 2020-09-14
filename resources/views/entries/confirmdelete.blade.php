@@ -36,6 +36,7 @@
 			<button type="submit" class="btn btn-primary">Confirm Delete</button>
 		</div>
 	{{ csrf_field() }}
+	{{ $referrer }}
 	</form>
 </div>
 @endsection

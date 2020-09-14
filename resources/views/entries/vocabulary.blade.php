@@ -17,7 +17,7 @@
 
 	<div><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></div>
 	<h3 class="mt-2">Vocabulary List ({{count($record->definitions)}})
-		@component('components.control-delete-glyph', ['margin' => 'ml-3', 'glyphicon' => 'glyphicon-trash', 'href' => '/entries/remove-vocabulary-list/' . $record->id . '', 'onclick' => null, 'prompt' => 'Remove all words from list'])@endcomponent
+		@component('components.control-delete-glyph', ['margin' => 'ml-3', 'glyphicon' => 'glyphCustom-md glyphicon-trash', 'href' => '/entries/remove-vocabulary-list/' . $record->id . '', 'prompt' => 'Remove all words from list'])@endcomponent
 	</h3>
 
 	<table class="table xtable-responsive table-striped" style="width:100%;" >

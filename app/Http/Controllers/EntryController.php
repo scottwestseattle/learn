@@ -493,8 +493,13 @@ class EntryController extends Controller
 	
     public function delete(Request $request, Entry $entry)
     {	
+		$entry->removeTags();
 		$entry->deleteSafe();
-		return redirect('/articles');
+		
+		Event::logDelete(LOG_MODEL_ENTRIES, $entry->title, $entry->id);
+		Tools::flash('success', $entry->getTypeName() . ' deleted');
+
+		return redirect($entry->isBook() ? '/books' : '/articles');
     }
 	
     public function viewcount(Entry $entry)
