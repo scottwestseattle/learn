@@ -819,6 +819,15 @@ class Tools
 		return $ip;
 	}
 
+	static public function str_truncate($string, $length)
+	{
+		$l = strlen($string);
+		if ($length <= $l)
+			$string = substr($string, 0, strlen($string) - $length);	
+
+		return $string;
+	}
+	
 	static public function trunc($string, $length)
 	{
 		$ellipsis = '...';
@@ -1176,5 +1185,5 @@ class Tools
 		}
 		
 		return $rc;
-	}
+	}	
 }

@@ -31,7 +31,7 @@
 			<a onclick="event.preventDefault(); $('#forms').val(''); $('#forms').focus();" href="" tabindex="-1" class="ml-2"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<input type="text" rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))"  value="{{$word}}"/>
 
-			<label for="conjugations" class="control-label mr-3">@LANG('content.Conjugations'):  <span class="small-thin-text">(Regular -AR verbs ony)</span></label></label>
+			<label for="conjugations" class="control-label mr-3">@LANG('content.Conjugations'):  <span class="small-thin-text">(regular verbs only)</span></label></label>
 			<a onclick="event.preventDefault(); conjugationsGen('#title', '#conjugations');" href="" tabindex="-1" class="ml-2"><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
 			<a onclick="event.preventDefault(); $('#conjugations').val(''); $('#conjugations').focus();" href="" tabindex="-1" class="ml-2"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<textarea rows="3" name="conjugations" id="conjugations" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>

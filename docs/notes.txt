@@ -1,5 +1,3 @@
-;batiendo;batido;|;bato;bates;bate;batimos;batís;baten;|;batí;batiste;batió;batimos;batisteis;batieron;|;batía;batías;batía;batíamos;batíais;batían;|;batiría;batirías;batiría;batiríamos;batiríais;batirían;|;batiré;batirás;batirá;batiremos;batiréis;batirán;|;bata;batas;bata;batamos;batáis;batan;|;batiera;batieras;batiera;batiéramos;batierais;batieran;|;batiese;batieses;batiese;batiésemos;batieseis;batiesen;|;batiere;batieres;batiere;batiéremos;batiereis;batieren;|;bate;bata;batamos;batid;batan;|;no batas;no bata;no batamos;no batáis;no batan;
-
 SELECT * FROM `definitions` WHERE 1
 AND definition is not null
 AND translation_en is not null

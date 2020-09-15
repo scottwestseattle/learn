@@ -675,7 +675,14 @@ class Definition extends Base
 			// participles
 			$offset = 5;
 			$index = 0;
-			$conjugations[CONJ_PARTICIPLE] = ';' . $words[$index++] . ';' . $words[$index++] . ';';
+			$participleStem = Tools::str_truncate($words[1], 1);
+			$conjugations[CONJ_PARTICIPLE] = ';' 
+				. $words[$index++] 				// abarcando
+				. ';' . $words[$index++] 		// abarcado
+				. ';' . $participleStem . 'os' 	// abarcados
+				. ';' . $participleStem . 'a' 	// abarcada
+				. ';' . $participleStem . 'as' 	// abarcadas
+				. ';';
 			$conj .= $conjugations[CONJ_PARTICIPLE]; // save the conjugation string
 			
 			// indicative
@@ -999,10 +1006,10 @@ class Definition extends Base
 		return $record;
     }	
 	
-	// á é í ó 			
+	// á é í ó	
 	static private $_verbEndings = [
 		'ar' => [
-			CONJ_PARTICIPLE 		=> ['ando', 'ado'],
+			CONJ_PARTICIPLE 		=> ['ando', 'ado', 'ados', 'ada', 'adas'],
 			CONJ_IND_PRESENT 		=> ['o', 'as', 'a', 'amos', 'áis', 'an'],
 			CONJ_IND_PRETERITE 		=> ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
 			CONJ_IND_IMPERFECT 		=> ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
@@ -1016,7 +1023,7 @@ class Definition extends Base
 			CONJ_IMP_NEGATIVE		=> ['es', 'e', 'emos', 'éis', 'en'],
 		],
 		'er' => [
-			CONJ_PARTICIPLE 		=> ['iendo', 'ido'],
+			CONJ_PARTICIPLE 		=> ['iendo', 'ido', 'idos', 'ida', 'idas'],
 			CONJ_IND_PRESENT 		=> ['o', 'es', 'e', 'emos', 'éis', 'en'],
 			CONJ_IND_PRETERITE 		=> ['í', 'iste', 'ió', 'imos', 'isteis', 'ieron'],
 			CONJ_IND_IMPERFECT 		=> ['ía', 'ías', 'ía', 'íamos', 'íais', 'ían'],
@@ -1029,18 +1036,18 @@ class Definition extends Base
 			CONJ_IMP_AFFIRMATIVE 	=> ['e', 'a', 'amos', 'ed', 'an'],
 			CONJ_IMP_NEGATIVE		=> ['as', 'a', 'amos', 'áis', 'an'],
 		],
-		'ir' => [
-			CONJ_PARTICIPLE 		=> ['iendo', 'ido'],
-			CONJ_IND_PRESENT 		=> ['o', 'es', 'e', 'emos', 'éis', 'en'],
+		'ir' => [ 			
+			CONJ_PARTICIPLE 		=> ['iendo', 'ido', 'idos', 'ida', 'idas'],
+			CONJ_IND_PRESENT 		=> ['o', 'es', 'e', 'imos', 'ís', 'en'],
 			CONJ_IND_PRETERITE 		=> ['í', 'iste', 'ió', 'imos', 'isteis', 'ieron'],
 			CONJ_IND_IMPERFECT 		=> ['ía', 'ías', 'ía', 'íamos', 'íais', 'ían'],
-			CONJ_IND_CONDITIONAL 	=> ['ería', 'erías', 'ería', 'eríamos', 'eríais', 'erían'],
-			CONJ_IND_FUTURE 		=> ['eré', 'erás', 'erá', 'eremos', 'eréis', 'erán'],
+			CONJ_IND_CONDITIONAL 	=> ['iría', 'irías', 'iría', 'iríamos', 'iríais', 'irían'],
+			CONJ_IND_FUTURE 		=> ['iré', 'irás', 'irá', 'iremos', 'iréis', 'irán'],
 			CONJ_SUB_PRESENT 		=> ['a', 'as', 'a', 'amos', 'áis', 'an'],
 			CONJ_SUB_IMPERFECT 		=> ['iera', 'ieras', 'iera', 'iéramos', 'ierais', 'ieran'],
 			CONJ_SUB_IMPERFECT2 	=> ['iese', 'ieses', 'iese', 'iésemos', 'ieseis', 'iesen'],
 			CONJ_SUB_FUTURE 		=> ['iere', 'ieres', 'iere', 'iéremos', 'iereis', 'ieren'],
-			CONJ_IMP_AFFIRMATIVE 	=> ['e', 'a', 'amos', 'ed', 'an'],
+			CONJ_IMP_AFFIRMATIVE 	=> ['e', 'a', 'amos', 'id', 'an'],
 			CONJ_IMP_NEGATIVE		=> ['as', 'a', 'amos', 'áis', 'an'],
 		],
 	];
@@ -1116,7 +1123,7 @@ class Definition extends Base
 				$endings = self::$_verbEndings['ar'];
 				
 				// get the regular conjugations
-				$records = self::conjugateAr($text, $endings, $stem, $middle);
+				$records = self::conjugate($text, $endings, $stem, $middle);
 				
 				// apply 4 irregular conjugations
 				$root = $records['root'];
@@ -1138,7 +1145,7 @@ class Definition extends Base
 				$endings = self::$_verbEndings['ar'];
 				
 				// get the regular conjugations
-				$records = self::conjugateAr($text, $endings, $stem, $middle);
+				$records = self::conjugate($text, $endings, $stem, $middle);
 				
 				// apply 4 irregular conjugations
 				$root = $records['root'];
@@ -1163,7 +1170,7 @@ class Definition extends Base
 				$endings = self::$_verbEndings['ar'];
 				
 				// get the regular conjugations
-				$records = self::conjugateAr($text, $endings, $stemTrimmer, $middle);
+				$records = self::conjugate($text, $endings, $stemTrimmer, $middle);
 				
 				// apply irregular conjugations
 				$root = $records['root'];
@@ -1187,7 +1194,7 @@ class Definition extends Base
 				$middle = '';
 				$endings = self::$_verbEndings[$stem];
 				
-				$records = self::conjugateAr($text, $endings, $stem, $middle);
+				$records = self::conjugate($text, $endings, $stem, $middle);
 			}
 			// Case 5: regular AR verbs that don't match a pattern yet
 			else if (in_array($text, self::$_regularVerbsAr))
@@ -1196,7 +1203,7 @@ class Definition extends Base
 				$middle = '';
 				$endings = self::$_verbEndings[$stem];
 				
-				$records = self::conjugateAr($text, $endings, $stem, $middle);
+				$records = self::conjugate($text, $endings, $stem, $middle);
 			}
 			// Case 6: conjugate all AR verbs as regular
 			else if (Tools::endsWith($text, 'ar'))
@@ -1205,7 +1212,7 @@ class Definition extends Base
 				$middle = '';
 				$endings = self::$_verbEndings[$stem];
 				
-				$records = self::conjugateAr($text, $endings, $stem, $middle);
+				$records = self::conjugate($text, $endings, $stem, $middle);
 			}
 			// Case 7: conjugate all ER verbs as regular
 			else if (Tools::endsWith($text, 'er'))
@@ -1214,16 +1221,16 @@ class Definition extends Base
 				$middle = '';
 				$endings = self::$_verbEndings[$stem];
 				
-				$records = self::conjugateAr($text, $endings, $stem, $middle);
+				$records = self::conjugate($text, $endings, $stem, $middle);
 			}
 			// Case 8: conjugate all IR verbs as regular
 			else if (Tools::endsWith($text, 'ir'))
 			{
-				$stem = 'er';
+				$stem = 'ir';
 				$middle = '';
 				$endings = self::$_verbEndings[$stem];
 				
-				$records = self::conjugateAr($text, $endings, $stem, $middle);
+				$records = self::conjugate($text, $endings, $stem, $middle);
 			}
 			else
 			{
@@ -1244,7 +1251,10 @@ class Definition extends Base
 		return $rc;
 	}		
 	
-    static private function conjugateAr($text, $endings, $stem, $middle)
+	//
+	// used when we are gening our own conjugations (most regular only)
+	//
+    static private function conjugate($text, $endings, $stem, $middle)
     {	
 		$records = null;
 
@@ -1256,35 +1266,39 @@ class Definition extends Base
 			$records['root'] = $root;
 
 			// participles
-			for ($i = 0; $i < 2; $i++)
+			$count = count($endings[CONJ_PARTICIPLE]);
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_PARTICIPLE][] = $root . $middle . $endings[CONJ_PARTICIPLE][$i];
-								
+						
 			// indication
-			for ($i = 0; $i < 6; $i++)
+			$count = count($endings[CONJ_IND_PRESENT]);
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_IND_PRESENT][] = $root . $middle . $endings[CONJ_IND_PRESENT][$i];
-			for ($i = 0; $i < 6; $i++)
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_IND_PRETERITE][] = $root . $middle . $endings[CONJ_IND_PRETERITE][$i];
-			for ($i = 0; $i < 6; $i++)
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_IND_IMPERFECT][] = $root . $middle . $endings[CONJ_IND_IMPERFECT][$i];
-			for ($i = 0; $i < 6; $i++)
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_IND_CONDITIONAL][] = $root . $middle . $endings[CONJ_IND_CONDITIONAL][$i];
-			for ($i = 0; $i < 6; $i++)
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_IND_FUTURE][] = $root . $middle . $endings[CONJ_IND_FUTURE][$i];
 						
 			// subjunctive
-			for ($i = 0; $i < 6; $i++)
+			$count = count($endings[CONJ_SUB_PRESENT]);
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_SUB_PRESENT][] = $root . $middle . $endings[CONJ_SUB_PRESENT][$i];
-			for ($i = 0; $i < 6; $i++)
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_SUB_IMPERFECT][] = $root . $middle . $endings[CONJ_SUB_IMPERFECT][$i];
-			for ($i = 0; $i < 6; $i++)
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_SUB_IMPERFECT2][] = $root . $middle . $endings[CONJ_SUB_IMPERFECT2][$i];
-			for ($i = 0; $i < 6; $i++)
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_SUB_FUTURE][] = $root . $middle . $endings[CONJ_SUB_FUTURE][$i];
 
 			// imperative
-			for ($i = 0; $i < 5; $i++)
+			$count = count($endings[CONJ_IMP_AFFIRMATIVE]);
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_IMP_AFFIRMATIVE][] = $root . $middle . $endings[CONJ_IMP_AFFIRMATIVE][$i];
-			for ($i = 0; $i < 5; $i++)
+			for ($i = 0; $i < $count; $i++)
 				$records[CONJ_IMP_NEGATIVE][] = 'no ' . $root . $middle . $endings[CONJ_IMP_NEGATIVE][$i];
 			
 			//dd($records);
