@@ -427,8 +427,6 @@ h1,h3 {
 
 .card-course, .card-course a {
 	height:200px;
-	xbackground-color: #f5746f; /* reddish */
-	xbackground-color: #3dbcb1; /* greenish */
 	color:white;
 	text-decoration:none;
 }
@@ -1125,4 +1123,16 @@ h6 {
 	color:#5CB85C; /* minty green */
 	font-size:.8em;
 	font-style: italic;
+}
+
+.card-flashcard, .card-flashcard a {
+	max-width:100%;
+	width:500px;
+	min-height:200px;
+	color:white;
+	text-decoration:none;
+}
+
+.card-blue {
+	background-color: #4993FD;
 }

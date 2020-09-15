@@ -171,4 +171,5 @@ return [
 'This list has' => 'This list has',
 'Latest Chapters Viewed' => 'Latest Chapters Viewed',
 'chapters' => 'chapters',
+'Flashcards' => 'Flashcards',
 ];

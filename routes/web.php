@@ -192,7 +192,7 @@ Route::group(['prefix' => 'vocab-lists'], function () {
 	Route::get('/', 'VocabListController@index');
 	Route::get('/index', 'VocabListController@index');
 	Route::get('/view/{vocabList}','VocabListController@view');
-	Route::get('/review/{vocabList}', 'VocabListController@review');
+	Route::get('/review/{vocabList}/{reviewType?}', 'VocabListController@review');
 
 	// add/create
 	Route::get('/add','VocabListController@add');

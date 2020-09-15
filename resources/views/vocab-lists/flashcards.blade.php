@@ -61,7 +61,7 @@
 		<div id="stats">
 			<div class="middle mt-1 mr-1"><a href="{{$returnPath}}"><span class="glyphicon glyphReaderReturn glyphicon-circle-arrow-up"></span></a></div>
 			<span id="statsCount" class="mr-2"></span>
-			<span id="statsScore"></span>
+			<span id="statsScore" class="hidden"></span>
 			<span id="statsAlert"></span><!-- what is this? -->
 		</div>
 		
@@ -73,13 +73,9 @@
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-quiz" style="" class="quiz-panel">
 
-	<!----------------------------------------------------------------------------->
-	<!-- SHOW QUESTIONS -->
-	<!----------------------------------------------------------------------------->
+	@if (count($records) > 0)
 
-@if (count($records) > 0)
-
-<section xstyle="max-width: 600px;" class="quizSection" id='sectionQna'>
+	<section xstyle="max-width: 600px;" class="quizSection" id='sectionQna'>
 
 	<!-------------------------------------------------------->
 	<!-- Instructions -->
@@ -96,9 +92,17 @@
 	<!-- QUESTION -->
 	<!-------------------------------------------------------->
 
-	<div id="question-graphics" class="text-center" style="font-size: {{$options['font-size']}}; margin-bottom:20px;">
-		<span id="prompt"></span>
-	</div>
+	<div class="card card-flashcard card-blue text-center" style="font-size: {{$options['font-size']}};">
+		<a href="" onclick="flipCard(event);">
+			<div class="card-header">
+				<div id="prompt" class="card-text"></div>
+			</div>
+			<div class="card-body">
+				<p id="flashcard-answer" class="card-text hidden"></p>
+				<p id="flashcard-extra" class="large-text hidden"></p>
+			</div>
+		</a>
+	</div>	
 
 	<!-------------------------------------------------------->
 	<!-- ANSWER -->
@@ -106,31 +110,6 @@
 
 	<div class="">
 		<fieldset id="runtimeFields">
-
-		<div class="text-center">
-			<!-------------------------------------------------------->
-			<!-- TEXTBOX TO ENTER ANSWER -->
-			<!-------------------------------------------------------->
-			<input class="form-control" autocomplete="off" type="text" name="answer" id="attemptInput" onkeypress="onKeypress(event)" />
-
-			<!-------------------------------------------------------->
-			<!-- SPACE TO SHOW SCORED ANSWER -->
-			<!-------------------------------------------------------->
-			<div style="display: none; padding: 10px 0; font-size: {{$options['font-size']}}; min-height: 70px; margin-top: 20px;" id="answer-show-div"></div>
-		</div>
-
-		<!-------------------------------------------------------->
-		<!-- ANSWER OPTION BUTTONS  -->
-		<!-------------------------------------------------------->
-		<div style="width:100%;" id="optionButtons">
-			<div><button id="0" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
-			<div><button id="1" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
-			<div><button id="2" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
-			<div><button id="3" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
-			<div><button id="4" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
-		</div>
-		
-		</fieldset>
 
 	<!----------------------------------------------------------------------------->
 	<!-- CONTROL BUTTONS -->
@@ -147,13 +126,6 @@
 
 		<div class="form-group">
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">@LANG('content.Check Typed Answer')</button>
-			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop Review')</button>
-			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); showAnswerOptionButtons()" id="button-show-options">@LANG('content.Show Choices')</button>
-			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); showAnswer()" id="button-show-answer">@LANG('content.Show Answer')</button>
-			<div class="mt-2 ml-1">
-				<input type="checkbox" name="checkbox-hide-options" id="checkbox-hide-options" onclick="displayAnswerButtons()" />
-				<label for="checkbox-hide-options" class="checkbox-xs" onclick="displayAnswerButtons()">@LANG('content.Hide choices before answering')</label>
-			</div>
 			<div class="mt-1 ml-1">
 				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="reloadQuestion();" />
 				<label for="checkbox-flip" class="checkbox-xs" onclick="reloadQuestion();">@LANG('content.Reverse question and answer')</label>
@@ -188,7 +160,7 @@
 		</div>
 	</div>
 
-</section>
+	</section>
 
 	</div>
 	<!---------------------------------------------------------------------------------------------------------------->

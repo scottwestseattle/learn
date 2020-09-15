@@ -13,6 +13,9 @@
 	    <a class="btn btn-primary btn-sm btn-nav-top" role="button" href="/{{$prefix}}/review/{{$record->id}}">
             @LANG('ui.Review')&nbsp;<span class="glyphicon glyphicon-eye-open"></span>
 	    </a>
+	    <a class="btn btn-primary btn-sm btn-nav-top" role="button" href="/{{$prefix}}/review/{{$record->id}}/1">
+            @LANG('content.Flashcards')&nbsp;<span class="glyphicon glyphicon-flash"></span>
+	    </a>
         @if (App\User::isOwner($record->user_id))
 	    <a class="btn btn-info btn-sm btn-nav-top" role="button" href="/words/add-vocab-word/{{$record->id}}">
             @LANG('ui.Add')&nbsp;<span class="glyphicon glyphicon-plus-sign"></span>

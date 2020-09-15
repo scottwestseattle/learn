@@ -171,4 +171,5 @@ return [
 'This list has' => 'La lista contiene',
 'Latest Chapters Viewed' => 'Últimos capítulos vistos',
 'chapters' => 'capítulos',
+'Flashcards' => 'Tarjetas',
 ];

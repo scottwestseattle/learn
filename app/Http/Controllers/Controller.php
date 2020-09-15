@@ -145,6 +145,15 @@ define('TAG_TYPE_DEFINITION_FAVORITE', 	3); // one per user so we have empty fav
 define('TAG_TYPE_OTHER',			   	99);
 //define('TAG_TYPE_DEFAULT', TAG_TYPE_SYSTEM); // need this?
 
+// Review type
+define('REVIEWTYPE_NOTSET', 0);
+define('REVIEWTYPE_FLASHCARDS', 1);
+define('REVIEWTYPE_FIB', 2);
+define('REVIEWTYPE_MC_RANDOM', 3);
+define('REVIEWTYPE_MC_FIXED', 4);
+define('REVIEWTYPE_MC_MIXED', 5);
+define('REVIEWTYPE_DEFAULT', REVIEWTYPE_MC_RANDOM);
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

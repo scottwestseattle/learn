@@ -2,7 +2,7 @@
 
 @section('content')
 
-<script src="{{ asset('js/qna.js') }}"></script>
+<script src="{{ asset('js/quiz.js') }}"></script>
 
 <script>
 document.getElementsByTagName("BODY")[0].onload = function() { quiz.start(); };
