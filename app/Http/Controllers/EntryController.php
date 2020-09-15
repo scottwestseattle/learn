@@ -107,34 +107,22 @@ class EntryController extends Controller
 		]));
     }
 	
-    public function vocabularyReview(Request $request, Entry $entry)
+    public function vocabularyReview(Request $request, Entry $entry, $reviewType = null)
     {
+		$reviewType = intval($reviewType);
 		$record = $entry;
 		$qna = Definition::makeQna($record->definitions); // splits text into questions and answers
-
-		$options = Tools::getOptionArray('font-size="150%"');
-		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
-		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
-		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
-		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
-
-		$qnaText = [
-			'Round' => 'Round',
-			'Correct' => 'Correct',
-			'TypeAnswers' => 'Type the Answer',
-			'Wrong' => 'Wrong',
-			'of' => 'of',
-		];
-
-		return view('entries.vocabulary-review', $this->getViewData([
-			'record' => $record,
+		$settings = Quiz::getSettings($reviewType);
+		
+		return view($settings['view'], $this->getViewData([
 			'sentenceCount' => count($qna),
 			'records' => $qna,
-			'options' => $options,
 			'canEdit' => true,
-			'quizText' => $qnaText,
 			'isMc' => true,
+			'returnPath' => '/entries/vocabulary/' . $record->id . '',
 			'touchPath' => '',
+			'parentTitle' => $record->title,
+			'settings' => $settings,
 			], LOG_MODEL, LOG_PAGE_VIEW));		
     }
 	

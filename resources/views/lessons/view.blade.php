@@ -91,7 +91,10 @@
 				<div style="min-height:300px;">
 
 					<div style="margin: 20px 0;">
-						<a href="/lessons/review/{{$record->id}}"><button class="btn btn-success">Start Review</button></a>
+						<a href="/lessons/review/{{$record->id}}"><button class="btn btn-success">Review</button></a>
+					</div>
+					<div style="margin: 20px 0;">
+						<a href="/lessons/review/{{$record->id}}/1"><button class="btn btn-success">Flashcards</button></a>
 					</div>
 
 					@if (false)

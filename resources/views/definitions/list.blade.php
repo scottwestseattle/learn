@@ -13,6 +13,9 @@
 	    <a class="btn btn-primary btn-sm btn-nav-top" role="button" href="/{{$prefix}}/review/{{$tag->id}}">
             @LANG('ui.Review')&nbsp;<span class="glyphicon glyphicon-eye-open"></span>
 	    </a>
+	    <a class="btn btn-primary btn-sm btn-nav-top" role="button" href="/{{$prefix}}/review/{{$tag->id}}/1">
+            @LANG('content.Flashcards')<span class="ml-1 glyphicon glyphicon-flash"></span>
+	    </a>
 	</div>
 
 	<h3 name="" class="" style="margin-bottom:10px;">{{$tag->name}}@component('components.badge', ['text' => count($records)])@endcomponent</h3>

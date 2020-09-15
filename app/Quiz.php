@@ -188,4 +188,43 @@ class Quiz
 		return $array;
 	}
 	
+	static public function getSettings($reviewType)
+	{
+		$loadJs = 'qnaReview.js';
+		$view = 'shared.review';
+		
+		$quizText = [
+			'Round' => 'Round',
+			'Correct' => 'Correct',
+			'TypeAnswers' => 'Type the Answer',
+			'Wrong' => 'Wrong',
+			'of' => 'of',
+		];
+
+		// options
+		$options = Tools::getOptionArray('font-size="150%"');
+		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
+		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
+		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
+		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
+		
+		// defaults
+		if ($reviewType == REVIEWTYPE_MC_RANDOM)
+		{
+			// use the default settings above
+		}
+		else if ($reviewType == REVIEWTYPE_FLASHCARDS)
+		{
+			$options['prompt'] = 'Tap or click to continue';
+			$view = 'shared.flashcards';
+			$loadJs = 'qnaFlashcards.js';
+		}		
+		
+		$rc['options'] = $options;
+		$rc['loadJs'] = $loadJs;
+		$rc['view'] = $view;
+		$rc['quizText'] = $quizText;
+		
+		return $rc;
+	}
 }

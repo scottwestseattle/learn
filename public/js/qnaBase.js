@@ -84,7 +84,6 @@ function quiz() {
 	this.runState = RUNSTATE_START;
 
 	//new:
-	//this.quizType = 0;
 	this.isMc = 0;
 	this.quizTextRound = 'not set';
 	this.quizTextCorrect = 'not set';
@@ -319,7 +318,6 @@ function loadData()
 		quiz.promptQuestion = quiz.promptQuestionNormal;
 
 		// new settings
-		//quiz.quizType = container.data('quiztype');
 		quiz.isMc = container.data('ismc');
 		quiz.quizTextRound = container.data('quiztext-round');
 		quiz.quizTextCorrect = container.data('quiztext-correct');

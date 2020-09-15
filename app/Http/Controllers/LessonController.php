@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
-use App\User;
-use App\Event;
-use App\Lesson;
-use App\Tools;
+
 use App\Course;
-use App\VocabList;
+use App\Event;
 use App\History;
+use App\Lesson;
+use App\Quiz;
+use App\Tools;
+use App\User;
+use App\VocabList;
 
 define('PREFIX', 'lessons');
 define('LOG_MODEL', 'lessons');
@@ -558,6 +560,7 @@ class LessonController extends Controller
 		$records = [];
 
 		// chop it into lines by using the <p>'s
+	    $text = str_replace(['&ndash;', '&nbsp;'], ['-', ' '], $text);
 		preg_match_all('#<p>(.*?)</p>#is', $text, $records, PREG_SET_ORDER);
 
 		$qna = [];
@@ -565,23 +568,26 @@ class LessonController extends Controller
 		$delim = (strpos($text, ' | ') !== false) ? ' | ' : ' - ';
 		foreach($records as $record)
 		{
-		    // had to do this because html_entity_decode() wouldn't work in explode
 			$line = $record[1];
 			$line = strip_tags($line);
-		    $line = str_replace('&nbsp;', ' ', $line);
 
 			$parts = explode($delim, $line); // split the line into q and a, looks like: "question text - correct answer text"
             //dd($parts);
 
 			if (count($parts) > 0)
 			{
-				$qna[$cnt]['q'] = trim($parts[0]);
-				$qna[$cnt]['a'] = array_key_exists(1, $parts) ? trim($parts[1]) : '';
+				$q = trim($parts[0]);
+				$qna[$cnt]['q'] = $q;
+				$qna[$cnt]['a'] = array_key_exists(1, $parts) ? trim($parts[1]) : null;
 				$qna[$cnt]['definition'] = 'false';
 				$qna[$cnt]['translation'] = '';
+				$qna[$cnt]['extra'] = '';
 				$qna[$cnt]['id'] = $cnt;
 				$qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
 				$qna[$cnt]['options'] = '';
+				
+				if (!isset($qna[$cnt]['a']))
+					throw new \Exception('parse error: ' . $q);
 			}
 
 			$cnt++;
@@ -664,40 +670,36 @@ class LessonController extends Controller
 	//
 	// this is the version updated to work with review.js
 	//
-	public function review(Lesson $lesson)
+	public function review(Lesson $lesson, $reviewType = null)
     {
+		$reviewType = intval($reviewType);
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
 
-		$quiz = self::makeQna($lesson->text); // split text into questions and answers
+		try
+		{
+			$quiz = self::makeQna($lesson->text); // split text into questions and answers
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error parsing for review';
+			Event::logException(LOG_MODEL, LOG_ACTION_QUIZ, $msg, $lesson->id, $e->getMessage());
+			Tools::flash('danger', $msg);
+			return back();
+		}
 
-		//todo: not working yet
-		$quizText = [
-			'Round' => 'Round',
-			'Correct' => 'Correct',
-			'TypeAnswers' => 'Type the Answer',
-			'Wrong' => 'Wrong',
-			'of' => 'of',
-		];
+		$settings = Quiz::getSettings($reviewType);
 
-		$options = Tools::getOptionArray($lesson->options);
-
-		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
-		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
-		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
-		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
-
-		return view(PREFIX . '.review', $this->getViewData([
-			'record' => $lesson,
+		return view($settings['view'], $this->getViewData([
 			'prev' => $prev,
 			'next' => $next,
 			'sentenceCount' => count($quiz),
 			'records' => $quiz,
-			'options' => $options,
 			'canEdit' => true,
-			'quizText' => $quizText,
 			'isMc' => true, //$lesson->isMc($reviewType),
             'returnPath' => '/' . PREFIX . '/view/' . $lesson->id,
+			'parentTitle' => $lesson->title,
+			'settings' => $settings,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

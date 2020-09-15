@@ -10,6 +10,7 @@ use App\Definition;
 use App\Entry;
 use App\Event;
 use App\Lesson;
+use App\Quiz;
 use App\Status;
 use App\Tag;
 use App\Tools;
@@ -309,48 +310,17 @@ class VocabListController extends Controller
     {
 		$reviewType = intval($reviewType);
 		$quiz = self::makeQuiz($vocabList->words); // splits text into questions and answers
+		$settings = Quiz::getSettings($reviewType);
 
-
-		$quizText = [
-			'Round' => 'Round',
-			'Correct' => 'Correct',
-			'TypeAnswers' => 'Type the Answer',
-			'Wrong' => 'Wrong',
-			'of' => 'of',
-		];
-
-		// options
-		$options = Tools::getOptionArray('font-size="150%"');
-		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
-		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
-		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
-		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
-		
-		// defaults
-		$view = 'review';
-		$loadJs = 'qnaReview.js';
-		if ($reviewType == REVIEWTYPE_MC_RANDOM)
-		{
-			// use the default settings above
-		}
-		else if ($reviewType == REVIEWTYPE_FLASHCARDS)
-		{
-			$options['prompt'] = 'Tap or click to continue';
-			$view = 'flashcards';
-			$loadJs = 'qnaFlashcards.js';
-		}
-
-		return view("vocab-lists.$view", $this->getViewData([
-			'record' => $vocabList,
+		return view($settings['view'], $this->getViewData([
 			'sentenceCount' => count($quiz),
 			'records' => $quiz,
-			'options' => $options,
 			'canEdit' => true,
-			'quizText' => $quizText,
 			'isMc' => true,
 			'returnPath' => '/' .  PREFIX . '/view/' . $vocabList->id . '',
 			'touchPath' => 'words/touch',
-			'loadJs' => $loadJs,
+			'parentTitle' => $vocabList->title,			
+			'settings' => $settings,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
@@ -367,7 +337,7 @@ class VocabListController extends Controller
             $qna[$cnt]['q'] = $question;
             $qna[$cnt]['a'] = $definition;
             $qna[$cnt]['definition'] = 'false';
-            $qna[$cnt]['extra'] = $examples; // only used for flashcards
+            $qna[$cnt]['extra'] = nl2br($examples); // only used for flashcards
             $qna[$cnt]['id'] = $record->id;
             $qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
             $qna[$cnt]['options'] = '';

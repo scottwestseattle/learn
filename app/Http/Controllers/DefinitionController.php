@@ -9,6 +9,7 @@ use Auth;
 use App\Definition;
 use App\Entry;
 use App\Event;
+use App\Quiz;
 use App\Tag;
 use App\Tools;
 use App\User;
@@ -988,35 +989,22 @@ class DefinitionController extends Controller
 		]));
     }	
 	
-    public function review(Request $request, Tag $tag)
+    public function review(Request $request, Tag $tag, $reviewType = null)
     {
+		$reviewType = intval($reviewType);
 		$record = $tag;
 		$qna = Definition::makeQna($record->definitionsUser); // splits text into questions and answers
+		$settings = Quiz::getSettings($reviewType);
 
-		$options = Tools::getOptionArray('font-size="150%"');
-		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
-		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
-		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
-		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
-
-		$qnaText = [
-			'Round' => 'Round',
-			'Correct' => 'Correct',
-			'TypeAnswers' => 'Type the Answer',
-			'Wrong' => 'Wrong',
-			'of' => 'of',
-		];
-
-		return view('definitions.review', $this->getViewData([
-			'titleList' => $record->name,
+		return view($settings['view'], $this->getViewData([
 			'sentenceCount' => count($qna),
 			'records' => $qna,
-			'options' => $options,
 			'canEdit' => true,
-			'quizText' => $qnaText,
 			'isMc' => true,
 			'returnPath' => '/definitions/list/' . $record->id . '',
 			'touchPath' => '',
+			'parentTitle' => $tag->name,
+			'settings' => $settings,
 			], LOG_MODEL, LOG_PAGE_VIEW));		
     }	
 }

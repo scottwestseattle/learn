@@ -20,9 +20,15 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	
     <script src="{{ asset('js/project.js') }}"></script>
 	<!-- qnaBase.js is the base class with all the common logic -->
-	<script src="{{ asset('js/qnaBase.js') }}"></script>
-	<!-- qna*.js is the custom class such as qnaFlashcards, qnaMultipleChoice, etc -->
-	<script src="{{ asset('js/' . $loadJs . '') }}"></script>
+	
+	@if (isset($settings['loadJs']))
+		<script src="{{ asset('js/qnaBase.js') }}"></script>
+		<!-- qna*.js is the custom class such as qnaFlashcards, qnaMultipleChoice, etc -->
+		<script src="{{ asset('js/' . $settings['loadJs'] . '') }}"></script>
+	@else
+		<!-- old way, not plugged in yet -->
+		<script src="{{ asset('js/review.js') }}"></script>
+	@endif
 	
 	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet">

@@ -80,7 +80,7 @@ class FrontPageController extends Controller
 		{
 			try
 			{
-				$articles = Entry::getArticles(10);
+				$articles = Entry::getArticles(5);
 			}
 			catch (\Exception $e)
 			{

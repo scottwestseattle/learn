@@ -88,7 +88,7 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/admin', 'DefinitionController@admin');
 	Route::get('/view/{definition}', 'DefinitionController@view');
 	Route::get('/list/{tag}', 'DefinitionController@list');
-	Route::get('/review/{tag}', 'DefinitionController@review');
+	Route::get('/review/{tag}/{reviewType?}', 'DefinitionController@review');
 	Route::get('/set-favorite-list/{definition}/{tagFromId}/{tagToId}','DefinitionController@setFavoriteList');
 
 	// ajax calls
@@ -139,7 +139,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/remove-definition-user/{entry}/{defId}', 'EntryController@removeDefinitionUser');
 	Route::get('/set-read-location/{entry}/{location}', 'EntryController@setReadLocationAjax');
 	Route::get('/vocabulary/{entry}', 'EntryController@vocabulary');
-	Route::get('/review-vocabulary/{entry}', 'EntryController@vocabularyReview');
+	Route::get('/review-vocabulary/{entry}/{reviewType?}', 'EntryController@vocabularyReview');
 	Route::get('/remove-vocabulary-list/{entry}', 'EntryController@removeVocabularyList');
 
 	// publish
@@ -284,7 +284,7 @@ Route::group(['prefix' => 'lessons'], function () {
 	Route::post('/view/{lesson}','LessonController@view'); // just in case they hit enter on the ajax form
 	Route::get('/review-orig/{lesson}/{reviewType?}','LessonController@reviewOrig');
 	Route::get('/reviewmc/{lesson}/{reviewType?}','LessonController@reviewmc');
-	Route::get('/review/{lesson}','LessonController@review');
+	Route::get('/review/{lesson}/{reviewType?}','LessonController@review');
 	Route::get('/log-quiz/{lessonId}/{score}', 'LessonController@logQuiz');
 	Route::get('/start/{lesson}/', 'LessonController@start');
 	Route::get('/rss/{lesson}/', 'LessonController@rss');

@@ -1361,6 +1361,7 @@ class Definition extends Base
             $qna[$cnt]['a'] = $translation;
             $qna[$cnt]['definition'] = $definition;
             $qna[$cnt]['translation'] = $translation;
+            $qna[$cnt]['extra'] = '';
             $qna[$cnt]['id'] = $record->id;
             $qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
             $qna[$cnt]['options'] = '';

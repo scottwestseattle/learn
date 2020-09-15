@@ -13,6 +13,9 @@
 	    <a class="btn btn-primary btn-sm btn-nav-top" role="button" href="/entries/review-vocabulary/{{$record->id}}">
             @LANG('ui.Review')<span class="glyphicon glyphicon-eye-open ml-1"></span>
 	    </a>
+	    <a class="btn btn-primary btn-sm btn-nav-top" role="button" href="/entries/review-vocabulary/{{$record->id}}/{{REVIEWTYPE_FLASHCARDS}}">
+            @LANG('content.Flashcards')<span class="glyphicon glyphicon-flash ml-1"></span>
+	    </a>
 	</div>
 
 	<div><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></div>

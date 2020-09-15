@@ -7,13 +7,12 @@
 <!-------------------------------------------------------->
 <div class="data-misc"
 	data-max="{{$sentenceCount}}"
-	data-prompt="@LANG('lesson.' . $options['prompt'])"
-	data-prompt-reverse="@LANG('lesson.' . $options['prompt-reverse'])"
-	data-question-count="{{$options['question-count']}}"
+	data-prompt="@LANG('lesson.' . $settings['options']['prompt'])"
+	data-prompt-reverse="@LANG('lesson.' . $settings['options']['prompt-reverse'])"
+	data-question-count="{{$settings['options']['question-count']}}"
 	data-quiztext-round="@LANG('content.Round')"
 	data-quiztext-correct="@LANG('content.Correct')"
 	data-quiztext-question="@LANG('content.Question')"
-	data-quiztype="{{$record->type_flag}}"
 	data-ismc="{{$isMc}}"
 	data-quiztext-of="@LANG('content.of')"
 	data-quiztext-correct-answer="@LANG('content.Correct!')"
@@ -22,7 +21,10 @@
 	data-quiztext-override-correct="@LANG('content.Change to Correct')"
 	data-quiztext-override-wrong="@LANG('content.Change to Wrong')"
 	data-quiztext-score-changed="@LANG('content.Score Changed')"
+@if (false)
+	data-quiztype="{{$record->type_flag}}"
 	data-lessonid="{{$record->id}}"
+@endif
 	data-touchpath="{{(isset($touchPath) ? $touchPath : '')}}"
 ></div>
 
@@ -61,7 +63,7 @@
 		<div id="stats">
 			<div class="middle mt-1 mr-1"><a href="{{$returnPath}}"><span class="glyphicon glyphReaderReturn glyphicon-circle-arrow-up"></span></a></div>
 			<span id="statsCount" class="mr-2"></span>
-			<span id="statsScore" class="hidden"></span>
+			<span id="statsScore"></span>
 			<span id="statsAlert"></span><!-- what is this? -->
 		</div>
 		
@@ -73,9 +75,13 @@
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-quiz" style="" class="quiz-panel">
 
-	@if (count($records) > 0)
+	<!----------------------------------------------------------------------------->
+	<!-- SHOW QUESTIONS -->
+	<!----------------------------------------------------------------------------->
 
-	<section xstyle="max-width: 600px;" class="quizSection" id='sectionQna'>
+@if (count($records) > 0)
+
+<section xstyle="max-width: 600px;" class="quizSection" id='sectionQna'>
 
 	<!-------------------------------------------------------->
 	<!-- Instructions -->
@@ -92,17 +98,9 @@
 	<!-- QUESTION -->
 	<!-------------------------------------------------------->
 
-	<div class="card card-flashcard card-blue text-center" style="font-size: {{$options['font-size']}};">
-		<a href="" onclick="flipCard(event);">
-			<div class="card-header">
-				<div id="prompt" class="card-text"></div>
-			</div>
-			<div class="card-body">
-				<p id="flashcard-answer" class="card-text hidden"></p>
-				<p id="flashcard-extra" class="large-text hidden"></p>
-			</div>
-		</a>
-	</div>	
+	<div id="question-graphics" class="text-center" style="font-size: {{$settings['options']['font-size']}}; margin-bottom:20px;">
+		<span id="prompt"></span>
+	</div>
 
 	<!-------------------------------------------------------->
 	<!-- ANSWER -->
@@ -110,6 +108,31 @@
 
 	<div class="">
 		<fieldset id="runtimeFields">
+
+		<div class="text-center">
+			<!-------------------------------------------------------->
+			<!-- TEXTBOX TO ENTER ANSWER -->
+			<!-------------------------------------------------------->
+			<input class="form-control" autocomplete="off" type="text" name="answer" id="attemptInput" onkeypress="onKeypress(event)" />
+
+			<!-------------------------------------------------------->
+			<!-- SPACE TO SHOW SCORED ANSWER -->
+			<!-------------------------------------------------------->
+			<div style="display: none; padding: 10px 0; font-size: {{$settings['options']['font-size']}}; min-height: 70px; margin-top: 20px;" id="answer-show-div"></div>
+		</div>
+
+		<!-------------------------------------------------------->
+		<!-- ANSWER OPTION BUTTONS  -->
+		<!-------------------------------------------------------->
+		<div style="width:100%;" id="optionButtons">
+			<div><button id="0" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="1" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="2" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="3" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+			<div><button id="4" onclick="checkAnswerFromButtonClick(event)" class="btn btn-primary btn-quiz-mc3" style="display:none;"></button></div>
+		</div>
+		
+		</fieldset>
 
 	<!----------------------------------------------------------------------------->
 	<!-- CONTROL BUTTONS -->
@@ -126,6 +149,13 @@
 
 		<div class="form-group">
 			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); checkAnswer(1)" id="button-check-answer">@LANG('content.Check Typed Answer')</button>
+			<button class="btn btn-warning btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('content.Stop Review')</button>
+			<button class="btn btn-primary btn-quiz" onclick="event.preventDefault(); showAnswerOptionButtons()" id="button-show-options">@LANG('content.Show Choices')</button>
+			<button class="btn btn-success btn-quiz" onclick="event.preventDefault(); showAnswer()" id="button-show-answer">@LANG('content.Show Answer')</button>
+			<div class="mt-2 ml-1">
+				<input type="checkbox" name="checkbox-hide-options" id="checkbox-hide-options" onclick="displayAnswerButtons()" />
+				<label for="checkbox-hide-options" class="checkbox-xs" onclick="displayAnswerButtons()">@LANG('content.Hide choices before answering')</label>
+			</div>
 			<div class="mt-1 ml-1">
 				<input type="checkbox" name="checkbox-flip" id="checkbox-flip" onclick="reloadQuestion();" />
 				<label for="checkbox-flip" class="checkbox-xs" onclick="reloadQuestion();">@LANG('content.Reverse question and answer')</label>
@@ -160,7 +190,7 @@
 		</div>
 	</div>
 
-	</section>
+</section>
 
 	</div>
 	<!---------------------------------------------------------------------------------------------------------------->
@@ -173,8 +203,7 @@
 	<div id="panel-start" class="quiz-panel text-center">
 
 		<div class="quiz-panel-content">
-
-			<h2>{{$record->title}}</h2>
+			<h2>{{$parentTitle}}</h2>
 			<!-- span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-star-empty bright-blue-fg"></span -->
 			<img style="margin:20px;" height="100" src="/img/quiz-start.jpg" />
 			<h3>@LANG('content.Number of Questions')</h3>
