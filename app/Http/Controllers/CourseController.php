@@ -36,6 +36,8 @@ class CourseController extends Controller
 
     public function index(Request $request)
     {
+		$showAll = isset($showAll);
+		
 		$public = []; // make this countable so view will always work
 		$private = []; // make this countable so view will always work
 
@@ -151,7 +153,8 @@ class CourseController extends Controller
             return $this->startTimedSlides($course);
 
 		$record = $course;
-		$count = 0;
+		$displayCount = 0;
+		$chapterCount = 0;
 		$records = []; // make this countable so view will always work
 
 		try
@@ -159,11 +162,11 @@ class CourseController extends Controller
 			$records = Lesson::getChapters($course->id);
 
 			// get the lesson count.  if only one chapter, count it's sections
-			$count = count($records); // count the chapters
-			if ($count == 1)
-			{
-				$count = count($records->first()); // count the sections
-			}
+			$chapterCount = count($records); // count the chapters
+			if ($chapterCount == 1)
+				$displayCount = count($records->first()); // show the count of sections
+			else
+				$displayCount = $chapterCount; // show the count of chapters
 		}
 		catch (\Exception $e)
 		{
@@ -182,7 +185,8 @@ class CourseController extends Controller
 			'records' => $records,
 			'disabled' => $disabled,
 			'firstId' => $firstId,
-			'displayCount' => $count,
+			'displayCount' => $displayCount,
+			'chapterCount' => $chapterCount,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 

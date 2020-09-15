@@ -1130,10 +1130,17 @@ function searchDefinitions(event, textId, resultsId)
 	// only search when alphanum char is pressed or removed with backspace/delete
 	// note that: ctrl-v and ctrl-x still work because the 'v' and 'x' are caught
 	// before it was searching on arrows, page up/down, etc
-	var doit = isAlphanum(event.keyCode) || isDelete(event.keyCode); 
-	//d('onkeyup: ' + event.keyCode + ', alphanum or delete: ' + doit);
-	if (!doit)
-		return;
+	if (isMobile)
+	{
+		// keycodes don't work for mobile
+	}
+	else
+	{
+		var doit = isAlphanum(event.keyCode) || isDelete(event.keyCode); 
+		//d('onkeyup: ' + event.keyCode + ', alphanum or delete: ' + doit);
+		if (!doit)
+			return;
+	}
 	
 	var debugOn = false;
 	

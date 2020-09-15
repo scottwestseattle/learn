@@ -134,7 +134,6 @@ class EntryController extends Controller
 			'canEdit' => true,
 			'quizText' => $qnaText,
 			'isMc' => true,
-			'returnPath' => '/entries/vocabulary/' . $record->id . '',
 			'touchPath' => '',
 			], LOG_MODEL, LOG_PAGE_VIEW));		
     }
@@ -558,7 +557,6 @@ class EntryController extends Controller
 				
     	return view('entries.reader', $this->getViewData([
 			'record' => $record,
-			'index' => $record->type_flag == ENTRY_TYPE_ARTICLE ? 'articles' : 'books',
 			'readLocation' => (Auth::check() ? $readLocation : null),
 		]));
     }	

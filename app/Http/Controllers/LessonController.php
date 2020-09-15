@@ -557,18 +557,20 @@ class LessonController extends Controller
     {
 		$records = [];
 
-		// count the paragraphs as sentences
+		// chop it into lines by using the <p>'s
 		preg_match_all('#<p>(.*?)</p>#is', $text, $records, PREG_SET_ORDER);
 
 		$qna = [];
 		$cnt = 0;
+		$delim = (strpos($text, ' | ') !== false) ? ' | ' : ' - ';
 		foreach($records as $record)
 		{
 		    // had to do this because html_entity_decode() wouldn't work in explode
-		    $line = str_replace('&nbsp;', ' ', htmlentities($record[1]));
-            $line = html_entity_decode($line); // decode it back
+			$line = $record[1];
+			$line = strip_tags($line);
+		    $line = str_replace('&nbsp;', ' ', $line);
 
-			$parts = explode(' | ', $line); // split the line into q and a, looks like: "question text - correct answer text"
+			$parts = explode($delim, $line); // split the line into q and a, looks like: "question text - correct answer text"
             //dd($parts);
 
 			if (count($parts) > 0)

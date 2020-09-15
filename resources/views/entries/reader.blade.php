@@ -45,7 +45,7 @@
 		<!-- Top Row Buttons -->
 		<!-------------------------------------------------------->
 		<div>
-			<span class="glyphReader"><a href="/{{$index}}"><span class="glyphicon glyphicon-circle-arrow-up"></span></a></span>
+			<span class="glyphReader"><a href="{{$referrerUrl}}"><span class="glyphicon glyphicon-circle-arrow-up"></span></a></span>
 			<span class="glyphReader"><a onclick="event.preventDefault(); reload()" href=""><span id="button-repeat" class="glyphicon glyphicon-repeat"></span></a></span>
 			<span class="glyphReader"><a onclick="zoom(event, -3);" href=""><span class="glyphicon glyphicon-zoom-out"></span></a></span>
 			<span class="glyphReader"><a onclick="zoom(event, 3);" href=""><span class="glyphicon glyphicon-zoom-in"></span></a></span>				

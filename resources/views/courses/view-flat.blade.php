@@ -42,7 +42,7 @@
 		<div class="drop-box-ghost mb-4" style="padding:10px 10px 20px 15px;">
 			<div style="font-size:1.3em; font-weight:normal;">
 				<a href="" onclick="event.preventDefault(); $('#parts{{$record[0]->lesson_number}}').toggle();">@LANG('content.Lesson')&nbsp;{{$record[0]->lesson_number}}:&nbsp;{{isset($record[0]->title_chapter) ? $record[0]->title_chapter : $record[0]->title}}</a>
-				<div id="parts{{$record[0]->lesson_number}}" class="mt-2 hidden">
+				<div id="parts{{$record[0]->lesson_number}}" class="mt-2 {{$chapterCount > 1 ? 'hidden' : ''}}">
 				@foreach($record as $r)
 				<div class="ml-2 mt-1" style="font-size:14px;">
 					<div class="">

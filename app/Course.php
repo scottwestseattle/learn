@@ -97,7 +97,8 @@ class Course extends Base
 		$siteId = Tools::getSiteId();
 		$siteIdCondition = '=';
 		
-		if (Tools::isSuperAdmin())
+		$showAll = (array_search('all', $parms) !== false);
+		if ($showAll && Tools::isSuperAdmin())
 		{
 			// super admins can see all sites
 			$siteId = 0;
@@ -106,7 +107,7 @@ class Course extends Base
 			
 		if (!$public && Tools::isAdmin())
 		{
-			if (array_search('all', $parms) !== false)
+			if ($showAll)
 			{
 				$records = Course::select()
 					->where('deleted_flag', 0)

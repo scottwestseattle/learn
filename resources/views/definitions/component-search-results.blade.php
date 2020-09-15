@@ -33,14 +33,14 @@
 						</div>
 						
 						@if (isset($record->conjugations))
-							<div class="small-thin-text mt-2"><a href="" onclick="event.preventDefault(); $('#hide-{{$record->id}}').show(); $('#showconjugations-{{$record->id}}').show(); ajaxexec('/definitions/conjugationscomponent/{{$record->id}}', '#showconjugations-{{$record->id}}');">
+							<div class="small-thin-text mt-2"><a href="" onclick="event.preventDefault(); $('#showconjugations-{{$record->id}}').toggle(); ajaxexec('/definitions/conjugationscomponent/{{$record->id}}', '#showconjugations-{{$record->id}}');">
 								@if (App\Definition::fixConjugations($record))
 									<a href="/definitions/edit/{{$record->id}}" class="small-thin-text danger">conjugations</a>
 								@else
 									<span>conjugations</span>
 								@endif
-							</a> <span style="display:none;" id="hide-{{$record->id}}"><a href="" onclick="event.preventDefault(); $('#hide-{{$record->id}}').hide(); $('#showconjugations-{{$record->id}}').hide();">(hide)</a></span></div>
-							<div id="showconjugations-{{$record->id}}"></div>
+							</a></div>
+							<div id="showconjugations-{{$record->id}}" class="hidden"></div>
 						@endif
 						
 					</td>
