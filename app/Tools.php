@@ -388,8 +388,14 @@ class Tools
 
 		// do custom word replacements
 		$v = str_ireplace('(irregular)', '<span class="irregular">irregular</span>', $v); // make (irregular) fancy
-		// make numbers fancy from "FN1. "
+		
+		// format Fancy Numbers: "FN1. "
 		$v = preg_replace('/FN([0-9]*)\.([ ]*)/', '<span class="fn">$1</span>', $v); //  $1 resolves to the part matched in the parenthesis
+
+		// format Fancy Bullets, type 1: "FB1"
+		//$v = preg_replace('/FB1([ ]*)/', '<div style="font-size:12px;" class="fb glyphicon glyphicon-arrow-right mr-2 ml-4 mb-1"></div>', $v); //
+		$v = preg_replace('/FB1([ ]*)/', '<div style="font-size:18px;" class="middle mr-2 ml-3 mb-1">→</div>', $v); //
+		$v = preg_replace('/FB2([ ]*)/', '<div style="font-size:12px;" class="middle mr-2 ml-3 mb-1 glyphicon glyphicon-triangle-right green"></div>', $v); //
 
 		return $v;
 	}

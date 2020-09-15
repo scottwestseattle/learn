@@ -1016,18 +1016,18 @@ class Definition extends Base
 			CONJ_IMP_NEGATIVE		=> ['es', 'e', 'emos', 'éis', 'en'],
 		],
 		'er' => [ //todo: not done, just copied
-			CONJ_PARTICIPLE 		=> ['ando', 'ado'],
-			CONJ_IND_PRESENT 		=> ['o', 'as', 'a', 'amos', 'áis', 'an'],
-			CONJ_IND_PRETERITE 		=> ['é', 'aste', 'ó', 'amos', 'asteis', 'aron'],
-			CONJ_IND_IMPERFECT 		=> ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
-			CONJ_IND_CONDITIONAL 	=> ['aría', 'arías', 'aría', 'aríamos', 'aríais', 'arían'],
-			CONJ_IND_FUTURE 		=> ['aré', 'arás', 'ará', 'aremos', 'aréis', 'arán'],
-			CONJ_SUB_PRESENT 		=> ['e', 'es', 'e', 'emos', 'éis', 'en'],
-			CONJ_SUB_IMPERFECT 		=> ['ara', 'aras', 'ara', 'áramos', 'arais', 'aran'],
-			CONJ_SUB_IMPERFECT2 	=> ['ase', 'ases', 'ase', 'ásemos', 'aseis', 'asen'],
-			CONJ_SUB_FUTURE 		=> ['are', 'ares', 'are', 'áremos', 'areis', 'aren'],
-			CONJ_IMP_AFFIRMATIVE 	=> ['a', 'e', 'emos', 'ad', 'en'],
-			CONJ_IMP_NEGATIVE		=> ['es', 'e', 'emos', 'éis', 'en'],
+			CONJ_PARTICIPLE 		=> ['iendo', 'ido'],
+			CONJ_IND_PRESENT 		=> ['o', 'es', 'e', 'emos', 'éis', 'en'],
+			CONJ_IND_PRETERITE 		=> ['í', 'iste', 'ió', 'imos', 'isteis', 'ieron'],
+			CONJ_IND_IMPERFECT 		=> ['ía', 'ías', 'ía', 'íamos', 'íais', 'ían'],
+			CONJ_IND_CONDITIONAL 	=> ['ería', 'erías', 'ería', 'eríamos', 'eríais', 'erían'],
+			CONJ_IND_FUTURE 		=> ['eré', 'erás', 'erá', 'eremos', 'eréis', 'erán'],
+			CONJ_SUB_PRESENT 		=> ['a', 'as', 'a', 'amos', 'áis', 'an'],
+			CONJ_SUB_IMPERFECT 		=> ['iera', 'ieras', 'iera', 'iéramos', 'ierais', 'ieran'],
+			CONJ_SUB_IMPERFECT2 	=> ['iese', 'ieses', 'iese', 'iésemos', 'ieseis', 'iesen'],
+			CONJ_SUB_FUTURE 		=> ['iere', 'ieres', 'iere', 'iéremos', 'iereis', 'ieren'],
+			CONJ_IMP_AFFIRMATIVE 	=> ['e', 'a', 'amos', 'ed', 'an'],
+			CONJ_IMP_NEGATIVE		=> ['as', 'a', 'amos', 'áis', 'an'],
 		],
 		'ir' => [ //todo: not done, just copies
 			CONJ_PARTICIPLE 		=> ['iendo', 'ido'],
@@ -1202,6 +1202,15 @@ class Definition extends Base
 			else if (Tools::endsWith($text, 'ar'))
 			{
 				$stem = 'ar';
+				$middle = '';
+				$endings = self::$_verbEndings[$stem];
+				
+				$records = self::conjugateAr($text, $endings, $stem, $middle);
+			}
+			// Case 7: conjugate all ER verbs as regular
+			else if (Tools::endsWith($text, 'er'))
+			{
+				$stem = 'er';
 				$middle = '';
 				$endings = self::$_verbEndings[$stem];
 				

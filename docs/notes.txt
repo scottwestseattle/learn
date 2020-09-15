@@ -1,4 +1,4 @@
-
+;metiendo;metido;|;meto;metes;mete;metemos;metéis;meten;|;metí;metiste;metió;metimos;metisteis;metieron;|;metía;metías;metía;metíamos;metíais;metían;|;metería;meterías;metería;meteríamos;meteríais;meterían;|;meteré;meterás;meterá;meteremos;meteréis;meterán;|;meta;metas;meta;metamos;metáis;metan;|;metiera;metieras;metiera;metiéramos;metierais;metieran;|;metiese;metieses;metiese;metiésemos;metieseis;metiesen;|;metiere;metieres;metiere;metiéremos;metiereis;metieren;|;mete;meta;metamos;meted;metan;|;no metas;no meta;no metamos;no metáis;no metan;
 
 SELECT * FROM `definitions` WHERE 1
 AND definition is not null
