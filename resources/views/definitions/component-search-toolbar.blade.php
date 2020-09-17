@@ -6,6 +6,7 @@
 	$status = 'status' . $id . '-' . $record->id . '';
 	$heartId = 'heart' . $id . '-' . $record->id . '';
 	$wipId = 'wip' . $id . '-' . $record->id . '';
+	$lists = isset($lists) ? $lists : [];
 ?>
 
 <div class="float-left">

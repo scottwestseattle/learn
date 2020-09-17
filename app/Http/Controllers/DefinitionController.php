@@ -327,6 +327,7 @@ class DefinitionController extends Controller
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
+			'favoriteLists' => null,
 			], LOG_MODEL, LOG_PAGE_PERMALINK));
 	}
 
@@ -839,6 +840,7 @@ class DefinitionController extends Controller
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
 			'word' => Tools::alphanum($text, true),
+			'favoriteLists' => null,
 			], LOG_MODEL, LOG_PAGE_VIEW));		
 	}
 	

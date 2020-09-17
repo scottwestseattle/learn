@@ -39,7 +39,7 @@
 			</div>
 
 			@if (App\User::isSuperAdmin())
-				@if ($canConjugate)
+				@if (isset($canConjugate) && $canConjugate)
 					<div class="small-thin-text mt-2"><a href="/{{PREFIX . '/conjugationsgen/' . $record->id}}/">generate conjugations</a>
 				@endif
 				@if (App\Definition::fixConjugations($record))
