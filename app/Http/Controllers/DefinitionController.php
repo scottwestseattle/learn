@@ -23,6 +23,18 @@ define('TITLE_PLURAL', 'Definitions');
 define('REDIRECT', '/definitions');
 define('REDIRECT_ADMIN', '/definitions/admin');
 
+define('DEFINITIONS_SEARCH_NOTSET', 0);
+define('DEFINITIONS_SEARCH_ALPHA', 1);
+define('DEFINITIONS_SEARCH_REVERSE', 2);
+define('DEFINITIONS_SEARCH_NEWEST', 3);
+define('DEFINITIONS_SEARCH_RECENT', 4);
+define('DEFINITIONS_SEARCH_MISSING_TRANSLATION', 5);
+define('DEFINITIONS_SEARCH_MISSING_DEFINITION', 6);
+define('DEFINITIONS_SEARCH_MISSING_CONJUGATION', 7);
+define('DEFINITIONS_SEARCH_WIP_NOTFINISHED', 8);
+define('DEFINITIONS_SEARCH_VERBS', 9);
+define('DEFINITIONS_SEARCH_ALL', 10);
+
 class DefinitionController extends Controller
 {
 	public function __construct ()
@@ -104,19 +116,26 @@ class DefinitionController extends Controller
     public function search(Request $request, $sort = null)
     {
 		$sort = intval($sort);
-		$search = '';
-		
-		// check if a previous sort was used 
-		if ($sort === 0)
-			$sort = session('definitionSort', 0);
-		else // save current sort value for next time
-			session(['definitionSort' => $sort]);
-
-		// check if a previous search word was used
-		$search = session('definitionSearch', '');
-
 		$records = null;
+		$search = '';
 
+		if ($sort == DEFINITIONS_SEARCH_NOTSET)
+		{
+			// check if a previous sort was used 
+			$sort = session('definitionSort', 0);
+			
+			// check if a previous search word was used
+			$search = session('definitionSearch', '');
+		}
+		else
+		{
+			// save current sort value for next time
+			session(['definitionSort' => $sort]);
+			
+			// clear any previous search word if any kind of sort is set
+			session(['definitionSearch' => null]);			
+		}
+		
 		try
 		{
 			if (isset($search) && strlen($search) > 0)

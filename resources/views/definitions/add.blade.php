@@ -31,27 +31,20 @@
 			<a onclick="event.preventDefault(); $('#forms').val(''); $('#forms').focus();" href="" tabindex="-1" class="ml-2"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<input type="text" rows="3" name="forms" id="forms" class="form-control" autocomplete="off" onfocus="setFocus($(this))"  value="{{$word}}"/>
 
+			<label for="definition" class="control-label">@LANG('content.Definition'):</label>
+			<textarea rows="3" name="definition" id="definition" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
+						
+			<label for="translation_en" class="control-label">@LANG('ui.Translation'):</label>
+			<textarea rows="3" name="translation_en" id="translation_en" class="form-control" onfocus="setFocus($(this))" ></textarea>
+
+			<label for="examples" class="control-label">@LANG('content.Examples'):</label>
+			<textarea rows="5" name="examples" id="examples" class="form-control" onfocus="setFocus($(this))"></textarea>
+
 			<label for="conjugations" class="control-label mr-3">@LANG('content.Conjugations'):  <span class="small-thin-text">(regular verbs only)</span></label></label>
 			<a onclick="event.preventDefault(); conjugationsGen('#title', '#conjugations');" href="" tabindex="-1" class="ml-2"><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
 			<a onclick="event.preventDefault(); $('#conjugations').val(''); $('#conjugations').focus();" href="" tabindex="-1" class="ml-2"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<textarea rows="3" name="conjugations" id="conjugations" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
 
-
-		<div>
-
-		<div class="form-group">
-			<label for="definition" class="control-label">@LANG('content.Definition'):</label>
-			<textarea rows="3" name="definition" id="definition" class="form-control" autocomplete="off" onfocus="setFocus($(this))" ></textarea>
-			
-			<label for="examples" class="control-label">@LANG('content.Examples'):</label>
-			<textarea rows="5" name="examples" id="examples" class="form-control" onfocus="setFocus($(this))"></textarea>
-			
-			<label for="translation_en" class="control-label">@LANG('content.English'):</label>
-			<textarea rows="3" name="translation_en" id="translation_en" class="form-control" onfocus="setFocus($(this))" ></textarea>
-
-			<label for="translation_es" class="control-label">@LANG('content.Spanish'):</label>
-			<textarea rows="3" name="translation_es" id="translation_es" class="form-control" onfocus="setFocus($(this))" ></textarea>			
-			
 		<div>
 
 		<div class="form-group">

@@ -172,4 +172,5 @@ return [
 'Latest Chapters Viewed' => '最新章节浏览',
 'chapters' => '章节',
 'Flashcards' => '抽认卡',
+'Books' => '图书',
 ];

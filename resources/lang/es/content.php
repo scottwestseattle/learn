@@ -172,4 +172,5 @@ return [
 'Latest Chapters Viewed' => 'Últimos capítulos vistos',
 'chapters' => 'capítulos',
 'Flashcards' => 'Tarjetas',
+'Books' => 'Libros',
 ];

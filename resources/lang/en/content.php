@@ -172,4 +172,5 @@ return [
 'Latest Chapters Viewed' => 'Latest Chapters Viewed',
 'chapters' => 'chapters',
 'Flashcards' => 'Flashcards',
+'Books' => 'Books',
 ];
