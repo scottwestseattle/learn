@@ -74,6 +74,7 @@
 
 	<div class="">
 		<p style="font-size:1.2em;">Not found in dictionary</p>
+		<p><a target='_blank' href="/definitions/add/{{$word}}">Add</a></p>
 		<p><a target='_blank' href="https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text={{$word}}">Google Translate: {{$word}}</a></p>
 		<p><a target='_blank' href="https://www.spanishdict.com/translate/{{$word}}">Span¡shD!ct.com: {{$word}}</a></p>
 	</div>
