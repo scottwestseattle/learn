@@ -408,71 +408,6 @@ function next()
 	loadQuestion();
 }
 
-function nextAttempt()
-{
-	clearTimeout(nextAttemptTimer);
-
-	setButtonStates(RUNSTATE_ASKING);
-
-	var done = false;
-	var count = 0;
-	while(!done)
-	{
-		curr++;
-
-		// check if at the end of round
-		if (curr >= max)
-		{
-			curr = 0;
-			nbr = 0;
-			score = (right / (right+wrong)) * 100;
-			total = right + wrong;
-			if (total > 0)
-			{
-				results = '<p>' + quiz.quizTextRound + ' ' + round + ': ' + score.toFixed(2) + '% (' + right + '/' + total + ')</p>';
-				if (round == 1)
-					$("#rounds").text('');
-				$("#rounds").append(results);
-				//alert('End of Round, Starting next round');
-				quiz.showPanel(RUNSTATE_ENDOFROUND);
-			}
-			else
-			{
-				//alert('End of Round???');
-			}
-
-			//alert('End of Round ' + round + ': ' + score.toFixed(2) + '% (' + right + ' of ' + (right+wrong) + ')');
-
-			round++;
-			statsMax = wrong;
-			right = 0;
-			wrong = 0;
-		}
-
-		// if this question has not been answered correctly yet
-		if (!quiz.qna[quiz.qna[curr].order].correct)
-		{
-			loadQuestion();
-			done = true;
-		}
-		else if (count++ >= max)
-		{
-			// no wrong answers left
-			//alert('Done, all answered correctly!!');
-			//quiz.showPanel(RUNSTATE_ENDOFQUIZ);
-			//resetQuiz();
-			quiz.runState = RUNSTATE_ENDOFQUIZ;
-			done = true;
-		}
-
-		if (count > 10000)
-		{
-			// break out just in care we're looping
-			break;
-		}
-	}
-}
-
 function prev()
 {
 	curr--;
@@ -489,15 +424,6 @@ function startQuiz()
 	loadData();
 	loadOrder();
 	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());
-
-	quiz.showPanel();
-}
-
-function continueQuiz()
-{
-	// if end of round but not end of quiz, keep asking
-	if (quiz.runState == RUNSTATE_ENDOFROUND)
-		quiz.runState = RUNSTATE_ASKING;
 
 	quiz.showPanel();
 }
@@ -526,9 +452,7 @@ function resetQuiz()
 
 	loadOrder();
 
-	$("#stats").hide();
-	$("#panelEndofquizFinished").show();
-	$("#panelEndofquizStopped").hide();
+	resetEndPanels();
 }
 
 function clear2()

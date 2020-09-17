@@ -813,9 +813,51 @@ class Definition extends Base
 			$records = Definition::select()
 				->where('deleted_at', null)
 				->where(function ($query) use ($word){$query
-					->where('title', 'LIKE', $word . '%')											// exact match of title
+					->where('title', 'LIKE', $word . '%')							// exact match of title
 					->orWhere('forms', 'LIKE', '%;' . $word . ';%')					// exact match of ";word;"
 					->orWhere('conjugations_search', 'LIKE', '%;' . $word . '%;%') 	// exact match of ";word;"
+					;})
+				->orderBy('title')
+				->get();
+
+			if (false && !isset($record)) // not yet
+			{
+				$record = self::searchDeeper($word);
+			}
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting word: ' . $word;
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
+		//dd($records);
+
+		return $records;
+	}	
+	
+	// search checks title and forms
+    static public function searchGeneral($word)
+    {
+		$word = Tools::alpha($word);
+		$records = null;
+		
+		if (!isset($word))
+		{
+			// show full list
+			return Definition::getIndex();
+		}
+
+		try
+		{			
+			$records = Definition::select()
+				->where('deleted_at', null)
+				->where(function ($query) use ($word){$query
+					->where('title', 'LIKE', $word . '%')						
+					->orWhere('forms', 'LIKE', '%' . $word . '%')				
+					->orWhere('conjugations_search', 'LIKE', '%' . $word . '%') 
+					->orWhere('translation_en', 'LIKE', '%' . $word . '%') 
 					;})
 				->orderBy('title')
 				->get();

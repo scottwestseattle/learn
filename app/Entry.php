@@ -285,6 +285,28 @@ class Entry extends Base
 
 		return $records;
 	}
+
+	static public function search($string)
+	{
+		$string = Tools::alphanum($string);
+		$search = '%' . $string . '%';
+		
+		$records = $record = Entry::select()
+				->where('deleted_flag', 0)
+				->where('entries.site_id', Tools::getSiteId())
+				->whereIn('type_flag', [ENTRY_TYPE_ARTICLE, ENTRY_TYPE_BOOK])
+				->where('release_flag', '>=', self::getReleaseFlag())
+				->where(function ($query) use($search) {$query
+					->where('title', 'like', $search)
+					->orWhere('description_short', 'like', $search)
+					->orWhere('description', 'like', $search)
+					;})				
+				->orderByRaw('type_flag, title')
+				->get();
+
+		return $records;
+	}
+	
 	
 	// get all entries for specified type
 	static public function getEntriesByType($type_flag, $limit = 0, $orderBy = ORDERBY_APPROVED)

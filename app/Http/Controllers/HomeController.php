@@ -6,14 +6,16 @@ use Illuminate\Http\Request;
 use Lang;
 use Auth;
 
-use App\Tools;
+use App\Entry;
 use App\Event;
-use App\Visitor;
-use App\User;
 use App\Course;
+use App\Definition;
 use App\Lesson;
-use App\Word;
+use App\Tools;
+use App\User;
+use App\Visitor;
 use App\VocabList;
+use App\Word;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMailable;
@@ -302,6 +304,8 @@ class HomeController extends Controller
     public function search(Request $request)
     {
 		$search = null;
+		$definitions = null;
+		$entries = null;
 		$lessons = null;
 		$words = null;
 		$wordsUser = null;
@@ -328,8 +332,14 @@ class HomeController extends Controller
 
 					if (Tools::siteUses(LOG_MODEL_ARTICLES))
 					{
-						//$lessons = Lesson::search($search);
-						//$count += (isset($lessons) ? count($lessons) : 0);
+						$entries = Entry::search($search);
+						$count += (isset($entries) ? count($entries) : 0);
+					}
+
+					if (Tools::siteUses(LOG_MODEL_DEFINITIONS))
+					{
+						$definitions = Definition::searchGeneral($search);
+						$count += (isset($definitions) ? count($definitions) : 0);
 					}
 
 					if (Tools::siteUses(LOG_MODEL_LESSONS))
@@ -359,6 +369,8 @@ class HomeController extends Controller
 		return view('home.search', $this->getViewData([
 			'lessons' => $lessons,
 			'words' => $words,
+			'definitions' => $definitions,
+			'entries' => $entries,
 			'isPost' => $isPost,
 			'count' => $count,
 			'search' => $search,

@@ -77,7 +77,7 @@
 
 	@if (count($records) > 0)
 
-	<section xstyle="max-width: 600px;" class="quizSection" id='sectionQna'>
+	<section class="" id='sectionQna'>
 
 	<!-------------------------------------------------------->
 	<!-- Instructions -->
@@ -94,6 +94,7 @@
 	<!-- QUESTION -->
 	<!-------------------------------------------------------->
 
+	<div class="text-center" style="xbackground-color:gray;">
 	<div class="card card-flashcard card-blue text-center" style="font-size: {{$settings['options']['font-size']}};">
 		<a href="" onclick="flipCard(event);">
 			<div class="card-header">
@@ -105,6 +106,7 @@
 			</div>
 		</a>
 	</div>	
+	</div>
 
 	<!-------------------------------------------------------->
 	<!-- ANSWER -->
@@ -166,10 +168,6 @@
 
 	</div>
 	<!---------------------------------------------------------------------------------------------------------------->
-	<!-- End of Quiz panel -->
-	<!---------------------------------------------------------------------------------------------------------------->
-
-	<!---------------------------------------------------------------------------------------------------------------->
 	<!-- Start Panel -->
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-start" class="quiz-panel text-center">
@@ -190,60 +188,22 @@
 	</div>
 
 	<!---------------------------------------------------------------------------------------------------------------->
-	<!-- Quiz Results Panel -->
-	<!---------------------------------------------------------------------------------------------------------------->
-	<div id="panel-endofround" class="quiz-panel text-center">
-
-		<div class="quiz-panel-content">
-			<span class="hidden" id="panelResultsRoundBase">@LANG('content.End of Round')</span>
-			<h1 id="panelResultsRound"></h1>
-			<!-- span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-stats bright-blue-fg"></span -->
-			<img style="margin:20px;" height="100" src="/img/quiz-endofround.png" />
-			<h3>@LANG('content.Correct Answers')</h3>
-			<h1 id="panelResultsCount"></h1>
-			<h3 id="panelResultsPercent"></h3>
-		</div>
-
-		<div class="btn-panel-bottom pb-2">
-			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); continueQuiz()" id="button-continue">@LANG('content.Continue')</button>
-			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); stopQuiz()" id="button-stop">@LANG('ui.Quit')</button>
-		</div>
-
-	</div>
-
-	<!---------------------------------------------------------------------------------------------------------------->
-	<!-- End of Quiz Panel -->
+	<!-- End of Flashcards Panel -->
 	<!---------------------------------------------------------------------------------------------------------------->
 	<div id="panel-endofquiz" class="quiz-panel text-center">
 
 		<div class="quiz-panel-content">
-			<h1 class="" id="">@LANG('content.End of Review')</h1>
-			<p id="panelEndofquizFinished">@LANG('content.All questions answered correctly.')</p>
-			<p id="panelEndofquizStopped">@LANG('content.Review was stopped.')</p>
-			<!-- span style="margin:20px; font-size:75px;" class="glyphicon glyphicon-thumbs-up bright-blue-fg"></span -->
+			<h1 class="" id="">@LANG('qna.End of Questions')</h1>
 			<img style="margin-bottom:20px;" width="100" src="/img/quiz-end.jpg" />
-			<h3>@LANG('content.Scores by Round')</h3>
-			<span class="hidden" id="roundsStart">@LANG('content.None Completed')</span>
-			<span id="rounds"></span>
+			<h3>@LANG('qna.Click below to restart')</h3>
 		</div>
 
 		<div class="btn-panel-bottom pb-2">
-			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); startQuiz();" id="button-continue2">@LANG('content.Continue')</button>
+			<button class="btn btn-lg btn-primary btn-quiz" onclick="event.preventDefault(); restartQuiz();" id="button-continue2">@LANG('ui.Restart')</button>
 			<a class="" role="" href="{{$returnPath}}"><button class="btn btn-lg btn-primary btn-quiz" >@LANG('ui.Quit')</button></a>
 		</div>
 
 	</div>
-
-	<!---------------------------------------------------------------------------------------------------------------->
-	<!-- Debug Info -->
-	<!---------------------------------------------------------------------------------------------------------------->
-@if (false) // debug dump
-	<div>
-	@foreach($records as $rec)
-		<p>{!!$rec['q']!!}</p>
-	@endforeach
-	</div>
-@endif
 
 @endif
 

@@ -75,7 +75,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 						<li class="nav-item"><a class="nav-link" href="/courses">@LANG('content.Courses')</a></li>
 					@endif
 					@if ($isAdmin && defined('LOG_MODEL_BOOKS') && App\Tools::siteUses(LOG_MODEL_BOOKS))
-						<li class="nav-item"><a class="nav-link" href="/books">@LANG('ui.Books')</a></li>
+						<li class="nav-item"><a class="nav-link" href="/books">@LANG('content.Books')</a></li>
 					@endif
 
                     <!-- Authentication Links -->

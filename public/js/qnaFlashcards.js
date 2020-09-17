@@ -73,3 +73,31 @@ function showQuestion()
 
 	$("#stats").show();
 }
+
+function nextAttempt()
+{
+	clearTimeout(nextAttemptTimer);
+	setButtonStates(RUNSTATE_ASKING);
+
+	if (++curr < max)
+	{
+		loadQuestion();
+	}
+	else
+	{
+		quiz.showPanel(RUNSTATE_ENDOFQUIZ);
+	}
+}
+
+function restartQuiz()
+{
+	quiz.showPanel();
+	resetQuiz();
+	quiz.runState = RUNSTATE_ASKING;
+	loadQuestion();
+}
+
+function resetEndPanels()
+{
+	// nothing to do but still need for call from qnaBase
+}

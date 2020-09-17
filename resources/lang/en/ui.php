@@ -120,4 +120,5 @@ return [
 'Tags' => 'Tags',
 'User' => 'User',
 'List' => 'List',
+'Restart' => 'Restart',
 ];

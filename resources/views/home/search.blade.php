@@ -19,9 +19,27 @@
 		{{ csrf_field() }}
 	</form>
 
-	@if (isset($lessons) || isset($words))
+	@if ($count > 0)
 			<table class="table table-striped">
 				<tbody>
+
+				@if (isset($entries))
+					@foreach($entries as $record)
+						<tr>
+							<td>@LANG('content.' . $record->getTypeFlagName($record->type_flag) . 's')</td>
+							<td><a href="/entries/{{$record->permalink}}" target="_blank">{{$record->title}}</a></td>
+						</tr>
+					@endforeach
+				@endif
+
+				@if (isset($definitions))
+					@foreach($definitions as $record)
+						<tr>
+							<td>@LANG('content.Dictionary')</td>
+							<td><a href="/definitions/view/{{$record->id}}" target="_blank">{{$record->title}}</a></td>
+						</tr>
+					@endforeach
+				@endif
 
 				@if (isset($lessons))
 					@foreach($lessons as $record)

@@ -120,4 +120,5 @@ return [
 'Tags' => 'Etiquetas',
 'User' => 'Usuario',
 'List' => 'Lista',
+'Restart' => 'Reiniciar',
 ];
