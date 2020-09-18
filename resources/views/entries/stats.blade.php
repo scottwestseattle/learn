@@ -61,9 +61,14 @@
 		@endif
 
 		<h3>Possible Verbs ({{$possibleVerbs}})</h3>
+		
 		@foreach($stats['sortCount'] as $key => $value)
 			@if (App\Tools::endsWithAny($key, ['ar', 'er', 'ir']))
-				<span><a href="/definitions/find/{{$key}}">{{$key}}</a></span> <span style="font-size:11px; color:gray; margin-right:10px;">({{$value}}) </span>
+@if (false)
+			<div><a href="/definitions/find/{{$key}}">{{$key}}</a></div> 
+@else
+			<span><a href="/definitions/find/{{$key}}">{{$key}}</a></span>&nbsp;<span class="" style="font-size:11px; color:gray; margin-right:10px;">({{$value}}) </span>
+@endif
 			@endif
 		@endforeach
 		

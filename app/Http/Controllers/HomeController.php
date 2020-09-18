@@ -203,7 +203,7 @@ class HomeController extends Controller
 		$vocabLists = null;
 		$stats['lessonDate'] = null;
 		
-		if (Tools::siteUses(LOG_MODEL_WORDS))
+		if (false && Tools::siteUses(LOG_MODEL_WORDS))
 		{
 			//
 			// user's vocab lists

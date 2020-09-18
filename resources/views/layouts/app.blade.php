@@ -49,7 +49,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 				@if ($isAdmin)
 					<div class="mr-2"><a href="/admin"><span class="glyphicon glyphicon-user gold"></span></a></div>
 				@else
-					<div class="mr-2"><a href="/admin"><span class="glyphicon glyphicon-user white"></span></a></div>
+					<div class="mr-2"><a href="/home"><span class="glyphicon glyphicon-user white"></span></a></div>
 				@endif
 			@endguest
 						
@@ -97,16 +97,14 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
 								@if (Auth::user()->isAdmin())
+									<a class="dropdown-item" href="/home"><span class="glyphicon glyphicon-home mr-2"></span></a>
+									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="/admin">@LANG('ui.Admin')</a>
 									<a class="dropdown-item" href="/events">@LANG('ui.Events')</a>
 									<a class="dropdown-item" href="/tags">@LANG('ui.Tags')</a>
+									<a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
 									<a class="dropdown-item" href="/users">@LANG('ui.Users')</a>
 									<a class="dropdown-item" href="/visitors">@LANG('ui.Visitors')</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="/translations">@LANG('ui.Translations')</a>
-									@if (App\Tools::siteUses(LOG_MODEL_COURSES))
-										<a class="dropdown-item" href="/courses/admin">@LANG('content.Courses')</a>
-									@endif
 
 								<div class="dropdown-divider"></div>
 								@endif

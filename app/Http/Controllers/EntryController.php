@@ -640,7 +640,7 @@ class EntryController extends Controller
 		$articleCount = 0;
 		$stats = null;
 
-		$records = Entry::getBooksRecent();
+		$records = Entry::getRecentList(ENTRY_TYPE_BOOK);
 		foreach($records as $record)
 		{
 			if ($record->language_flag == LANGUAGE_SPANISH)

@@ -4,7 +4,7 @@
 
 <div class="container page-normal">
 
-	@if (isset($vocabLists))
+	@if (isset($vocabLists) && count($vocabLists) > 0)
 	<div class="mb-5">
 		<div class="">
             <!-- SHOW VOCAB LISTS -->
@@ -53,7 +53,7 @@
 	@if (isset($course))
 	<div class="mb-5">
 		<div class="">
-			<h3>@LANG('content.Your Current Location')</h3>
+			<h3>@LANG('content.Courses in Progress')</h3>
 		</div>
 		<div class="">
 
@@ -69,20 +69,21 @@
 				</div>
 			@else
 				<div class="mb-5">
-					<h4>@LANG('content.No lessons viewed yet').<h4>
+					<h4>@LANG('content.No lessons started').<h4>
 				</div>
 			@endif
-
-				<p><a class="btn btn-primary btn-lg" href="/courses" role="button">@LANG('content.Go to Courses')</a></p>
-
+			
 		</div>
 	</div>
 	<hr />
+	@else
+		<h3>@LANG('content.No Courses Started')</h3>
+		<p><a class="btn btn-primary btn-lg" href="/courses" role="button">@LANG('content.Go to Courses')</a></p>		
 	@endif
 
 	@if (isset($quizes))
 	<div class="mb-5">
-		<h3>@LANG('content.Latest Results')</h3>
+		<h3>@LANG('content.Review Results')</h3>
 
 		<div class="">
 
