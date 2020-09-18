@@ -20,6 +20,26 @@ var isMobile = {
     }
 };
 
+function mobile()
+{
+    if (navigator.userAgent.match(/Android/i))
+		return true;
+	
+	if (navigator.userAgent.match(/iPhone|iPad|iPod/i))
+		return true;
+	
+	if (navigator.userAgent.match(/BlackBerry/i))
+		return true;
+		
+	if (navigator.userAgent.match(/Opera Mini/i))
+		return true;
+		
+	if (navigator.userAgent.match(/IEMobile/i))
+		return true;
+	
+	return false;
+}
+
 function debug(msg, debugOn)
 {
 	if (debugOn)
@@ -755,8 +775,14 @@ function setFloat(obj, id)
 	$("#accent-chars-esp").appendTo("#" + id);
 }
 
-function setFocus(obj)
+function setFocus(obj, accentsId = null)
 {
+	if (accentsId != null)
+	{
+		$(accentsId).insertBefore(obj);
+		$(accentsId).show();
+	}
+	
 	prevFocus = obj;
 }
 
@@ -1062,7 +1088,9 @@ function getWordForms(word, wordForms, pluralOnly)
 
 function wordExists(title)
 {
-	ajaxexec('/definitions/wordexists/' + title.val().trim(), '#wordexists');
+	var word = title.val().trim();
+	if (word.length > 0) // if anything is left
+		ajaxexec('/definitions/wordexists/' + word, '#wordexists');
 }
 
 function scrollTo(className, heightAdjustment = 0)
@@ -1130,14 +1158,14 @@ function searchDefinitions(event, textId, resultsId)
 	// only search when alphanum char is pressed or removed with backspace/delete
 	// note that: ctrl-v and ctrl-x still work because the 'v' and 'x' are caught
 	// before it was searching on arrows, page up/down, etc
-	if (isMobile)
+	if (mobile())
 	{
-		// keycodes don't work for mobile
+		// keycodes don't work for mobile so let it go through
 	}
 	else
 	{
+		// if it's not a printable character OR delete
 		var doit = isAlphanum(event.keyCode) || isDelete(event.keyCode); 
-		//d('onkeyup: ' + event.keyCode + ', alphanum or delete: ' + doit);
 		if (!doit)
 			return;
 	}

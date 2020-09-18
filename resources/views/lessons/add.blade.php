@@ -10,6 +10,8 @@
 
 	<form method="POST" action="/{{$prefix}}/create">
 
+		@component('components.control-accent-chars-esp', ['flat' => true])@endcomponent
+
         @if ($course->isTimedSlides())
             <input type="hidden" name="parent_id" id="parent_id" value="{{$course->id}}" />
         @else
@@ -75,7 +77,7 @@
 
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('gen.Title'):</label>
-			<input type="text" name="title" id="title" class="form-control" />
+			<input type="text" name="title" id="title" class="form-control" onclick="setFocus($(this), '#accent-chars');" />
 		</div>
 
         @if ($course->isTimedSlides())
@@ -112,13 +114,13 @@
 
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('gen.Description'):</label>
-			<textarea name="description" class="form-control"></textarea>
+			<textarea id="description" name="description" class="form-control" onclick="setFocus($(this), '#accent-chars');"></textarea>
 		<div>
 
 
 		<div class="form-group">
 			<label for="title_chapter" class="control-label">@LANG('gen.Chapter Title'):</label>
-			<input type="text" name="title_chapter" class="form-control" />
+			<input type="text" id="title_chapter" name="title_chapter" class="form-control" onclick="setFocus($(this), '#accent-chars');" />
 		<div>
 
         @if ($course->isTimedSlides())

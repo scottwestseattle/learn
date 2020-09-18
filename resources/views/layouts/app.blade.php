@@ -182,4 +182,3 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 </body>
 </html>
-<

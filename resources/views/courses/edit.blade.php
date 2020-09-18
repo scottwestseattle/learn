@@ -27,12 +27,12 @@
 
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('gen.Title'):</label>
-			<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}" onfocus="setFocus($(this))" ></input>	
+			<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}" onfocus="setFocus($(this), '#accent-chars')" ></input>	
 		</div>
 				
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('gen.Description'):</label>
-			<textarea id="description" name="description" class="form-control" onfocus="setFocus($(this))" >{{$record->description}}</textarea>
+			<textarea id="description" name="description" class="form-control" onfocus="setFocus($(this), '#accent-chars')" >{{$record->description}}</textarea>
 		</div>
 
 		<div class="form-group">

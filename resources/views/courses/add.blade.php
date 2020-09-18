@@ -13,11 +13,11 @@
 	<form method="POST" action="/{{$prefix}}/create">
 							
 		<label for="title" class="control-label">@LANG('gen.Title'):</label>
-		<input type="text" id="title" name="title" class="form-control" onfocus="setFocus($(this))" />
+		<input type="text" id="title" name="title" class="form-control" onfocus="setFocus($(this), '#accent-chars')" />
 		
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('gen.Description'):</label>
-			<textarea id="description" name="description" class="form-control" onfocus="setFocus($(this))" ></textarea>
+			<textarea id="description" name="description" class="form-control" onfocus="setFocus($(this), '#accent-chars')" ></textarea>
 		<div>
 		
 		<div class="form-group">

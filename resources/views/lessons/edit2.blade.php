@@ -18,7 +18,9 @@
 			</div>
 		</div>
 		
-		<textarea style="height:500px" name="text" id="text" class="form-control big-text">{{$record->text}}</textarea>
+		@component('components.control-accent-chars-esp', ['flat' => true])@endcomponent		
+		
+		<textarea style="height:500px" name="text" id="text" class="form-control big-text"  onclick="setFocus($(this), '#accent-chars');">{{$record->text}}</textarea>
 		
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
