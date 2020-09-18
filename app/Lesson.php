@@ -23,6 +23,7 @@ define('LESSONTYPE_QUIZ_MC2', 41);
 define('LESSONTYPE_QUIZ_MC3', 42);
 define('LESSONTYPE_QUIZ_MC4', 43);
 define('LESSONTYPE_TIMED_SLIDES', 50);
+define('LESSONTYPE_READING', 60);
 define('LESSONTYPE_OTHER', 99);
 define('LESSONTYPE_DEFAULT', LESSONTYPE_TEXT);
 
@@ -38,6 +39,7 @@ class Lesson extends Base
 		LESSONTYPE_QUIZ_MC3 => 'Multiple Choice - New Layout (MC3)',
 //todo: not used yet		LESSONTYPE_QUIZ_MC4 => 'Multiple Choice - Random Options New Layout (MC4)',
 		LESSONTYPE_TIMED_SLIDES => 'Timed Slides',
+		LESSONTYPE_READING => 'Reading',
 		LESSONTYPE_OTHER => 'Other',
     ];
 
@@ -620,6 +622,11 @@ class Lesson extends Base
 		}
 
 		return $v;
+	}
+
+    public function isReading()
+	{
+		return ($this->type_flag == LESSONTYPE_READING);
 	}
 
     public function getLessonType()

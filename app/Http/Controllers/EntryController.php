@@ -543,9 +543,11 @@ class EntryController extends Controller
 		
 		$record['lines'] = $text;
 				
-    	return view('entries.reader', $this->getViewData([
+    	return view('shared.reader', $this->getViewData([
 			'record' => $record,
 			'readLocation' => (Auth::check() ? $readLocation : null),
+			'speechLanguage' => $record->getSpeechLanguage(),
+			'contentType' => 'Entry',			
 		]));
     }	
 

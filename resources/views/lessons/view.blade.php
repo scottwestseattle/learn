@@ -50,6 +50,11 @@
 	</div>
 
 	<h3 name="title" class="mb-2">
+	
+		@if ($record->isReading())
+			@component('components.icon-read', ['href' => "/lessons/read/$record->id"])@endcomponent						
+		@endif
+	
 	    {{$record->title }}
 	    @if (false && $record->isText())
             <div><a href="/lessons/convert-to-list/{{$record->id}}"><button class="btn btn-info btn-xs">Convert</button></a></div>

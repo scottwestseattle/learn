@@ -7,6 +7,7 @@ use DB;
 use Auth;
 
 use App\Course;
+use App\Entry;
 use App\Event;
 use App\History;
 use App\Lesson;
@@ -27,7 +28,10 @@ class LessonController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'start', 'permalink', 'logQuiz', 'rss', 'rssReader']);
+        $this->middleware('is_admin')->except([
+			'index', 'review', 'reviewmc', 'read', 'view', 
+			'start', 'permalink', 'logQuiz', 'rss', 'rssReader'
+		]);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -702,6 +706,27 @@ class LessonController extends Controller
 			'settings' => $settings,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
+
+    public function read(Request $request, Lesson $lesson)
+    {
+		$record = $lesson;		
+		$text = [];
+		
+		//$title = Tools::getSentences($record->title);
+		$text = str_replace("<br />", "\r\n", $record->text);
+		$text = Tools::getSentences($text);
+		//$text = array_merge($title, $text);
+		//dd($text);
+		
+		$record['lines'] = $text;
+				
+    	return view('shared.reader', $this->getViewData([
+			'record' => $record,
+			'readLocation' => null,
+			'speechLanguage' => 'es-ES',
+			'contentType' => 'Lesson',
+		]));
+    }	
 
     public function logQuiz($lessonId, $score)
     {

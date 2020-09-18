@@ -76,7 +76,7 @@
 							<tr><td style="padding-bottom:10px; font-size:1.3em; font-weight:normal;"><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
 							<tr><td style="padding-bottom:10px; font-size:.8em; font-weight:10;">
 								<div style="float:left;">
-									@component('entries.icon-read', ['record' => $record])@endcomponent						
+									@component('components.icon-read', ['href' => "/entries/read/$record->id"])@endcomponent						
 									<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
 									<div style="margin-right:15px; margin-bottom:5px; float:left;"><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
 									

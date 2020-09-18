@@ -220,7 +220,6 @@ class Entry extends Base
 	//
 	// End of new tag code
 	//
-
     public function getSpeechLanguage()
     {
     	return Tools::getSpeechLanguage($this->language_flag);
