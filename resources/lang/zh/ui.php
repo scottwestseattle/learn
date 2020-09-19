@@ -121,4 +121,5 @@ return [
 'User' => '用户',
 'List' => '清单',
 'Restart' => '重新开始',
+'Translation' => '翻译',
 ];
