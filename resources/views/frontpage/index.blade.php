@@ -6,8 +6,9 @@
 <!-- Front Page -->
 <!--------------------------------------------------------------------------------------->
 
+@if (Auth::check() && count($lesson) > 0)
+@else
 <!-- Main jumbotron for a primary marketing message or call to action -->
-@if (false)
 <div class="fpheader">
 	<div class="container text-center">
 	  <h1 class="">@LANG('fp.Frontpage Header Title')</h1>
@@ -39,6 +40,30 @@
 	
 	<!-- SHOW COURSES -->
 	@if (App\Tools::siteUses(LOG_MODEL_COURSES))
+		@if (Auth::check())
+			
+		<h3>@LANG('content.Courses in Progress')</h3>
+		<div class="row row-course">
+
+			@if (isset($lesson['course']))
+				<div class="alert alert-primary" role="alert">
+					<h3 class="alert-heading mt-0">{{$lesson['course']->title}}</h3>
+					@if (isset($lesson['lesson']))
+						<hr>
+						<h4>@LANG('content.Chapter') {{$lesson['lesson']->getFullName()}}</h4>
+						<p>@LANG('content.Last viewed on') {{$lesson['date']}}</p>
+						<p><a class="btn btn-primary btn-lg" href="/lessons/view/{{$lesson['lesson']->id}}" role="button">@LANG('content.Continue Lesson') &raquo;</a></p>
+					@endif
+				</div>
+			@else
+				<div class="mb-3">
+					<h4>@LANG('content.No lessons started').<h4>
+				</div>
+			@endif
+					
+		</div>	
+
+		@else
 		<h3>@LANG('content.Courses') ({{count($courses)}})</h3>
 		<div class="row row-course">
 			@foreach($courses as $record)
@@ -52,6 +77,7 @@
 			</div>
 			@endforeach
 		</div>
+		@endif
 	@endif
 	<!-- END OF COURSES -->		
 

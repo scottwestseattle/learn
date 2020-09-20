@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
-use App\Event;
-use App\Tools;
+
 use App\Course;
+use App\Entry;
+use App\Event;
+use App\Lesson;
+use App\User;
+use App\Tools;
 use App\VocabList;
 use App\Word;
-use App\User;
-use App\Entry;
 
 define('LOG_MODEL', 'frontpage');
 
@@ -37,10 +39,11 @@ class FrontPageController extends Controller
 		$courses = []; // make this countable so view will always work
 		$vocabLists = [];
 		$articles = [];
+		$lesson = [];
 		$wod = null;
 
         // get word of the day
-		if (Tools::siteUses(LOG_MODEL_WORDS))
+		if (false && Tools::siteUses(LOG_MODEL_WORDS))
 		{
 			$wod = Word::getWod(User::getSuperAdminUserId());
 
@@ -60,6 +63,15 @@ class FrontPageController extends Controller
 				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 				Tools::flash('danger', $msg);
 			}			
+		}
+
+		if (Tools::siteUses(LOG_MODEL_LESSONS) && Auth::check())
+		{
+			//
+			// get user's last viewed lesson so he can resume where he left off
+			//
+			$lesson = Lesson::getCurrentLocation();
+			$lesson['course'] = isset($lesson['lesson']) ? $lesson['lesson']->course : null;
 		}
 
 		if (Tools::siteUses(LOG_MODEL_COURSES))
@@ -96,6 +108,7 @@ class FrontPageController extends Controller
 			'vocabLists' => $vocabLists,
 			'wod' => $wod,
 			'articles' => $articles,
+			'lesson' => $lesson,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

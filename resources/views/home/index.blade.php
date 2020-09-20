@@ -59,7 +59,7 @@
 
 			@if (isset($course))
 				<div class="alert alert-primary" role="alert">
-					<h3 class="alert-heading mb-3">{{$course->title}}</h3>
+					<h3 class="alert-heading mt-0">{{$course->title}}</h3>
 					@if (isset($lesson))
 					<hr>
 					<h4>@LANG('content.Chapter') {{$lesson->getFullName()}}</h4>
