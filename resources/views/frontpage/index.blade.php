@@ -9,8 +9,8 @@
 @if (Auth::check() && count($lesson) > 0)
 @else
 <!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="fpheader">
-	<div class="container text-center">
+<div class="fpheader app-color-primary fpBannerImage">
+	<div class="container text-center" >
 	  <h1 class="">@LANG('fp.Frontpage Header Title')</h1>
 	  <p>@LANG('fp.Frontpage Header Body')</p>
 	  <p><a class="btn btn-primary btn-lg" href="/articles" role="button">@LANG('fp.Start') &raquo;</a></p>

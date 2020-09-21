@@ -40,7 +40,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 <body>
 	<header>
-		<nav style="" class="navbar navbar-expand-md navbar-dark fixed-top power-purple">
+		<nav style="" class="navbar navbar-expand-md navbar-dark fixed-top app-color-primary">
 
 			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
 

@@ -144,6 +144,16 @@ h1,h3 {
 	color: white;
 }
 
+.mars-sky {
+	background-color: #fe5b4c;
+	color: white;
+}
+
+.app-color-primary {
+	background-color: #fe5b4c; /* mars-sky */
+	color: white;
+}
+
 .oolong-orange {
 	background-color: #FF6900;
 	color: white;"
@@ -190,8 +200,17 @@ h1,h3 {
 .fpheader {
     padding: 2rem 1rem;
     margin-bottom: 2rem;
- 	background-color: #800080;
-	color: white;
+}
+
+.fpBannerImage {
+	/* not yet
+	
+	background-image:url('/img/banner.png'); 
+	background-repeat: no-repeat;
+	background-position: center;
+	background-attachment: fixed;
+
+	not yet */
 }
 
 .fpheader p {
