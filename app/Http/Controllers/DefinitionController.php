@@ -180,10 +180,23 @@ class DefinitionController extends Controller
     public function conjugationsGenAjax(Request $request, $text)
     {
 		$forms = null;
-		$records = Definition::conjugationsGen($text);
-		if (isset($records))
+		
+		$scraped = Definition::isIrregular($text);
+		if ($scraped['irregular'])
 		{
-			$forms = $records['forms'];
+			$forms = $scraped['conj']['full'];
+			//dump('scraped');
+			//dd($forms);
+		}
+		else
+		{
+			$records = Definition::conjugationsGen($text);
+			if (isset($records))
+			{
+				$forms = $records['forms'];
+				//dump('gened');
+				//dd($forms);
+			}
 		}
 		
 		return $forms;

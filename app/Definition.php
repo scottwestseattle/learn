@@ -445,7 +445,7 @@ class Definition extends Base
 		{
 			// looks raw so attempt to clean it
 			// returns both 'full' and 'search'
-			$rc = self::cleanConjugations($raw);
+			$rc = self::cleanConjugationsPasted($raw);
 		}
 	
 		return $rc;
@@ -510,8 +510,177 @@ class Definition extends Base
 	
 		return $rc;
 	}
+
+    static public function cleanConjugationsScraped($raw)
+    {		
+		$rc['full'] = null;	  // full conjugations
+		$rc['search'] = null; // conjugations list that can be searched (needed for reflexive conjugations like: 'nos acordamos')
+		$conj = '';
+		$search = '';
+		
+		if (!isset($raw))
+			return null;
+		
+		$words = [];
+
+		//$pos = strpos($raw, 'obtengo'); // 70574
+		//dump($pos);
+		//$pos = strpos($raw, 'play translation audio'); // 
+		//dump($pos);
+		preg_match_all('/aria-label\=\"(.*?)\"/is', substr($raw, 50000), $parts);
+		//$parts = $parts[1];
+		
+		// figure out where the start and end are
+		$start = 0;
+		$end = 0;
+
+		//dd($parts);
+		$parts = $parts[1];
+		$matches = count($parts);
+		$participle = '';
+		if ($matches >= 150) // use the exact number so we can tell if we get unexpected results
+		{	
+			
+			// fix up the array first
+			$words = [];
+			$wordsPre = [];
+			$word = '';
+			foreach($parts as $part)
+			{
+				switch($part)
+				{
+					case 'Spanishdict Homepage':
+					case 'SpanishDict logo':
+					case 'more':
+					case 'Menu':
+					case 'Enter a Spanish verb':
+					case 'Search':
+					case 'play headword audio':
+					case 'play translation audio':
+						break;
+					default:
+						$word = $part;
+						$words[] = $word;					
+						break;
+				}
+
+				if (Tools::startsWith($word, 'estoy '))
+					$wordsPre[] = substr($word, strlen('estoy '));
+				else if (Tools::startsWith($word, 'he '))
+				{
+					$wordsPre[] = substr($word, strlen('he '));
+					break;
+				}
+			}
+
+			// put the pre at the beginning
+			$words = array_merge($wordsPre, $words);
+			//dd($words);
+
+			// do a pass to create the search string
+			$searchUnique = [];
+			foreach($words as $word)
+			{
+				// remove the no from the imperatives
+				if (Tools::startsWith($word, 'no '))
+				{
+					$word = substr($word, strlen('no ')); // remove the "no"
+				}
+				
+				// check unique array to only add a word once to the search string
+				if (!in_array($word, $searchUnique))
+				{
+					$searchUnique[] = $word;
+					$search .= $word . ';';								
+				}	
+			}		
+			
+			//
+			// save the conjugations
+			//
+			
+			// participles
+			$participleStem = Tools::str_truncate($words[1], 1);
+
+			$offset = 5;
+			$index = 0;
+			$participleStem = Tools::str_truncate($words[1], 1);
+			$conjugations[CONJ_PARTICIPLE] = ';' 
+				. $words[$index++] 				// abarcando
+				. ';' . $words[$index++] 		// abarcado
+				. ';' . $participleStem . 'os' 	// abarcados
+				. ';' . $participleStem . 'a' 	// abarcada
+				. ';' . $participleStem . 'as' 	// abarcadas
+				. ';';
+			$conj .= $conjugations[CONJ_PARTICIPLE]; // save the conjugation string
+
+			// indicative
+			$factor = 1;
+			$conjugations[CONJ_IND_PRESENT] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';		
+			$conj .= '|' . $conjugations[CONJ_IND_PRESENT]; // save the conjugation string
+			
+			$factor = 1; $index++;
+			$conjugations[CONJ_IND_PRETERITE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';		
+			$conj .= '|' . $conjugations[CONJ_IND_PRETERITE]; // save the conjugation string
+			
+			$factor = 1; $index++;
+			$conjugations[CONJ_IND_IMPERFECT] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';		
+			$conj .= '|' . $conjugations[CONJ_IND_IMPERFECT]; // save the conjugation string
+			
+			$factor = 1; $index++;
+			$conjugations[CONJ_IND_CONDITIONAL] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';		
+			$conj .= '|' . $conjugations[CONJ_IND_CONDITIONAL]; // save the conjugation string
+			
+			$factor = 1; $index++;
+			$conjugations[CONJ_IND_FUTURE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_IND_FUTURE]; // save the conjugation string
+
+			// subjunctive
+			$offset = 4;
+			$factor = 1; 
+			$index += 26;
+			$conjugations[CONJ_SUB_PRESENT] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_SUB_PRESENT]; // save the conjugation string
+
+			$factor = 1; $index++;
+			$conjugations[CONJ_SUB_IMPERFECT] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_SUB_IMPERFECT]; // save the conjugation string
+
+			$factor = 1; $index++;
+			$conjugations[CONJ_SUB_IMPERFECT2] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_SUB_IMPERFECT2]; // save the conjugation string
+
+			$factor = 1; $index++;
+			$conjugations[CONJ_SUB_FUTURE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_SUB_FUTURE]; // save the conjugation string
+
+			// imperatives
+			$offset = 2;
+			$factor = 1; 
+			$index += 21;
+			$conjugations[CONJ_IMP_AFFIRMATIVE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' ;		
+			$conj .= '|' . $conjugations[CONJ_IMP_AFFIRMATIVE]; // save the conjugation string
+
+			$factor = 1; $index++;		
+			$conjugations[CONJ_IMP_NEGATIVE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
+			$conj .= '|' . $conjugations[CONJ_IMP_NEGATIVE]; // save the conjugation string
+			
+			//dd($conjugations);
+		}
+		else
+		{
+			$msg = 'Error cleaning scraped conjugation: total results: ' . count($words);
+			//dd($words);
+			throw new \Exception($msg);
+		}
+		
+		$rc['full'] = $conj;
+		$rc['search'] = $search;
+				
+		return $rc;
+	}
 	
-    static public function cleanConjugations($raw)
+    static public function cleanConjugationsPasted($raw)
     {		
 		$rc['full'] = null;		// full conjugations
 		$rc['search'] = null;	// conjugations list that can be searched (needed for reflexive conjugations like: 'nos acordamos')
@@ -729,7 +898,7 @@ class Definition extends Base
 		}
 		else
 		{
-			$msg = 'Error cleaning conjugation: total results: ' . count($words);
+			$msg = 'Error cleaning pasted conjugation: total results: ' . count($words);
 			//dd($words);
 			throw new \Exception($msg);
 		}
@@ -1122,6 +1291,51 @@ class Definition extends Base
 		return $rc;
 	}
 	
+    static public function isIrregular($word)
+    {
+		$rc['irregular'] = false;
+		$rc['conj'] = [];
+		$rc['error'] = null;
+		
+		$word = Tools::alphanum($word);
+		$url = "https://www.spanishdict.com/conjugate/" . $word;
+		
+		$opciones = array(
+		  'https'=>array(
+			'method'=>"GET",
+		  )
+		);		
+		$contexto = stream_context_create($opciones);
+		
+		try 
+		{
+			$raw = file_get_contents($url, false, $contexto);
+			$pos = strpos($raw, 'Irregularities are in');
+			if ($pos !== false)
+			{
+				$rc['irregular'] = true;
+				$rc['conj'] = self::cleanConjugationsScraped($raw);
+			}			
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error conjugating: ' . $word;
+			
+			if (strpos($e->getMessage(), '401') !== FALSE)
+			{
+				$msg .= ' - 401 Unauthorized';
+			}
+			
+			Event::logException(LOG_MODEL, LOG_ACTION_TRANSLATE, $msg, null, $e->getMessage());
+			//$result = $msg;
+			//$rc['error'] = $msg;
+			//$rc['found'] = $found;
+			//return $rc;
+		}
+		
+		return $rc;
+	}
+	
     static public function conjugationsGen($text)
     {
 		$records = null;
@@ -1133,7 +1347,7 @@ class Definition extends Base
 		$parts = null;
 		$text = Tools::alphanum($text);
 		if (isset($text)) // anything left?
-		{
+		{			
 			// find the right pattern
 			if (in_array($text, self::$_irregularVerbs))
 			{
