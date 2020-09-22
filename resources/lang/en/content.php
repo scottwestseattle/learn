@@ -173,4 +173,5 @@ return [
 'chapters' => 'chapters',
 'Flashcards' => 'Flashcards',
 'Books' => 'Books',
+'Random Word' => 'Random Word',
 ];

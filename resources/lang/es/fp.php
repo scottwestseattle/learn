@@ -6,8 +6,8 @@ return [
 'Frontpage Section 2 Body' => 'Nuestro sistema está optimizado para que usted aprenda lo más rápido posible y retenga la mayor cantidad de información posible.',
 'Frontpage Section 3 Title' => 'Profesores En Vivo',
 'Frontpage Section 3 Body' => 'Una vez que haya completado las lecciones gratuitas que están disponibles en línea, tenemos instructores en vivo disponibles para ayudarlo a dominar la gramática y la pronunciación a través de la conversación en línea. Nuestros instructores brindan comentarios constantes para ayudarlo a ser fluido lo más rápido posible. Trabajar con un instructor en vivo es opcional y están disponibles por una módica tarifa por hora.',
-'Frontpage Subfooter Title' => 'Palabra aleatoria',
-'Frontpage Subfooter Body' => 'Párrafo de portada con frases. Esta es otra oración que forma parte del párrafo.',
+'Frontpage Subfooter Title' => '1.5 mil millones de hablantes',
+'Frontpage Subfooter Body' => 'El inglés es el idioma más hablado en todo el mundo, con 1.500 millones de hablantes. Es el idioma estándar para negocios, tecnología y turismo.',
 'Start' => 'Empezar ahora',
 'Frontpage Header Title' => 'Aprende español en 50 lecciones',
 'Frontpage Header Body' => 'Descubre el contenido y las herramientas que necesitas para que aprender español sea fácil y divertido.',
@@ -28,4 +28,7 @@ return [
 'terms-p2' => 'Si no está de acuerdo con estos términos, no tiene derecho a acceder o utilizar los servicios o registrar una cuenta en este sitio web.',
 'terms-p1' => 'Usted reconoce y acepta que, al acceder o utilizar los servicios o al descargar o publicar cualquier contenido de los servicios, está identificando que ha leído y que comprende y acepta estar sujeto a estos términos, independientemente de si usted o no se ha registrado con nosotros.',
 'Please contact us at the following email address.' => 'Por favor contáctenos en la siguiente dirección de correo electrónico.',
+'jumboTitleSpanish' => 'Aprende español en 50 lecciones',
+'jumboSlug' => 'Descubra el contenido y las herramientas que necesita para que aprender un nuevo idioma sea divertido y fácil.',
+'jumboTitleEnglish' => 'Aprende inglés en 50 lecciones',
 ];

@@ -6,8 +6,8 @@ return [
 'Frontpage Section 2 Body' => 'Our system is optimized for you to learn as fast as possible and to retain as much information as possible.',
 'Frontpage Section 3 Title' => 'Live Teachers Available',
 'Frontpage Section 3 Body' => 'Once you have completed the free lessons that are available online, we have live instructors available to help you master grammar and pronuciation through online conversation.  Our instructors provide constant feedback to help you become fluent as fast as possible.  Working with a live instructor is optional and they are available at a modest hourly fee.',
-'Frontpage Subfooter Title' => 'Random Word',
-'Frontpage Subfooter Body' => 'Front page paragraph with sentences.  This is another sentence which is part of the paragraph.',
+'Frontpage Subfooter Title' => '1.5 Billion Speakers',
+'Frontpage Subfooter Body' => 'English is the most widely spoken language worldwide, with 1.5 billion speakers.  It is the standard language for business, technology, and tourism.',
 'Start' => 'Start',
 'Frontpage Header Title' => 'Learn Spanish in 50 Lessons',
 'Frontpage Header Body' => 'Discover the content and tools you need to make learning Spanish fun and easy.',
@@ -28,4 +28,7 @@ return [
 'terms-p2' => 'If you do not agree to these terms, then you have no right to access or use the services or register an account on this web site.',
 'terms-p1' => 'You acknowledge and agree that, by accessing or using the services or by downloading or posting any content from or on the services, you are idicating that you have read, and that you understand and agree to be bound by these terms, whether or not you have registered with us.',
 'Please contact us at the following email address.' => 'Please contact us at the following email address.',
+'jumboTitleSpanish' => 'Learn Spanish in 50 Lessons',
+'jumboSlug' => 'Discover the content and tools you need to make learning a new language fun and easy.',
+'jumboTitleEnglish' => 'Learn English in 50 Lessons',
 ];
