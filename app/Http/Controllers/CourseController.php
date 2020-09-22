@@ -25,7 +25,7 @@ class CourseController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'permalink', 'rss', 'rssReader']);
+        $this->middleware('is_admin')->except(['index', 'view', 'permalink', 'rss', 'rssReader', 'start']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -34,6 +34,30 @@ class CourseController extends Controller
 		parent::__construct();
 	}
 
+    public function start(Request $request)
+    {
+		try
+		{
+			$record = Course::select()
+				->where('deleted_flag', 0)
+				->where('site_id', Tools::getSiteId())
+				->where('type_flag', COURSETYPE_SPANISH)
+				->where('release_flag', '>=', RELEASE_PUBLIC)
+				->orderBy('display_order')
+				->first();
+				
+			return $this->view($record);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting first course';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
+		return redirect()->back();		
+	}
+		
     public function index(Request $request)
     {
 		$showAll = isset($showAll);

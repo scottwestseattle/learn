@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use DB;
 use Auth;
 
 use App\Course;
+use App\Definition;
 use App\Entry;
 use App\Event;
 use App\Lesson;
@@ -29,6 +31,14 @@ class FrontPageController extends Controller
 		parent::__construct();
     }
 
+    /**
+     * Handle the start button from the front page.
+     */
+    public function start()
+    {
+		return redirect('/courses/start');		
+	}
+	
     /**
      * Show the application front page.
      *
@@ -102,13 +112,14 @@ class FrontPageController extends Controller
 				Tools::flash('danger', $msg);
 			}
 		}
-
+		
 		return view('frontpage.index', $this->getViewData([
 			'courses' => $courses,
 			'vocabLists' => $vocabLists,
 			'wod' => $wod,
 			'articles' => $articles,
 			'lesson' => $lesson,
+			'randomWord' => Definition::getRandom(),
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

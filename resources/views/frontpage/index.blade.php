@@ -13,7 +13,7 @@
 	<div class="container text-center" >
 	  <h1 class="">@LANG('fp.Frontpage Header Title')</h1>
 	  <p>@LANG('fp.Frontpage Header Body')</p>
-	  <p><a class="btn btn-primary btn-lg" href="/articles" role="button">@LANG('fp.Start') &raquo;</a></p>
+	  <p><a class="btn btn-primary btn-lg" href="/start" role="button">@LANG('fp.Start') &raquo;</a></p>
 	</div>
 </div>
 @endif
@@ -43,7 +43,7 @@
 		@if (Auth::check())
 			
 		<h3>@LANG('content.Courses in Progress')</h3>
-		<div class="row row-course">
+		<div class="row row-course m-1">
 
 			@if (isset($lesson['course']))
 				<div class="alert alert-primary" role="alert">
@@ -159,12 +159,18 @@
 </div>
 
 <!-- PRE-FOOTER SECTION -->
-<div class="grassy-green">
+<div class="mars-sky">
 	<div class="container marketing text-center">
-		<div style="padding:50px;">
-			<img src="/img/image5.png" width="100%" style="max-width: 350px;" />
-			<h2 class="section-heading">@LANG('fp.Frontpage Subfooter Title')</h2>
-			<p class="lead">@LANG('fp.Frontpage Subfooter Body')</p>
+		<div class="pb-4 pt-3">
+			<img src="/img/image5.png" width="100%" style="max-width: 300px;" />
+			<h2 class="section-heading mt-0 mb-1">@LANG('fp.Frontpage Subfooter Title')</h2>
+			@if (isset($randomWord))
+				<h3 class=""><a style="color:white;" href="/definitions/view/{{$randomWord->id}}">{{$randomWord->title}}</a></h3>
+				<p>{{$randomWord->translation_en}}</p>
+				@foreach($randomWord->examples as $example)
+					<div><i>{{$example}}</i></div>
+				@endforeach
+			@endif
 		</div>
 	</div>
 </div>

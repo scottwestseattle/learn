@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use DB;
 use Auth;
+
 use App\Definition;
 use App\Entry;
 use App\Event;
@@ -281,6 +282,42 @@ class Definition extends Base
 
 		return $records;
     }
+
+    static public function getRandom()
+    {
+		$record = null;
+
+		try
+		{
+			$count = Definition::select()
+				->where('deleted_at', null)
+				->whereNotNull('definition')
+				->whereNotNull('translation_en')
+				->where('wip_flag', '>=', WIP_FINISHED)
+				->count();
+				
+			$rnd = rand(1, $count - 1);
+				
+			$record = Definition::select()
+				->where('deleted_at', null)
+				->whereNotNull('definition')
+				->whereNotNull('translation_en')
+				->where('wip_flag', '>=', WIP_FINISHED)
+				->orderBy('id')
+				->skip($rnd)
+				->first();
+
+			$record->examples = isset($record->examples) ? Tools::splitSentences($record->examples) : [];			
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting random word';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $record;
+	}
 	
     static public function getById($id)
     {

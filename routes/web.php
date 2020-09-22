@@ -35,6 +35,7 @@ Route::get('/articles', 'EntryController@articles');
 Route::get('/books', 'EntryController@books');
 Route::get('/vocabulary', 'VocabListController@index');
 Route::get('/404/{model}/{view}/{parameters}', 'Controller@pageNotFound404');
+Route::get('/start', 'FrontPageController@start');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
@@ -258,6 +259,7 @@ Route::group(['prefix' => 'courses'], function () {
 	Route::get('/admin', 'CourseController@admin');
 	Route::get('/view/{course}','CourseController@view');
 	Route::get('/rss', 'CourseController@rss');
+	Route::get('/start', 'CourseController@start');
 
 	// add/create
 	Route::get('/add','CourseController@add');
