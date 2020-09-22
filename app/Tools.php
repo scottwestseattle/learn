@@ -764,6 +764,11 @@ class Tools
 		return $rc;
 	}
 
+	static public function getSiteLanguage()
+	{
+		return self::getLanguageFlag();
+	}
+	
 	static public function getLanguageFlag()
 	{		
 		$rc = LANGUAGE_ENGLISH;

@@ -1120,8 +1120,8 @@ function translateOnWebsite(event, destination, text)
 	
 	if (destination == 'spanishdict')
 		window.open("https://www.spanishdict.com/translate/" + text + "");
-	else if (destination == 'wordreference')
-		window.open("https://www.wordreference.com/definicion/" + text + "");		
+	else if (destination == 'rae')
+		window.open("https://dle.rae.es/" + text + "");		
 	else // everything else goes to google
 		window.open("https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "");
 }
@@ -1254,3 +1254,8 @@ function toggleWip(event, recordId, resultsId)
 	}
 }
 
+function getRandomWord(event, resultsId)
+{
+	event.preventDefault();
+	ajaxexec('/definitions/get-random-word', resultsId);
+}

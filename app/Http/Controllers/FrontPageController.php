@@ -51,6 +51,7 @@ class FrontPageController extends Controller
 		$articles = [];
 		$lesson = [];
 		$wod = null;
+		$randomWord = null;
 
         // get word of the day
 		if (false && Tools::siteUses(LOG_MODEL_WORDS))
@@ -112,6 +113,18 @@ class FrontPageController extends Controller
 				Tools::flash('danger', $msg);
 			}
 		}
+
+		$jumboTitle = null;
+		$jumboSlug = 'jumboSlug';
+		if (Tools::getSiteLanguage() == LANGUAGE_SPANISH)
+		{
+			$randomWord = Definition::getRandomWord();
+			$jumboTitle = 'jumboTitleSpanish';
+		}
+		else if ((Tools::getSiteLanguage() == LANGUAGE_ENGLISH))
+		{
+			$jumboTitle = 'jumboTitleEnglish';
+		}
 		
 		return view('frontpage.index', $this->getViewData([
 			'courses' => $courses,
@@ -119,7 +132,9 @@ class FrontPageController extends Controller
 			'wod' => $wod,
 			'articles' => $articles,
 			'lesson' => $lesson,
-			'randomWord' => Definition::getRandom(),
+			'jumboTitle' => $jumboTitle,
+			'jumboSlug' => $jumboSlug,
+			'randomWord' => $randomWord,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

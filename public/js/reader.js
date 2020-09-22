@@ -882,7 +882,7 @@ function getSelectedText(clicks)
 		var html = "<div style='margin-bottom:10px;'><span style='font-size:1.2em;'>" + text + "</span>"
 			+ "&nbsp;<a target='_blank' href='https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "'>(Google)</a>"
 			+ "&nbsp;<a target='_blank' href='https://www.spanishdict.com/translate/" + text + "'>(SpanDict)</a>"
-			+ "&nbsp;<a target='_blank' href='https://www.wordreference.com/definicion/" + text + "'>(WR)</a>";
+			+ "&nbsp;<a target='_blank' href='https://dle.rae.es/" + text + "'>(RAE)</a>";
 			if (false && deck.isAdmin)
 				html += "&nbsp;<a target='_blank' href='/definitions/add/" + text + "'>(add)</a>";
 			html+= "</div>";

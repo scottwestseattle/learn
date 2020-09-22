@@ -173,4 +173,5 @@ return [
 'chapters' => '章节',
 'Flashcards' => '抽认卡',
 'Books' => '图书',
+'Random Word' => '随机词',
 ];

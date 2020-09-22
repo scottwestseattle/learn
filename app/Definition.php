@@ -283,7 +283,7 @@ class Definition extends Base
 		return $records;
     }
 
-    static public function getRandom()
+    static public function getRandomWord()
     {
 		$record = null;
 
@@ -306,8 +306,6 @@ class Definition extends Base
 				->orderBy('id')
 				->skip($rnd)
 				->first();
-
-			$record->examples = isset($record->examples) ? Tools::splitSentences($record->examples) : [];			
 		}
 		catch (\Exception $e)
 		{

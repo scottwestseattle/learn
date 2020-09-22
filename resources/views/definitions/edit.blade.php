@@ -20,7 +20,7 @@
 			<div class="mb-2 ml-2">
 				<a onclick="translateOnWebsite(event, 'google', $('#title').val());" href="" tabindex="-1" class="small-thin-text">Google</a>
 				<a onclick="translateOnWebsite(event, 'spanishdict', $('#title').val());" href="" tabindex="-1"  class="small-thin-text ml-2">Span!shD¡ct</a>
-				<a onclick="translateOnWebsite(event, 'wordreference', $('#title').val());" href="" tabindex="-1"  class="small-thin-text ml-2">WR</a>
+				<a onclick="translateOnWebsite(event, 'rae', $('#title').val());" href="" tabindex="-1"  class="small-thin-text ml-2">RAE</a>
 			</div>
 						
 			<label for="forms" class="control-label mr-3">@LANG('content.Word Forms'): <span class="small-thin-text">(comma or semi-colon)</span></label>

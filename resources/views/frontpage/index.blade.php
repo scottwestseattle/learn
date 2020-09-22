@@ -11,9 +11,16 @@
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="fpheader app-color-primary fpBannerImage">
 	<div class="container text-center" >
-	  <h1 class="">@LANG('fp.Frontpage Header Title')</h1>
-	  <p>@LANG('fp.Frontpage Header Body')</p>
-	  <p><a class="btn btn-primary btn-lg" href="/start" role="button">@LANG('fp.Start') &raquo;</a></p>
+		@if (isset($jumboTitle))
+			<h1 class="">@LANG('fp.' . $jumboTitle)</h1>
+			<p>@LANG('fp.' . $jumboSlug)</p>
+		@else
+			<h1 class="">@LANG('fp.Frontpage Header Title')</h1>
+			<p>@LANG('fp.Frontpage Header Body')</p>			
+		@endif
+		@if (App\Tools::siteUses(LOG_MODEL_COURSES))
+			<p><a class="btn btn-primary btn-lg" href="/start" role="button">@LANG('fp.Start') &raquo;</a></p>
+		@endif
 	</div>
 </div>
 @endif
@@ -163,13 +170,11 @@
 	<div class="container marketing text-center">
 		<div class="pb-4 pt-3">
 			<img src="/img/image5.png" width="100%" style="max-width: 300px;" />
-			<h2 class="section-heading mt-0 mb-1">@LANG('fp.Frontpage Subfooter Title')</h2>
 			@if (isset($randomWord))
-				<h3 class=""><a style="color:white;" href="/definitions/view/{{$randomWord->id}}">{{$randomWord->title}}</a></h3>
-				<p>{{$randomWord->translation_en}}</p>
-				@foreach($randomWord->examples as $example)
-					<div><i>{{$example}}</i></div>
-				@endforeach
+				@component('components.random-word', ['record' => $randomWord])@endcomponent						
+			@else
+				<h2 class="section-heading mt-0 mb-4">@LANG('fp.Frontpage Subfooter Title')</h2>
+				<h4 style="font-size: 20px; font-weight: 400;">@LANG('fp.Frontpage Subfooter Body')</h4>
 			@endif
 		</div>
 	</div>

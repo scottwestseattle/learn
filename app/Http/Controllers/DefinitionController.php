@@ -42,7 +42,7 @@ class DefinitionController extends Controller
 		$public = [
 			'index', 'view', 'find', 'search', 'list', 
 			'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponentAjax', 
-			'getAjax', 'translateAjax', 'wordExistsAjax', 'searchAjax',	
+			'getAjax', 'translateAjax', 'wordExistsAjax', 'searchAjax',	'getRandomWordAjax',
 			'heartAjax', 'unheartAjax', // leave these as public so everyone can see the option
 			'setFavoriteList',
 		];
@@ -1041,4 +1041,13 @@ class DefinitionController extends Controller
 			'settings' => $settings,
 			], LOG_MODEL, LOG_PAGE_VIEW));		
     }	
+	
+    public function getRandomWordAjax(Request $request)
+    {
+		$record = Definition::getRandomWord();
+		
+		return view('components.random-word', $this->getViewData([
+			'record' => $record,
+			], LOG_MODEL));			
+	}	
 }

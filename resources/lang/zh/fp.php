@@ -6,8 +6,8 @@ return [
 'Frontpage Section 2 Body' => '我们的系统经过优化，可让您尽快学习并尽可能多地保留信息。',
 'Frontpage Section 3 Title' => '现场教师',
 'Frontpage Section 3 Body' => '完成在线免费课程后，我们会有现场讲师帮助您通过在线对话掌握语法和发音。 我们的教练提供持续的反馈，帮助您尽快流利。 与现场讲师一起工作是可选的，他们每小时收费一次。',
-'Frontpage Subfooter Title' => '随机词',
-'Frontpage Subfooter Body' => '带有句子的首页段落。 这是该段的另一句话。',
+'Frontpage Subfooter Title' => '15亿演讲者',
+'Frontpage Subfooter Body' => '英语是全球使用最广泛的语言，有15亿说话者。 它是商务，技术和旅游业的标准语言。',
 'Start' => '现在开始',
 'Frontpage Header Title' => '在50节课中学习西班牙语',
 'Frontpage Header Body' => '发现所需的内容和工具，使学习西班牙语变得轻松有趣。',
@@ -28,4 +28,7 @@ return [
 'terms-p2' => '如果您不同意这些条款，则您无权访问或使用本网站上的服务或注册帐户。',
 'terms-p1' => '您承认并同意，通过访问或使用服务或下载或发布服务中的任何内容，即表示您已经阅读，并且您理解并同意受这些条款的约束，无论您是否 已在我们这里注册。',
 'Please contact us at the following email address.' => '请通过以下电子邮件地址与我们联系。',
+'jumboTitleSpanish' => '在50课中学习西班牙语',
+'jumboSlug' => '发现使轻松有趣的学习新语言所需的内容和工具。',
+'jumboTitleEnglish' => '在50课中学习英语',
 ];
