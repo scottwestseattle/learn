@@ -1,50 +1,7 @@
-SELECT * FROM `definitions` WHERE 1
-AND definition is not null
-AND translation_en is not null
-AND conjugations is not null
-AND LENGTH(conjugations) > 50
-AND deleted_at is null
-
-update definitions set pos_flag = 1 WHERE 1 AND LENGTH(conjugations) > 50;
-
-update definitions set wip_flag = 100
-WHERE 1
-AND definition is not null
-AND translation_en is not null
-AND LENGTH(conjugations) > 50
-AND deleted_at is null
-
-
-
-START TRANSACTION;
-
-CREATE TABLE `definition_tag` (
-  `definition_id` int(10) UNSIGNED NOT NULL,
-  `tag_id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-ALTER TABLE `definition_tag`
-  ADD UNIQUE KEY `definition_tag_definition_id_tag_id_unique` (`definition_id`,`tag_id`,`user_id`) USING BTREE,
-  ADD KEY `definition_tag_tag_id_foreign` (`tag_id`) USING BTREE,
-  ADD KEY `definition_tag_definition_id_foreign` (`definition_id`) USING BTREE;
-  
-COMMIT;
-
-SELECT title, description as definition, examples FROM `words`
-where 1
-and title <> ''
-and title not like '%\_%'
-and title not like '%?%'
-and type_flag = 4
-and vocab_list_id <> 21
-group by title, description, examples
-ORDER by title
-limit 2000
-
 SAMPLES
 -------
+
+MySQL Character Set and Collation: utf8mb4_bin (this distinguishes between accent and non-accent chars: n != ñ
 
 Implement Soft Deletes:
 1. Add to model:
