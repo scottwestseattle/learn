@@ -309,7 +309,7 @@ class DefinitionController extends Controller
 		catch (\Exception $e)
 		{
 			$msg = isset($msg) ? $msg : 'Error adding new ' . TITLE_LC;
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $record->title, null, $msg . ': ' . $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $msg, null, $record->title . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
 
 			return back();

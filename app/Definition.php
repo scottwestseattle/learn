@@ -342,18 +342,21 @@ class Definition extends Base
     static public function get($word)
     {
 		$word = Tools::alphanum($word, /* strict = */ true);
-		
 		$record = null;
 
 		try
 		{
 			$record = Definition::select()
+				//->whereRaw("`title` = '$word' collate utf8mb4_bin") // to distinguish between accent chars
 				->where('title', $word)
 				->where('deleted_at', null)
 				->first();
+				
+			//dd($record);
 		}
 		catch (\Exception $e)
 		{
+			//dd($e);
 			$msg = 'Error getting word: ' . $word;
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $word, null, $msg . ': ' . $e->getMessage());
 			Tools::flash('danger', $msg);
@@ -592,6 +595,10 @@ class Definition extends Base
 					case 'Search':
 					case 'play headword audio':
 					case 'play translation audio':
+					case 'Preterite':
+					case 'Imperfect':
+					case 'Present':
+					case 'Subjunctive':
 						break;
 					default:
 						$word = $part;
@@ -610,7 +617,7 @@ class Definition extends Base
 
 			// put the pre at the beginning
 			$words = array_merge($wordsPre, $words);
-			//dd($words);
+			//dbg dump($words);
 
 			// do a pass to create the search string
 			$searchUnique = [];
@@ -700,7 +707,7 @@ class Definition extends Base
 			$conjugations[CONJ_IMP_NEGATIVE] = ';' . $words[$index] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';' . $words[$index + ($offset * $factor++)] . ';';
 			$conj .= '|' . $conjugations[CONJ_IMP_NEGATIVE]; // save the conjugation string
 			
-			//dd($conjugations);
+			//dbg dd($conjugations);
 		}
 		else
 		{
