@@ -42,19 +42,26 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	<header>
 		<nav style="" class="navbar navbar-expand-md navbar-dark fixed-top app-color-primary">
 
-			<a class="navbar-brand" href="/"><img height="35" src="/img/logo.png" /></a>
+			<a class="navbar-brand" href="/">
+				<!-- img height="35" src="/img/logo.png" / -->
+				<div class="brand logo middle">
+					<svg class="mb-1" width="32" height="32" fill="currentColor" >
+						<use xlink:href="/img/bootstrap-icons.svg#brightness-high" />
+					</svg>
+				</div>				
+			</a>
 
-			@guest
-			@else
-				@if ($isAdmin)
-					<div class="mr-2"><a href="/admin"><span class="glyphicon glyphicon-user gold"></span></a></div>
-				@else
-					<div class="mr-2"><a href="/home"><span class="glyphicon glyphicon-user white"></span></a></div>
-				@endif
-			@endguest
-						
-			<div class="ml-2 mr-2"><a href="/search"><span style="color:white;" class="glyphicon glyphicon-search"></span></a></div>
-
+			<div class="mr-auto navbar-icon-shortcuts">
+				@auth
+					@if ($isAdmin)
+						<a class="navbar-item" href="/admin"><span class="glyphicon glyphicon-user gold"></span></a>
+					@else
+						<a class="navbar-item" href="/home"><span class="glyphicon glyphicon-user white"></span></a><
+					@endif
+				@endauth
+				<a class="navbar-item mr-3" href="/search"><span style="color:white;" class="glyphicon glyphicon-search"></span></a>
+			</div>
+			
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
 				aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>

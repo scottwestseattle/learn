@@ -37,8 +37,6 @@ class HomeController extends Controller
     public function mail()
     {
 		$name = 'scott';
-		$addressTo = 'scott@scotthub.com';
-		$addressTo = 'sbwilkinson1@gmail.com';
 		$addressTo = 'scottscott@yopmail.com';
 		$addressFrom = env('MAIL_FROM_ADDRESS', '63f42e54a4-f10d4b@inbox.mailtrap.io');
 		$to = Lang::get('content.To:');
