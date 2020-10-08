@@ -154,6 +154,10 @@ h1,h3 {
 	color: white;
 }
 
+.app-color-primary-reverse {
+	color: #fe5b4c; /* mars-sky */
+}
+
 .oolong-orange {
 	background-color: #FF6900;
 	color: white;"
@@ -632,10 +636,16 @@ h1,h3 {
 
 .footer-links {
 	color: blue; /* this is for the bullets only */
+	color: #fe5b4c;
 }
 
 .footer-links a {
 	margin-right:6px;
+	color: #fe5b4c;
+}
+
+.footer-links a:hover {
+	text-decoration: none;
 }
 
 .footer-heading {
@@ -1155,3 +1165,4 @@ h6 {
 	color: white;
 	margin: auto 10px;	
 }
+

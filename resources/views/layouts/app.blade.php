@@ -170,8 +170,16 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 	<!-- FOOTER -->
 	<footer class="footer backin-black">
-		<div class="container marketing text-center" style="padding:50px;">
-			<a href="#"><img src="/img/logo.png" height="60" /></a>
+		<div class="container marketing text-center p-5">
+			
+			<a class="" href="/">
+				<div class="brand logo middle">
+					<svg class="bi app-color-primary-reverse" width="55" height="55" >
+						<use xlink:href="/img/bootstrap-icons.svg#brightness-high" />
+					</svg>
+				</div>
+			</a>			
+			
 			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
 			<p style="font-size:1.2em;" class="">{{$siteTitleLite}}</p>
 			<p>&copy; {{date("Y")}} {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
