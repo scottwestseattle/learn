@@ -9,26 +9,24 @@
 	<h1>@LANG('ui.Books') ({{count($books)}})</h1>
 
 	<div>
-	@if (isset($books))
-		@foreach($books as $record)	
-		<div class="drop-box-ghost mb-4" style="padding:10px;">
-			<div style="font-size:1.3em; font-weight:normal;">
-				<a href=""  onclick="event.preventDefault(); $('#parts{{$record->id}}').toggle();">{{$record->name}} ({{count($record->books)}} @LANG('content.chapters'))</a>
-				
-				<div id="parts{{$record->id}}" class="mt-2 hidden">
-				@foreach($record->books as $r)
-				<div class="ml-2 mt-1" style="font-size:14px;">
-					<div class="">
-						<a href="/entries/{{$r->permalink}}">{{$r->title}}</a>				
-					</div>
+	@foreach($books as $record)	
+	<div class="drop-box-ghost mb-4" style="padding:10px;">
+		<div style="font-size:1.3em; font-weight:normal;">
+			<a href=""  onclick="event.preventDefault(); $('#parts{{$record->id}}').toggle();">{{$record->name}} ({{count($record->books)}} @LANG('content.chapters'))</a>
+			
+			<div id="parts{{$record->id}}" class="mt-2 hidden">
+			@foreach($record->books as $r)
+			<div class="ml-2 mt-1" style="font-size:14px;">
+				<div class="">
+					<a href="/entries/{{$r->permalink}}">{{$r->title}}</a>				
 				</div>
-				@endforeach
-				</div>
-				
 			</div>
+			@endforeach
+			</div>
+			
 		</div>
-		@endforeach
-	@endif
+	</div>
+	@endforeach
 	</div>
 	
 	<h1>@LANG('content.Latest Chapters Viewed')</h1>

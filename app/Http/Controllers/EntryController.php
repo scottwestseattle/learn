@@ -83,9 +83,9 @@ class EntryController extends Controller
     {		
 		$this->saveVisitor(LOG_MODEL_BOOKS, LOG_PAGE_INDEX);
 	
-		$records = Entry::getRecentList(ENTRY_TYPE_BOOK, 5);
+		$records = Auth::check() ? Entry::getRecentList(ENTRY_TYPE_BOOK, 5) : [];
 		
-		$books = Entry::getBookTags();
+		$books = Auth::check() ? Entry::getBookTags() : [];
 		
 		$vdata = $this->getViewData([
 			'books' => $books,

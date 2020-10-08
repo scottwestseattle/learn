@@ -12,7 +12,7 @@
 <div class="fpheader app-color-primary fpBannerImage">
 	<div class="container text-center" >
 		@if (isset($jumboTitle))
-			<h1 class="">@LANG('fp.' . $jumboTitle)</h1>
+			<h1 class="text-lg">@LANG('fp.' . $jumboTitle)</h1>
 			<p>@LANG('fp.' . $jumboSlug)</p>
 		@else
 			<h1 class="">@LANG('fp.Frontpage Header Title')</h1>

@@ -203,14 +203,9 @@ h1,h3 {
 }
 
 .fpBannerImage {
-	/* not yet
-	
 	background-image:url('/img/banner.png'); 
 	background-repeat: no-repeat;
 	background-position: center;
-	background-attachment: fixed;
-
-	not yet */
 }
 
 .fpheader p {
