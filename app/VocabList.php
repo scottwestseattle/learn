@@ -16,7 +16,7 @@ class VocabList extends Model
         return $this->hasMany('App\Word', 'vocab_list_id', 'id')->orderByDesc('id');
     }
 
-   static public function getIndex($parms = [])
+	static public function getIndex($parms = [])
     {
 		$records = []; // make this countable so view will always work
 

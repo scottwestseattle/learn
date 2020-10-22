@@ -695,8 +695,13 @@ class Tools
 			// doesn't work for: "Mr. Tambourine Man" / Mr. Miss. Sr. Mrs. Ms. St.
 			$p = str_replace(self::$_lineSplitters, self::$_lineSplittersSubs, $p);
 			
-			// sentences end with: ". " or "'. " or "\". "
-			$sentences = preg_split('/(\. |\.\' |\.\" )/', $p, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+			// sentences end with: ". " or "'. " or "\". " or "? " or "! "
+			if (true) // split on more characters because the lines are too long
+				$sentences = preg_split('/(\. |\.\' |\.\" |\? |\! )/', $p, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+			else
+				// the original to avoid splitting on conversation
+				$sentences = preg_split('/(\. |\.\' |\.\" )/', $p, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+
 			//$sentences = explode($eos, $p);
 			for($i = 0; $i < count($sentences); $i++)
 			{

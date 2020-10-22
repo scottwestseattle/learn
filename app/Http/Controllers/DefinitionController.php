@@ -23,18 +23,6 @@ define('TITLE_PLURAL', 'Definitions');
 define('REDIRECT', '/definitions');
 define('REDIRECT_ADMIN', '/definitions/admin');
 
-define('DEFINITIONS_SEARCH_NOTSET', 0);
-define('DEFINITIONS_SEARCH_ALPHA', 1);
-define('DEFINITIONS_SEARCH_REVERSE', 2);
-define('DEFINITIONS_SEARCH_NEWEST', 3);
-define('DEFINITIONS_SEARCH_RECENT', 4);
-define('DEFINITIONS_SEARCH_MISSING_TRANSLATION', 5);
-define('DEFINITIONS_SEARCH_MISSING_DEFINITION', 6);
-define('DEFINITIONS_SEARCH_MISSING_CONJUGATION', 7);
-define('DEFINITIONS_SEARCH_WIP_NOTFINISHED', 8);
-define('DEFINITIONS_SEARCH_VERBS', 9);
-define('DEFINITIONS_SEARCH_ALL', 10);
-
 class DefinitionController extends Controller
 {
 	public function __construct ()
@@ -45,6 +33,7 @@ class DefinitionController extends Controller
 			'getAjax', 'translateAjax', 'wordExistsAjax', 'searchAjax',	'getRandomWordAjax',
 			'heartAjax', 'unheartAjax', // leave these as public so everyone can see the option
 			'setFavoriteList',
+			'reviewNewest',
 		];
 		
         $this->middleware('is_admin')->except($public);
@@ -1038,6 +1027,25 @@ class DefinitionController extends Controller
 			'returnPath' => '/definitions/list/' . $record->id . '',
 			'touchPath' => '',
 			'parentTitle' => $tag->name,
+			'settings' => $settings,
+			], LOG_MODEL, LOG_PAGE_VIEW));		
+    }	
+
+    public function reviewNewest(Request $request, $reviewType = null)
+    {
+		$reviewType = intval($reviewType);
+		$records = Definition::getNewest(20);
+		$qna = Definition::makeQna($records); // splits text into questions and answers
+		$settings = Quiz::getSettings($reviewType);
+
+		return view($settings['view'], $this->getViewData([
+			'sentenceCount' => count($qna),
+			'records' => $qna,
+			'canEdit' => true,
+			'isMc' => true,
+			'returnPath' => '/vocabulary',
+			'touchPath' => '',
+			'parentTitle' => 'New Dictionary Entries',
 			'settings' => $settings,
 			], LOG_MODEL, LOG_PAGE_VIEW));		
     }	

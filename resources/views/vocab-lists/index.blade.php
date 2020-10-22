@@ -51,7 +51,6 @@
     @endforeach
     </div>
 
-
 	<!--------------------------------------------------------------------->
 	<!-- Favorites Lists                                                 -->
 	<!--------------------------------------------------------------------->
@@ -88,6 +87,32 @@
 	@else
 		<div class="medium-thing-text mb-5">No favorites lists</div>
 	@endif
+	@endif
+
+	<!--------------------------------------------------------------------->
+	<!-- Newest Definitions                                              -->
+	<!--------------------------------------------------------------------->
+
+	@if (isset($newest))
+	<h1 class="mb-0">@LANG('content.New Dictionary Words')</h1>
+	<div class="mb-2 small-thin-text">@LANG('content.20 Newest definitions added to the dictionary')</div>
+    <div class="card-deck">
+		<div class="col-sm-12 col-lg-6 col-xl-4"><!-- xl = 3 cols, lg = 2 cols, sm = 1 col -->	
+			<div class="mb-3 mr-0">
+				<div class="card-body drop-box-ghost">
+					<h5 class="card-title">@LANG('content.New Dictionary Words')</h5>
+					<p class="card-text">
+						<a class="btn btn-primary btn-xs" role="button" href="/definitions/review-newest">
+							@LANG('ui.Review')<span class="glyphicon glyphicon-eye-open ml-1"></span>
+						</a>
+						<a class="btn btn-primary btn-xs" role="button" href="/definitions/review-newest/1">
+							@LANG('content.Flashcards')<span class="glyphicon glyphicon-flash ml-1"></span>
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+    </div>
 	@endif
 
 	<!--------------------------------------------------------------------->

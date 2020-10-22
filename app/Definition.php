@@ -172,6 +172,11 @@ class Definition extends Base
 	//////////////////////////////////////////////////////////////////////
 	// End of Tag Functions
 	//////////////////////////////////////////////////////////////////////
+
+	static public function getNewest($limit)
+	{
+		return self::getIndex(DEFINITIONS_SEARCH_NEWEST, $limit);
+	}
 	
     static public function getIndex($sort = null, $limit = PHP_INT_MAX)
 	{

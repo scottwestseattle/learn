@@ -42,7 +42,7 @@ class VocabListController extends Controller
     public function index(Request $request)
     {
 		// qna lists
-        $records = VocabList::getIndex(['ownedOrPublic']);
+        $records = VocabList::getIndex(['owned']);
 
 		// definitions favorites
 		$favorites = Definition::getUserFavoriteLists();
@@ -54,6 +54,7 @@ class VocabListController extends Controller
 			'favorites' => $favorites,
 			'records' => $records,
 			'entries' => $entries,
+			'newest' => true, // show the option for "New Dictionary Entries" review and flashcards
 		]));
     }
 
