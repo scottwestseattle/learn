@@ -89,9 +89,12 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/admin', 'DefinitionController@admin');
 	Route::get('/view/{definition}', 'DefinitionController@view');
 	Route::get('/list/{tag}', 'DefinitionController@list');
+	Route::get('/set-favorite-list/{definition}/{tagFromId}/{tagToId}','DefinitionController@setFavoriteList');
 	Route::get('/review/{tag}/{reviewType?}', 'DefinitionController@review');
 	Route::get('/review-newest/{reviewType?}', 'DefinitionController@reviewNewest');
-	Route::get('/set-favorite-list/{definition}/{tagFromId}/{tagToId}','DefinitionController@setFavoriteList');
+	Route::get('/review-newest-verbs/{reviewType?}', 'DefinitionController@reviewNewestVerbs');
+	Route::get('/review-random-words/{reviewType?}', 'DefinitionController@reviewRandomWords');
+	Route::get('/review-random-verbs/{reviewType?}', 'DefinitionController@reviewRandomVerbs');
 
 	// ajax calls
 	Route::get('/find/{text}', 'DefinitionController@find');

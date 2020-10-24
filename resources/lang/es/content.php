@@ -174,4 +174,6 @@ return [
 'Flashcards' => 'Tarjetas',
 'Books' => 'Libros',
 'Random Word' => 'Palabra aleatoria',
+'New Dictionary Words' => 'Nuevas palabras del diccionario',
+'20 Newest definitions added to the dictionary' => '20 definiciones más recientes del diccionario',
 ];

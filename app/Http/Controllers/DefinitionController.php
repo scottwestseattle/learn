@@ -33,7 +33,7 @@ class DefinitionController extends Controller
 			'getAjax', 'translateAjax', 'wordExistsAjax', 'searchAjax',	'getRandomWordAjax',
 			'heartAjax', 'unheartAjax', // leave these as public so everyone can see the option
 			'setFavoriteList',
-			'reviewNewest',
+			'reviewNewest', 'reviewNewestVerbs', 'reviewRandomWords', 'reviewRandomVerbs',
 		];
 		
         $this->middleware('is_admin')->except($public);
@@ -1045,7 +1045,64 @@ class DefinitionController extends Controller
 			'isMc' => true,
 			'returnPath' => '/vocabulary',
 			'touchPath' => '',
-			'parentTitle' => 'New Dictionary Entries',
+			'parentTitle' => 'Title Note Used',
+			'settings' => $settings,
+			], LOG_MODEL, LOG_PAGE_VIEW));		
+    }	
+	
+    public function reviewNewestVerbs(Request $request, $reviewType = null)
+    {
+		$reviewType = intval($reviewType);
+		$records = Definition::getNewestVerbs(20);
+		$qna = Definition::makeQna($records); // splits text into questions and answers
+		$settings = Quiz::getSettings($reviewType);
+
+		return view($settings['view'], $this->getViewData([
+			'sentenceCount' => count($qna),
+			'records' => $qna,
+			'canEdit' => true,
+			'isMc' => true,
+			'returnPath' => '/vocabulary',
+			'touchPath' => '',
+			'parentTitle' => 'Title Note Used',
+			'settings' => $settings,
+			], LOG_MODEL, LOG_PAGE_VIEW));		
+    }	
+	
+    public function reviewRandomWords(Request $request, $reviewType = null)
+    {
+		$reviewType = intval($reviewType);
+		$records = Definition::getRandomWords(20);
+		$qna = Definition::makeQna($records); // splits text into questions and answers
+		$settings = Quiz::getSettings($reviewType);
+
+		return view($settings['view'], $this->getViewData([
+			'sentenceCount' => count($qna),
+			'records' => $qna,
+			'canEdit' => true,
+			'isMc' => true,
+			'returnPath' => '/vocabulary',
+			'touchPath' => '',
+			'parentTitle' => 'Title Note Used',
+			'settings' => $settings,
+			], LOG_MODEL, LOG_PAGE_VIEW));		
+    }    
+	
+	public function reviewRandomVerbs(Request $request, $reviewType = null)
+    {
+		$reviewType = intval($reviewType);
+		$records = Definition::getRandomVerbs(20);
+		$qna = Definition::makeQna($records); // splits text into questions and answers
+		$settings = Quiz::getSettings($reviewType);
+
+		return view($settings['view'], $this->getViewData([
+			'sentenceCount' => count($qna),
+			'records' => $qna,
+			'canEdit' => true,
+			'isMc' => true,
+			'returnPath' => '/vocabulary',
+			'touchPath' => '',
+			'parentTitle' => 'Title Note Used',
 			'settings' => $settings,
 			], LOG_MODEL, LOG_PAGE_VIEW));		
     }	

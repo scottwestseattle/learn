@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
 
 use DB;
 use Auth;
@@ -177,6 +178,72 @@ class Definition extends Base
 	{
 		return self::getIndex(DEFINITIONS_SEARCH_NEWEST, $limit);
 	}
+
+	static public function getNewestVerbs($limit)
+	{
+		return self::getIndex(DEFINITIONS_SEARCH_NEWEST_VERBS, $limit);
+	}
+	
+	static public function getRandomWords($limit)
+	{
+		$records = self::getIndex(DEFINITIONS_SEARCH_RANDOM_WORDS);
+		
+		// get random indexes
+		$random = self::getRandomIndexes(20, count($records));
+		$recs = [];
+		
+		// copy random words
+		foreach($random as $a)
+			$recs[] = $records[$a];
+		
+		// return the random words
+		return $recs;
+	}
+
+	static public function getRandomVerbs($limit)
+	{
+		$records = self::getIndex(DEFINITIONS_SEARCH_RANDOM_VERBS);
+		// get random indexes
+		$random = self::getRandomIndexes(20, count($records));
+		$recs = [];
+		
+		// copy random words
+		foreach($random as $a)
+			$recs[] = $records[$a];
+		
+		// return the random words
+		return $recs;
+	}
+	
+    static public function getRandomIndexes($count, $range)
+    {
+		$rc = [];		
+		for ($i = 0; $i < $count; $i++)
+		{
+			$rnd = rand(0, $range - 1);  // using the 0-based index
+			if (in_array($rnd, $rc))
+			{
+				// find the next open spot
+				for ($j = 0; $j < $count; $j++)
+				{
+					$rnd++;
+					if ($rnd >= $range)
+						$rnd = 0; // roll over
+					
+					if (!in_array($rnd, $rc))
+					{
+						// stop looping and it will be added below
+						break;
+					}
+				}
+			}
+
+			// add it
+			$rc[] = $rnd; // use counts so we can easily see if the logic is bad
+		}
+		
+		return $rc;
+	}	
 	
     static public function getIndex($sort = null, $limit = PHP_INT_MAX)
 	{
@@ -184,6 +251,7 @@ class Definition extends Base
 		$limit = intval($limit);
 		$records = [];
 		$orderBy = 'title';
+		$verbs = false;
 		switch($sort)
 		{
 			case DEFINITIONS_SEARCH_REVERSE:
@@ -195,8 +263,18 @@ class Definition extends Base
 			case DEFINITIONS_SEARCH_RECENT:
 				$orderBy = 'updated_at desc';
 				break;
-			case DEFINITIONS_SEARCH_ALL:
+			case DEFINITIONS_SEARCH_NEWEST_VERBS:
+				$orderBy = 'id desc';
+				$verbs = true;
+				break;
+			case DEFINITIONS_SEARCH_RANDOM_VERBS:
+				$verbs = true;
+				break;
 			case DEFINITIONS_SEARCH_VERBS:
+				$limit = PHP_INT_MAX;
+				$verbs = true;
+				break;
+			case DEFINITIONS_SEARCH_ALL:
 			case DEFINITIONS_SEARCH_MISSING_TRANSLATION:
 			case DEFINITIONS_SEARCH_MISSING_DEFINITION:
 			case DEFINITIONS_SEARCH_MISSING_CONJUGATION:
@@ -209,7 +287,22 @@ class Definition extends Base
 
 		try
 		{
-			if ($sort === DEFINITIONS_SEARCH_MISSING_TRANSLATION)
+			if ($verbs)
+			{
+				$records = Definition::select()
+					->whereNull('deleted_at')
+					->where(function ($query) {$query
+						->where('title', 'like', '%ar')
+						->orWhere('title', 'like', '%er')
+						->orWhere('title', 'like', '%ir')
+						;})
+					->whereNotNull('conjugations_search')
+					->whereNotNull('conjugations')
+					->orderByRaw($orderBy)
+					->limit($limit)
+					->get();
+			}			
+			else if ($sort === DEFINITIONS_SEARCH_MISSING_TRANSLATION)
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')
@@ -250,21 +343,6 @@ class Definition extends Base
 				$records = Definition::select()
 					->whereNull('deleted_at')
 					->where('wip_flag', '<', WIP_FINISHED)
-					->orderByRaw($orderBy)
-					->limit($limit)
-					->get();
-			}
-			else if ($sort == DEFINITIONS_SEARCH_VERBS)
-			{
-				$records = Definition::select()
-					->whereNull('deleted_at')
-					->where(function ($query) {$query
-						->where('title', 'like', '%ar')
-						->orWhere('title', 'like', '%er')
-						->orWhere('title', 'like', '%ir')
-						;})
-					->whereNotNull('conjugations_search')
-					->whereNotNull('conjugations')
 					->orderByRaw($orderBy)
 					->limit($limit)
 					->get();

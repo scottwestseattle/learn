@@ -174,4 +174,6 @@ return [
 'Flashcards' => '抽认卡',
 'Books' => '图书',
 'Random Word' => '随机词',
+'New Dictionary Words' => '新字典词',
+'20 Newest definitions added to the dictionary' => '词典中添加了20个最新定义',
 ];
