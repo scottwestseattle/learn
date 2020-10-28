@@ -190,6 +190,13 @@ class DefinitionController extends Controller
 		
 		return $forms;
     }	
+
+    public function scrapeDefinitionAjax(Request $request, $word)
+    {
+		$rc = Definition::scrapeDefinition($word);
+		
+		return $rc;
+    }	
 	
 	public function conjugationsComponentAjax(Request $request, Definition $definition)
     {

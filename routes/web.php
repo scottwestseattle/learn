@@ -105,6 +105,7 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/unheart/{definition}','DefinitionController@unheartAjax');
 	Route::get('/toggle-wip/{definition}','DefinitionController@toggleWipAjax');
 	Route::get('/get-random-word/','DefinitionController@getRandomWordAjax');
+	Route::get('/scrape-definition/{word}','DefinitionController@scrapeDefinitionAjax');
 	
 	// search
 	Route::get('/search/{sort?}', 'DefinitionController@search');

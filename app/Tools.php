@@ -833,7 +833,7 @@ class Tools
 	{
 		$l = strlen($string);
 		if ($length <= $l)
-			$string = substr($string, 0, strlen($string) - $length);	
+			$string = mb_substr($string, 0, strlen($string) - $length);	
 
 		return $string;
 	}

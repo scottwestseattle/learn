@@ -174,6 +174,9 @@ return [
 'Flashcards' => 'Flashcards',
 'Books' => 'Books',
 'Random Word' => 'Random Word',
-'New Dictionary Words' => 'New Dictionary Words',
-'20 Newest definitions added to the dictionary' => '20 Newest definitions added to the dictionary',
+'20 Newest Words' => '20 Newest Words',
+'Lists from the dictionary' => 'Lists from the dictionary',
+'20 Newest Verbs' => '20 Newest Verbs',
+'20 Random Words' => '20 Random Words',
+'20 Random Verbs' => '20 Random Verbs',
 ];

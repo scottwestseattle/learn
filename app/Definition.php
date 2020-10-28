@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 use DB;
 use Auth;
@@ -187,12 +188,12 @@ class Definition extends Base
 	static public function getRandomWords($limit)
 	{
 		$records = self::getIndex(DEFINITIONS_SEARCH_RANDOM_WORDS);
-		
+
 		// get random indexes
 		$random = self::getRandomIndexes(20, count($records));
 		$recs = [];
 		
-		// copy random words
+		// copy words using random indexes
 		foreach($random as $a)
 			$recs[] = $records[$a];
 		
@@ -203,11 +204,12 @@ class Definition extends Base
 	static public function getRandomVerbs($limit)
 	{
 		$records = self::getIndex(DEFINITIONS_SEARCH_RANDOM_VERBS);
+		
 		// get random indexes
 		$random = self::getRandomIndexes(20, count($records));
 		$recs = [];
 		
-		// copy random words
+		// copy words using random indexes
 		foreach($random as $a)
 			$recs[] = $records[$a];
 		
@@ -343,6 +345,16 @@ class Definition extends Base
 				$records = Definition::select()
 					->whereNull('deleted_at')
 					->where('wip_flag', '<', WIP_FINISHED)
+					->orderByRaw($orderBy)
+					->limit($limit)
+					->get();
+			}
+			else if ($sort == DEFINITIONS_SEARCH_RANDOM_WORDS)
+			{
+				$records = Definition::select()
+					->whereNull('deleted_at')
+					->whereNotNull('definition')
+					->whereNotNull('translation_en')
 					->orderByRaw($orderBy)
 					->limit($limit)
 					->get();
@@ -632,7 +644,7 @@ class Definition extends Base
 		return $rc;
 	}
 
-    static public function cleanConjugationsScraped($raw)
+    static public function cleanConjugationsScraped($raw, $reflexive)
     {		
 		$rc['full'] = null;	  // full conjugations
 		$rc['search'] = null; // conjugations list that can be searched (needed for reflexive conjugations like: 'nos acordamos')
@@ -648,20 +660,21 @@ class Definition extends Base
 		//dump($pos);
 		//$pos = strpos($raw, 'play translation audio'); // 
 		//dump($pos);
-		preg_match_all('/aria-label\=\"(.*?)\"/is', substr($raw, 50000), $parts);
-		//$parts = $parts[1];
-		
+		preg_match_all('/aria-label\=\"(.*?)\"/is', mb_substr($raw, 50000), $parts);
+
 		// figure out where the start and end are
 		$start = 0;
 		$end = 0;
 
 		//dd($parts);
 		$parts = $parts[1];
+
 		$matches = count($parts);
 		$participle = '';
+		$progressivePrefix = $reflexive ? 'me estoy ' : 'estoy ';
+		$participlePrefix = $reflexive ? 'me he ' : 'he ';
 		if ($matches >= 150) // use the exact number so we can tell if we get unexpected results
 		{	
-			
 			// fix up the array first
 			$words = [];
 			$wordsPre = [];
@@ -670,6 +683,7 @@ class Definition extends Base
 			{
 				switch($part)
 				{
+					// get rid of all of the trash
 					case 'Spanishdict Homepage':
 					case 'SpanishDict logo':
 					case 'more':
@@ -689,11 +703,17 @@ class Definition extends Base
 						break;
 				}
 
-				if (Tools::startsWith($word, 'estoy '))
-					$wordsPre[] = substr($word, strlen('estoy '));
-				else if (Tools::startsWith($word, 'he '))
+				if (Tools::startsWith($word, $progressivePrefix))
 				{
-					$wordsPre[] = substr($word, strlen('he '));
+					// save  the progressive form
+					$wordsPre[] = mb_substr($word, strlen($progressivePrefix));
+				}
+				else if (Tools::startsWith($word, $participlePrefix))
+				{
+					// save the past participle
+					$wordsPre[] = mb_substr($word, strlen($participlePrefix));
+					
+					//  break because we've got everything we need
 					break;
 				}
 			}
@@ -726,7 +746,6 @@ class Definition extends Base
 			
 			// participles
 			$participleStem = Tools::str_truncate($words[1], 1);
-
 			$offset = 5;
 			$index = 0;
 			$participleStem = Tools::str_truncate($words[1], 1);
@@ -1419,6 +1438,7 @@ class Definition extends Base
     static public function isIrregular($word)
     {
 		$rc['irregular'] = false;
+		$rc['reflexive'] = Str::endsWith($word, 'se');
 		$rc['conj'] = [];
 		$rc['error'] = null;
 		
@@ -1439,8 +1459,8 @@ class Definition extends Base
 			if ($pos !== false)
 			{
 				$rc['irregular'] = true;
-				$rc['conj'] = self::cleanConjugationsScraped($raw);
-			}			
+				$rc['conj'] = self::cleanConjugationsScraped($raw, $rc['reflexive']);
+			}
 		}
 		catch (\Exception $e)
 		{
@@ -1461,6 +1481,95 @@ class Definition extends Base
 		return $rc;
 	}
 	
+    static public function scrapeDefinition($word)
+    {
+		$rc = '';
+		$word = Tools::alphanum($word);
+		$url = "https://dle.rae.es/" . $word;
+		
+		$opciones = array(
+		  'https'=>array(
+			'method'=>"GET",
+		  )
+		);		
+		$contexto = stream_context_create($opciones);
+		
+		try 
+		{
+			$raw = file_get_contents($url, false, $contexto);
+			$prefix = '<meta name="description" content=';
+			$pos = mb_strpos($raw, $prefix);
+			if ($pos !== false)
+			{
+				$ix = $pos + (strlen($prefix));
+				$raw = mb_substr($raw, $ix, 2000);
+				$lines = explode(">", trim($raw));
+				if (count($lines) > 0)
+				{
+					$lines = $lines[0];
+					if (Str::startsWith($lines, "Versión electrónica"))
+					{
+						// this means word not found
+						$rc = $word . ': not found';
+					}
+					else
+					{			
+						// word found, clean up the definition
+						
+						// remove this: "Definición RAE de «competer» según el Diccionario de la lengua española: "
+						$lines = preg_replace('/Definición RAE de.*española: /', '', $lines);
+						// try the reflexive version of the word
+						if (Str::endsWith($word, 'se'))
+						{
+							$w = Tools::str_truncate($word, 2); // remove the 'se'
+							$remove = 'Definición RAE de «' . $w . '» según el Diccionario de la lengua española: ';
+							$lines = str_replace($remove, '', $lines);	
+						}
+								
+						$lines = str_ireplace('‖ ', '', $lines);
+						$lines = str_ireplace(' c.', ' ', $lines);
+						$lines = str_ireplace(' f.', ' ', $lines);
+						$lines = str_ireplace(' m.', ' ', $lines);
+						$lines = str_ireplace(' p.', ' ', $lines);
+						$lines = str_ireplace(' s.', ' ', $lines);
+						$lines = str_ireplace(' t.', ' ', $lines);
+						$lines = str_ireplace(' u.', ' ', $lines);
+						$lines = str_ireplace(' y.', ' ', $lines);
+						$lines = str_ireplace(' adj.', ' ', $lines);
+						$lines = str_ireplace(' coloq.', ' ', $lines);
+						$lines = str_ireplace(' cult.', ' ', $lines);
+						$lines = str_ireplace(' desus.', ' ', $lines);
+						$lines = str_ireplace(' gram.', ' ', $lines);
+						$lines = str_ireplace(' intr.', ' ', $lines);
+						$lines = str_ireplace(' prnl.', ' ', $lines);
+						$lines = str_ireplace(' tr.', ' ', $lines);
+						$lines = str_ireplace(' us.', ' ', $lines);
+						$lines = str_ireplace('  ', ' ', $lines);
+						$lines = str_ireplace('  ', ' ', $lines);
+
+						$lines = trim($lines, '"');
+
+						$rc = $lines;
+					}
+				}
+			}			
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error scraping: ' . $word;
+			
+			if (strpos($e->getMessage(), '401') !== FALSE)
+			{
+				$msg .= ' - 401 Unauthorized';
+			}
+			
+			Event::logException(LOG_MODEL, LOG_ACTION_TRANSLATE, $msg, null, $e->getMessage());
+			$rc = $word . ': error getting definition, check event log';
+		}
+		
+		return $rc;
+	}
+		
     static public function conjugationsGen($text)
     {
 		$records = null;

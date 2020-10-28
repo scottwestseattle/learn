@@ -1026,6 +1026,13 @@ function conjugationsGen(fromId, toId)
 	ajaxexec('/definitions/conjugationsgenajax/' + title.trim(), toId, true);
 }
 
+function scrapeDefinition(event, fromId, toId)
+{
+	event.preventDefault();
+	var title = $(fromId).val();
+	ajaxexec('/definitions/scrape-definition/' + title.trim(), toId, true);
+}
+
 function wordFormsGen(event, fromId, toId, pluralOnly = false)
 {
 	event.preventDefault();

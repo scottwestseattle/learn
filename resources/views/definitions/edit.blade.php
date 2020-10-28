@@ -33,6 +33,8 @@
 			<div class="submit-button mt-2 mb-2"><button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button></div>			
 
 			<label for="definition" class="control-label">@LANG('content.Definition'):</label>
+			<a onclick="scrapeDefinition(event, '#title', '#definition');" href="" tabindex="-1" class="ml-2"><span id="button-increment-line" class="glyphicon glyphicon-plus-sign" ></span></a>			
+			<a onclick="event.preventDefault(); $('#definition').val(''); $('#definition').focus();" href="" tabindex="-1" class="ml-2"><span id="button-clear" class="glyphicon glyphicon-remove" ></span></a>			
 			<textarea rows="3" name="definition" id="definition" class="form-control" autocomplete="off" onfocus="setFocus($(this), '#accent-chars')" >{{$record->definition}}</textarea>
 
 			<label for="translation_en" class="control-label">@LANG('ui.Translation'):</label>
