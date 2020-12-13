@@ -122,4 +122,5 @@ return [
 'List' => 'List',
 'Restart' => 'Restart',
 'Translation' => 'Translation',
+'or' => 'or',
 ];

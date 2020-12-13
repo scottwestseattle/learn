@@ -16,7 +16,7 @@
 			<p>@LANG('fp.' . $jumboSlug)</p>
 		@else
 			<h1 class="">@LANG('fp.Frontpage Header Title')</h1>
-			<p>@LANG('fp.Frontpage Header Body')</p>			
+			<p>@LANG('fp.Frontpage Header Body')</p>
 		@endif
 		@if (App\Tools::siteUses(LOG_MODEL_COURSES))
 			<p><a class="btn btn-primary btn-lg" href="/start" role="button">@LANG('fp.Start') &raquo;</a></p>
@@ -44,15 +44,14 @@
 		</div>
 	@endif
 	<!-- END OF VOCAB LISTS -->
-	
+
 	<!-- SHOW COURSES -->
 	@if (App\Tools::siteUses(LOG_MODEL_COURSES))
 		@if (Auth::check())
-			
+
+		@if (isset($lesson['course']))
 		<h3>@LANG('content.Courses in Progress')</h3>
 		<div class="row row-course m-1">
-
-			@if (isset($lesson['course']))
 				<div class="alert alert-primary" role="alert">
 					<h3 class="alert-heading mt-0">{{$lesson['course']->title}}</h3>
 					@if (isset($lesson['lesson']))
@@ -62,13 +61,8 @@
 						<p><a class="btn btn-primary btn-lg" href="/lessons/view/{{$lesson['lesson']->id}}" role="button">@LANG('content.Continue Lesson') &raquo;</a></p>
 					@endif
 				</div>
-			@else
-				<div class="mb-3">
-					<h4>@LANG('content.No lessons started').<h4>
-				</div>
-			@endif
-					
-		</div>	
+		</div>
+		@endif
 
 		@else
 		<h3>@LANG('content.Courses') ({{count($courses)}})</h3>
@@ -86,17 +80,17 @@
 		</div>
 		@endif
 	@endif
-	<!-- END OF COURSES -->		
+	<!-- END OF COURSES -->
 
     <!-- SHOW ARTICLES -->
 	@if (App\Tools::siteUses(LOG_MODEL_ARTICLES))
 		<h3>@LANG('content.Latest Articles')</h3>
-		<div class="text-center mt-3">		
+		<div class="text-center mt-3">
 			<div style="display: inline-block; width: 95%;">
 				<table>
 				<?php $count = 0; ?>
 				@foreach($articles as $record)
-				
+
 				<tr class="drop-box-ghost" style="vertical-align:middle;">
 					<td style="min-width:75px; font-size: 1.5em; padding:10px; color: white; background-color: #74b567; margin-bottom:10px;" >
 						<div style="margin:0; padding:0; line-height:100%;">
@@ -109,16 +103,16 @@
 							<tr><td style="padding-bottom:10px; font-size:1.3em; font-weight:normal;"><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
 							<tr><td style="padding-bottom:10px; font-size:.8em; font-weight:10;">
 								<div style="float:left;">
-									@component('components.icon-read', ['href' => "/entries/read/$record->id"])@endcomponent						
+									@component('components.icon-read', ['href' => "/entries/read/$record->id"])@endcomponent
 									<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
 									<div style="margin-right:15px; margin-bottom:5px; float:left;"><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
-									
+
 									@if (App\User::isAdmin())
 										<div style="margin-right:15px; float:left;">
-											@component('components.control-button-publish', ['record' => $record, 'btnStyle' => 'btn-xxs', 'prefix' => 'entries', 'showPublic' => true])@endcomponent					
+											@component('components.control-button-publish', ['record' => $record, 'btnStyle' => 'btn-xxs', 'prefix' => 'entries', 'showPublic' => true])@endcomponent
 										</div>
 									@endif
-																	
+
 								</div>
 								<div style="float:left;">
 									@if (App\User::isAdmin())
@@ -131,14 +125,14 @@
 						</table>
 					</td>
 				</tr>
-				
+
 				<tr><td>&nbsp;</td><td></td></tr>
-				
+
 				@endforeach
 				</table>
 			</div>
 			<div class="mb-4"><a href="/articles">@LANG('content.Show All Articles')</a></div>
-		</div>	
+		</div>
 		<!-- END OF ARTICLES -->
 	@endif
 
@@ -171,7 +165,7 @@
 		<div class="pb-4 pt-3">
 			<img src="/img/image5.png" width="100%" style="max-width: 300px;" />
 			@if (isset($randomWord))
-				@component('components.random-word', ['record' => $randomWord])@endcomponent						
+				@component('components.random-word', ['record' => $randomWord])@endcomponent
 			@else
 				<h2 class="section-heading mt-0 mb-4">@LANG('fp.Frontpage Subfooter Title')</h2>
 				<h4 style="font-size: 20px; font-weight: 400;">@LANG('fp.Frontpage Subfooter Body')</h4>

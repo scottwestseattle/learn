@@ -48,7 +48,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 					<svg class="mb-1" width="32" height="32" fill="currentColor" >
 						<use xlink:href="/img/bootstrap-icons.svg#brightness-high" />
 					</svg>
-				</div>				
+				</div>
 			</a>
 
 			<div class="mr-auto navbar-icon-shortcuts">
@@ -56,12 +56,12 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 					@if ($isAdmin)
 						<a class="navbar-item" href="/admin"><span class="glyphicon glyphicon-user gold"></span></a>
 					@else
-						<a class="navbar-item" href="/home"><span class="glyphicon glyphicon-user white"></span></a><
+						<a class="navbar-item" href="/home"><span class="glyphicon glyphicon-user white"></span></a>
 					@endif
 				@endauth
 				<a class="navbar-item mr-3" href="/search"><span style="color:white;" class="glyphicon glyphicon-search"></span></a>
 			</div>
-			
+
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
 				aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -90,7 +90,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">@LANG('ui.Login')</a>
                         </li>
-                        @if (Route::has('register'))
+                        @if (App\Tools::isAdmin() && Route::has('register'))
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('register') }}">@LANG('ui.Register')</a>
                             </li>
@@ -115,7 +115,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 								<div class="dropdown-divider"></div>
 								@endif
-								
+
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
@@ -171,15 +171,15 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	<!-- FOOTER -->
 	<footer class="footer backin-black">
 		<div class="container marketing text-center p-5">
-			
+
 			<a class="" href="/">
 				<div class="brand logo middle">
 					<svg class="bi app-color-primary-reverse" width="55" height="55" >
 						<use xlink:href="/img/bootstrap-icons.svg#brightness-high" />
 					</svg>
 				</div>
-			</a>			
-			
+			</a>
+
 			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
 			<p style="font-size:1.2em;" class="">{{$siteTitleLite}}</p>
 			<p>&copy; {{date("Y")}} {{$domainName}} - @LANG('ui.All Rights Reserved')</p>

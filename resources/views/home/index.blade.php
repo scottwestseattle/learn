@@ -50,35 +50,37 @@
 	<hr />
 	@endif
 
-	@if (isset($course))
-	<div class="mb-5">
-		<div class="">
-			<h3>@LANG('content.Courses in Progress')</h3>
-		</div>
-		<div class="">
+	@if (App\Tools::siteUses(LOG_MODEL_COURSES))
+        @if (Auth::check() && isset($course))
+            <div class="mb-5">
+                <div class="">
+                    <h3>@LANG('content.Courses in Progress')</h3>
+                </div>
+                <div class="">
 
-			@if (isset($course))
-				<div class="alert alert-primary" role="alert">
-					<h3 class="alert-heading mt-0">{{$course->title}}</h3>
-					@if (isset($lesson))
-					<hr>
-					<h4>@LANG('content.Chapter') {{$lesson->getFullName()}}</h4>
-					<p>@LANG('content.Last viewed on') {{$stats['lessonDate']}}</p>
-					<p><a class="btn btn-primary btn-lg" href="/lessons/view/{{$lesson->id}}" role="button">@LANG('content.Continue Lesson') &raquo;</a></p>
-					@endif
-				</div>
-			@else
-				<div class="mb-5">
-					<h4>@LANG('content.No lessons started').<h4>
-				</div>
-			@endif
-			
-		</div>
-	</div>
-	<hr />
-	@else
-		<h3>@LANG('content.No Courses Started')</h3>
-		<p><a class="btn btn-primary btn-lg" href="/courses" role="button">@LANG('content.Go to Courses')</a></p>		
+                    @if (isset($course))
+                        <div class="alert alert-primary" role="alert">
+                            <h3 class="alert-heading mt-0">{{$course->title}}</h3>
+                            @if (isset($lesson))
+                            <hr>
+                            <h4>@LANG('content.Chapter') {{$lesson->getFullName()}}</h4>
+                            <p>@LANG('content.Last viewed on') {{$stats['lessonDate']}}</p>
+                            <p><a class="btn btn-primary btn-lg" href="/lessons/view/{{$lesson->id}}" role="button">@LANG('content.Continue Lesson') &raquo;</a></p>
+                            @endif
+                        </div>
+                    @else
+                        <div class="mb-5">
+                            <h4>@LANG('content.No lessons started').<h4>
+                        </div>
+                    @endif
+
+                </div>
+            </div>
+            <hr />
+        @else
+            <h3>@LANG('content.No Courses Started')</h3>
+            <p><a class="btn btn-primary btn-lg" href="/courses" role="button">@LANG('content.Go to Courses')</a></p>
+        @endif
 	@endif
 
 	@if (isset($quizes))

@@ -122,4 +122,5 @@ return [
 'List' => 'Lista',
 'Restart' => 'Reiniciar',
 'Translation' => 'Traducción',
+'or' => 'o',
 ];
