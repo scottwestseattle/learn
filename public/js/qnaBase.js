@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// THE QNA JS APPLICATION
+// QNA Base with all of the shared functions
 //-----------------------------------------------------------------------------
 
 //
@@ -14,7 +14,7 @@ const RUNSTATE_ENDOFQUIZ = 5;
 const CHECKANSWER_NORMAL = 1;
 const CHECKANSWER_KNOW = 2;
 const CHECKANSWER_DONTKNOW = 3;
-const CHECKANSWER_MC1 = 4;
+const CHECKANSWER_FROMBUTTON = 4;
 
 const SCORE_NOTSET = 0;
 const SCORE_CORRECT = 1;
@@ -68,22 +68,6 @@ $(document).keydown(function(event) {
 
 });
 
-$( document ).ready(function() {
-
-	quiz.setButtonStates(RUNSTATE_START);
-	quiz.setControlStates();
-	loadData();
-	loadOrder();
-	quiz.showAnswersClick();
-	quiz.typeAnswersClick();
-
-	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());
-
-	quiz.showPanel();
-
-	quiz.start();
-});
-
 //
 // quiz class
 //
@@ -100,18 +84,18 @@ function quiz() {
 	this.runState = RUNSTATE_START;
 
 	//new:
-	this.quizType = 0;
 	this.isMc = 0;
 	this.quizTextRound = 'not set';
 	this.quizTextCorrect = 'not set';
 	this.quizTextOf = 'not set';
 	this.quizTextQuestion = 'not set';
 	this.quizTextCorrectAnswer = 'not set'; // Correct! <- separate for the exclamations in Spanish
+	this.quizTextMarkedWrong = 'not set';
 	this.quizTextWrongAnswer = 'not set';	// Wrong!
 	this.quizTextOverrideCorrect = 'not set';
 	this.quizTextOverrideWrong = 'not set';
 	this.quizTextScoreChanged = 'not set';
-	this.lessonId = 'not set';
+	//this.lessonId = 'not set';
 
 	this.getQuestionId = function(index) {
 		return this.qna[this.qna[index].order].id;
@@ -122,10 +106,7 @@ function quiz() {
 	}
 
 	this.setControlStates = function() {
-		if (this.isTypeAnswers())
-			$("#attemptInput").focus();
-		else
-			$("#button-start").focus();
+		//$("#button-start").focus();
 	}
 
 	this.showPanel = function(state = null) {
@@ -155,8 +136,8 @@ function quiz() {
 				$("#panelResultsCount").text(count);
 
 				// log the quiz round
-				if (parseInt(round) == 1)
-					ajaxexec('/lessons/log-quiz/' + this.lessonId + '/' + fScore);
+				//if (parseInt(round) == 1)
+				//	ajaxexec('/lessons/log-quiz/' + this.lessonId + '/' + fScore);
 
 				break;
 			}
@@ -172,204 +153,34 @@ function quiz() {
 
 	}
 
-	//todo: only implemented for setFocus()
-	this.isTypeAnswers = function() {
-		return $("#checkbox-type-answers").prop('checked');
-	}
-
 	this.setFocus = function() {
-
-		//todo: only done for start quiz
-		if (this.isTypeAnswers())
-			$("#attemptInput").focus();
-	}
-
-	this.setButtonStates = function(state) {
-
-		this.runState = state;
-
-		if (this.isMc)
-		{
-			$(".hide-for-mc").hide();
-		}
-
-		if (state == RUNSTATE_START)
-		{
-			//
-			// only show the start button
-			//
-			quiz.showOverrideButton(false, null);
-			$("#button-check-answer").hide();
-			$("#button-next-attempt").hide();
-			$("#button-know").hide();
-			$("#button-dont-know").hide();
-
-			//$("#button-start").show();
-			$("#button-stop").hide();
-
-			$("#question-right").hide();
-			$("#question-wrong").hide();
-			$("#question-prompt").hide();
-
-			$("#attemptInput").hide();
-		}
-		else if (state == RUNSTATE_ASKING)
-		{
-			//
-			// asking the question
-			//
-
-			if (quiz.isMc)
-			{
-				$("#button-dont-know").hide();
-				$("#button-check-answer").hide();
-				$("#button-know").hide();
-			}
-			else
-			{
-				if (this.isTypeAnswers())
-				{
-					$("#button-check-answer").show();
-					$("#button-dont-know").hide();
-					$("#button-know").show();
-				}
-				else
-				{
-					$("#button-check-answer").hide();
-					$("#button-dont-know").show();
-					$("#button-know").show();
-					$("#button-know").focus();
-				}
-			}
-
-			quiz.showOverrideButton(false, null);
-			$("#button-next-attempt").hide();
-			//$("#button-start").hide();
-			$("#button-stop").show();
-
-			$("#question-right").hide();
-			$("#question-wrong").hide();
-			$("#question-prompt").show();
-		}
-		else if (state == RUNSTATE_CHECKING)
-		{
-			$("#question-prompt").hide();
-
-			//
-			// checking the answer
-			//
-			$("#button-check-answer").hide();
-			$("#button-know").hide();
-			$("#button-dont-know").hide();
-
-			quiz.showOverrideButton(true, null);
-			//$("#button-start").hide();
-			$("#button-stop").show();
-
-			if (quiz.isMc)
-			{
-				// change the button colors to show the answer
-				$(".btn-right").css('background-color','#5CB85C');
-				$(".btn-right").css('border-color','#5CB85C');
-
-				$(".btn-wrong").css('background-color','LightGray');
-				$(".btn-wrong").css('border-color','LightGray');
-
-				$(".btn-chosen").css('background-color','red');
-				$(".btn-chosen").css('border-color','DarkRed');
-
-				// check if the chosen button is invisible
-				//if ($(".btn-chosen").is(":hidden"))
-				//{
-				//	$(".btn-chosen").css('color','red');
-				//}
-
-				$("#button-next-attempt").show();
-			}
-			else
-			{
-				$("#button-next-attempt").show();
-			}
-		}
-		else
-		{
-			alert("setButtonStates - bad value");
-		}
 	}
 
 	this.flipped = function() {
-		return this._flip;
+		return $('#checkbox-flip').prop('checked');
 	}
-
+	
+	this.useDefinition = function() {
+		return $("#checkbox-use-definition").prop("checked");
+	}
+	
+	//review: not used
 	this.flip = function() {
 		this._flip = !this._flip;
 		this.promptQuestion = (this._flip ? this.promptQuestionReverse : this.promptQuestionNormal);
-		this.showQuestion();
+		showQuestion();
 	}
 
 	this.start = function() {
 		$("#rounds").text($("#roundsStart").text());
 		resetQuiz();
-		this.showQuestion();
+		showQuestion();
 		nbr = 1;
 		updateScore();
 
-		this.setButtonStates(RUNSTATE_ASKING);
+		setButtonStates(RUNSTATE_ASKING);
 
 		this.showPanel();
-	}
-
-	this.showQuestion = function() {
-
-		clear();
-
-		// show question
-		var q = getQuestion(true);
-		$("#prompt").html(q);
-
-		// get button options
-		if ($("#checkbox-hide-options").prop('checked'))
-		{
-			$("#optionButtons").hide();
-			$("#button-show-options").show();
-			$("#button-show-answer").hide();
-		}
-		else
-		{
-			$("#button-show-options").hide();
-			$("#button-show-answer").show();
-		}
-		
-		o = quiz.qna[quiz.qna[curr].order].options;
-		if (o && o.length > 0)
-			$("#optionButtons").html(o);	// show the option buttons
-
-		// show answer
-		if ($("#checkbox-show").prop('checked'))
-		{
-			var a = getQuestion(false);
-			$("#answer-show").html(a);
-			$("#answer-show").val(a);
-		}
-
-		// show prompt
-		$("#promptQuestion").text(quiz.promptQuestion + " ");
-
-		var typeAnswers = !this.isMc && this.isTypeAnswers();
-		if (typeAnswers)
-		{
-			$("#attemptInput").show();
-			$("#attemptInput").focus();
-		}
-		else
-		{
-			$("#attemptInput").hide();
-			$("#button-know").focus();
-		}
-
-		quiz.setAlertPrompt(quiz.promptQuestion, COLOR_QUESTION_PROMPT);
-
-		$("#stats").show();
 	}
 
 	this.showOverrideButton = function(show, label)
@@ -393,7 +204,7 @@ function quiz() {
 
 	this.typeAnswersClick = function()
 	{
-		this.setButtonStates(this.runState);
+		setButtonStates(this.runState);
 
 		var typeAnswers = $("#checkbox-type-answers").prop('checked');
 
@@ -471,6 +282,8 @@ function loadData()
 
 		var question = container.data('question');
 		var answer = container.data('answer');
+		var def = container.data('definition');
+		var extra = container.data('extra');
 		var options = container.data('options'); // mc options
 		var id = container.data('id');
 		var wordId = container.data('wid');
@@ -479,6 +292,8 @@ function loadData()
 		quiz.qna[i] = {
 		    q:question.toString(),
 		    a:answer.toString(),
+			definition:def.toString(),
+			extra:extra.toString(),
 		    id:id.toString(),
 		    options:options.toString(),
 		    order:0,
@@ -503,22 +318,19 @@ function loadData()
 		quiz.promptQuestion = quiz.promptQuestionNormal;
 
 		// new settings
-		quiz.quizType = container.data('quiztype');
 		quiz.isMc = container.data('ismc');
 		quiz.quizTextRound = container.data('quiztext-round');
 		quiz.quizTextCorrect = container.data('quiztext-correct');
 		quiz.quizTextOf = container.data('quiztext-of');
 		quiz.quizTextQuestion = container.data('quiztext-question');
 		quiz.quizTextCorrectAnswer = container.data('quiztext-correct-answer');
+		quiz.quizTextMarkedWrong =  container.data('quiztext-marked-wrong');
 		quiz.quizTextWrongAnswer = container.data('quiztext-wrong-answer');
 		quiz.quizTextOverrideCorrect = container.data('quiztext-override-correct') + " (Alt+c)";
 		quiz.quizTextOverrideWrong = container.data('quiztext-override-wrong') + " (Alt+c)";
 		quiz.quizTextScoreChanged = container.data('quiztext-score-changed');
-		quiz.lessonId = container.data('lessonid');
-		quiz.touchPath = container.data('touchpath');
-
-		if (i == 0)
-			alert(quiz.qna[i].q);
+		//quiz.lessonId = container.data('lessonid');
+		quiz.touchPath = ''; //turned off for the moment: container.data('touchpath');
 
 		i++;
     });
@@ -596,71 +408,6 @@ function next()
 	loadQuestion();
 }
 
-function nextAttempt()
-{
-	clearTimeout(nextAttemptTimer);
-
-	quiz.setButtonStates(RUNSTATE_ASKING);
-
-	var done = false;
-	var count = 0;
-	while(!done)
-	{
-		curr++;
-
-		// check if at the end of round
-		if (curr >= max)
-		{
-			curr = 0;
-			nbr = 0;
-			score = (right / (right+wrong)) * 100;
-			total = right + wrong;
-			if (total > 0)
-			{
-				results = '<p>' + quiz.quizTextRound + ' ' + round + ': ' + score.toFixed(2) + '% (' + right + '/' + total + ')</p>';
-				if (round == 1)
-					$("#rounds").text('');
-				$("#rounds").append(results);
-				//alert('End of Round, Starting next round');
-				quiz.showPanel(RUNSTATE_ENDOFROUND);
-			}
-			else
-			{
-				//alert('End of Round???');
-			}
-
-			//alert('End of Round ' + round + ': ' + score.toFixed(2) + '% (' + right + ' of ' + (right+wrong) + ')');
-
-			round++;
-			statsMax = wrong;
-			right = 0;
-			wrong = 0;
-		}
-
-		// if this question has not been answered correctly yet
-		if (!quiz.qna[quiz.qna[curr].order].correct)
-		{
-			loadQuestion();
-			done = true;
-		}
-		else if (count++ >= max)
-		{
-			// no wrong answers left
-			//alert('Done, all answered correctly!!');
-			//quiz.showPanel(RUNSTATE_ENDOFQUIZ);
-			//resetQuiz();
-			quiz.runState = RUNSTATE_ENDOFQUIZ;
-			done = true;
-		}
-
-		if (count > 10000)
-		{
-			// break out just in care we're looping
-			break;
-		}
-	}
-}
-
 function prev()
 {
 	curr--;
@@ -672,20 +419,11 @@ function prev()
 
 function startQuiz()
 {
-	quiz.setButtonStates(RUNSTATE_START);
+	setButtonStates(RUNSTATE_START);
 	quiz.setControlStates();
 	loadData();
 	loadOrder();
 	$("#checkbox-type-answers").prop('checked', startWithTypeAnswers());
-
-	quiz.showPanel();
-}
-
-function continueQuiz()
-{
-	// if end of round but not end of quiz, keep asking
-	if (quiz.runState == RUNSTATE_ENDOFROUND)
-		quiz.runState = RUNSTATE_ASKING;
 
 	quiz.showPanel();
 }
@@ -696,38 +434,6 @@ function stopQuiz()
 	$("#panelEndofquizStopped").show();
 	quiz.runState = RUNSTATE_ENDOFQUIZ;
 	quiz.showPanel();
-}
-
-function showAnswer()
-{
-	$("#button-show-answer").hide();
-	
-	var id = $(".btn-right").attr('id');
-	var text = $(".btn-right").text();
-	checkAnswerMc1(id, text, true);
-}
-
-function showAnswerOptionButtons()
-{
-	$("#optionButtons").show();
-	$("#button-show-options").hide();
-	$("#button-show-answer").show();	
-}
-
-function hideOptionsClick()
-{
-	if ($("#checkbox-hide-options").prop('checked'))
-	{
-		$("#optionButtons").hide();
-		$("#button-show-options").show();
-		$("#button-show-answer").hide();
-	}
-	else
-	{
-		$("#optionButtons").show();
-		$("#button-show-options").hide();
-		$("#button-show-answer").show();
-	}
 }
 
 function resetQuiz()
@@ -746,9 +452,7 @@ function resetQuiz()
 
 	loadOrder();
 
-	$("#stats").hide();
-	$("#panelEndofquizFinished").show();
-	$("#panelEndofquizStopped").hide();
+	resetEndPanels();
 }
 
 function clear2()
@@ -772,42 +476,66 @@ function clear()
 	$("#answer-show-div").text('');
 }
 
-function getAnswer()
+function getAnswer(index = null)
 {
-	return getQuestion(false);
-}
+	var rc = null;
+	index = (index == null) ? quiz.qna[curr].order : index;
 
-function getQuestion(question)
-{
-	var q = null;
-	var flip = (question) ? quiz.flipped() : !quiz.flipped(); // flip the flip for getting answers!!
-
-	if (flip)
+	if (quiz.flipped())
 	{
-		q = quiz.qna[quiz.qna[curr].order].a;
-		//console.log("flip: " + quiz._flip + ", answer: " + q);
+		rc = quiz.qna[index].q;
 	}
 	else
 	{
-		q = quiz.qna[quiz.qna[curr].order].q;
-		//console.log("flip: " + quiz._flip + ", question: " + q);
+		if (quiz.useDefinition())
+			rc = quiz.qna[index].definition;
+		else
+			rc = quiz.qna[index].a;
 	}
 
-	return q;
+	return rc;
 }
 
-function isFlipChecked()
+function getQuestion(index = null)
 {
-	return $("checkbox-flip").prop("checked");
+	var rc = null;
+	index = (index == null) ? quiz.qna[curr].order : index;
+
+	if (quiz.flipped())
+	{
+		if (quiz.useDefinition())
+			rc = quiz.qna[index].definition;
+		else
+			rc = quiz.qna[index].a;
+	}
+	else
+	{
+		rc = quiz.qna[index].q;
+	}
+
+	return rc;
+
 }
 
 function loadQuestion()
 {
-	quiz.showQuestion();
+	showQuestion();
 	nbr++;
 	updateScore();
 
 	quiz.setAlertPrompt(quiz.promptQuestion, COLOR_QUESTION_PROMPT);
+}
+
+function reloadQuestion()
+{
+	showQuestion();
+	
+	// one of these triggered this call so save the state
+	var checked = $('#checkbox-flip').prop('checked') ? 'true' : '';
+	localStorage.setItem('checkbox-flip', checked);
+		
+	var checked = $('#checkbox-use-definition').prop('checked') ? 'true' : '';
+	localStorage.setItem('checkbox-use-definition', checked);
 }
 
 function toStringBoolArray(a)
@@ -855,17 +583,33 @@ function cleanUpSpecialChars(str)
     return str;
 }
 
-function checkAnswerMc1(id, answer, showOnly = false)
+function checkAnswerFromButtonClick(event)
 {
+	checkAnswerFromButton(event.target.id);
+}
+
+function checkAnswerFromButton(id, showOnly = false)
+{
+	var correctButtonClicked = false;
+	id = '#' + id;
+
 	if (quiz.runState == RUNSTATE_ASKING)
 	{
-		if (!$("#" + id).hasClass("btn-right")) // if WRONG answer chosen, mark so we can show it as red
-			$("#" + id).addClass( "btn-chosen" ); // set a class on the chosen button so we don't have to pass the id all the way through
+		if ($(id).hasClass("btn-right"))
+		{
+			// if RIGHT answer chosen
+			correctButtonClicked = true;
+		}
+		else
+		{
+			// if WRONG answer chosen, mark so we can show it as red
+			$(id).addClass( "btn-chosen" ); // set a class on the chosen button so we don't have to pass the id all the way through
+		}
 
 		//alert(answer);
 		var timerSeconds = 2;
-		if (!checkAnswer(CHECKANSWER_MC1, answer, showOnly))
-		    timerSeconds *= 2; // add extra time for wrong answer
+		if (!checkAnswer(CHECKANSWER_FROMBUTTON, correctButtonClicked, showOnly))
+		    timerSeconds *= 1; // optional: add extra time for wrong answer, make more than 1
 
 		// load next question on a timer
 		nextAttemptTimer = setTimeout(nextAttempt, timerSeconds * 1000 /* make it milliseconds */);
@@ -876,22 +620,15 @@ function checkAnswerMc1(id, answer, showOnly = false)
 	}
 }
 
-function checkAnswer(checkOptions, attemptMc = null, showOnly = false)
+function checkAnswer(checkOptions, correctButtonClicked = false, showOnly = false)
 {
-	quiz.setButtonStates(RUNSTATE_CHECKING);
+	setButtonStates(RUNSTATE_CHECKING);
 	$("#question-prompt").hide();
 
 	var answerRaw = getAnswer();
 	var answer = cleanUpSpecialChars(answerRaw);
 	var attempt = $("#attemptInput").val();
 	var rightAnswer = false;
-
-	if (checkOptions == CHECKANSWER_MC1)
-	{
-		// multiple choice 1, attempt comes from the MC button
-		attempt = attemptMc;
-	}
-
 	var result = '';
 	var answerColor = 'black';
 
@@ -921,27 +658,33 @@ function checkAnswer(checkOptions, attemptMc = null, showOnly = false)
 	}
 	else
 	{
-		//
-		// typing the answers so check the entry
-		//
-//alert(encodeURI("S&atilde;o Tom&eacute; and Pr&iacute;ncipe") + " | " + unescape(attempt.toLowerCase()));
-//		$("").html('Some text with &lt;div&gt;html&lt;/div&gt;').text()
-
-		cleanAnswer = cleanQna(jQuery('<span>').html(answer).text());
-		cleanAttempt = cleanQna(jQuery('<span>').html(attempt).text());
-		if (cleanAnswer != cleanAttempt)
+		var correctAnswer = false;
+		if (checkOptions == CHECKANSWER_FROMBUTTON)
 		{
-			cleanAnswer = accentFold(cleanAnswer);
-			cleanAttempt = accentFold(cleanAttempt);
+			correctAnswer = correctButtonClicked;		
+		}
+		else
+		{
+			// typing the answers so check the entry
+			cleanAnswer = cleanQna(jQuery('<span>').html(answer).text());
+			cleanAttempt = cleanQna(jQuery('<span>').html(attempt).text());
+			if (cleanAnswer != cleanAttempt)
+			{
+				cleanAnswer = accentFold(cleanAnswer);
+				cleanAttempt = accentFold(cleanAttempt);
+			}
+			
+			correctAnswer = ((answer != null && attempt != null) && cleanAnswer == cleanAttempt);
 		}
 
-		if ((answer != null && attempt != null) && cleanAnswer == cleanAttempt)
+		if (correctAnswer)
 		{
 			if (showOnly)
 			{
-				result = "Showing Correct Answer";
-				answerColor = 'green';
+				result = quiz.quizTextMarkedWrong;
+				answerColor = 'purple';
 				quiz.qna[quiz.qna[curr].order].correct = false;
+				
 			}
 			else
 			{
@@ -1019,7 +762,7 @@ function updateScore()
 	var percent = total > 0 ? (right / total) * 100 : 0;
 	percent = percent.toFixed(2).replace(/\.?0*$/,'');
 
-	$("#statsCount").html("<span class='quizStats'>" + quiz.quizTextQuestion + ": " + nbr + "/" + statsMax + "</span>");
+	$("#statsCount").html("<span class='quizStats'>" + quiz.quizTextQuestion + " " + nbr + " " + quiz.quizTextOf + " " + statsMax + "</span>");
 	$("#statsScore").html("<span class='quizStats'>" + quiz.quizTextCorrect + ": " + right + "/" + total + " (" + percent + "%)</span>");
 	$("#statsDebug").html("<span class='quizStats'>"
 		+ "round=" + round
@@ -1136,17 +879,127 @@ function accentFold (s)
 
 function touch(q)
 {
+	//debug('touching', true);
+	   
     // if it's a word, update it's last display time
     if (quiz.touchPath.length > 0) // if touchPath set
     {
         var path = '/' + quiz.touchPath + '/' + q.id;
         ajaxexec(path);
 
-        //alert('id: ' + q.id + ', word: ' + q.a);
+        debug('touch: id: ' + q.id + ', word: ' + q.a, true);
     }
 }
 
 function flip()
 {
 	quiz.flip();
+}
+
+function setButtonStates(state) 
+{
+	quiz.runState = state;
+
+	if (quiz.isMc)
+	{
+		$(".hide-for-mc").hide();
+	}
+
+	if (state == RUNSTATE_START)
+	{
+		//
+		// only show the start button
+		//
+		quiz.showOverrideButton(false, null);
+		$("#button-check-answer").hide();
+		$("#button-next-attempt").hide();
+		$("#button-know").hide();
+		$("#button-dont-know").hide();
+
+		$("#button-stop").hide();
+
+		$("#question-right").hide();
+		$("#question-wrong").hide();
+		$("#question-prompt").hide();
+
+		$("#attemptInput").hide();
+	}
+	else if (state == RUNSTATE_ASKING)
+	{
+		//
+		// asking the question
+		//
+
+		if (quiz.isMc)
+		{
+			$("#button-dont-know").hide();
+			$("#button-check-answer").hide();
+			$("#button-know").hide();
+		}
+		else
+		{
+			$("#button-check-answer").hide();
+			$("#button-dont-know").show();
+			$("#button-know").show();
+			$("#button-know").focus();
+		}
+
+		quiz.showOverrideButton(false, null);
+		$("#button-next-attempt").hide();
+		$("#button-stop").show();
+
+		$("#question-right").hide();
+		$("#question-wrong").hide();
+		$("#question-prompt").show();
+	}
+	else if (state == RUNSTATE_CHECKING)
+	{
+		$("#question-prompt").hide();
+
+		//
+		// checking the answer
+		//
+		$("#button-check-answer").hide();
+		$("#button-know").hide();
+		$("#button-dont-know").hide();
+
+		quiz.showOverrideButton(true, null);
+		$("#button-stop").show();
+
+		if (quiz.isMc)
+		{
+			// change the button colors to show the answer
+			$(".btn-right").css('background-color','#5CB85C');
+			$(".btn-right").css('border-color','#5CB85C');
+
+			// wrong button option
+			$(".btn-wrong").css('background-color','LightGray');
+			$(".btn-wrong").css('border-color','LightGray');
+
+			// answer chosen but wrong
+			$(".btn-chosen").css('background-color','red');
+			$(".btn-chosen").css('border-color','black');
+
+			// [I don't know] button clicked, show answer in yellow
+			$(".btn-right-show").css('color', 'purple');
+			$(".btn-right-show").css('background-color', '#ffc107');
+			$(".btn-right-show").css('border-color', '#ffed4a');
+
+			// check if the chosen button is invisible
+			//if ($(".btn-chosen").is(":hidden"))
+			//{
+			//	$(".btn-chosen").css('color','red');
+			//}
+
+			$("#button-next-attempt").show();
+		}
+		else
+		{
+			$("#button-next-attempt").show();
+		}
+	}
+	else
+	{
+		alert("setButtonStates - bad value");
+	}
 }

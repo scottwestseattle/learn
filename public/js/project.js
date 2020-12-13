@@ -20,6 +20,37 @@ var isMobile = {
     }
 };
 
+function mobile()
+{
+    if (navigator.userAgent.match(/Android/i))
+		return true;
+	
+	if (navigator.userAgent.match(/iPhone|iPad|iPod/i))
+		return true;
+	
+	if (navigator.userAgent.match(/BlackBerry/i))
+		return true;
+		
+	if (navigator.userAgent.match(/Opera Mini/i))
+		return true;
+		
+	if (navigator.userAgent.match(/IEMobile/i))
+		return true;
+	
+	return false;
+}
+
+function debug(msg, debugOn)
+{
+	if (debugOn)
+		console.log(msg);
+}
+
+function d(msg)
+{
+	console.log(msg);
+}
+
 function clipboardCopy(event, idFlash, id)
 {
 	event.preventDefault();
@@ -38,7 +69,8 @@ function clipboardCopy(event, idFlash, id)
 	// do the flash affect (only included in full jquery / we are using jquery slim for the moment
 //	$("#" + idFlash + ' p').fadeTo('fast', 0.1).fadeTo('slow', 1.0);
 //	$("#" + idFlash).fadeTo('fast', 0.1).fadeTo('slow', 1.0);
-    $("#status").text('copied');
+	$("#" + idFlash).css("color", "red");
+    $("#status").text("copied");
 
 	// remove the <br>'s and <p>'s and <span>'s
 	text = text.replace(/(\r\n|\n|\r)/gm, "");
@@ -102,12 +134,30 @@ function urlEncode(fromId, toId)
 	var toElem = document.getElementById(toId);
 	if (fromElem && toElem)
 	{
-		toElem.value = encodeURI(fromElem.value.replace(/[\W_]+/g, "-").toLowerCase());
+		text = convertAccentChars(fromElem.value);
+		toElem.value = encodeURI(text.replace(/[\W_]+/g, "-").toLowerCase());
 	}
 	else
 	{
 		alert('Error creating permalink');
 	}
+}
+
+function convertAccentChars(text)
+{
+	//
+	// replace accent / special characters one by one
+	//
+	text = text.replace(/ñ/g, "n");
+	text = text.replace(/ç/g, "c");
+	text = text.replace(/[ÀÁÄÂàáâäã]+/g, "a");
+	text = text.replace(/[ÉÈËÊèéêë]+/g, "e");
+	text = text.replace(/[ÍÌÏÎìíîï]+/g, "i");
+	text = text.replace(/[ÓÒÖÔòóôöõø]+/g, "o");
+	text = text.replace(/[ÙÚÜÛùúûü]+/g, "u");
+	text = text.replace(/Ÿÿ/g, "y");
+	
+	return text;
 }
 
 function urlEncodeWithDate(fromId, fromYearId, fromMonthId, fromDayId, toId)
@@ -623,29 +673,70 @@ function onCategoryChange(id)
 	xhttp.send();
 }
 
-function ajaxexec(url)
+function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = null)
 {
 	var xhttp = new XMLHttpRequest();
+	var debugOn = false;
 
+	debug('ajaxexec: url: ' + url, debugOn);
+	//debug('ajaxexec: resultsId: ' + resultsId, debugOn);
+	
 	xhttp.onreadystatechange = function()
 	{
 		//alert(this.status);
 
-		if (this.status == 200)
+		if (this.status == 404) // page not found?
 		{
-			//alert(this.responseText);
-		}
-		else if (this.status == 404)
-		{
-			//alert(this.responseText);
+			debug('ajaxexec: 404', debugOn);
+			
+			if (resultsId.length > 0)
+				$(resultsId).text('Server Error 404');
 		}
 
-		if (this.readyState == 4 && this.status == 200)
+		if (this.readyState == 4)
 		{
-			//
-			// results
-			//
-			//alert(this.requestText);
+			if (this.status == 200)
+			{
+				//
+				// results
+				//
+				if (resultsId.length > 0)
+				{
+					//$(resultsId).text('definition: ' + this.responseText);
+					if (this.responseText.startsWith('<'))
+					{
+						debug('ajaxexec: html returned', debugOn);						
+						$(resultsId).html(this.responseText);
+					}
+					else if (resultsInput) // put results in an input
+					{
+						debug('ajaxexec: text for input returned', debugOn);
+						$(resultsId).val(this.responseText);
+					}
+					else
+					{
+						debug('ajaxexec: text returned', debugOn);
+						$(resultsId).text(this.responseText);
+						$(resultsId).css('color', '#a37800');
+					}
+				}
+				else
+				{
+					debug('ajaxexec: results empty', debugOn);
+				}
+				
+				if (resultsCallback != null)
+					resultsCallback(this.responseText);
+				
+				//debug(this.responseText);
+			}
+			else
+			{
+				debug('ajaxexec: 500');
+				
+				if (resultsId.length > 0)
+					$(resultsId).text('Server Error ' + this.status);
+			}
 		}
 	};
 
@@ -684,8 +775,14 @@ function setFloat(obj, id)
 	$("#accent-chars-esp").appendTo("#" + id);
 }
 
-function setFocus(obj)
+function setFocus(obj, accentsId = null)
 {
+	if (accentsId != null)
+	{
+		$(accentsId).insertBefore(obj);
+		$(accentsId).show();
+	}
+	
 	prevFocus = obj;
 }
 
@@ -705,6 +802,7 @@ function insertChar(char, id, isTinyMce)
 
 	if (id != 0 && id != '0')
 	{
+		// if we're using the id parameter 
 		txtarea = document.getElementById(id);
 	}
 	else if (!prevFocus || prevFocus == 'undefined')
@@ -714,18 +812,22 @@ function insertChar(char, id, isTinyMce)
 	}
 	else
 	{
-		id = prevFocus.attr('id');
-		if (!id)
+		//
+		// if we're using previous focus instead of the id 
+		//
+		var focusId = prevFocus.attr('id');
+		
+		if (!focusId)
 		{
-			console.log('id = ' + id);
+			console.log('"id" must be set for each control that calls this component');
 			return;
 		}
 		else
 		{
-			txtarea = document.getElementById(id);
+			txtarea = document.getElementById(focusId);
 			if (!txtarea)
 			{
-				console.log('txtarea not set: ' + txtarea);
+				console.log('textarea not set: ' + txtarea);
 				return;
 			}
 		}
@@ -766,6 +868,35 @@ function setTab(event, tab)
 	}
 
 }
+
+function setActiveTab(event, tabIdShow, tabBodyClass, tabLinkClass = null)
+{
+	event.preventDefault();
+
+	$(tabBodyClass).hide();	
+	$(tabIdShow).show();
+
+	if (tabLinkClass != null)
+	{
+		$(tabLinkClass).removeClass('active');
+		$(tabIdShow + '-nav-link').addClass('active');
+	}
+}
+
+function toggleActiveTab(event, tabIdShow, tabIdMain, tabBodyClass)
+{
+	event.preventDefault();
+
+	var idShow = tabIdShow;
+	
+	// if the target is already visible, then toggle to main tab	
+	if ($(tabIdShow).is(':visible')) 
+		idShow = tabIdMain;
+
+	$(tabBodyClass).hide();	// hide all tabs
+	$(idShow).show();		// show the indicated tab
+}
+
 
 function saveAndStay()
 {
@@ -870,7 +1001,7 @@ function makeTitle(filename)
     s = s.toLowerCase().replace(/.gif/g, '');
 
     s = s.replace(/-/g, ' ');
-    s = s.replace(/_/g, '');
+    s = s.replace(/_/g, ' ');
 
     s = s.trim();
 
@@ -880,4 +1011,258 @@ function makeTitle(filename)
         .join(' ');
 
     return s;
+}
+
+function numInc(id, amount)
+{
+	var input = $("#" + id);
+	var value = Number(input.val()) + amount;
+	input.val(Number(value) < 0 ? 0 : Number(value));
+}
+
+function conjugationsGen(fromId, toId)
+{
+	var title = $(fromId).val();
+	ajaxexec('/definitions/conjugationsgenajax/' + title.trim(), toId, true);
+}
+
+function scrapeDefinition(event, fromId, toId)
+{
+	event.preventDefault();
+	var title = $(fromId).val();
+	ajaxexec('/definitions/scrape-definition/' + title.trim(), toId, true);
+}
+
+function wordFormsGen(event, fromId, toId, pluralOnly = false)
+{
+	event.preventDefault();
+	var word = $(fromId).val();
+	var wordForms = $(toId).val(); // get current forms so we don't wipe them out
+	var wordForms = getWordForms(word, wordForms, pluralOnly);
+	$(toId).val(wordForms);
+}
+
+function getWordForms(word, wordForms, pluralOnly)
+{
+	var gen = '';
+	var root = word.substring(0, word.length - 1);
+	word = word.trim();
+	wordForms = wordForms.trim();
+	
+	// if it ends in a consonant, add 'as', else add 's'
+	// paciente = pacientes
+	// alto = altos, alta, altas
+	// capaz = capaces
+	// reloj = relojes
+	if (word.endsWith('o') || word.endsWith('a'))
+	{
+		if (pluralOnly)
+		{
+			gen += word + 's';
+		}
+		else
+		{
+			gen += root + 'o';
+			gen += ', ' + root + 'os';
+			gen += ', ' + root + 'a';
+			gen += ', ' + root + 'as';
+		}
+	}
+	else if (word.endsWith('e'))
+	{
+		gen += word + 's';
+	}
+	else if (word.endsWith('z'))
+	{
+		gen += root + 'ces';
+	}
+	// for all the rest, just add 'es'
+	else //if (word.endsWith('r') || word.endsWith('j'))
+	{
+		gen += word + 'es';
+	}
+	
+	if (wordForms.length > 0)
+	{
+		if (!wordForms.endsWith(',') && !wordForms.endsWith(';'))
+			wordForms += ', ';
+		else
+			wordForms += ' ';
+	}
+	 
+	return wordForms + gen;
+}
+
+function wordExists(title)
+{
+	var word = title.val().trim();
+	if (word.length > 0) // if anything is left
+		ajaxexec('/definitions/wordexists/' + word, '#wordexists');
+}
+
+function scrollTo(className, heightAdjustment = 0)
+{
+	var e = $(className).first();
+	var position = e.offset();
+	var top_of_element = position.top;
+	var bottom_of_element = position.top + e.outerHeight();
+	var bottom_of_screen = $(window).scrollTop() + $(window).innerHeight();
+	var top_of_screen = $(window).scrollTop();
+	bottom_of_screen -= heightAdjustment; // apply any adjustment for viewport height
+
+	if ((bottom_of_screen > bottom_of_element) && (top_of_screen < top_of_element))
+	{
+		// the element is visible, don't scroll
+	} 
+	else 
+	{
+		// the element is not visible, scroll to it
+		window.scroll(position.left, position.top);
+	}
+}
+
+function translateOnWebsite(event, destination, text)
+{
+	event.preventDefault();
+	
+	if (destination == 'spanishdict')
+		window.open("https://www.spanishdict.com/translate/" + text + "");
+	else if (destination == 'rae')
+		window.open("https://dle.rae.es/" + text + "");		
+	else // everything else goes to google
+		window.open("https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "");
+}
+
+function isAlphanum(keyCode)
+{	
+	if (keyCode >= 65 && keyCode <= 90) // a-z, A-Z
+		return true;
+
+	if (keyCode == 32)
+		return true;
+
+	if (keyCode >= 48 && keyCode <= 57) // 0-9
+		return true;
+	
+	return false;
+}
+
+function isDelete(keyCode)
+{	
+	if (keyCode == 8) // backspace
+		return true;
+
+	if (keyCode == 46) // delete
+		return true;
+	
+	return false;
+}
+
+_delaySearchId = 0;
+_lastSearchWord = '';
+function searchDefinitions(event, textId, resultsId)
+{
+	// only search when alphanum char is pressed or removed with backspace/delete
+	// note that: ctrl-v and ctrl-x still work because the 'v' and 'x' are caught
+	// before it was searching on arrows, page up/down, etc
+	if (mobile())
+	{
+		// keycodes don't work for mobile so let it go through
+	}
+	else
+	{
+		// if it's not a printable character OR delete
+		var doit = isAlphanum(event.keyCode) || isDelete(event.keyCode); 
+		if (!doit)
+			return;
+	}
+	
+	var debugOn = false;
+	
+	if (_delaySearchId != 0)
+	{
+		clearTimeout(_delaySearchId);
+		_delaySearchId = 0;
+	}
+
+	var searchText = $(textId).val().trim();
+	debug('search: ' + searchText, debugOn);
+
+	// try to limit the numbre of server calls
+	if (searchText.length > 1 && searchText == _lastSearchWord)
+	{
+		debug('search: not calling duplicate search: ' + _lastSearchWord, debugOn);
+		return;
+	}
+	
+	$(resultsId).html('');	
+
+	//if (searchText.length != 1) // don't use so we can see all the words that start with a letter
+	{		
+		_delaySearchId = setTimeout(function(){
+			debug('search server call on timer: ' + searchText, debugOn);
+			_lastSearchWord = searchText;
+			ajaxexec('/definitions/search-ajax/' + searchText + '', resultsId, false, searchDefinitionsCallack);}
+			, 500
+		);
+	}
+
+}
+
+function searchDefinitionsCallack()
+{
+	// update the results count
+	var count = $('#searchDefinitionsResultsTable tr').length;
+	$('#searchDefinitionsResultsCount').text(count);
+}
+
+function heartDefinition(event, recordId, resultsId)
+{
+	event.preventDefault();	
+	
+	var target = '#' + event.target.id;
+	if ($(target).hasClass('glyphicon-heart-empty'))
+	{
+		// heart it
+		ajaxexec('/definitions/heart/' + recordId + '', resultsId);
+		$(target).removeClass('glyphicon-heart-empty');
+		$(target).addClass('glyphicon-heart');
+	}
+	else
+	{
+		// unheart it
+		ajaxexec('/definitions/unheart/' + recordId + '', resultsId);
+		$(target).removeClass('glyphicon-heart');
+		$(target).addClass('glyphicon-heart-empty');
+	}
+}
+
+function unheartDefinition(event, recordId, resultsId)
+{
+	event.preventDefault();		
+	var target = '#' + event.target.id;
+	ajaxexec('/definitions/unheart/' + recordId + '', resultsId);
+}
+
+function toggleWip(event, recordId, resultsId)
+{
+	event.preventDefault();	
+	ajaxexec('/definitions/toggle-wip/' + recordId + '', resultsId);
+	var target = '#' + event.target.id;
+	if ($(target).hasClass('glyphicon-ok-circle'))
+	{
+		$(target).removeClass('glyphicon-ok-circle');
+		$(target).addClass('glyphicon-remove-sign');
+	}
+	else
+	{
+		$(target).removeClass('glyphicon-remove-sign');
+		$(target).addClass('glyphicon-ok-circle');
+	}
+}
+
+function getRandomWord(event, resultsId)
+{
+	event.preventDefault();
+	ajaxexec('/definitions/get-random-word', resultsId);
 }

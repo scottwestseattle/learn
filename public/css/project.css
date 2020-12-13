@@ -26,12 +26,23 @@ Super Light Green: #eff7f0
 }
 
 .data-accent-chars {
-	display:none;
+	font-size:.6em;
 }
 
-h1,h3 {
-	xmargin:10px 0 15px 0;
+.accent-button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 1px 3px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 11px;
+  margin: 4px 0px;
+  cursor: pointer;
+  min-width:20px;
 }
+
 
 .size-xs, .size-sm, .size-md, .size-lg, .size-xl { display: none; }
 .size-xs { display: initial; }
@@ -99,16 +110,18 @@ body {
 /* this is the wrapper around the page yield */
 .page-layout {
     margin-top: 14px;	/* this adjust for the fixed nav bar height */
+	min-height:500px;
 }
 
 /* spacing for normal, non-front pages */
 .page-normal {
-    padding-top: 15px;
-    margin-bottom: 3rem;
+	margin-top: 20px;
+	margin-bottom: 3rem;
 	min-height: 500px;
 }
 
-.page-normal h1 {
+h1,h3 {
+	margin: 30px 0 15px 0;
 	font-size: 1.7em;
 }
 
@@ -131,6 +144,20 @@ body {
 	color: white;
 }
 
+.mars-sky {
+	background-color: #fe5b4c;
+	color: white;
+}
+
+.app-color-primary {
+	background-color: #fe5b4c; /* mars-sky */
+	color: white;
+}
+
+.app-color-primary-reverse {
+	color: #fe5b4c; /* mars-sky */
+}
+
 .oolong-orange {
 	background-color: #FF6900;
 	color: white;"
@@ -141,11 +168,48 @@ body {
 	color: white;
 }
 
+.green {
+	color:green;
+}
+
+.red {
+	color:red;
+}
+
+.teal {
+	color:teal;
+}
+
+.white {
+	color:white;
+}
+
+.gold {
+	color:gold;
+}
+
+.steelblue {
+	color:#4682b4;
+}
+
+.mediumgray {
+	color:#989898;
+}
+
+.danger {
+	color:red;
+}
+
+
 .fpheader {
     padding: 2rem 1rem;
     margin-bottom: 2rem;
- 	background-color: #800080;
-	color: white;
+}
+
+.fpBannerImage {
+	background-image:url('/img/banner.png'); 
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .fpheader p {
@@ -219,12 +283,12 @@ body {
 
 .btn-panel-bottom {
 	text-align: center;
-	padding:10px;
 	position: fixed;
 	bottom: 0px;
 	left: 0px;
 	background: white;
 	width:100%;
+	opacity:0.8;
 }
 
 /***********************************************************
@@ -381,22 +445,20 @@ body {
 
 .card-course, .card-course a {
 	height:200px;
-	xbackground-color: #f5746f; /* reddish */
-	xbackground-color: #3dbcb1; /* greenish */
 	color:white;
 	text-decoration:none;
 }
 
 .card-course-type0 { /* not set */
-	background-color: #9568ad; /* plumb */
+	background-color: darkgray;
 }
 
 .card-course-type1 { /* English */
-	background-color: #4993FD; /* header blue */
+	background-color: #f5746f; /* reddish */
 }
 
 .card-course-type2 { /* Spanish */
-	background-color: #2AB455; /* green */
+	background-color: #4993FD; /* header blue */
 }
 
 .card-course-type3 { /* Tech */
@@ -404,7 +466,11 @@ body {
 }
 
 .card-course-type4 { /* Other */
-	background-color: #f5746f; /* reddish */
+	background-color: #9568ad; /* plumb */
+}
+
+.card-course-type40 { /* Planch */
+	background-color: #2AB455; /* green */
 }
 
 .card-course .card-header {
@@ -448,20 +514,20 @@ body {
     border-radius: .1rem
 }
 
-.glyphCustom {
-	margin:0 5px;
-	font-size: 22px;
-	color: #286090;
-}
-
-.glyphCustom-sm {
-	margin:0 5px;
-	font-size: 14px;
-	color: #286090;
+.btn-group-xxs>.btn,
+.btn-xxs {
+    padding: .25rem .5rem;
+    font-size: .53rem;
+    line-height: 1;
+    border-radius: .1rem
 }
 
 .drop-box {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
+}
+
+.drop-box-ghost {
+	box-shadow: 1px 1px 10px 1px #e0e0e0;
 }
 
 /* spacing for the lesson prev/next buttons */
@@ -570,10 +636,16 @@ body {
 
 .footer-links {
 	color: blue; /* this is for the bullets only */
+	color: #fe5b4c;
 }
 
 .footer-links a {
 	margin-right:6px;
+	color: #fe5b4c;
+}
+
+.footer-links a:hover {
+	text-decoration: none;
 }
 
 .footer-heading {
@@ -720,7 +792,7 @@ body {
 .lesson-table,
 .lesson-table td,
 .lesson-table th {
-    xborder: 1px solid #dee2e6
+    xborder: 1px solid #dee2e6;
 }
 
 .lesson-table thead td,
@@ -734,16 +806,15 @@ body {
 .lesson-table th {
     background-color: #eff7f0;
 	font-weight: bold;
-	text-align: center;
+	text-align: center;	
 }
-
 
 .lesson-table, .lesson-table input
 {
 	width: 100%;
 }
 
-.lesson-table, .lesson-table-sm {
+.lesson-table-sm {
 	max-width:400px;
 }
 
@@ -751,13 +822,24 @@ body {
 	max-width:300px;
 }
 
-.lesson-table-md {
+.lesson-table, .lesson-table-md {
 	max-width:600px;
 }
 
 .lesson-table-lg {
 	max-width:800px;
 }
+
+.lesson-table-fancy th {
+	background-color: #5CB85C;
+	color:white;
+	padding:5px;
+	text-align:center;
+	font-weight:600;
+	border: 2px solid white;
+	border-radius:7px;
+}
+
 
 .bs-callout-no-border {
     padding: 10px 15px;
@@ -825,3 +907,262 @@ body {
 .bs-callout-info h4 {
     color: #5bc0de;
 }
+
+.article-source {
+	margin: 20px 0;
+	font-size:12px;
+	font-weight:100;
+}
+
+.small-thin-text {
+	font-size:12px;
+	font-weight:200;
+}
+
+.medium-thin-text {
+	font-size:15px;
+	font-weight:200;
+}
+
+.large-text {
+	font-size:18px;
+}
+
+.small-thin-hdr {
+	font-size:12px;
+	font-weight:bold;
+}
+
+td.article-extra {
+	font-size:12px;
+	padding:0 10px;
+}
+
+.vertical-align {
+	line-height:20px; 
+	valign:middle;
+}
+
+label.tiny {
+	font-size:.6em;
+	margin-bottom:2px;
+}
+
+.highlight-word {
+	background-color: yellow;
+	border-radius: 25px;
+	padding: 5px 0;
+}
+
+/* doesn't work for the checkbox, just the label */
+.checkbox-xs {
+	color:gray;
+	font-size:11px;
+	line-height: 12px;
+	vertical-align: middle;
+}
+
+@media (max-width:767px) {
+    .hidden-xs {
+        display: none!important
+    }
+}
+
+@media (min-width:768px) and (max-width:991px) {
+    .hidden-sm {
+        display: none!important
+    }
+}
+
+@media (min-width:992px) and (max-width:1199px) {
+    .hidden-md {
+        display: none!important
+    }
+}
+
+@media (min-width:1200px) {
+    .hidden-lg {
+        display: none!important
+    }
+}
+
+.wordwrap
+{
+	/* wrap long text and urls */
+	white-space: pre; /* CSS 2.0 */
+	white-space: pre-wrap; /* CSS 2.1 */
+	white-space: pre-line; /* CSS 3.0 */
+	white-space: -pre-wrap; /* Opera 4-6 */
+	white-space: -o-pre-wrap; /* Opera 7 */
+	white-space: -moz-pre-wrap; /* Mozilla */
+	word-wrap: break-word; /* IE 5+ */
+} 
+
+/*********************************************************/
+/* badges                                                */
+/*********************************************************/
+
+.badge-purple, .badge-blue {
+	display: inline-block; 
+	vertical-align: middle; 
+	margin-bottom: 3px;
+}
+
+.badge-purple {
+	background-color: purple; 
+	color: white;	
+}
+
+.badge-blue {
+	background-color: #4993FD; /* bright-blue */
+	color: white;	
+}
+
+.badge-white {
+	background-color: white;
+	color: #4993FD;	
+}
+
+.badge-medium {
+	font-size:12px;
+	margin-left: 10px;
+}
+
+.badge-small {
+	font-size:10px; 
+	padding:2px 2px; 
+	font-weight:bold;	
+	margin-left: 5px;
+}
+
+/*********************************************************/
+/* glyphs                                                */
+/*********************************************************/
+
+.glyphCustom {
+	margin:0 5px;
+	font-size: 22px;
+	color: #286090;
+}
+
+.glyphCustom-lt {
+	font-size:13px; 
+	color:#acacac;	
+}
+
+.glyphCustom-sm {
+	margin:0 5px;
+	font-size: 14px;
+	color: #286090;
+}
+
+.glyphCustom-md {
+	font-size: 16px;
+	color: #286090;
+}
+
+.glyphCustom-lg {
+	font-size: 19px;
+	color: #286090;
+}
+
+.glyphRed {
+	color: red;
+}
+
+.glyphReader {
+	font-size:27px;
+	margin-right: 10px;
+}
+
+.glyphReaderReturn {
+	font-size:18px;
+	color: #286090;
+}
+
+.glyphReaderMove {
+	font-size:2em;
+	display:inline-block;
+	vertical-align:middle;
+}
+
+.glyphReaderPlay {
+	font-size:2em;
+	display:inline-block;
+	vertical-align:middle;
+}
+
+.glyphcircle {
+	color:white;
+	background-color:#4993FD;
+	border-radius: 50%;
+	padding: 10px;
+}
+
+.middle {
+	display:inline-block;
+	vertical-align:middle;
+}
+
+.tab-body {
+	padding-bottom:60px;
+}
+
+td.icon {
+	width:10px;
+}
+
+.submenu-view td.icon {
+	width: 40px;
+}
+
+.quizStats {
+	font-size:13px;
+	color:#4682b4; /* steelblue */
+}
+
+.type-not-set-color {
+	background-color: red;
+	color: white;
+	border: DarkRed;
+}
+
+h6 {
+	font-size:1em;
+	xfont-weight:300;
+	margin-top:30px;
+	margin-bottom:20px;
+}
+
+.fn, .fancy-number {
+	font-weight:bold;
+	background-color:#5CB85C;
+	color:white;
+	border-radius:5px;
+	padding:0 10px;
+	margin-right:5px;
+}
+
+.irregular {
+	color:#5CB85C; /* minty green */
+	font-size:.8em;
+	font-style: italic;
+}
+
+.card-flashcard, .card-flashcard a {
+	max-width:100%;
+	width:500px;
+	min-height:200px;
+	color:white;
+	text-decoration:none;
+}
+
+.card-blue {
+	background-color: #4993FD;
+}
+
+.navbar-icon-shortcuts a {
+	color: white;
+	margin: auto 10px;	
+}
+
