@@ -6,14 +6,16 @@ use Illuminate\Http\Request;
 use Lang;
 use Auth;
 
-use App\Tools;
+use App\Entry;
 use App\Event;
-use App\Visitor;
-use App\User;
 use App\Course;
+use App\Definition;
 use App\Lesson;
-use App\Word;
+use App\Tools;
+use App\User;
+use App\Visitor;
 use App\VocabList;
+use App\Word;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMailable;
@@ -35,8 +37,6 @@ class HomeController extends Controller
     public function mail()
     {
 		$name = 'scott';
-		$addressTo = 'scott@scotthub.com';
-		$addressTo = 'sbwilkinson1@gmail.com';
 		$addressTo = 'scottscott@yopmail.com';
 		$addressFrom = env('MAIL_FROM_ADDRESS', '63f42e54a4-f10d4b@inbox.mailtrap.io');
 		$to = Lang::get('content.To:');
@@ -69,6 +69,13 @@ class HomeController extends Controller
 
 	//
 	// word of the day
+	//
+	// this is the main function used in the cron
+	// cron settings: 
+	// Minute: 0
+	// Hour: 7,19
+	// Day/Month/Weekday: *
+	// Command: wget https://learnfast.xyz/send/email
 	//
     public function wod()
     {
@@ -188,31 +195,41 @@ class HomeController extends Controller
             return redirect('/');
 
         $words = null;
+		$course = null;
+		$lesson = null;
+		$quizes = null;
+		$vocabLists = null;
+		$stats['lessonDate'] = null;
+		
+		if (false && Tools::siteUses(LOG_MODEL_WORDS))
+		{
+			//
+			// user's vocab lists
+			//
+			$vocabLists = VocabList::getIndex(['owned']);
+		}
 
-		//
-		// user's vocab lists
-		//
-		$vocabLists = VocabList::getIndex(['owned']);
+		if (Tools::siteUses(LOG_MODEL_LESSONS))
+		{
+			//
+			// get user's last viewed lesson so he can resume where he left off
+			//
+			$record = Lesson::getCurrentLocation();
+			$lesson = $record['lesson'];
+			$course = isset($lesson) ? $lesson->course : null;
+			$stats['lessonDate'] = $record['date'];
 
-		//
-		// get user's last viewed lesson so he can resume where he left off
-		//
-		$record = Lesson::getCurrentLocation();
-		$lesson = $record['lesson'];
-		$course = isset($lesson) ? $lesson->course : null;
-		$stats['lessonDate'] = $record['date'];
-
+			//
+			// get quiz results
+			//
+			$quizes = Lesson::getQuizScores(5);
+		}
 		//
 		// get some user stats
 		//
 		$lastLogin = Event::getLast(LOG_TYPE_TRACKING, LOG_MODEL_USERS, LOG_ACTION_LOGIN);
 		$stats['lastLogin'] = isset($lastLogin) ? $lastLogin->created_at : Lang::get('content.none');
 		$stats['accountCreated'] = Auth::check() ? Auth::user()->created_at : Lang::get('content.none');
-
-		//
-		// get quiz results
-		//
-		$quizes = Lesson::getQuizScores(5);
 
         return view('home.index', $this->getViewData([
 			'course' => $course,
@@ -234,17 +251,7 @@ class HomeController extends Controller
 		//
 		// get Sites
 		//
-		$sites = null;
-		if (User::isSuperAdmin())
-		{
-			$sites = [
-				'English50.com',
-				'Spanish50.com',
-				'VirtualEnglish.xyz',
-				'Conversar.xyz',
-				'LearnFast.xyz',
-			];
-		}
+		$sites = Tools::getSites();
 
 		//
 		// get unapproved comments
@@ -288,12 +295,15 @@ class HomeController extends Controller
 			'courses' => $courses,
 			'ip' => $ip,
 			'new_visitor' => Visitor::isNew($ip),
+			'domain' => Tools::getDomainName(),
 		]));
     }
 
     public function search(Request $request)
     {
 		$search = null;
+		$definitions = null;
+		$entries = null;
 		$lessons = null;
 		$words = null;
 		$wordsUser = null;
@@ -318,11 +328,29 @@ class HomeController extends Controller
 						throw new \Exception("dangerous search characters");
 					}
 
-					$lessons = Lesson::search($search);
-					$count += (isset($lessons) ? count($lessons) : 0);
+					if (Tools::siteUses(LOG_MODEL_ARTICLES))
+					{
+						$entries = Entry::search($search);
+						$count += (isset($entries) ? count($entries) : 0);
+					}
 
-					$words = Word::search($search);
-					$count += (isset($words) ? count($words) : 0);
+					if (Tools::siteUses(LOG_MODEL_DEFINITIONS))
+					{
+						$definitions = Definition::searchGeneral($search);
+						$count += (isset($definitions) ? count($definitions) : 0);
+					}
+
+					if (Tools::siteUses(LOG_MODEL_LESSONS))
+					{
+						$lessons = Lesson::search($search);
+						$count += (isset($lessons) ? count($lessons) : 0);
+					}
+
+					if (Tools::siteUses(LOG_MODEL_WORDS))
+					{
+						$words = Word::search($search);
+						$count += (isset($words) ? count($words) : 0);
+					}
 				}
 				catch (\Exception $e)
 				{
@@ -339,6 +367,8 @@ class HomeController extends Controller
 		return view('home.search', $this->getViewData([
 			'lessons' => $lessons,
 			'words' => $words,
+			'definitions' => $definitions,
+			'entries' => $entries,
 			'isPost' => $isPost,
 			'count' => $count,
 			'search' => $search,

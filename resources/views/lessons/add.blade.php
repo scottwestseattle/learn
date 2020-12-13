@@ -10,6 +10,8 @@
 
 	<form method="POST" action="/{{$prefix}}/create">
 
+		@component('components.control-accent-chars-esp', ['flat' => true])@endcomponent
+
         @if ($course->isTimedSlides())
             <input type="hidden" name="parent_id" id="parent_id" value="{{$course->id}}" />
         @else
@@ -45,46 +47,52 @@
             </div>
         @endif
 
-        <!--------------------------------------------------------------------------->
-        <!-- Main Photo -->
-        <!--------------------------------------------------------------------------->
+        @if ($course->isTimedSlides())
 
-        <!-- Photo Preview -->
-        <div id="photo-div" class="form-group" style="">
-            <img id="photo" width="150" src="{{$photoPath}}/none.png" />
-            <input id="main_photo" name="main_photo" type="hidden" value="default" />
-        </div>
+			<!--------------------------------------------------------------------------->
+			<!-- Main Photo -->
+			<!--------------------------------------------------------------------------->
 
-        <div class="form-group">
-        @component('components.control-dropdown-photos', [
-            'prompt' => 'Select Exercise',
-            'empty' => 'Select Main Photo',
-            'options' => App\Tools::getPhotos($photoPath),
-            'selected_option' => null,
-            'field_name' => 'main_photo',
-            'prompt_div' => true,
-            'select_class' => 'form-control',
-            'onchange' => 'showMainPhoto',
-            'noSelection' => 'none.png',
-        ])@endcomponent
-        </div>
+			<!-- Photo Preview -->
+			<div id="photo-div" class="form-group" style="display:none;">
+				<img id="photo" width="150" src="{{$photoPath}}/none.png" />
+				<input id="main_photo" name="main_photo" type="hidden" value="default" />
+			</div>
+
+			<div class="form-group">
+			@component('components.control-dropdown-photos', [
+				'prompt' => 'Select Exercise',
+				'empty' => 'Select Main Photo',
+				'options' => App\Tools::getPhotos($photoPath),
+				'selected_option' => null,
+				'field_name' => 'main_photo',
+				'prompt_div' => true,
+				'select_class' => 'form-control',
+				'onchange' => 'showMainPhoto',
+				'noSelection' => 'none.png',
+			])@endcomponent
+			</div>
+
+		@endif
 
 		<div class="form-group">
 			<label for="title" class="control-label">@LANG('gen.Title'):</label>
-			<input type="text" name="title" id="title" class="form-control" />
+			<input type="text" name="title" id="title" class="form-control" onclick="setFocus($(this), '#accent-chars');" />
 		</div>
 
-		<div class="form-group">
-			<label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
-			<input type="number" name="seconds" class="form-control" />
-		<div>
-
-		<div class="form-group">
-			<label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
-			<input type="number" name="break_seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_SECONDS}}" />
-		<div>
-
         @if ($course->isTimedSlides())
+			<div class="form-group">
+				<label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
+				<input type="number" name="seconds" id="seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_SECONDS}}" />
+				@component('components.control-numinc', ['id' => 'seconds', 'multiple' => 5])@endcomponent			
+			<div>
+
+			<div class="form-group">
+				<label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
+				<input type="number" name="break_seconds" id="break_seconds" class="form-control" value="{{TIMED_SLIDES_DEFAULT_BREAK_SECONDS}}" />
+				@component('components.control-numinc', ['id' => 'break_seconds', 'multiple' => 5])@endcomponent
+			<div>			
+
             <div class="form-group">
                 <div class="submit-button">
                     <button type="submit" name="update" class="btn btn-primary">@LANG('ui.Add')</button>
@@ -94,31 +102,34 @@
 
 		<div class="form-group">
 			<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
-			<input type="number"  min="1" max="1000" step="1" name="lesson_number" class="form-control form-control-100" value="{{$chapter}}" />
+			<input type="number"  min="1" max="1000" step="1" name="lesson_number" id="lesson_number" class="form-control form-control-100" value="{{$chapter}}" />
+            @component('components.control-numinc', ['id' => 'lesson_number', 'multiple' => 1])@endcomponent
 		</div>
 
 		<div class="form-group">
 			<label for="section_number" class="control-label">@LANG('content.Section'):</label>
-			<input type="number"  min="0" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$section}}" />
+			<input type="number"  min="0" max="1000" step="1" name="section_number" id="section_number" class="form-control form-control-100" value="{{$section}}" />
+            @component('components.control-numinc', ['id' => 'section_number', 'multiple' => 1])@endcomponent
 		</div>
-
 
 		<div class="form-group">
 			<label for="description" class="control-label">@LANG('gen.Description'):</label>
-			<textarea name="description" class="form-control"></textarea>
+			<textarea id="description" name="description" class="form-control" onclick="setFocus($(this), '#accent-chars');"></textarea>
 		<div>
 
 
 		<div class="form-group">
 			<label for="title_chapter" class="control-label">@LANG('gen.Chapter Title'):</label>
-			<input type="text" name="title_chapter" class="form-control" />
+			<input type="text" id="title_chapter" name="title_chapter" class="form-control" onclick="setFocus($(this), '#accent-chars');" />
 		<div>
 
-		<div class="form-group">
-			<label for="reps" class="control-label">@LANG('gen.Reps'):</label>
-			<input type="number" name="reps" class="form-control" />
-		<div>
-
+        @if ($course->isTimedSlides())
+			<div class="form-group">
+				<label for="reps" class="control-label">@LANG('gen.Reps'):</label>
+				<input type="number" name="reps" class="form-control" />
+			<div>
+		@endif
+		
 		<div class="form-group">
 			<div class="submit-button">
 				<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Add')</button>

@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
-use App\User;
-use App\Event;
-use App\Lesson;
-use App\Tools;
+
 use App\Course;
+use App\Entry;
+use App\Event;
+use App\History;
+use App\Lesson;
+use App\Quiz;
+use App\Tools;
+use App\User;
 use App\VocabList;
 
 define('PREFIX', 'lessons');
@@ -24,7 +28,10 @@ class LessonController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'review', 'reviewmc', 'view', 'start', 'permalink', 'logQuiz']);
+        $this->middleware('is_admin')->except([
+			'index', 'review', 'reviewmc', 'read', 'view', 
+			'start', 'permalink', 'logQuiz', 'rss', 'rssReader'
+		]);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -256,12 +263,23 @@ class LessonController extends Controller
 		$next = Lesson::getNext($lesson);
 		$nextChapter = $lesson->getNextChapter();
 
-		// count the paragraphs as sentences
-		//preg_match_all('#<p>(.*?)</p>#is', $lesson->text, $matches, PREG_SET_ORDER);
+		// count the <p>'s as sentences
 		preg_match_all('#<p>#is', $lesson->text, $matches, PREG_SET_ORDER);
+		$sentenceCount = count($matches);
+		// if there's a table, count the rows, add it to the count
+		if (strpos($lesson->text, '<table') !== false)
+		{
+			preg_match_all('#<tr#is', $lesson->text, $matches, PREG_SET_ORDER); // a formatted table not using <p>'s
+			$sentenceCount += count($matches);
+		}
 
 		// only vocab pages may have vocab
 		$vocab = $lesson->getVocab();
+		
+		// get course time to show
+		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
+				
+		$times = Lesson::getTimes($records);		
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $lesson,
@@ -274,6 +292,7 @@ class LessonController extends Controller
 			'vocab' => $vocab['records'],
 			'hasDefinitions' => $vocab['hasDefinitions'], // if the user has already added one or more definitions
 			'photoPath' => '/img/plancha/',
+			'times' => $times,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
@@ -312,7 +331,7 @@ class LessonController extends Controller
 
 		$isDirty = false;
 		$changes = '';
-
+		
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->title_chapter = Tools::copyDirty($record->title_chapter, $request->title_chapter, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
@@ -497,6 +516,7 @@ class LessonController extends Controller
 		return redirect('/lessons/view/' . $lesson->id);
     }
 
+	// this is the original way
 	public function makeQuiz($text)
     {
 		$records = [];
@@ -509,7 +529,7 @@ class LessonController extends Controller
 		foreach($records as $record)
 		{
 		    // had to do this because html_entity_decode() wouldn't work in explode
-		    $line = mb_eregi_replace('&nbsp;', ' ', htmlentities($record[1]));
+		    $line = str_replace('&nbsp;', ' ', htmlentities($record[1]));
             $line = html_entity_decode($line); // decode it back
 
             // this doesn't work
@@ -536,7 +556,53 @@ class LessonController extends Controller
 		return $records;
 	}
 
-	public function review(Lesson $lesson, $reviewType = null)
+	//
+	// this is the new way, updated for review.js
+	//
+	public function makeQna($text)
+    {
+		$records = [];
+
+		// chop it into lines by using the <p>'s
+	    $text = str_replace(['&ndash;', '&nbsp;'], ['-', ' '], $text);
+		preg_match_all('#<p>(.*?)</p>#is', $text, $records, PREG_SET_ORDER);
+
+		$qna = [];
+		$cnt = 0;
+		$delim = (strpos($text, ' | ') !== false) ? ' | ' : ' - ';
+		foreach($records as $record)
+		{
+			$line = $record[1];
+			$line = strip_tags($line);
+
+			$parts = explode($delim, $line); // split the line into q and a, looks like: "question text - correct answer text"
+            //dd($parts);
+
+			if (count($parts) > 0)
+			{
+				$q = trim($parts[0]);
+				$qna[$cnt]['q'] = $q;
+				$qna[$cnt]['a'] = array_key_exists(1, $parts) ? trim($parts[1]) : null;
+				$qna[$cnt]['definition'] = 'false';
+				$qna[$cnt]['translation'] = '';
+				$qna[$cnt]['extra'] = '';
+				$qna[$cnt]['id'] = $cnt;
+				$qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
+				$qna[$cnt]['options'] = '';
+				
+				if (!isset($qna[$cnt]['a']))
+					throw new \Exception('parse error: ' . $q);
+			}
+
+			$cnt++;
+		}
+
+		//dd($qna);
+
+		return $qna;
+	}
+	
+	public function reviewOrig(Lesson $lesson, $reviewType = null)
     {
 		$prev = Lesson::getPrev($lesson);
 		$next = Lesson::getNext($lesson);
@@ -553,7 +619,7 @@ class LessonController extends Controller
 			'of' => 'of',
 		];
 
-		return view(PREFIX . '.review', $this->getViewData([
+		return view(PREFIX . '.review-orig', $this->getViewData([
 			'record' => $lesson,
 			'prev' => $prev,
 			'next' => $next,
@@ -605,6 +671,63 @@ class LessonController extends Controller
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
+	//
+	// this is the version updated to work with review.js
+	//
+	public function review(Lesson $lesson, $reviewType = null)
+    {
+		$reviewType = intval($reviewType);
+		$prev = Lesson::getPrev($lesson);
+		$next = Lesson::getNext($lesson);
+
+		try
+		{
+			$quiz = self::makeQna($lesson->text); // split text into questions and answers
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error parsing for review';
+			Event::logException(LOG_MODEL, LOG_ACTION_QUIZ, $msg, $lesson->id, $e->getMessage());
+			Tools::flash('danger', $msg);
+			return back();
+		}
+
+		$settings = Quiz::getSettings($reviewType);
+
+		return view($settings['view'], $this->getViewData([
+			'prev' => $prev,
+			'next' => $next,
+			'sentenceCount' => count($quiz),
+			'records' => $quiz,
+			'canEdit' => true,
+			'isMc' => true, //$lesson->isMc($reviewType),
+            'returnPath' => '/' . PREFIX . '/view/' . $lesson->id,
+			'parentTitle' => $lesson->title,
+			'settings' => $settings,
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
+    public function read(Request $request, Lesson $lesson)
+    {
+		$record = $lesson;		
+		$text = [];
+		
+		//$title = Tools::getSentences($record->title);
+		$text = str_replace("<br />", "\r\n", $record->text);
+		$text = Tools::getSentences($text);
+		//$text = array_merge($title, $text);
+		//dd($text);
+		
+		$record['lines'] = $text;
+				
+    	return view('shared.reader', $this->getViewData([
+			'record' => $record,
+			'readLocation' => null,
+			'speechLanguage' => 'es-ES',
+			'contentType' => 'Lesson',
+		]));
+    }	
+
     public function logQuiz($lessonId, $score)
     {
 		$rc = '';
@@ -644,23 +767,38 @@ class LessonController extends Controller
 	}
 
 	public function start(Lesson $lesson)
-    {
+    {		
 		Lesson::setCurrentLocation($lesson->id);
 
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
-
-		$seconds = 0;
-		$breakSeconds = 0;
-		foreach($records as $record)
+		
+		if (false) // one time fix for file namespace
 		{
-            $s = intval($record->seconds);
-            $seconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
-
-            $s = intval($record->break_seconds);
-            $breakSeconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
+			foreach($records as $record)
+			{
+				$photo = str_replace('-', '_', $record->main_photo);
+				$photo = str_replace(' ', '_', $photo);
+				
+				if ($photo != $record->main_photo)
+				{
+					//dump($photo);
+					$record->main_photo = $photo;
+					$record->save();
+				}
+			}
 		}
+		
+		$times = Lesson::getTimes($records);
 
-        $bgs = Tools::getPhotos('/img/backgrounds/');
+		// get background images by random album
+		$bgAlbums = [
+			'pnw', 'europe', 'africa', 'uk'
+		];
+		$ix = rand(1, count($bgAlbums)) - 1;
+		$album = $bgAlbums[$ix];
+        $bgs = Tools::getPhotos('/img/backgrounds/' . $album . '/');
+		//dump($album);
+		
         foreach($bgs as $key => $value)
         {
             $bgs[$key] = 0;
@@ -671,8 +809,62 @@ class LessonController extends Controller
 			'record' => $lesson,
 			'records' => $records,
 			'returnPath' => 'courses/view',
-			'displayTime' => Tools::secondsToTime($seconds + $breakSeconds),
+			'displayTime' => $times['timeTotal'],
+			'totalSeconds' => $times['seconds'],
 			'bgs' => $bgs,
+			'bgAlbum' => $album,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
+	
+    public function rssReader(Lesson $lesson)
+    {
+		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
+
+		$qna = [];
+		
+		foreach ($records as $record)
+		{
+			$lines = explode("\r\n", strip_tags(html_entity_decode($record->text)));
+			//dd($lines);
+			
+			$cnt = 0;
+			foreach($lines as $line)
+			{
+				$line = trim($line);
+				if (strlen($line) > 0)
+				{
+					$parts = explode(" - ", $line);
+
+					$qna[$cnt]['q'] = null;
+					$qna[$cnt]['a'] = null;
+
+					if (count($parts) > 0)
+						$qna[$cnt]['q'] = $parts[0];
+						
+					if (count($parts) > 1)
+						$qna[$cnt]['a'] = $parts[1];
+					
+					$cnt++;
+				}
+			}
+			
+			$record['qna'] = $qna;
+		}
+
+		return view(PREFIX . '.rss-reader', $this->getViewData([
+			'record' => $lesson,
+			'records' => $records,
+			], LOG_MODEL, LOG_PAGE_VIEW));
+	}
+	
+	public function rss(Lesson $lesson)
+    {
+		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
+
+		return view(PREFIX . '.rss', $this->getViewData([
+			'record' => $lesson,
+			'records' => $records,
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+	
 }

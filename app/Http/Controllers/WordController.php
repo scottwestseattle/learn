@@ -11,6 +11,7 @@ use App\Event;
 use App\Tools;
 use App\Word;
 use App\VocabList;
+use App\Definition;
 
 define('PREFIX', 'words');
 define('LOG_MODEL', 'words');
@@ -24,7 +25,7 @@ class WordController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser'
+        $this->middleware('is_admin')->except(['index', 'translate', 'getajax', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser'
             , 'confirmDeleteUser', 'deleteUser', 'view', 'touch']);
 
 		$this->prefix = PREFIX;
@@ -164,7 +165,10 @@ class WordController extends Controller
 
     public function add($lesson_id = null)
     {
-		$words = isset($lesson_id) ? Word::getCourseWords($lesson_id, 'lesson_number, section_number, id')->groupBy('lesson_id') : null;
+		$words = isset($lesson_id) ? Word::getCourseWords($lesson_id, 'lesson_number, section_number, id') : null;
+		if (count($words) > 0)
+			$words = $words->groupBy('lesson_id');
+		//dd($words);
 
 		return view(PREFIX . '.add', $this->getViewData([
 			'lesson_id' => $lesson_id,

@@ -11,6 +11,7 @@
 	data-lessonid="{{$record->id}}"
 	data-touchpath="{{(isset($touchPath) ? $touchPath : '')}}"
 	data-max="{{count($records)}}"
+	data-bgalbum="{{$bgAlbum}}"
 ></div>
 
 	<!-------------------------------------------------------->
@@ -48,7 +49,7 @@
 	<div style="margin-top: 5px;">
 
 		<!-------------------------------------------------------->
-		<!-- Top Return Button -->
+		<!-- Top Row Buttons -->
 		<!-------------------------------------------------------->
 		<div style="margin: 0 5px 0 0;">
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a class="" role="" href="/{{$returnPath}}/{{$record->parent_id}}"><span class="glyphicon glyphicon-button-back-to"></span></a></span>
@@ -57,15 +58,6 @@
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); skip()" href=""><span id="button-skip" class="glyphicon glyphicon-step-forward"></span></a></span>
 			<span style="font-size:1.3em; margin-right:10px;" class=""><a onclick="event.preventDefault(); mute()" href=""><span id="button-mute" class="glyphicon glyphicon-volume-up"></span></a></span>
 		</div>
-
-		<!-------------------------------------------------------->
-		<!-- Run-time Stats -->
-		<!-------------------------------------------------------->
-		@if (false)
-		<div style="font-size:.9em;" id="stats">
-			<span id="statsCount"></span>&nbsp;&nbsp;&nbsp;<span id="statsScore"></span>&nbsp;&nbsp;<span id="statsAlert"></span>
-		</div>
-		@endif
 
 	</div>
 
@@ -81,8 +73,11 @@
                 <a href="/lessons/add/{{$record->parent_id}}" class="btn btn-success btn-xs ml-1" role="button">Add</a>
                 @endif
             </p>
-            <h3 class="mt-2 mb-2">{{$records[0]->title_chapter}}</h3>
+            <h3 class="mt-2 mb-2">{{isset($records[0]->title_chapter) ? $records[0]->title_chapter : 'Day ' . $record->lesson_number}}</h3>
             <p style="font-size:13px;" class="">{{count($records)}} exercises ({{$displayTime}})</p>
+			@if (Auth::check())
+				<p style="font-size:13px;"><a href="/history/add-public/{{urlencode($record->course->title)}}/{{$record->course->id}}/{{isset($record->title_chapter) ? urlencode($record->title_chapter) : urlencode('Day ' . $record->lesson_number)}}/{{$record->id}}/{{$totalSeconds}}">Add to History</p>
+			@endif
             <a onclick="event.preventDefault(); run()"  href="" class="btn btn-primary mb-3" role="button">Start</a>
         </div>
 
@@ -202,6 +197,7 @@
 	    <div class="text-center">
             <h1>Congratulations!</h1>
             <h5 class="mb-3">{{count($records)}} Exercises completed in {{$displayTime}}</h5>
+			<h5><a href="/history/add/{{urlencode($record->course->title)}}/{{$record->course->id}}/{{isset($record->title_chapter) ? urlencode($record->title_chapter) : urlencode('Day ' . $record->lesson_number)}}/{{$record->id}}/{{$totalSeconds}}">Add to History</h5>
 	    </div>
         <div class="card-deck">
         @foreach($records as $record)

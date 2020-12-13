@@ -30,7 +30,7 @@ class Course extends Base
 
     public function lessons()
     {
-    	return $this->hasMany('App\Lesson', 'parent_id', 'id');
+    	return $this->hasMany('App\Lesson', 'parent_id', 'id')->orderBy('lesson_number');
     }
 
     public function isTimedSlides()
@@ -46,17 +46,23 @@ class Course extends Base
 		{
 			switch ($this->type_flag)
 			{
-				case 1:
+				case COURSETYPE_ENGLISH:
 					$cardClass = 'card-course-type1';
 					break;
-				case 2:
+				case COURSETYPE_SPANISH:
 					$cardClass = 'card-course-type2';
 					break;
-				case 3:
+				case COURSETYPE_TECH:
 					$cardClass = 'card-course-type3';
 					break;
 				case 4: // other
 					$cardClass = 'card-course-type4';
+					break;
+				case COURSETYPE_TIMED_SLIDES: // exercise
+					$cardClass = 'card-course-type40';
+					break;
+				case COURSETYPE_OTHER: // exercise
+					$cardClass = 'card-course-type99';
 					break;
 				default:
 					break;
@@ -88,15 +94,27 @@ class Course extends Base
 		$records = []; // make this countable so view will always work
 
 		$public = array_search('public', $parms) !== false;
-
+		$siteId = Tools::getSiteId();
+		$siteIdCondition = '=';
+		
+		$showAll = (array_search('all', $parms) !== false);
+		if ($showAll && Tools::isSuperAdmin())
+		{
+			// super admins can see all sites
+			$siteId = 0;
+			$siteIdCondition = '>=';
+		}
+			
 		if (!$public && Tools::isAdmin())
 		{
-			if (array_search('all', $parms) !== false)
+			if ($showAll)
 			{
 				$records = Course::select()
 					->where('deleted_flag', 0)
+					->where('site_id', $siteIdCondition, $siteId)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->orderBy('type_flag')
+					->orderBy('site_id')
 					->orderBy('display_order')
 					->get();
 			}
@@ -104,9 +122,11 @@ class Course extends Base
 			{
 				$records = Course::select()
 					->where('deleted_flag', 0)
+					->where('site_id', $siteIdCondition, $siteId)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->where('wip_flag', '!=', WIP_FINISHED)
 					->orderBy('type_flag')
+					->orderBy('site_id')
 					->orderBy('display_order')
 					->get();
 			}
@@ -114,9 +134,11 @@ class Course extends Base
 			{
 				$records = Course::select()
 					->where('deleted_flag', 0)
+					->where('site_id', $siteIdCondition, $siteId)
 					->where('wip_flag', '!=', WIP_INACTIVE)
-					->where('release_flag', '!=', RELEASE_PUBLISHED)
+					->where('release_flag', '!=', RELEASE_PUBLIC)
 					->orderBy('type_flag')
+					->orderBy('site_id')
 					->orderBy('display_order')
 					->get();
 			}
@@ -124,25 +146,74 @@ class Course extends Base
 			{
 				$records = Course::select()
 					->where('deleted_flag', 0)
+					->where('site_id', $siteIdCondition, $siteId)
 					->where('wip_flag', '!=', WIP_INACTIVE)
 					->orderBy('type_flag')
+					->orderBy('site_id')
 					->orderBy('display_order')
 					->get();
 			}
 		}
 		else
 		{
+			// public
 			$records = Course::select()
-//				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
-				->where('release_flag', '>=', RELEASE_PUBLISHED)
+				->where('site_id', $siteIdCondition, $siteId)
+				->where('release_flag', '>=', RELEASE_PUBLIC)
 				->orderBy('type_flag')
+				->orderBy('site_id')
 				->orderBy('display_order')
 				->get();
 		}
 
 		return $records;
 	}
+
+    static public function getRss()
+    {
+		$records = Course::select()
+			->where('deleted_flag', 0)
+			->where('release_flag', '>=', RELEASE_PUBLIC)
+			->where('type_flag', '=', COURSETYPE_TIMED_SLIDES)
+			->orderBy('display_order')
+			->get();
+		
+		return $records;
+	}
+
+    static public function getRssReader()
+    {
+		$records = Course::select()
+			->where('deleted_flag', 0)
+			->where('release_flag', '>=', RELEASE_PUBLIC)
+			->where('type_flag', '=', COURSETYPE_SPANISH)
+			->orderBy('display_order')
+			->get();
+			
+		return $records;
+	}
+	
+    static public function getRssFlat()
+    {
+		$records = Course::select(
+				'courses.id as courseId', 'courses.title as courseName', 'courses.description as courseDescription',
+				'lessons.id as lessonId', 'lessons.title_chapter as lessonName'
+				)
+			->join('lessons', 'courses.id', '=', 'lessons.parent_id')
+			->where('courses.type_flag', '=', COURSETYPE_TIMED_SLIDES)
+			->where('courses.deleted_flag', 0)
+			->where('lessons.deleted_flag', 0)
+			->where('lessons.section_number', 1)
+			->where('courses.release_flag', '>=', RELEASE_PUBLIC)
+			->orderBy('courses.id')
+			->orderBy('lessons.section_number')
+			->get();
+
+		//dd($records);
+		
+		return $records;
+	}	
 
     public function getStatus()
     {

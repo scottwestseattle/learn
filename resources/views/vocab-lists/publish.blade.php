@@ -13,6 +13,14 @@
 		<h3 name="title" class="">{{$record->title }}</h3>
 
 		<div class="form-group">
+			@component('components.control-dropdown-menu', ['record' => $record, 'prompt' => 'Work Status:', 'field_name' => 'wip_flag', 'options' => $wip_flags, 'selected_option' => $record->wip_flag, 'select_class' => 'form-control'])@endcomponent
+		</div>
+		<div class="form-group">
+			@component('components.control-dropdown-menu', ['record' => $record, 'prompt' => 'Release Status:', 'field_name' => 'release_flag', 'options' => $release_flags, 'selected_option' => $record->release_flag, 'select_class' => 'form-control'])@endcomponent
+		</div>
+		
+		@if (false)
+		<div class="form-group">
 			<label for="wip_flag" class="control-label">@LANG('content.Work Status'):</label>
 			<select name="wip_flag" class="form-control">
 				@foreach ($wip_flags as $key => $value)
@@ -29,6 +37,7 @@
 				@endforeach
 			</select>
 		</div>
+		@endif
 
 		<div class="submit-button">
 			<button type="submit" class="btn btn-primary">Update</button>

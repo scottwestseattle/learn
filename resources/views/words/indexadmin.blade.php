@@ -4,7 +4,7 @@
 
 <div class="container page-normal">
 
-	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'parent_id' => $parent_id, 'isAdmin' => $isAdmin])@endcomponent
+	@component($prefix . '.menu-submenu', ['prefix' => $prefix, 'parent_id' => isset($parent_id) ? $parent_id : null, 'isAdmin' => $isAdmin])@endcomponent
 	
 	<h1>@LANG('content.Vocabulary') ({{count($records)}})</h1>
 	
@@ -22,7 +22,7 @@
 								<a href="/words/view/{{$word->id}}">
 									{{$word->title}}
 									@if ($word->view_count > 0)
-										<span class="badge" style="vertical-align: middle; background-color: LightGray; color: gray; margin: 0 0 0 3px; font-size:12px; padding:3px 3px; font-weight:bold;">{{$word->view_count}}</span>
+										@component('components.badge', ['text' => $word->view_count])@endcomponent
 									@endif
 								</a>
 							</td>

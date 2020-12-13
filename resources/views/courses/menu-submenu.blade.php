@@ -13,6 +13,7 @@
 			@else
 				<td><a href='/{{$prefix}}/undelete/'><span class="glyphCustom glyphicon glyphicon-undelete"></span></a></td>			
 			@endif
+			<td><a href='/history/'><span class="glyphCustom glyphicon glyphicon-calendar"></span></a></td>
 	</tr></table>
 </div>
 @endif

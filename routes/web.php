@@ -31,6 +31,11 @@ Route::get('/eunoticeaccept/', 'FrontPageController@eunoticeaccept');
 Route::get('/eunoticereset/', 'FrontPageController@eunoticereset');
 Route::get('/sample/', 'FrontPageController@sample');
 Route::get('/authenticated', 'HomeController@authenticated');
+Route::get('/articles', 'EntryController@articles');
+Route::get('/books', 'EntryController@books');
+Route::get('/vocabulary', 'VocabListController@index');
+Route::get('/404/{model}/{view}/{parameters}', 'Controller@pageNotFound404');
+Route::get('/start', 'FrontPageController@start');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
@@ -48,13 +53,153 @@ Route::post('/hasher', 'HomeController@hasher');
 Route::get('/send/email', 'HomeController@wod');
 Route::get('/send/wod', 'HomeController@wod');
 
+// Reader RSS
+Route::get('/lessons/rss-reader/{lesson}/', 'LessonController@rssReader');
+Route::get('/courses/rss-reader', 'CourseController@rssReader');
+
+// Tags
+Route::group(['prefix' => 'tags'], function () {
+	
+	// index
+	Route::get('/', 'TagController@index');
+	Route::get('/view/{tag}', 'TagController@view');
+
+	// add/create
+	Route::get('/add','TagController@add');
+	Route::post('/create','TagController@create');
+	Route::get('/add-user-favorite-list','TagController@addUserFavoriteList');
+	Route::post('/create-user-favorite-list','TagController@createUserFavoriteList');
+
+	// edit/update
+	Route::get('/edit/{tag}','TagController@edit');
+	Route::post('/update/{tag}','TagController@update');
+	Route::get('/edit-user-favorite-list/{tag}','TagController@editUserFavoriteList');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{tag}','TagController@confirmdelete');
+	Route::get('/confirm-user-favorite-list-delete/{tag}','TagController@confirmUserFavoriteListDelete');
+	Route::post('/delete/{tag}','TagController@delete');
+	
+});
+
+// Definitions
+Route::group(['prefix' => 'definitions'], function () {
+	
+	Route::get('/', 'DefinitionController@index');
+	Route::get('/admin', 'DefinitionController@admin');
+	Route::get('/view/{definition}', 'DefinitionController@view');
+	Route::get('/list/{tag}', 'DefinitionController@list');
+	Route::get('/set-favorite-list/{definition}/{tagFromId}/{tagToId}','DefinitionController@setFavoriteList');
+	Route::get('/review/{tag}/{reviewType?}', 'DefinitionController@review');
+	Route::get('/review-newest/{reviewType?}', 'DefinitionController@reviewNewest');
+	Route::get('/review-newest-verbs/{reviewType?}', 'DefinitionController@reviewNewestVerbs');
+	Route::get('/review-random-words/{reviewType?}', 'DefinitionController@reviewRandomWords');
+	Route::get('/review-random-verbs/{reviewType?}', 'DefinitionController@reviewRandomVerbs');
+
+	// ajax calls
+	Route::get('/find/{text}', 'DefinitionController@find');
+	Route::get('/wordexists/{text}', 'DefinitionController@wordExistsAjax');
+	Route::get('/get/{text}/{entryId}','DefinitionController@getAjax');
+	Route::get('/translate/{text}/{entryId?}','DefinitionController@translateAjax');
+	Route::get('/heart/{definition}','DefinitionController@heartAjax');
+	Route::get('/unheart/{definition}','DefinitionController@unheartAjax');
+	Route::get('/toggle-wip/{definition}','DefinitionController@toggleWipAjax');
+	Route::get('/get-random-word/','DefinitionController@getRandomWordAjax');
+	Route::get('/scrape-definition/{word}','DefinitionController@scrapeDefinitionAjax');
+	
+	// search
+	Route::get('/search/{sort?}', 'DefinitionController@search');
+	Route::post('/search/{sort?}', 'DefinitionController@search');
+	Route::get('/search-ajax/{text?}', 'DefinitionController@searchAjax');
+		
+	// conjugations
+	Route::get('/conjugationsgen/{definition}', 'DefinitionController@conjugationsGen');
+	Route::get('/conjugationsgenajax/{text}', 'DefinitionController@conjugationsGenAjax');
+	Route::get('/conjugationscomponent/{definition}','DefinitionController@conjugationsComponentAjax');
+
+	// add/create
+	Route::get('/add/{word?}','DefinitionController@add')->middleware('auth');
+	Route::post('/create','DefinitionController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{definition}','DefinitionController@edit')->middleware('auth');
+	Route::post('/update/{definition}','DefinitionController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{definition}','DefinitionController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{definition}','DefinitionController@delete')->middleware('auth');	
+	
+});
+
+// Entries
+Route::group(['prefix' => 'entries'], function () {
+	
+	// misc
+//old	Route::get('/', 'EntryController@index');
+//old	Route::get('/index/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
+//old	Route::get('/show/{id}', 'EntryController@show');
+	Route::get('/read/{entry}', 'EntryController@read');
+	Route::get('/stats/{entry}', 'EntryController@stats');
+	Route::get('/superstats', 'EntryController@superstats');
+	Route::get('/get-definitions-user/{entry}', 'EntryController@getDefinitionsUserAjax');
+	Route::get('/remove-definition-user-ajax/{entry}/{defId}', 'EntryController@removeDefinitionUserAjax');
+	Route::get('/remove-definition-user/{entry}/{defId}', 'EntryController@removeDefinitionUser');
+	Route::get('/set-read-location/{entry}/{location}', 'EntryController@setReadLocationAjax');
+	Route::get('/vocabulary/{entry}', 'EntryController@vocabulary');
+	Route::get('/review-vocabulary/{entry}/{reviewType?}', 'EntryController@vocabularyReview');
+	Route::get('/remove-vocabulary-list/{entry}', 'EntryController@removeVocabularyList');
+
+	// publish
+	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
+	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
+		
+	// add/create
+	Route::get('/add','EntryController@add')->middleware('auth');
+	Route::post('/create','EntryController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{entry}','EntryController@edit')->middleware('auth');
+	Route::post('/update/{entry}','EntryController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{entry}','EntryController@delete')->middleware('is_owner');	
+	Route::get('/delete/{entry}','EntryController@delete')->middleware('is_owner');	
+	
+	// permalink catch alls
+//old	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);
+	Route::get('/{permalink}', ['as' => 'entry.permalink', 'uses' => 'EntryController@permalink']);
+	Route::resource('entry', 'EntryController');		
+});
+
+
+// History
+Route::group(['prefix' => 'history'], function () {
+	Route::get('/', 'HistoryController@index');
+	Route::get('/rss', 'HistoryController@rss');
+
+	// add/create
+	Route::get('/add/{programName}/{programId}/{sessionName}/{sessionId}/{seconds}','HistoryController@add');
+	Route::get('/add-public/{programName}/{programId}/{sessionName}/{sessionId}/{seconds}','HistoryController@addPublic');
+	Route::post('/create','HistoryController@create');
+
+	// edit/update
+	Route::get('/edit/{history}','HistoryController@edit');
+	Route::post('/update/{history}','HistoryController@update');
+	
+	// delete
+	Route::get('/confirmdelete/{history}','HistoryController@confirmdelete');
+	Route::post('/delete/{history}','HistoryController@delete');
+	Route::get('/delete/{history}','HistoryController@delete');	
+});
+
 // Vocabulary Lists
 Route::group(['prefix' => 'vocab-lists'], function () {
 
 	Route::get('/', 'VocabListController@index');
 	Route::get('/index', 'VocabListController@index');
 	Route::get('/view/{vocabList}','VocabListController@view');
-	Route::get('/review/{vocabList}', 'VocabListController@review');
+	Route::get('/review/{vocabList}/{reviewType?}', 'VocabListController@review');
 
 	// add/create
 	Route::get('/add','VocabListController@add');
@@ -119,6 +264,8 @@ Route::group(['prefix' => 'courses'], function () {
 	Route::get('/', 'CourseController@index');
 	Route::get('/admin', 'CourseController@admin');
 	Route::get('/view/{course}','CourseController@view');
+	Route::get('/rss', 'CourseController@rss');
+	Route::get('/start', 'CourseController@start');
 
 	// add/create
 	Route::get('/add','CourseController@add');
@@ -143,10 +290,13 @@ Route::group(['prefix' => 'lessons'], function () {
 	Route::get('/admin/{course_id?}', 'LessonController@admin');
 	Route::get('/view/{lesson}','LessonController@view');
 	Route::post('/view/{lesson}','LessonController@view'); // just in case they hit enter on the ajax form
-	Route::get('/review/{lesson}/{reviewType?}','LessonController@review');
+	Route::get('/review-orig/{lesson}/{reviewType?}','LessonController@reviewOrig');
 	Route::get('/reviewmc/{lesson}/{reviewType?}','LessonController@reviewmc');
+	Route::get('/review/{lesson}/{reviewType?}','LessonController@review');
+	Route::get('/read/{lesson}','LessonController@read');
 	Route::get('/log-quiz/{lessonId}/{score}', 'LessonController@logQuiz');
 	Route::get('/start/{lesson}/', 'LessonController@start');
+	Route::get('/rss/{lesson}/', 'LessonController@rss');
 
 	// add/create
 	Route::get('/add','LessonController@add');

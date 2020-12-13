@@ -10,7 +10,9 @@
 	
 	<h1>@LANG('ui.About')</h1>
 		
+	@if (false)
 	<span style="font-size:1.5em;">@LANG('fp.about-p1')&nbsp;<a href="/contact">@LANG('ui.by clicking here')</a>.</span>
+	@endif
 	
 	<p style="margin-top: 20px;">{{$domainName}} {{$version}}<p>
 	

@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use DateTime;
+use DateInterval;
 use DB;
 use App;
 use Auth;
@@ -17,6 +19,8 @@ use App\Event;
 use App\Tools;
 
 define('SITE_ID', intval(env('SITE_ID')));
+
+define('MAX_DB_TEXT_COLUMN_LENGTH', 65535 - 2); // 2 byetes for db overhead
 
 define('SHOW_NON_XS', 'd-none d-sm-block-tablecell');
 define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
@@ -31,40 +35,43 @@ define('LOG_TYPE_TRACKING', 5);
 define('LOG_TYPE_OTHER', 99);
 
 define('LOG_MODEL_ARTICLES', 'articles');
-define('LOG_MODEL_BLOGS', 'blogs');
-define('LOG_MODEL_BLOG_ENTRIES', 'blog entries');
+define('LOG_MODEL_BOOKS', 'books');
 define('LOG_MODEL_COURSES', 'courses');
+define('LOG_MODEL_DEFINITIONS', 'definitions');
+define('LOG_MODEL_ENTRIES', 'entries');
 define('LOG_MODEL_EVENTS', 'events');
 define('LOG_MODEL_HOME', 'home');
 define('LOG_MODEL_LESSONS', 'lessons');
 define('LOG_MODEL_SITES', 'sites');
-define('LOG_MODEL_USERS', 'users');
+define('LOG_MODEL_TAGS', 'tags');
 define('LOG_MODEL_TRANSLATIONS', 'translations');
+define('LOG_MODEL_USERS', 'users');
 define('LOG_MODEL_VISITORS', 'visitors');
 define('LOG_MODEL_WORDS', 'words');
 
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');
-define('LOG_ACTION_EDIT', 'edit');
 define('LOG_ACTION_DELETE', 'delete');
-define('LOG_ACTION_VIEW', 'view');
-define('LOG_ACTION_SELECT', 'select');
-define('LOG_ACTION_MOVE', 'move');
-define('LOG_ACTION_UPLOAD', 'upload');
-define('LOG_ACTION_MKDIR', 'mkdir');
-define('LOG_ACTION_SCANDIR', 'scandir');
-define('LOG_ACTION_INDEX', 'index');
-define('LOG_ACTION_PERMALINK', 'permalink');
-define('LOG_ACTION_UNDELETE', 'undelete');
-define('LOG_ACTION_PUBLISH', 'publish');
-define('LOG_ACTION_LOGIN', 'login');
-define('LOG_ACTION_LOGOUT', 'logout');
-define('LOG_ACTION_QUIZ', 'quiz');
-define('LOG_ACTION_SEARCH', 'search');
+define('LOG_ACTION_EDIT', 'edit');
 define('LOG_ACTION_EMAIL', 'email');
 define('LOG_ACTION_IMPORT', 'import');
-define('LOG_ACTION_TOUCH', 'touch');
+define('LOG_ACTION_INDEX', 'index');
+define('LOG_ACTION_LOGIN', 'login');
+define('LOG_ACTION_LOGOUT', 'logout');
+define('LOG_ACTION_MOVE', 'move');
+define('LOG_ACTION_MKDIR', 'mkdir');
 define('LOG_ACTION_OTHER', 'other');
+define('LOG_ACTION_PERMALINK', 'permalink');
+define('LOG_ACTION_PUBLISH', 'publish');
+define('LOG_ACTION_QUIZ', 'quiz');
+define('LOG_ACTION_SCANDIR', 'scandir');
+define('LOG_ACTION_SEARCH', 'search');
+define('LOG_ACTION_SELECT', 'select');
+define('LOG_ACTION_TOUCH', 'touch');
+define('LOG_ACTION_TRANSLATE', 'translate');
+define('LOG_ACTION_UNDELETE', 'undelete');
+define('LOG_ACTION_UPLOAD', 'upload');
+define('LOG_ACTION_VIEW', 'view');
 
 define('LOG_PAGE_INDEX', 'index');
 define('LOG_PAGE_VIEW', 'view');
@@ -73,19 +80,16 @@ define('LOG_PAGE_PERMALINK', 'permalink');
 // translations
 define('TRANSLATIONS_FOLDER', '../resources/lang/');
 
-// word types
-define('WORDTYPE_LESSONLIST', 1);
-define('WORDTYPE_LESSONLIST_USERCOPY', 2);
-define('WORDTYPE_USERLIST', 3);
-define('WORDTYPE_VOCABLIST', 4);
-define('WORDTYPE_USERLIST_LIMIT', 20);
-
+// Release Status
 define('RELEASE_NOTSET', 0);
-define('RELEASE_PRIVATE', 10);
-define('RELEASE_APPROVED', 90);
-define('RELEASE_PUBLISHED', 100);
+define('RELEASE_PRIVATE', 10);	// visible for owner only and can't be promoted until approved
+define('RELEASE_APPROVED', 20);	// visible for owner only and can be promoted
+define('RELEASE_PAID', 50); 	// visible for logged-in paid members
+define('RELEASE_MEMBER', 80); // visible for logged-in members
+define('RELEASE_PUBLIC', 100);	// visible for all
 define('RELEASE_DEFAULT', RELEASE_PRIVATE);
 
+// Work in progress
 define('WIP_NOTSET', 0);
 define('WIP_INACTIVE', 10);
 define('WIP_DEV', 20);
@@ -93,7 +97,77 @@ define('WIP_TEST', 30);
 define('WIP_FINISHED', 100);
 define('WIP_DEFAULT', WIP_DEV);
 
-define('TIMED_SLIDES_DEFAULT_SECONDS', 20);
+// Part of Speech flag
+define('POS_NOTSET', 0);
+define('POS_VERB', 1);
+define('POS_NOUN', 2);
+define('POS_ADJECTIVE', 3);
+define('POS_ADVERB', 4);
+define('POS_OTHER', 20);
+
+// word types
+define('WORDTYPE_LESSONLIST', 1);
+define('WORDTYPE_LESSONLIST_USERCOPY', 2);
+define('WORDTYPE_USERLIST', 3);
+define('WORDTYPE_VOCABLIST', 4);
+define('WORDTYPE_USERLIST_LIMIT', 20);
+
+define('TIMED_SLIDES_DEFAULT_BREAK_SECONDS', 20);
+define('TIMED_SLIDES_DEFAULT_SECONDS', 50);
+
+// entries
+define('ENTRY_TYPE_NOTSET', 	-1);
+define('ENTRY_TYPE_ENTRY', 		1);
+define('ENTRY_TYPE_ARTICLE', 	2);
+define('ENTRY_TYPE_BOOK',	 	3);
+define('ENTRY_TYPE_OTHER',		99);
+
+// query sorting
+define('ORDERBY_APPROVED', 0);
+define('ORDERBY_TITLE', 1);
+define('ORDERBY_DATE', 2);
+define('ORDERBY_VIEWS', 3);
+
+// Languages
+define('LANGUAGE_ENGLISH', 0);
+define('LANGUAGE_SPANISH', 1);
+
+// Tags
+define('TAG_RECENT', 'recent');
+define('TAG_BOOK', 'book');
+
+// Tag types
+define('TAG_TYPE_NOTSET',			   	0);
+define('TAG_TYPE_SYSTEM',				1); // one for everybody, ex: recent article
+//define('TAG_TYPE_RECENT_ARTICLE',	   	1); // old way
+define('TAG_TYPE_BOOK',				   	2); //not implented yet: need one per book
+define('TAG_TYPE_DEFINITION_FAVORITE', 	3); // one per user so we have empty favorites list
+define('TAG_TYPE_OTHER',			   	99);
+//define('TAG_TYPE_DEFAULT', TAG_TYPE_SYSTEM); // need this?
+
+// Review type
+define('REVIEWTYPE_NOTSET', 0);
+define('REVIEWTYPE_FLASHCARDS', 1);
+define('REVIEWTYPE_FIB', 2);
+define('REVIEWTYPE_MC_RANDOM', 3);
+define('REVIEWTYPE_MC_FIXED', 4);
+define('REVIEWTYPE_MC_MIXED', 5);
+define('REVIEWTYPE_DEFAULT', REVIEWTYPE_MC_RANDOM);
+
+define('DEFINITIONS_SEARCH_NOTSET', 0);
+define('DEFINITIONS_SEARCH_ALPHA', 1);
+define('DEFINITIONS_SEARCH_REVERSE', 2);
+define('DEFINITIONS_SEARCH_NEWEST', 3);
+define('DEFINITIONS_SEARCH_RECENT', 4);
+define('DEFINITIONS_SEARCH_MISSING_TRANSLATION', 5);
+define('DEFINITIONS_SEARCH_MISSING_DEFINITION', 6);
+define('DEFINITIONS_SEARCH_MISSING_CONJUGATION', 7);
+define('DEFINITIONS_SEARCH_WIP_NOTFINISHED', 8);
+define('DEFINITIONS_SEARCH_VERBS', 9);
+define('DEFINITIONS_SEARCH_ALL', 10);
+define('DEFINITIONS_SEARCH_NEWEST_VERBS', 11);
+define('DEFINITIONS_SEARCH_RANDOM_VERBS', 12);
+define('DEFINITIONS_SEARCH_RANDOM_WORDS', 13);
 
 class Controller extends BaseController
 {
@@ -127,6 +201,7 @@ class Controller extends BaseController
 			return $next($request);
 		});
 
+		$id = Tools::getSiteId();
 	}
 
 	static private function showPrivacyNotice()
@@ -155,7 +230,11 @@ class Controller extends BaseController
 		$this->viewData['titlePlural'] = $this->titlePlural;
 		$this->viewData['isAdmin'] = Tools::isAdmin();
 		$this->viewData['isSuperAdmin'] = Tools::isSuperAdmin();
-
+		
+		$referrer = Tools::getReferrer();
+		$this->viewData['referrer'] = $referrer['input'];
+		$this->viewData['referrerUrl'] = $referrer['url'];
+		
 		if ($this->getDomainName() == 'localhost')
 			$this->viewData['localhost'] = true;
 
@@ -263,7 +342,7 @@ class Controller extends BaseController
     {
 		$filter = Controller::getFilter($request);
 
-		$date = Controller::trimNullStatic($filter['from_date']);
+		$date = Tools::trimNull($filter['from_date']);
 
 		return $date;
 	}
@@ -445,4 +524,28 @@ class Controller extends BaseController
 		return $parts;
 	}
 
+    public function pageNotFound404($model, $view = null, $parameters = null)
+    {
+		$title = 'Page Not Found (404)';
+		$description = $model . '/' . $view . '/' . $parameters;			
+		//$geo = new Geo;
+		//$desc = $geo->visitorInfoDebug();
+		Event::logError('controller', LOG_ACTION_VIEW, $title, $description);			
+		$data['title'] = '404';
+		$data['name'] = 'Page not found';
+		
+		return response()->view('errors.404', $data, 404);		
+	}
+
+	// can't use 'Request $request' because multiple Request classes are used
+    protected function getReferrer($request, $default)
+    {
+		$rc = $default;
+		if (isset($request) && isset($request->referrer))
+		{
+			$rc = $request->referrer;
+		}
+		
+		return $rc;
+	}
 }

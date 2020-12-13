@@ -28,8 +28,12 @@
 	</div>
 
     <div style="font-size:.8em;">
-		{{$courseTitle}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
-
+		@if ($record->isTimedSlides())
+			{{$courseTitle}}&nbsp;Slide&nbsp;{{$record->section_number}}, Course Time: {{$times['timeTotal']}}
+		@else
+			{{$courseTitle}},&nbsp;@LANG('content.Chapter')&nbsp;{{$record->lesson_number}}.{{$record->section_number}}&nbsp;({{$sentenceCount}})
+		@endif
+		
 		@if ($isAdmin)
 			@if ($record->isVocab())
 				&nbsp;<a href="/words/add/{{$record->id}}"><span class="glyphCustom-sm glyphicon glyphicon-pencil"></span></a>
@@ -45,14 +49,17 @@
 		@endif
 	</div>
 
-	@if ($isAdmin)
 	<h3 name="title" class="mb-2">
+	
+		@if ($record->isReading())
+			@component('components.icon-read', ['href' => "/lessons/read/$record->id"])@endcomponent						
+		@endif
+	
 	    {{$record->title }}
-	    @if ($record->isText())
+	    @if (false && $record->isText())
             <div><a href="/lessons/convert-to-list/{{$record->id}}"><button class="btn btn-info btn-xs">Convert</button></a></div>
         @endif
     </h3>
-    @endif
 
     @if ($record->isTimedSlides() && isset($record->main_photo))
         <div>
@@ -88,30 +95,35 @@
 			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 				<div style="min-height:300px;">
 
-					@if ($isAdmin)
 					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Start Review</button></a>
+						<a href="/lessons/review/{{$record->id}}"><button class="btn btn-success">Review</button></a>
 					</div>
-					@endif
+					<div style="margin: 20px 0;">
+						<a href="/lessons/review/{{$record->id}}/1"><button class="btn btn-success">Flashcards</button></a>
+					</div>
 
-					@if ($record->getLessonType() == LESSONTYPE_QUIZ_MC1)
-					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Start Quiz</button></a>
-					</div>
-					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC2)
-					<div style="margin: 20px 0;">
-						<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Start Quiz</button></a>
-					</div>
-					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC3)
-					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC3}}"><button class="btn btn-info">Start Quiz</button></a>
-					</div>
-					@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC4)
-					<div style="margin: 20px 0;">
-						<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC4}}"><button class="btn btn-info">Start Quiz</button></a>
-					</div>
-					@else
-						<!-- FIB ONLY -->
+					@if (false)
+						@if ($record->getLessonType() == LESSONTYPE_QUIZ_MC1)
+						<div style="margin: 20px 0;">
+							<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC1}}"><button class="btn btn-primary">Start Quiz</button></a>
+						</div>
+						@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC2)
+						<div style="margin: 20px 0;">
+							<a href="/lessons/review/{{$record->id}}/{{LESSONTYPE_QUIZ_MC2}}"><button class="btn btn-info">Start Quiz</button></a>
+						</div>
+						@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC3)
+						<div style="margin: 20px 0;">
+							<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC3}}"><button class="btn btn-info">Start Quiz</button></a>
+						</div>
+						@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC4)
+						<div style="margin: 20px 0;">
+							<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_MC4}}"><button class="btn btn-info">Start Quiz</button></a>
+						</div>
+						@elseif ($record->getLessonType() == LESSONTYPE_QUIZ_MC4)
+						<div style="margin: 20px 0;">
+							<a href="/lessons/reviewmc/{{$record->id}}/{{LESSONTYPE_QUIZ_FIB}}"><button class="btn btn-success">Start Review</button></a>
+						</div>
+						@endif
 					@endif
 				</div>
 			</div>
@@ -225,7 +237,7 @@
 		<!------------------------------------------------------------------------------->
 		<p>{!! $record->text !!}</p>
 
-        @if ($record->isText())
+        @if (false && $record->isText())
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <div class="input-group-text">

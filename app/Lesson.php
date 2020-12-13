@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
 use App\Course;
-use App\Word;
-use App\User;
 use App\Event;
+use App\Quiz;
+use App\User;
+use App\Word;
 
 define('LESSON_FORMAT_DEFAULT', 0);
 define('LESSON_FORMAT_AUTO', 1);
@@ -22,6 +23,7 @@ define('LESSONTYPE_QUIZ_MC2', 41);
 define('LESSONTYPE_QUIZ_MC3', 42);
 define('LESSONTYPE_QUIZ_MC4', 43);
 define('LESSONTYPE_TIMED_SLIDES', 50);
+define('LESSONTYPE_READING', 60);
 define('LESSONTYPE_OTHER', 99);
 define('LESSONTYPE_DEFAULT', LESSONTYPE_TEXT);
 
@@ -37,6 +39,7 @@ class Lesson extends Base
 		LESSONTYPE_QUIZ_MC3 => 'Multiple Choice - New Layout (MC3)',
 //todo: not used yet		LESSONTYPE_QUIZ_MC4 => 'Multiple Choice - Random Options New Layout (MC4)',
 		LESSONTYPE_TIMED_SLIDES => 'Timed Slides',
+		LESSONTYPE_READING => 'Reading',
 		LESSONTYPE_OTHER => 'Other',
     ];
 
@@ -80,7 +83,7 @@ class Lesson extends Base
 					->leftJoin('words', 'lessons.id', '=', 'words.lesson_id')
 					->select('lessons.id', 'lessons.lesson_number', 'lessons.section_number', 'lessons.title', 'courses.title as courseTitle')
 					->where('lessons.deleted_flag', 0)
-					->where('courses.release_flag', RELEASE_PUBLISHED)
+					->where('courses.release_flag', RELEASE_PUBLIC)
 					->where(function ($query) use ($search){$query
 						->where('lessons.title', 'LIKE', $search)
 						->orWhere('lessons.text', 'LIKE', $search)
@@ -318,49 +321,6 @@ class Lesson extends Base
 		return self::formatMc1($quizNew, $reviewType);
 	}
 
-	static private function getCommaSeparatedWords($text)
-    {
-		$words = '';
-		$array = [];
-
-		// pattern looks like: "The words [am, is, are] in the sentence."
-		preg_match_all('#\[(.*)\]#is', $text, $words, PREG_SET_ORDER);
-
-		// if answers not found, set it to ''
-		$words = (count($words) > 0 && count($words[0]) > 1) ? $words[0][1] : '';
-
-		if (strlen($words) > 0)
-		{
-			$raw = explode(',', $words); // extract the comma-separated words
-
-			if (is_array($raw) && count($raw) > 0)
-			{
-				foreach($raw as $word)
-				{
-					$array[] = trim($word);
-				}
-			}
-		}
-
-		return $array;
-	}
-
-	static private function formatButton($text, $id, $class)
-    {
-		$button = '<div><button id="'
-            . $id
-            . '" onclick="checkAnswerMc1('
-            . $id . ', \''
-		    . $text . '\')" class="btn btn-primary btn-quiz-mc3 '
-		    . $class . '">'
-		    . $text
-		    . '</button></div>';
-
-		//dump($button);
-
-		return $button;
-	}
-
 	// creates buttons for each answer option
 	// and puts them into the question
 	static private function formatMc1($quiz, $reviewType)
@@ -413,7 +373,7 @@ class Lesson extends Base
 				else
 				{
 					// get the answer options from the question text
-					$answers = self::getCommaSeparatedWords($q);
+					$answers = Quiz::getCommaSeparatedAnswers($q);
 
 					if (count($answers) > 0)
 					{
@@ -428,7 +388,7 @@ class Lesson extends Base
 							// mark the correct button so it can be styled during the quiz
 							$buttonClass = ($m == $a) ? 'btn-right' : 'btn-wrong';
 
-							$buttons .= self::formatButton($m, $buttonId++, $buttonClass);
+							$buttons .= Quiz::formatButton($m, $buttonId++, $buttonClass);
 
 						}
 						//dd($buttons);
@@ -476,7 +436,7 @@ class Lesson extends Base
 			$id = $record['id'];
 
 			// get the answer options from the question text, like: Algeria [Rabat, Jerusalem, Algiers]
-			$answers = self::getCommaSeparatedWords($q);
+			$answers = Quiz::getCommaSeparatedAnswers($q);
 
 			if (count($answers) > 0) // if there are embedded answers
 			{
@@ -662,6 +622,11 @@ class Lesson extends Base
 		}
 
 		return $v;
+	}
+
+    public function isReading()
+	{
+		return ($this->type_flag == LESSONTYPE_READING);
 	}
 
     public function getLessonType()
@@ -1085,16 +1050,53 @@ class Lesson extends Base
 	}
 
 	public function getTime()
-	{
-        $s = isset($this->seconds) ? $this->seconds : TIMED_SLIDES_DEFAULT_SECONDS;
-        $b = isset($this->break_seconds) ? $this->break_seconds : TIMED_SLIDES_DEFAULT_SECONDS;
+	{		
+		$seconds = isset($this->seconds) ? intval($this->seconds) : TIMED_SLIDES_DEFAULT_SECONDS;
+		$breakSeconds = isset($this->break_seconds) ? intval($this->break_seconds) : TIMED_SLIDES_DEFAULT_BREAK_SECONDS;
 
-        $rc['runSeconds'] = $s;
-        $rc['runTime'] = Tools::secondsToTime($s);
+        $rc['runSeconds'] = $seconds;
+        $rc['runTime'] = Tools::secondsToTime($seconds);
 
-        $rc['breakSeconds'] = $b;
-        $rc['breakTime'] = Tools::secondsToTime($b);
+        $rc['breakSeconds'] = $breakSeconds;
+        $rc['breakTime'] = Tools::secondsToTime($breakSeconds);
 
 		return $rc;
 	}
+	
+	static public function getTimes($records)
+	{
+		$seconds = 0;
+		$breakSeconds = 0;
+		
+		foreach($records as $record)
+		{
+			$seconds += isset($record->seconds) ? intval($record->seconds) : TIMED_SLIDES_DEFAULT_SECONDS;
+			$breakSeconds += isset($record->break_seconds) ? intval($record->break_seconds) : TIMED_SLIDES_DEFAULT_BREAK_SECONDS;
+		}
+		
+		$rc['seconds'] = $seconds;
+		$rc['breakSeconds'] = $breakSeconds;
+		
+		$rc['timeSeconds'] = Tools::secondsToTime($seconds);
+		$rc['timeTotal'] = Tools::secondsToTime($seconds + $breakSeconds);
+		
+		return $rc;
+	}
+	
+	// the new version was moved to Quiz but isn't being used
+	static private function formatButton($text, $id, $class)
+    {
+		$button = '<div><button id="'
+            . $id
+            . '" onclick="checkAnswerMc1('
+            . $id . ', \''
+		    . $text . '\')" class="btn btn-primary btn-quiz-mc3 '
+		    . $class . '">'
+		    . $text
+		    . '</button></div>';
+
+		//dump($button);
+
+		return $button;
+	}	
 }

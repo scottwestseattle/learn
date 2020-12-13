@@ -113,4 +113,13 @@ return [
 'Quit' => 'Quit',
 'by clicking here' => 'by clicking here',
 'Search' => 'Search',
+'views' => 'views',
+'Books' => 'Books',
+'Review' => 'Review',
+'Tag' => 'Tag',
+'Tags' => 'Tags',
+'User' => 'User',
+'List' => 'List',
+'Restart' => 'Restart',
+'Translation' => 'Translation',
 ];

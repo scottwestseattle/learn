@@ -25,7 +25,7 @@ class CourseController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'view', 'permalink']);
+        $this->middleware('is_admin')->except(['index', 'view', 'permalink', 'rss', 'rssReader', 'start']);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -34,8 +34,34 @@ class CourseController extends Controller
 		parent::__construct();
 	}
 
+    public function start(Request $request)
+    {
+		try
+		{
+			$record = Course::select()
+				->where('deleted_flag', 0)
+				->where('site_id', Tools::getSiteId())
+				->where('type_flag', COURSETYPE_SPANISH)
+				->where('release_flag', '>=', RELEASE_PUBLIC)
+				->orderBy('display_order')
+				->first();
+				
+			return $this->view($record);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting first course';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+		
+		return redirect()->back();		
+	}
+		
     public function index(Request $request)
     {
+		$showAll = isset($showAll);
+		
 		$public = []; // make this countable so view will always work
 		$private = []; // make this countable so view will always work
 
@@ -88,6 +114,7 @@ class CourseController extends Controller
 		$record = new Course();
 
 		$record->user_id 		= Auth::id();
+		$record->site_id 		= Tools::getSiteId();
 		$record->title 			= $request->title;
 		$record->description	= $request->description;
 		$record->permalink		= Tools::createPermalink($request->title);
@@ -111,7 +138,7 @@ class CourseController extends Controller
 			return back();
 		}
 
-		return redirect(REDIRECT_ADMIN);
+		return redirect('/' . PREFIX . '/view/' . $record->id);
     }
 
     public function permalink(Request $request, $permalink)
@@ -125,7 +152,7 @@ class CourseController extends Controller
 			$record = Course::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
-				->where('release_flag', '>=', RELEASE_PUBLISHED)
+				->where('release_flag', '>=', RELEASE_PUBLIC)
 				->where('permalink', $permalink)
 				->first();
 		}
@@ -150,7 +177,8 @@ class CourseController extends Controller
             return $this->startTimedSlides($course);
 
 		$record = $course;
-		$count = 0;
+		$displayCount = 0;
+		$chapterCount = 0;
 		$records = []; // make this countable so view will always work
 
 		try
@@ -158,11 +186,11 @@ class CourseController extends Controller
 			$records = Lesson::getChapters($course->id);
 
 			// get the lesson count.  if only one chapter, count it's sections
-			$count = count($records); // count the chapters
-			if ($count == 1)
-			{
-				$count = count($records->first()); // count the sections
-			}
+			$chapterCount = count($records); // count the chapters
+			if ($chapterCount == 1)
+				$displayCount = count($records->first()); // show the count of sections
+			else
+				$displayCount = $chapterCount; // show the count of chapters
 		}
 		catch (\Exception $e)
 		{
@@ -176,12 +204,13 @@ class CourseController extends Controller
 
 		$firstId = (count($records) > 0) ? $records->first()[0]->id : 0; // collection index starts at 1
 
-		return view(PREFIX . '.view', $this->getViewData([
+		return view(PREFIX . '.view-flat', $this->getViewData([
 			'record' => $record,
 			'records' => $records,
 			'disabled' => $disabled,
 			'firstId' => $firstId,
-			'displayCount' => $count,
+			'displayCount' => $displayCount,
+			'chapterCount' => $chapterCount,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
@@ -215,20 +244,10 @@ class CourseController extends Controller
 
         foreach($records as $chapter)
         {
-            //dd($chapter);
-            $seconds = 0;
-            $breakSeconds = 0;
-            foreach($chapter as $lesson)
-            {
-                $s = intval($lesson->seconds);
-                $seconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
+			$times = Lesson::getTimes($chapter);
 
-                $s = intval($lesson->break_seconds);
-                $breakSeconds += ($s == 0) ? TIMED_SLIDES_DEFAULT_SECONDS : $s;
-            }
-
-            $chapter['time'] = Tools::secondsToTime($seconds);
-            $chapter['totalTime'] = Tools::secondsToTime($seconds + $breakSeconds);
+            $chapter['time'] = $times['timeSeconds'];
+            $chapter['totalTime'] = $times['timeTotal'];
         }
 
 		return view(PREFIX . '.viewTimedSlides', $this->getViewData([
@@ -260,6 +279,7 @@ class CourseController extends Controller
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->display_order = Tools::copyDirty($record->display_order, $request->display_order, $isDirty, $changes);
 		$record->type_flag = Tools::copyDirty($record->type_flag, $request->type_flag, $isDirty, $changes);
+		$record->site_id = Tools::copyDirty($record->site_id, $request->site_id, $isDirty, $changes);
 
 		if ($isDirty)
 		{
@@ -373,4 +393,126 @@ class CourseController extends Controller
 
 		return redirect(REDIRECT_ADMIN);
     }
+	
+    public function rssReader()
+    {
+		$records = []; // make this countable so view will always work
+
+		try
+		{
+			$records = Course::getRssReader();
+			
+			foreach($records as $course)
+			{
+				$sessions = [];
+				
+				foreach($course->lessons as $lesson)
+				{	
+					if ($lesson->deleted_flag == 0)
+					{		
+						if ($lesson->section_number == 1) // lesson 1 holds the chapter info
+						{
+							$sessions[$lesson->lesson_number]['title'] = isset($lesson->title_chapter) ? $lesson->title_chapter : 'Chapter ' . $lesson->lesson_number;
+							$sessions[$lesson->lesson_number]['description'] = $lesson->description;
+							$sessions[$lesson->lesson_number]['id'] = $lesson->id;
+							$sessions[$lesson->lesson_number]['number'] = $lesson->lesson_number;						
+							$sessions[$lesson->lesson_number]['course'] = $course->title;
+						}
+						
+						if (array_key_exists($lesson->lesson_number, $sessions) && array_key_exists('exercise_count', $sessions[$lesson->lesson_number]))
+						{
+							$sessions[$lesson->lesson_number]['exercise_count'] += 1;
+						}
+						else
+						{
+							$sessions[$lesson->lesson_number]['exercise_count'] = 1;
+						}
+						
+						//dump($lesson->title . ': ' . $lesson->section_number);
+
+					}
+				}
+				
+				$course['sessions'] = $sessions;
+				
+				//dd($course);
+			}
+		}
+		catch (\Exception $e)
+		{
+			dd($e);
+			$msg = 'Error getting ' . TITLE_LC . ' rss';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+		}
+
+		//dd($records);
+		
+		return view(PREFIX . '.rss-reader', $this->getViewData([
+			'records' => $records,
+		]));
+	}
+	
+    public function rss()
+    {
+		$records = []; // make this countable so view will always work
+
+		try
+		{
+			$records = Course::getRss();
+			
+			foreach($records as $course)
+			{
+				$sessions = [];
+				
+				foreach($course->lessons as $lesson)
+				{	
+					//if ($lesson->lesson_number == 2) // test
+					{
+						if ($lesson->deleted_flag == 0)
+						{		
+							if ($lesson->section_number == 1)
+							{
+								$sessions[$lesson->lesson_number]['title'] = isset($lesson->title_chapter) ? $lesson->title_chapter : 'Day ' . $lesson->lesson_number;
+								$sessions[$lesson->lesson_number]['description'] = $lesson->description;
+								$sessions[$lesson->lesson_number]['id'] = $lesson->id;
+								$sessions[$lesson->lesson_number]['number'] = $lesson->lesson_number;						
+								$sessions[$lesson->lesson_number]['course'] = $course->title;
+							}
+							
+							$breakSeconds = isset($lesson->break_seconds) ? $lesson->break_seconds : TIMED_SLIDES_DEFAULT_BREAK_SECONDS;
+							$runSeconds = isset($lesson->seconds) ? $lesson->seconds : TIMED_SLIDES_DEFAULT_SECONDS;
+							$seconds = $breakSeconds + $runSeconds;
+							if (array_key_exists($lesson->lesson_number, $sessions) && array_key_exists('exercise_count', $sessions[$lesson->lesson_number]))
+							{
+								$sessions[$lesson->lesson_number]['exercise_count'] += 1;
+								$sessions[$lesson->lesson_number]['seconds'] += $seconds;
+							}
+							else
+							{
+								$sessions[$lesson->lesson_number]['exercise_count'] = 1;
+								$sessions[$lesson->lesson_number]['seconds'] = $seconds;
+							}
+							
+							//dump($lesson->title . ': ' . $lesson->section_number . ", " . $runSeconds . ', ' . $breakSeconds . ', ' . $seconds);
+
+						}
+					}
+				}
+				
+				$course['sessions'] = $sessions;
+				
+				//dd($course);
+			}
+		}
+		catch (\Exception $e)
+		{
+			dd($e);
+			$msg = 'Error getting ' . TITLE_LC . ' rss';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+		}
+
+		return view(PREFIX . '.rss', $this->getViewData([
+			'records' => $records,
+		]));
+    }	
 }

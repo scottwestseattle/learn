@@ -36,7 +36,7 @@
 
 		<div style="{{$record->isText() ? 'display:none;' : ''}}" id="tab-title">
 
-            @if ($record->isTimedSlides())
+        @if ($record->isTimedSlides())
 			<!--------------------------------------------------------------------------->
 			<!-- Main Photo -->
 			<!--------------------------------------------------------------------------->
@@ -71,13 +71,15 @@
 			<!-- Seconds -->
 			<div class="form-group">
                 <label for="seconds" class="control-label">@LANG('gen.Seconds'):</label>
-                <input type="number" name="seconds" class="form-control"  value="{{$record->seconds}}" />
+                <input type="number" min="0" step="5" name="seconds" id="seconds" class="form-control form-control-100"  value="{{$record->seconds}}" />
+				@component('components.control-numinc', ['id' => 'seconds', 'multiple' => 5])@endcomponent
             </div>
 
 			<!-- Break Seconds -->
 			<div class="form-group">
-                <label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
-                <input type="number" min="0" max="1000" name="break_seconds" class="form-control"  value="{{$record->break_seconds}}" />
+				<label for="break_seconds" class="control-label">@LANG('gen.Break Seconds'):</label>
+				<input type="number" min="0" step="5" name="break_seconds" id="break_seconds" class="form-control form-control-100"  value="{{$record->break_seconds}}" />
+				@component('components.control-numinc', ['id' => 'break_seconds', 'multiple' => 5])@endcomponent
             </div>
 
             @if (false)
@@ -92,7 +94,7 @@
                 <button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
             </div>
 
-            @else
+        @else
 
 			<div class="form-group">
 				<label for="parent_id" class="control-label">@LANG('content.Course'):</label>
@@ -109,7 +111,7 @@
 				<input type="text" id="title" name="title" class="form-control" value="{{$record->title}}"></input>
 			</div>
 
-            @endif
+        @endif
 
 			<!--------------------------------------------------------------------------->
 			<!-- Chapter / Section -->
@@ -117,12 +119,14 @@
 
 			<div class="form-group">
 				<label for="lesson_number" class="control-label">@LANG('content.Chapter'):</label>
-				<input type="number"  min="1" max="1000" step="1" name="lesson_number" class="form-control form-control-100" value="{{$record->lesson_number}}" />
+				<input type="number" min="1" name="lesson_number" id="lesson_number" class="form-control form-control-100" value="{{$record->lesson_number}}" />
+				@component('components.control-numinc', ['id' => 'lesson_number', 'multiple' => 1])@endcomponent
 			</div>
 
 			<div class="form-group">
 				<label for="section_number" class="control-label">@LANG('content.Section'):</label>
-				<input type="number"  min="0" max="1000" step="1" name="section_number" class="form-control form-control-100" value="{{$record->section_number}}" />
+				<input type="number" min="0" name="section_number" id="section_number" class="form-control form-control-100" value="{{$record->section_number}}" />
+				@component('components.control-numinc', ['id' => 'section_number', 'multiple' => 1])@endcomponent
 			</div>
 
 			<div class="form-group">
@@ -157,7 +161,6 @@
     			<label for="options" class="control-label">@LANG('content.Options'):</label>
 	    		<input type="text" name="options" class="form-control" value="{{$record->options}}" />
             </div>
-
 
             @if ($record->isTimedSlides())
 
@@ -195,7 +198,7 @@
     @if ($record->isText())
 		<div id="tab-text">
 
-			<div id ="rich" style="clear:both;display:default;">
+			<div id="rich" style="clear:both;display:default;">
 				<textarea style="height:500px" name="text" id="text" class="form-control big-text">{{$record->text}}</textarea>
 			</div>
 
@@ -221,6 +224,7 @@
 
 @endsection
 
+@if (false)
 <script>
 
 function showMainPhoto(id)
@@ -229,3 +233,4 @@ function showMainPhoto(id)
 }
 
 </script>
+@endif

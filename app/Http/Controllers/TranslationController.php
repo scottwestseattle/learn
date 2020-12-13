@@ -318,7 +318,7 @@ class TranslationController extends Controller
 			}
 			catch (\Exception $e)
 			{
-				Event::logException(LOG_MODEL_TRANSLATIONS, $logAction, $this->getTextOrShowEmpty($entry->title), null, $e->getMessage());
+				Event::logException(LOG_MODEL_TRANSLATIONS, $logAction, Tools::getTextOrShowEmpty($entry->title), null, $e->getMessage());
 
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', $e->getMessage());

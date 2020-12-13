@@ -2,13 +2,60 @@
 
 namespace App;
 
+use Illuminate\Support\HtmlString;
+
+use App;
 use Auth;
 use Lang;
+
 use App\User;
 use DateTime;
 
+define('SITE_ID_LOCALHOST',	0);
+define('SITE_ID_ENGLISH',	1);
+define('SITE_ID_ENGLISH50', 2);
+define('SITE_ID_SPANISH50', 3);
+define('SITE_ID_SPANISH',	4);
+define('SITE_ID_PLANCHA',	5);
+define('SITE_ID_TEST',		6);
+define('SITE_ID_',			7);
+
 class Tools
 {
+	static private $_accents = 'áÁéÉíÍóÓúÚüÜñÑ'; 
+
+	static private $_sites = [
+		'localhost' 			=> SITE_ID_LOCALHOST,
+		'english.codespace.us'	=> SITE_ID_ENGLISH,
+		'english50.com'			=> SITE_ID_ENGLISH50,
+		'spanish50.com'			=> SITE_ID_SPANISH50,
+		'spanish.codespace.us'	=> SITE_ID_SPANISH,
+		'plancha.codespace.us'	=> SITE_ID_PLANCHA,
+	];
+	
+	static private $_sitesLanguages = [
+		//'localhost' 			=> 'es-ES',
+		'localhost' 			=> 'en-EN',
+		'english.codespace.us'	=> 'en-EN',
+		'english50.com'			=> 'en-EN',
+		'spanish.codespace.us'	=> 'es-ES',
+		'spanish50.com'			=> 'es-ES',
+	];	
+
+	static private $_sitesLanguageFlags = [
+		//'localhost'			=> LANGUAGE_ENGLISH,
+		'localhost'				=> LANGUAGE_SPANISH,
+		'english.codespace.us'	=> LANGUAGE_ENGLISH,
+		'spanish.codespace.us'	=> LANGUAGE_SPANISH,
+		'english50.com'			=> LANGUAGE_ENGLISH,
+		'spanish50.com'			=> LANGUAGE_SPANISH,
+	];	
+
+    static public function getAccentChars()
+    {
+		return self::$_accents;
+	}
+	
     static public function isMobile()
     {
 		$useragent = $_SERVER['HTTP_USER_AGENT'];
@@ -56,6 +103,15 @@ class Tools
 
         return $r;
     }
+
+	// if n isn't null then return intval
+    static public function intOrNull($n)
+    {
+		if (isset($n))
+			$n = intval($n);
+		
+		return($n);
+	}
 
     static public function itoa($n)
     {
@@ -182,6 +238,11 @@ class Tools
 		return (Auth::user() && Auth::user()->isAdmin());
 	}
 
+    static public function isPaid()
+    {
+		return (Auth::user() && false); // not implemented yet
+	}
+
 	// shortcut
     static public function isSuperAdmin()
     {
@@ -198,12 +259,119 @@ class Tools
 		return $v;
 	}
 
+	// <div role="fancy-table-xs-border-header">
     static public function convertToHtml($text)
     {
 		$v = $text;
+		$f = '';
+		// check for custom formatting HTML tags
+		$fancyTableTag = 'fancy-table';
+		$endTag = '</div>';
+		if (strpos($v, $fancyTableTag) !== false)
+		{
+			// do the fancy formatting
+			$lines = explode("\r\n", $text);
+			$inTableLine = 0;
+			$header = false; // default
+			foreach($lines as $line)
+			{
+				$pos = strpos($line, $fancyTableTag);
+				if ($pos !== false)
+				{				
+					$inTableLine++;
+					
+					// get table attributes, looks like: "fancy-table-xs-border-header"
+					$attr = substr($line, $pos);
+					$parts = explode('-', $attr);
+					$border = 'table-borderless'; // default
+					$size = 'lesson-table-xs';	  // default
+					if (count($parts) > 4) // header
+						$header = (trim($parts[4], '">') == 'header');
+					if (count($parts) > 3) // border
+						$border = Tools::startsWith(trim($parts[3], '">'), 'borderless') ? 'table-borderless' : '';
+					if (count($parts) > 2) // size
+						$size = 'lesson-table-' . trim($parts[2], '">');
+					
+					$table = '<table class="table lesson-table ' . $border . ' ' . ' ' . $size . '">';
+					
+					//dump($parts);
+					//dump($header);
+					$f .= $table;
+				}									
+				else if (strpos($line, $endTag) !== false)
+				{
+					$inTableLine = 0;
+					$header = false;
+					$f .= '</table>';
+				}								
+				else if ($inTableLine > 0)
+				{					
+					$col1 = null;
+					$col2 = null;
+					$col3 = null;
+					
+					// clean up the line but don't removing styling
+					$line = str_replace('<p>', '', $line);
+					$line = str_replace('</p>', '', $line);
+					$line = str_replace('&nbsp;', '', $line);
+					$line = str_replace('<br />', '', $line);
+					
+					$parts = explode('|', $line);
+					if (count($parts) > 2)
+						$col3 = trim($parts[2]);
+					if (count($parts) > 1)
+						$col2 = trim($parts[1]);
+					if (count($parts) > 0)
+						$col1 = trim($parts[0]);
 
-		// check for HTML
-		if (strpos($v, '[') !== false)
+					if (count($parts) > 0)
+					{						
+						$rowStart = '<tr>';
+						$rowEnd = '</tr>';
+						$colStartTag = '<td>';
+						$colEndTag = '</td>';
+						
+						if ($header && $inTableLine == 1)
+						{
+							$rowStart = '<thead><tr>';
+							$rowEnd = '</tr></thead>';
+							$colStartTag = '<th>';
+							$colEndTag = '</th>';
+						}
+					
+						$row = $rowStart;
+					
+						if (isset($col1))
+							$row .= $colStartTag . $col1 . $colEndTag;
+					
+						if (isset($col2))
+							$row .= $colStartTag . $col2 . $colEndTag;
+						
+						if (isset($col3))
+							$row .= $colStartTag . $col3 . $colEndTag;
+						
+						$row .= $rowEnd;
+						$f .= $row;
+						//dd($row);
+					}
+					else
+					{
+						$f .= $line;
+					}
+					
+					$inTableLine++;					
+				}
+				else
+				{
+					$f .= $line;
+				}
+				
+			}
+			//dd($table);
+			$v = $f;
+			//dd($v);
+		}
+		else if (strpos($v, '[') !== false)
 		{
 			//$v = str_replace('[', '<', $v);
 			//$v = str_replace(']', '>', $v);
@@ -217,6 +385,17 @@ class Tools
 			// no html so add br's
 			$v = nl2br($v);
 		}
+
+		// do custom word replacements
+		$v = str_ireplace('(irregular)', '<span class="irregular">irregular</span>', $v); // make (irregular) fancy
+		
+		// format Fancy Numbers: "FN1. "
+		$v = preg_replace('/FN([0-9]*)\.([ ]*)/', '<span class="fn">$1</span>', $v); //  $1 resolves to the part matched in the parenthesis
+
+		// format Fancy Bullets, type 1: "FB1"
+		//$v = preg_replace('/FB1([ ]*)/', '<div style="font-size:12px;" class="fb glyphicon glyphicon-arrow-right mr-2 ml-4 mb-1"></div>', $v); //
+		$v = preg_replace('/FB1([ ]*)/', '<div style="font-size:18px;" class="middle mr-2 ml-0 mb-1">→</div>', $v); //
+		$v = preg_replace('/FB2([ ]*)/', '<div style="font-size:12px;" class="middle mr-2 ml-0 mb-1 glyphicon glyphicon-triangle-right green"></div>', $v); //
 
 		return $v;
 	}
@@ -275,18 +454,24 @@ class Tools
 		return $from;
 	}
 
+	static public function getMaxText($text)
+	{
+		$text = self::trimNull($text);
+		
+		$text = substr($text, 0, MAX_DB_TEXT_COLUMN_LENGTH);
+		
+		return $text;
+	}
+
 	// if string has non-whitespace chars, then it gets trimmed, otherwise gets set to null
-	static protected function trimNull($text, $alphanum = false)
+	static public function trimNull($text, $alphanum = false)
 	{
 		if (isset($text))
 		{
 			$text = trim($text);
 
 			if ($alphanum)
-			{
-				// remove all but the specified chars
-				$text = preg_replace("/[^a-zA-Z0-9!@.,()-+=?!' \r\n]+/", "", $text);
-			}
+				$text = alphanum($text);
 
 			if (strlen($text) === 0)
 				$text = null;
@@ -294,6 +479,79 @@ class Tools
 
 		return $text;
 	}
+
+	static public function alphanumpunct($text)
+	{
+		return(self::alphanum($text));
+	}
+	
+	static public function alphanum($text, $strict = false)
+	{
+		if (isset($text))
+		{			
+			// replace all chars except alphanums, some punctuation, accent chars, and whitespace
+			$base = "a-zA-Z0-9 \r\n";
+			$punct = "!@.,()-+=?!';";
+			
+			$match = $base . self::$_accents;
+			if (!$strict)
+				$match .= $punct;
+			
+			$text = preg_replace("/[^" . $match . "]+/", "", trim($text));
+		}
+
+		return $text;
+	}	
+
+	static public function alpha($text)
+	{
+		if (isset($text))
+		{			
+			// replace all chars except alphanums, some punctuation, accent chars, and whitespace
+			//$text = str_replace("\r\n", ' ', $text); // old way works but didn't handle tabs
+			$text = preg_replace("/\s+/", ' ', $text); // change all whitespace to one space
+			$base = "a-zA-Z ";			
+			$match = $base . self::$_accents;
+			
+			$text = preg_replace("/[^" . $match . "]+/", "", trim($text));
+		}
+
+		return $text;
+	}
+
+	static public function permalink($permalink)
+	{
+		$rc = null;
+		
+		if (isset($permalink)) // clean the permalink
+		{
+			// example permalink: /one/two/three-four-five/six-seven
+			$permalink = preg_replace("/[^a-zA-Z0-9\-]/", "", $permalink);
+			
+			// if anything left
+			if (isset($permalink) && strlen($permalink) > 0)
+				$rc = $permalink;
+		}
+		
+		return $rc;
+	}
+	
+	static public function getTextOrShowEmpty($text)
+	{
+		$r = '(empty)';
+		
+		if (isset($text))
+		{
+			$text = trim($text);
+			
+			if (strlen($text) === 0)
+				$text = null;
+			else
+				$r = $text;
+		}
+		
+		return $r;
+	}	
 
     static public function createPermalink($title, $date = null)
     {
@@ -329,7 +587,7 @@ class Tools
 
 		if (array_key_exists("SERVER_NAME", $_SERVER))
 		{
-			$v = $_SERVER["SERVER_NAME"];
+			$v = strtolower($_SERVER["SERVER_NAME"]);
 
 			// trim the duba duba duba
 			if (Tools::startsWith($v, 'www.'))
@@ -339,6 +597,196 @@ class Tools
 		return $v;
 	}
 
+	static public function getSiteIds()
+	{
+		$ids = array_flip(self::$_sites);
+		
+		return $ids;
+	}
+	
+	static public function getSiteId()
+	{
+		$siteId = -1;
+		$domain = self::getDomainName();
+		if (array_key_exists($domain, self::$_sites))
+		{
+			$siteId = self::$_sites[$domain];
+		}
+		//dump($domain . " " . $siteId);
+		
+		return $siteId;
+	}
+
+	static public function getSiteName($id)
+	{
+		$id = intval($id);
+		$rc = "not found";
+		
+		$sites = array_flip(self::$_sites);
+		if (array_key_exists($id, $sites))
+		{
+			$rc = $sites[$id];
+		}
+			
+		return $rc;
+	}
+	
+	static public function siteUses($model)
+	{
+		$rc = false;
+		$siteId = self::getSiteId();
+		switch($siteId)
+		{
+			case SITE_ID_LOCALHOST: // localhost
+				$rc = ($model == LOG_MODEL_COURSES);
+				$rc = ($model == LOG_MODEL_ARTICLES || $model == LOG_MODEL_DEFINITIONS);
+				$rc = true;
+				break;
+			case SITE_ID_ENGLISH:	// english.codespace
+			case SITE_ID_ENGLISH50: // english50
+				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
+				break;
+			case SITE_ID_PLANCHA:
+				$rc = ($model == LOG_MODEL_COURSES);
+				break;
+			case SITE_ID_SPANISH: // spanish.codespace.us
+				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
+				break;
+			case SITE_ID_SPANISH50: // spanish50
+				$rc = true;
+				break;
+			default:
+				break;
+		}
+
+		return $rc;
+	}
+
+	static public $_lineSplitters = array('Mr.', 'Miss.', 'Sr.', 'Mrs.', 'Ms.', 'St.');
+	static public $_lineSplittersSubs = array('Mr:', 'Miss:', 'Sr:', 'Mrs:', 'Ms:', 'St:');
+	static public $_fixWords = array(
+		'Mr.', 'Sr.', 'Sr ', 'Mrs.', 'Miss.',
+		'Y,', 'Y;', 'y,', 'y:', 
+		'Jessica', 'Jéssica', 'Jess', 
+		'Max', 'Aspid', 'Áspid',
+		'Mariel', 'MARIEL', 'Beaumont', 'BEAUMONT',
+		'Dennis', 
+		'Geovanny', 'Giovanny', 'Geo', 'Gio',
+		);
+	static public $_fixWordsSubs = array(
+		'Señor', 'Señor', 'Señor ', 'Señora', 'Señorita', 
+		'Y ', 'Y ', 'y ', 'y ',
+		'Sofía', 'Sofía', 'Sofía', 
+		'Pedro', 'Picapiedra', 'Picapiedra',
+		'Gerarda', 'Gerarda', 'Gonzalez', 'Gonzalez',
+		'Fernando', 
+		'Jorge', 'Jorge', 'Jorge', 'Jorge',
+		);
+
+	static public function getSentences($text)
+	{		
+		$lines = [];
+		
+		$paragraphs = explode("\r\n", strip_tags(html_entity_decode($text)));
+		foreach($paragraphs as $p)
+		{		
+			$p = trim($p);
+
+			// doesn't work for: "Mr. Tambourine Man" / Mr. Miss. Sr. Mrs. Ms. St.
+			$p = str_replace(self::$_lineSplitters, self::$_lineSplittersSubs, $p);
+			
+			// sentences end with: ". " or "'. " or "\". " or "? " or "! "
+			if (true) // split on more characters because the lines are too long
+				$sentences = preg_split('/(\. |\.\' |\.\" |\? |\! )/', $p, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+			else
+				// the original to avoid splitting on conversation
+				$sentences = preg_split('/(\. |\.\' |\.\" )/', $p, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+
+			//$sentences = explode($eos, $p);
+			for($i = 0; $i < count($sentences); $i++)
+			{
+				// get the sentence text
+				$s = self::formatForReading($sentences[$i]);
+				
+				// get the delimiter which is stored in the next array entry				
+				$i++;
+				if (count($sentences) > $i)
+				{
+					$s .= trim($sentences[$i]);
+				}
+				
+				// save the sentence
+				if (strlen($s) > 0)
+				{
+					$lines[] = $s;
+				}			
+			}
+		}	
+		
+		//dump($lines);
+		return $lines;
+	}
+		
+	static public function formatForReading($text)
+	{		
+		// change dash to long dash so it won't be read as 'minus'
+		$text = str_replace('-', '–', trim($text));
+	
+		// put the sentence splitter subs back to the originals
+		$text = str_replace(self::$_lineSplittersSubs, self::$_lineSplitters, $text);
+	
+		// apply any word fixes
+		$text = str_replace(self::$_fixWords, self::$_fixWordsSubs, $text);
+	
+		return $text;
+	}
+	
+	static public function getSites()
+	{		
+		return self::$_sites;
+	}
+
+	static public function getSpeechLanguage($language_flag)
+	{
+		if ($language_flag == LANGUAGE_ENGLISH)
+			return 'en-EN';
+		else if ($language_flag == LANGUAGE_SPANISH)
+			return 'es-ES';
+		else
+			return 'en-EN';	
+	}
+	
+	static public function getLanguage()
+	{		
+		$rc = 'en-US';
+		
+		$domain = self::getDomainName();
+		if (array_key_exists($domain, self::$_sitesLanguages))
+		{
+			$rc = self::$_sitesLanguages[$domain];
+		}
+	
+		return $rc;
+	}
+
+	static public function getSiteLanguage()
+	{
+		return self::getLanguageFlag();
+	}
+	
+	static public function getLanguageFlag()
+	{		
+		$rc = LANGUAGE_ENGLISH;
+		
+		$domain = self::getDomainName();
+		if (array_key_exists($domain, self::$_sitesLanguageFlags))
+		{
+			$rc = self::$_sitesLanguageFlags[$domain];
+		}
+	
+		return $rc;
+	}
+	
 	static public function getSiteTitle($withDomainName = true)
 	{
 		$d = self::getDomainName();
@@ -381,6 +829,15 @@ class Tools
 		return $ip;
 	}
 
+	static public function str_truncate($string, $length)
+	{
+		$l = strlen($string);
+		if ($length <= $l)
+			$string = mb_substr($string, 0, strlen($string) - $length);	
+
+		return $string;
+	}
+	
 	static public function trunc($string, $length)
 	{
 		$ellipsis = '...';
@@ -410,6 +867,23 @@ class Tools
 		return $rc;
 	}
 
+	static public function startsWithAny($haystack, $needles)
+	{
+		$rc = false;
+		
+		if (is_array($needles))
+		{
+			foreach($needles as $needle)
+			{
+				$rc = self::startsWith($haystack, $needle);
+				if ($rc)
+					break; // quick out
+			}
+		}
+		
+		return $rc;
+	}
+	
 	static public function startsWith($haystack, $needle)
 	{
 		$rc = false;
@@ -435,7 +909,60 @@ class Tools
 		return $rc;
 	}
 
+	static public function endsWithAny($haystack, $needle)
+	{
+		$rc = false;
+		
+		if (is_array($needle))
+		{
+			foreach($needle as $n)
+			{
+				$rc = self::endsWith($haystack, $n);
+				if ($rc) // if it ends with any of them then it's true
+					break;
+			}
+		}
+		
+		return $rc;
+	}
+
+	static public function endsWithAnyIndex($haystack, $needle)
+	{
+		$rc = false;
+		
+		if (is_array($needle))
+		{
+			foreach($needle as $index => $n)
+			{
+				$rc = self::endsWith($haystack, $n);
+				if ($rc) // if it ends with any of them then it's true
+				{
+					$rc = $index;
+					break;
+				}
+			}
+		}
+		
+		return $rc;
+	}
+	
 	static public function endsWith($haystack, $needle)
+	{
+		$rc = false;
+		
+		$pos = strlen($haystack) - strlen($needle); // get the end
+		if ($pos > 0) // not the same length
+		{
+			if ($needle === substr($haystack, $pos)) // matches
+			{
+				$rc = true;
+			}
+		}
+		
+		return $rc;
+	}
+	
+	static public function endsWithORIG($haystack, $needle)
 	{
 		$rc = false;
 		$pos = strrpos($haystack, $needle);
@@ -579,4 +1106,94 @@ class Tools
 
         return $time;
     }
+
+    static public function timestamp2date($timestamp)
+    {
+		return self::translateDate($timestamp);
+	}
+	
+    static public function translateDate($date)
+    {		
+		$dateFormat = "%B %e, %Y";
+				
+		if (App::getLocale() == 'es')
+		{
+			$dateFormat = "%e " . __('ui.of') . ' ' . __('ui.' . strftime("%B", strtotime($date))) . ", %Y";
+			
+		}
+		else if (App::getLocale() == 'zh')
+		{
+			// 2019年12月25日
+			$dateFormat = "%Y" . __('ui.year') . "%m" . __('ui.month') . "%e" . __('ui.date');
+		}
+		else
+		{
+		}	
+		
+		$date = strftime($dateFormat, strtotime($date));
+		
+		return $date;
+	}	
+	
+    static public function getWordStats($text, $words = null)
+    {	
+		$words = isset($words) ? $words : [];
+		
+		$text = strip_tags(html_entity_decode($text));
+		$text = str_replace("\r\n", ' ', $text);
+		$parts = explode(' ', $text);
+		foreach($parts as $part)
+		{			
+			$word = strtolower(trim($part));
+			$word = self::alphanum($word, true);
+						
+			if (strlen($word) > 0)
+			{
+				if (array_key_exists($word, $words))
+				{
+					$words[$word]++;
+				}
+				else
+				{
+					$words[$word] = 1;
+				}
+			}
+		}
+		
+		ksort($words);
+		$stats['sortAlpha'] = $words;
+		
+		arsort($words);
+		$stats['sortCount'] = $words;
+		
+		$stats['wordCount'] = str_word_count($text);
+		$stats['uniqueCount'] = count($words);
+	
+		return $stats;
+	}	
+	
+	static public function getOrSetString($text, $default)
+    {
+		// if text not set or blank then return the default
+		return ((isset($text) && strlen($text) > 0) ? $text : $default);
+	}
+	
+	static public function getSafeUserId()
+    {
+		return (Auth::check() ? Auth::id() : 'not logged in');
+	}
+	
+	static public function getReferrer()
+    {
+		$rc['input'] = '';
+		$rc['url'] = '';
+		
+		if (isset($_SERVER["HTTP_REFERER"]))
+		{
+			$rc['url'] = $_SERVER["HTTP_REFERER"];
+			$rc['input'] = new HtmlString("<input name='referrer' type='hidden' value='" . $rc['url'] . "' />");
+		}
+		
+		return $rc;
+	}	
 }

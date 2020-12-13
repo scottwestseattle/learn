@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use DB;
 use Auth;
-use App\Event;
-use App\Tools;
+
 use App\Course;
+use App\Definition;
+use App\Entry;
+use App\Event;
+use App\Lesson;
+use App\User;
+use App\Tools;
 use App\VocabList;
 use App\Word;
-use App\User;
 
 define('LOG_MODEL', 'frontpage');
 
@@ -27,6 +32,14 @@ class FrontPageController extends Controller
     }
 
     /**
+     * Handle the start button from the front page.
+     */
+    public function start()
+    {
+		return redirect('/courses/start');		
+	}
+	
+    /**
      * Show the application front page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -34,39 +47,94 @@ class FrontPageController extends Controller
     public function index()
     {
 		$courses = []; // make this countable so view will always work
+		$vocabLists = [];
+		$articles = [];
+		$lesson = [];
+		$wod = null;
+		$randomWord = null;
 
         // get word of the day
-        $wod = Word::getWod(User::getSuperAdminUserId());
+		if (false && Tools::siteUses(LOG_MODEL_WORDS))
+		{
+			$wod = Word::getWod(User::getSuperAdminUserId());
 
-		// format the examples to display as separate sentences
-		$wod->examples = Tools::splitSentences($wod->examples);
-
-		try
-		{
-			$courses = Course::getIndex(['public']);
-		}
-		catch (\Exception $e)
-		{
-			$msg = 'Error getting courses';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);
-		}
-
-		try
-		{
-			$vocabLists = VocabList::getIndex();
-		}
-		catch (\Exception $e)
-		{
-			$msg = 'Error getting Vocab Lists';
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
-			Tools::flash('danger', $msg);
+			if (isset($wod))
+			{
+				// format the examples to display as separate sentences
+				$wod->examples = Tools::splitSentences($wod->examples);
+			}
+			
+			try
+			{
+				$vocabLists = VocabList::getIndex();
+			}
+			catch (\Exception $e)
+			{
+				$msg = 'Error getting Vocab Lists';
+				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+				Tools::flash('danger', $msg);
+			}			
 		}
 
+		if (Tools::siteUses(LOG_MODEL_LESSONS) && Auth::check())
+		{
+			//
+			// get user's last viewed lesson so he can resume where he left off
+			//
+			$lesson = Lesson::getCurrentLocation();
+			$lesson['course'] = isset($lesson['lesson']) ? $lesson['lesson']->course : null;
+		}
+
+		if (Tools::siteUses(LOG_MODEL_COURSES))
+		{
+			try
+			{
+				$courses = Course::getIndex(['public']);
+			}
+			catch (\Exception $e)
+			{
+				$msg = 'Error getting courses';
+				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+				Tools::flash('danger', $msg);
+			}
+		}
+
+		if (Tools::siteUses(LOG_MODEL_ARTICLES))
+		{
+			try
+			{
+				$articles = Entry::getArticles(5);
+			}
+			catch (\Exception $e)
+			{
+				//dump($e);
+				$msg = 'Error getting Articles';
+				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+				Tools::flash('danger', $msg);
+			}
+		}
+
+		$jumboTitle = null;
+		$jumboSlug = 'jumboSlug';
+		if (Tools::getSiteLanguage() == LANGUAGE_SPANISH)
+		{
+			$randomWord = Definition::getRandomWord();
+			$jumboTitle = 'jumboTitleSpanish';
+		}
+		else if ((Tools::getSiteLanguage() == LANGUAGE_ENGLISH))
+		{
+			$jumboTitle = 'jumboTitleEnglish';
+		}
+		
 		return view('frontpage.index', $this->getViewData([
 			'courses' => $courses,
 			'vocabLists' => $vocabLists,
 			'wod' => $wod,
+			'articles' => $articles,
+			'lesson' => $lesson,
+			'jumboTitle' => $jumboTitle,
+			'jumboSlug' => $jumboSlug,
+			'randomWord' => $randomWord,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

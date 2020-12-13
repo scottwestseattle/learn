@@ -11,16 +11,19 @@
 		    @LANG('content.Back to Vocabulary Lists')<span class="glyphicon glyphicon-button-back-to"></span>
 		</a>
 	    <a class="btn btn-primary btn-sm btn-nav-top" role="button" href="/{{$prefix}}/review/{{$record->id}}">
-            @LANG('content.Review')&nbsp;<span class="glyphicon glyphicon-eye-open"></span>
+            @LANG('ui.Review')&nbsp;<span class="glyphicon glyphicon-eye-open"></span>
+	    </a>
+	    <a class="btn btn-primary btn-sm btn-nav-top" role="button" href="/{{$prefix}}/review/{{$record->id}}/1">
+            @LANG('content.Flashcards')&nbsp;<span class="glyphicon glyphicon-flash"></span>
 	    </a>
         @if (App\User::isOwner($record->user_id))
 	    <a class="btn btn-info btn-sm btn-nav-top" role="button" href="/words/add-vocab-word/{{$record->id}}">
-            @LANG('content.Add New Word')&nbsp;<span class="glyphicon glyphicon-plus-sign"></span>
+            @LANG('ui.Add')&nbsp;<span class="glyphicon glyphicon-plus-sign"></span>
 	    </a>
 	    @endif
 	</div>
 
-	<h3 name="" class="" style="margin-bottom:10px;">{{$record->title}}<span style="background-color:purple; margin-left:10px; font-size:12px;" class="badge badge-dark">{{count($record->words)}}</span>
+	<h3 name="" class="" style="margin-bottom:10px;">{{$record->title}}@component('components.badge', ['text' => count($record->words)])@endcomponent
         @if (App\User::isOwner($record->user_id))
 			@if (!\App\Status::isFinished($record->wip_flag))
 				<a class="btn {{($wip=\App\Status::getWipStatus($record->wip_flag))['btn']}} btn-xs" role="button" href="/{{$prefix}}/publish/{{$record->id}}">{{$wip['text']}}</a>
@@ -31,19 +34,19 @@
 		@endif
 	</h3>
 
-	<table class="table table-responsive table-striped">
+	<table class="table table-striped">
 		<tbody>
 		@foreach($record->words->where('deleted_flag', 0) as $r)
 			<tr>
             @if (App\User::isOwner($record->user_id))
-				<td><a href="/{{$prefixWord}}/edit-user/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
+				<td class="icon"><a href="/{{$prefixWord}}/edit-user/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
             @endif
 				<td>
 				    <a href="/{{$prefixWord}}/view/{{$r->id}}">{{$r->title}}</a>
 				    <div>{{substr($r->description, 0, 200)}}</div>
 				</td>
             @if (App\User::isOwner($record->user_id))
-				<td><a href="/{{$prefixWord}}/confirmdelete/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
+				<td class="icon"><a href="/{{$prefixWord}}/confirmdelete/{{$r->id}}"><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
             @endif
 			</tr>
 		@endforeach

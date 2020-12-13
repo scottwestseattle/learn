@@ -16,7 +16,7 @@ class VocabList extends Model
         return $this->hasMany('App\Word', 'vocab_list_id', 'id')->orderByDesc('id');
     }
 
-   static public function getIndex($parms = [])
+	static public function getIndex($parms = [])
     {
 		$records = []; // make this countable so view will always work
 
@@ -27,7 +27,7 @@ class VocabList extends Model
         {
 			$records = self::select()
 //				->where('site_id', SITE_ID)
-				->where('release_flag', '>=', RELEASE_PUBLISHED)
+				->where('release_flag', '>=', RELEASE_PUBLIC)
 				->orderByRaw('id DESC')
 				->get();
         }
@@ -37,7 +37,7 @@ class VocabList extends Model
             {
                 // only return the user's list
                 $records = self::select()
-    				->where('release_flag', '>=', RELEASE_PUBLISHED)
+    				->where('release_flag', '>=', RELEASE_PUBLIC)
                     ->orWhere('user_id', Auth::id())
                     ->orderBy('type_flag')
                     ->orderByRaw('id DESC')

@@ -6,12 +6,16 @@ use Illuminate\Http\Request;
 
 use DB;
 use Auth;
-use App\User;
-use App\VocabList;
+use App\Definition;
+use App\Entry;
 use App\Event;
 use App\Lesson;
-use App\Tools;
+use App\Quiz;
 use App\Status;
+use App\Tag;
+use App\Tools;
+use App\User;
+use App\VocabList;
 use App\Word;
 
 define('PREFIX', 'vocab-lists');
@@ -37,10 +41,20 @@ class VocabListController extends Controller
 
     public function index(Request $request)
     {
-        $records = VocabList::getIndex(['ownedOrPublic']);
+		// qna lists
+        $records = VocabList::getIndex(['owned']);
+
+		// definitions favorites
+		$favorites = Definition::getUserFavoriteLists();
+
+		// articles/books look ups
+		$entries = Entry::getDefinitionsUser();
 
 		return view(PREFIX . '.index', $this->getViewData([
+			'favorites' => $favorites,
 			'records' => $records,
+			'entries' => $entries,
+			'newest' => true, // show the option for "New Dictionary Entries" review and flashcards
 		]));
     }
 
@@ -136,6 +150,27 @@ class VocabListController extends Controller
 	public function view(VocabList $vocabList)
     {
         $record = $vocabList;
+
+		if (false) // one time code to export list words to the dictionary
+		{
+			foreach($record->words->where('deleted_flag', 0) as $r)
+			{
+				$def = Definition::search($r->title);
+				if (!isset($def))
+				{
+					$def = Definition::add($r->title, $r->description, /* translation = */ null, $r->examples);
+					//dump($r->title);
+					Event::logAdd(LOG_MODEL_DEFINITIONS, $r->title, $r->description, 0);
+				}
+				else
+				{
+					//dump('skipped: ' . $r->title);
+					Event::logAdd(LOG_MODEL_DEFINITIONS, 'skipped: ' . $r->title, $r->description, 0);
+				}
+			}
+		}
+		
+		//dd('done');
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
@@ -274,34 +309,19 @@ class VocabListController extends Controller
 
 	public function review(VocabList $vocabList, $reviewType = null)
     {
+		$reviewType = intval($reviewType);
 		$quiz = self::makeQuiz($vocabList->words); // splits text into questions and answers
-		$quiz = Lesson::formatMc3($quiz, LESSONTYPE_QUIZ_MC3); // format the answers according to quiz type
+		$settings = Quiz::getSettings($reviewType);
 
-		$options = Tools::getOptionArray('font-size="150%"');
-
-		$options['prompt'] = Tools::getSafeArrayString($options, 'prompt', 'Select the correct answer');
-		$options['prompt-reverse'] = Tools::getSafeArrayString($options, 'prompt-reverse', 'Select the correct question');
-		$options['question-count'] = Tools::getSafeArrayInt($options, 'question-count', 0);
-		$options['font-size'] = Tools::getSafeArrayString($options, 'font-size', '120%');
-
-		$quizText = [
-			'Round' => 'Round',
-			'Correct' => 'Correct',
-			'TypeAnswers' => 'Type the Answer',
-			'Wrong' => 'Wrong',
-			'of' => 'of',
-		];
-
-		return view('lessons.reviewmc', $this->getViewData([
-			'record' => $vocabList,
+		return view($settings['view'], $this->getViewData([
 			'sentenceCount' => count($quiz),
 			'records' => $quiz,
-			'options' => $options,
 			'canEdit' => true,
-			'quizText' => $quizText,
 			'isMc' => true,
-			'returnPath' => PREFIX . '/view',
+			'returnPath' => '/' .  PREFIX . '/view/' . $vocabList->id . '',
 			'touchPath' => 'words/touch',
+			'parentTitle' => $vocabList->title,			
+			'settings' => $settings,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
 
@@ -311,9 +331,14 @@ class VocabListController extends Controller
 		$cnt = 0;
 		foreach($records as $record)
 		{
-		    // flip the title and description so title will be the answer
-            $qna[$cnt]['q'] = $record->description;
-            $qna[$cnt]['a'] = $record->title;
+			$question = $record->title;
+			$definition = Tools::getOrSetString($record->description, $question . ': definition not set');
+			$examples = $record->examples;
+			
+            $qna[$cnt]['q'] = $question;
+            $qna[$cnt]['a'] = $definition;
+            $qna[$cnt]['definition'] = 'false';
+            $qna[$cnt]['extra'] = nl2br($examples); // only used for flashcards
             $qna[$cnt]['id'] = $record->id;
             $qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
             $qna[$cnt]['options'] = '';

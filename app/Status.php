@@ -13,7 +13,9 @@ class Status
 		RELEASE_NOTSET => 'Not Set',
 		RELEASE_PRIVATE => 'Private',
 		RELEASE_APPROVED => 'Approved',
-		RELEASE_PUBLISHED => 'Published',
+		RELEASE_PAID => 'Premium',
+		RELEASE_MEMBER => 'Member',
+		RELEASE_PUBLIC => 'Public',
     ];
 
 	const _wipFlags = [
@@ -30,7 +32,7 @@ class Status
 	}
     static public function isPublished($release_flag)
     {
-		return ($release_flag == RELEASE_PUBLISHED);
+		return ($release_flag == RELEASE_PUBLIC);
 	}
 
     static public function getReleaseFlags()
@@ -43,7 +45,7 @@ class Status
 		return self::_wipFlags;
 	}
 
-    static public function getReleaseStatus($release_flag)
+    static public function getReleaseStatus($release_flag, $showPublic = false)
     {
 		$btn = '';
 		$text = Tools::safeArrayGetString(self::_releaseFlags, $release_flag, 'Unknown Value: ' . $release_flag);
@@ -55,20 +57,35 @@ class Status
 				$btn = 'btn-danger';
 				break;
 			case RELEASE_PRIVATE:
-				$btn = 'btn-primary';
+				$btn = 'btn-secondary';
 				break;
 			case RELEASE_APPROVED:
-				$btn = 'btn-success';
+				$btn = 'btn-warning';
 				break;
-			case RELEASE_PUBLISHED:
-				// don't show anything for published records
-				$btn = '';
-				$text = '';
-				$done = true;
+			case RELEASE_PAID:
+				$btn = 'btn-info';
 				break;
+			case RELEASE_MEMBER:
+				$btn = 'btn-primary';
+				break;
+			case RELEASE_PUBLIC:
+			{
+				if ($showPublic)
+				{
+					$btn = 'btn-success';
+				}
+				else
+				{
+					// don't show anything for published records
+					$btn = '';
+					$text = '';
+					$done = true;
+				}
+				break;
+			}
 			default:
 				$btn = 'btn-danger';
-				$text = 'Unknown Value';
+				$text = 'Not Set';
 				break;
 		}
 

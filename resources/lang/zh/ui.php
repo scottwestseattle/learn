@@ -113,4 +113,13 @@ return [
 'Quit' => '出口',
 'by clicking here' => '点击这里',
 'Search' => '搜索',
+'views' => '查看次数',
+'Books' => '图书',
+'Review' => '评论',
+'Tag' => '标签',
+'Tags' => '标签',
+'User' => '用户',
+'List' => '清单',
+'Restart' => '重新开始',
+'Translation' => '翻译',
 ];

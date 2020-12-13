@@ -96,6 +96,26 @@ class Word extends Model
 		return $records;
 	}
 
+	static public function searchWord($search)
+    {
+		$record = null;
+
+		try
+		{
+            $record = Word::select()
+                ->where('words.title', $search)
+                ->first();
+		}
+		catch(\Exception $e)
+		{
+		    $msg = "Search Word Error";
+			Event::logException(LOG_MODEL_WORDS, LOG_ACTION_SEARCH, 'search = ' . $search, null, $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $record;
+	}
+	
     static public function addList($parent_id, $words)
     {
 		$parent_id = intval($parent_id);
@@ -252,7 +272,7 @@ class Word extends Model
 			{
 				// check if this word already belongs to any lesson in the course
 				$words = DB::table('words')
-					->join('lessons', 'lessons.id', '=', 'words.parent_id')
+					->join('lessons', 'lessons.id', '=', 'words.lesson_id')
 					->select('words.*', 'lessons.id as lessonId', 'lessons.title as lessonTitle', 'lessons.lesson_number', 'lessons.section_number')
 					->where('words.type_flag', WORDTYPE_LESSONLIST)
 					->where('lessons.parent_id', $parent->parent_id) // only lessons of this course

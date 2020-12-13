@@ -113,4 +113,13 @@ return [
 'Quit' => 'Salir',
 'by clicking here' => 'haciendo clic aquí',
 'Search' => 'Buscar',
+'views' => 'conteo de visitas',
+'Books' => 'Libros',
+'Review' => 'Revisar',
+'Tag' => 'Etiqueta',
+'Tags' => 'Etiquetas',
+'User' => 'Usuario',
+'List' => 'Lista',
+'Restart' => 'Reiniciar',
+'Translation' => 'Traducción',
 ];

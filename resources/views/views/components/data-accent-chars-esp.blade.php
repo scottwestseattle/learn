@@ -1,0 +1,1 @@
+<div class="data-accent-chars">á-é-í-ó-ú-ü-ñ-Á-É-Í-Ú-Ü-Ñ</div>
