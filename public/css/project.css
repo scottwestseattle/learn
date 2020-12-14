@@ -207,7 +207,7 @@ h1,h3 {
 }
 
 .fpBannerImage {
-	background-image:url('/img/banner.png'); 
+	background-image:url('/img/banner2.png');
 	background-repeat: no-repeat;
 	background-position: center;
 }
@@ -806,7 +806,7 @@ h1,h3 {
 .lesson-table th {
     background-color: #eff7f0;
 	font-weight: bold;
-	text-align: center;	
+	text-align: center;
 }
 
 .lesson-table, .lesson-table input
@@ -928,6 +928,11 @@ h1,h3 {
 	font-size:18px;
 }
 
+.phrase-of-the-day-text {
+	font-size: 35px;
+	font-weight: 200;
+}
+
 .small-thin-hdr {
 	font-size:12px;
 	font-weight:bold;
@@ -939,7 +944,7 @@ td.article-extra {
 }
 
 .vertical-align {
-	line-height:20px; 
+	line-height:20px;
 	valign:middle;
 }
 
@@ -996,31 +1001,31 @@ label.tiny {
 	white-space: -o-pre-wrap; /* Opera 7 */
 	white-space: -moz-pre-wrap; /* Mozilla */
 	word-wrap: break-word; /* IE 5+ */
-} 
+}
 
 /*********************************************************/
 /* badges                                                */
 /*********************************************************/
 
 .badge-purple, .badge-blue {
-	display: inline-block; 
-	vertical-align: middle; 
+	display: inline-block;
+	vertical-align: middle;
 	margin-bottom: 3px;
 }
 
 .badge-purple {
-	background-color: purple; 
-	color: white;	
+	background-color: purple;
+	color: white;
 }
 
 .badge-blue {
 	background-color: #4993FD; /* bright-blue */
-	color: white;	
+	color: white;
 }
 
 .badge-white {
 	background-color: white;
-	color: #4993FD;	
+	color: #4993FD;
 }
 
 .badge-medium {
@@ -1029,9 +1034,9 @@ label.tiny {
 }
 
 .badge-small {
-	font-size:10px; 
-	padding:2px 2px; 
-	font-weight:bold;	
+	font-size:10px;
+	padding:2px 2px;
+	font-weight:bold;
 	margin-left: 5px;
 }
 
@@ -1046,8 +1051,8 @@ label.tiny {
 }
 
 .glyphCustom-lt {
-	font-size:13px; 
-	color:#acacac;	
+	font-size:13px;
+	color:#acacac;
 }
 
 .glyphCustom-sm {
@@ -1163,6 +1168,47 @@ h6 {
 
 .navbar-icon-shortcuts a {
 	color: white;
-	margin: auto 10px;	
+	margin: auto 10px;
+}
+
+.phrase-of-the-day {
+	color: white;
+	background-color:#fe5b4c;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #d03b2d;
+	border-radius: 5px;
+	width:100%;
+	max-width:600px;
+	font-weight: 300;
+	font-size: 28px;
+}
+
+.phrase-of-the-day p:last-child {
+    margin-bottom: 0;
+}
+.phrase-of-the-day h4 {
+    color: #5cb85c;
+	color:#666;
+    margin-bottom:30px;
+}
+
+.card-potd, .card-potd a {
+	min-height:200px;
+	color:white;
+	text-decoration:none;
+	background-color: #4993FD;
+}
+
+.card-header-potd {
+    font-size: 28px;
+    font-weight: 400;
+}
+
+.card-body-potd {
+    font-size: 26px;
+    font-weight: 300;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 

@@ -185,4 +185,6 @@ return [
 'Vocabulary saved from articles' => 'Vocabulario guardado de artículos',
 'Dictionary Words' => 'Palabras del Diccionario',
 'No lists' => 'No listas',
+'Phrase of the day' => 'Frase del día',
+'Practice this phrase out loud' => 'Practica esta frase en voz alta',
 ];

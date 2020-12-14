@@ -185,4 +185,6 @@ return [
 'Vocabulary saved from articles' => '从文章中保存的词汇',
 'Dictionary Words' => '字典词',
 'No lists' => '没有清单',
+'Phrase of the day' => '当天的词组',
+'Practice this phrase out loud' => '大声练习这个短语',
 ];

@@ -120,7 +120,7 @@ return [
 'Score' => 'Score',
 'No quiz results yet' => 'No results yet',
 'Latest Vocabulary' => 'Latest Vocabulary',
-'Site Title Spanish' => 'Learn Spanish in 50 Lessons',
+'Site Title Spanish' => 'Spanish in 50 Lessons',
 'From' => 'From',
 'To' => 'To',
 'Word of the Day' => 'Word of the Day',
@@ -185,4 +185,6 @@ return [
 'Vocabulary saved from articles' => 'Vocabulary saved from articles',
 'Dictionary Words' => 'Dictionary Words',
 'No lists' => 'No lists',
+'Phrase of the day' => 'Phrase of the day',
+'Practice this phrase out loud' => 'Practice this phrase out loud',
 ];

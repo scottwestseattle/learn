@@ -3,31 +3,63 @@
 @section('content')
 
 <!--------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------->
 <!-- Front Page -->
 <!--------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------->
 
+<!--------------------------------------------------------------------------------------->
+<!-- Header -->
+<!--------------------------------------------------------------------------------------->
 @if (Auth::check() && count($lesson) > 0)
+    <div class="mt-5"></div>
 @else
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="fpheader app-color-primary fpBannerImage">
-	<div class="container text-center" >
-		@if (isset($jumboTitle))
-			<h1 class="text-lg">@LANG('fp.' . $jumboTitle)</h1>
-			<p>@LANG('fp.' . $jumboSlug)</p>
-		@else
-			<h1 class="">@LANG('fp.Frontpage Header Title')</h1>
-			<p>@LANG('fp.Frontpage Header Body')</p>
-		@endif
-		@if (App\Tools::siteUses(LOG_MODEL_COURSES))
-			<p><a class="btn btn-primary btn-lg" href="/start" role="button">@LANG('fp.Start') &raquo;</a></p>
-		@endif
-	</div>
+
+    @if (false)
+        <div class="container text-center" >
+            @if (isset($jumboTitle))
+                <h1 class="text-lg">@LANG('fp.' . $jumboTitle)</h1>
+                <p>@LANG('fp.' . $jumboSlug)</p>
+            @else
+                <h1 class="">@LANG('fp.Frontpage Header Title')</h1>
+                <p>@LANG('fp.Frontpage Header Body')</p>
+            @endif
+            @if (App\Tools::siteUses(LOG_MODEL_COURSES))
+                <p><a class="btn btn-primary btn-lg" href="/start" role="button">@LANG('fp.Start') &raquo;</a></p>
+            @endif
+        </div>
+    @else
+        <div style="height:150px;"></div>
+    @endif
+
 </div>
+
 @endif
 
-<div class="container page-normal">
+<div class="container page-normal" style="clear:both;">
 
-	<!-- SHOW VOCAB LISTS -->
+<!--------------------------------------------------------------------------------------->
+<!-- PHRASE OF THE DAY -->
+<!--------------------------------------------------------------------------------------->
+    <div class="card card-potd truncate mt-3">
+        <a href="/">
+            <div class="card-header card-header-potd">
+                <div>@LANG('content.Phrase of the day')</div>
+	            <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
+            </div>
+            <div class="card-body card-body-potd">
+                <p>¡Qué horrible fue el error que cometí cuando arreglé la llave para arrancar el carro!</p>
+            </div>
+        </a>
+    </div>
+
+<!--------------------------------------------------------------------------------------->
+<!-- VOCAB LISTS (Logged in only) -->
+<!--------------------------------------------------------------------------------------->
 	@if (isset($vocabLists) && count($vocabLists) > 0)
 		<h3>@LANG('content.Vocabulary') ({{count($vocabLists)}})</h3>
 		<div class="row row-course">
@@ -45,7 +77,9 @@
 	@endif
 	<!-- END OF VOCAB LISTS -->
 
-	<!-- SHOW COURSES -->
+<!--------------------------------------------------------------------------------------->
+<!-- COURSES (Logged in only) -->
+<!--------------------------------------------------------------------------------------->
 	@if (App\Tools::siteUses(LOG_MODEL_COURSES))
 		@if (Auth::check())
 
@@ -82,7 +116,9 @@
 	@endif
 	<!-- END OF COURSES -->
 
-    <!-- SHOW ARTICLES -->
+<!--------------------------------------------------------------------------------------->
+<!-- ARTICLES -->
+<!--------------------------------------------------------------------------------------->
 	@if (App\Tools::siteUses(LOG_MODEL_ARTICLES))
 		<h3>@LANG('content.Latest Articles')</h3>
 		<div class="text-center mt-3">
@@ -133,10 +169,11 @@
 			</div>
 			<div class="mb-4"><a href="/articles">@LANG('content.Show All Articles')</a></div>
 		</div>
-		<!-- END OF ARTICLES -->
 	@endif
 
-    <!-- SHOW WORD OF THE DAY -->
+<!--------------------------------------------------------------------------------------->
+<!-- WORD OF THE DAY (not used) -->
+<!--------------------------------------------------------------------------------------->
     @if (isset($wod))
         <h3>@LANG('content.Word of the Day')</h3>
 		<div style="max-width:600px;">
@@ -155,7 +192,12 @@
 			</div>
 		</div>
     @endif
-    <!-- END OF WORD OF THE DAY -->
+
+<!--------------------------------------------------------------------------------------->
+<!-- BUY US A COFFEE BUTTON -->
+<!--------------------------------------------------------------------------------------->
+
+<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="Spanish50" data-color="#FFDD00" data-emoji=""  data-font="Cookie" data-text="Buy us a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>	<!-- SHOW VOCAB LISTS -->
 
 </div>
 
