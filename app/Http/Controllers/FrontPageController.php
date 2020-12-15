@@ -36,9 +36,9 @@ class FrontPageController extends Controller
      */
     public function start()
     {
-		return redirect('/courses/start');		
+		return redirect('/courses/start');
 	}
-	
+
     /**
      * Show the application front page.
      *
@@ -63,7 +63,7 @@ class FrontPageController extends Controller
 				// format the examples to display as separate sentences
 				$wod->examples = Tools::splitSentences($wod->examples);
 			}
-			
+
 			try
 			{
 				$vocabLists = VocabList::getIndex();
@@ -73,7 +73,7 @@ class FrontPageController extends Controller
 				$msg = 'Error getting Vocab Lists';
 				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 				Tools::flash('danger', $msg);
-			}			
+			}
 		}
 
 		if (Tools::siteUses(LOG_MODEL_LESSONS) && Auth::check())
@@ -116,16 +116,27 @@ class FrontPageController extends Controller
 
 		$jumboTitle = null;
 		$jumboSlug = 'jumboSlug';
+		$banner = null;
+		$logoFooter = null;
+		$fotd = null;
 		if (Tools::getSiteLanguage() == LANGUAGE_SPANISH)
 		{
 			$randomWord = Definition::getRandomWord();
 			$jumboTitle = 'jumboTitleSpanish';
+			$logoFooter = 'logo-footer-es.png';
+            $fotd = '¡Qué horrible fue el error que cometí cuando arreglé la llave para arrancar el carro!';
+            $fotd = 'Sin entrar en pormenores, su semblante se volvió sombrío porque estaba horrorizado por el siniestro acontecimiento que presenció.';
+            $fotd = 'Como dice el sabio, si me hubiera rendido, nunca habría llegado a ninguna parte.';
+
+            $files = scandir(base_path() . '/public/img/banners');
+			$ix = rand(1, count($files) - 2); // subtract 2 for '.' and '..'
+			$banner = 'es-banner' . $ix . '.png';
 		}
 		else if ((Tools::getSiteLanguage() == LANGUAGE_ENGLISH))
 		{
 			$jumboTitle = 'jumboTitleEnglish';
 		}
-		
+
 		return view('frontpage.index', $this->getViewData([
 			'courses' => $courses,
 			'vocabLists' => $vocabLists,
@@ -135,6 +146,9 @@ class FrontPageController extends Controller
 			'jumboTitle' => $jumboTitle,
 			'jumboSlug' => $jumboSlug,
 			'randomWord' => $randomWord,
+			'banner' => $banner,
+			'logoFooter' => $logoFooter,
+			'fotd' => $fotd,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

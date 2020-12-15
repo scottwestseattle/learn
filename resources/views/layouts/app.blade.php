@@ -12,6 +12,17 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	<meta name="author" content="Learn Systems">
 	<meta name="generator" content="Jekyll v3.8.5">
 	<meta name="csrf-token" content="{{ csrf_token() }}" />
+
+	<!-- Icon -->
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#ffc40d">
+    <meta name="theme-color" content="#ffffff">
+
+	<!-- Title -->
 	<title>{{$siteTitle}}</title>
 
     <!-- Scripts -->
@@ -170,12 +181,12 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 	<!-- FOOTER -->
 	<footer class="footer backin-black">
-		<div class="container marketing text-center pt-5">
+		<div class="container marketing text-center pt-4 pb-4">
 
 			<a class="" href="/">
-			    @if (true)
+			    @if (isset($logoFooter))
 			        <div>
-			            <img width="250" src="/img/banner.png" />
+			            <img width="250" src="/img/{{$logoFooter}}" />
 			        </div>
 			    @else
 				<div class="brand logo middle">
@@ -187,7 +198,9 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 			</a>
 
 			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
-			<!-- p style="font-size:1.2em;" class="">{{$siteTitleLite}}</p -->
+			@if (!isset($logoFooter))
+			<p style="font-size:1.2em;" class="">{{$siteTitleLite}}</p>
+			@endif
 			<p>&copy; {{date("Y")}} {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
 			<span class="footer-links">
 				<a href="#">@LANG('ui.Back to Top')</a>&bull;

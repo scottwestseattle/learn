@@ -16,46 +16,45 @@
 @if (Auth::check() && count($lesson) > 0)
     <div class="mt-5"></div>
 @else
-<!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="fpheader app-color-primary fpBannerImage">
 
-    @if (false)
-        <div class="container text-center" >
-            @if (isset($jumboTitle))
-                <h1 class="text-lg">@LANG('fp.' . $jumboTitle)</h1>
-                <p>@LANG('fp.' . $jumboSlug)</p>
-            @else
-                <h1 class="">@LANG('fp.Frontpage Header Title')</h1>
-                <p>@LANG('fp.Frontpage Header Body')</p>
-            @endif
-            @if (App\Tools::siteUses(LOG_MODEL_COURSES))
-                <p><a class="btn btn-primary btn-lg" href="/start" role="button">@LANG('fp.Start') &raquo;</a></p>
-            @endif
-        </div>
+    @if (isset($banner))
+        <div><img src="/img/banners/{{$banner}}" style="width:100%;" /></div>
     @else
-        <div style="height:150px;"></div>
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="app-color-primary fpBannerImage" style="min-height:300px;">
+            <div class="container text-center" >
+                @if (isset($jumboTitle))
+                    <h1 class="text-lg">@LANG('fp.' . $jumboTitle)</h1>
+                    <p>@LANG('fp.' . $jumboSlug)</p>
+                @else
+                    <h1 class="">@LANG('fp.Frontpage Header Title')</h1>
+                    <p>@LANG('fp.Frontpage Header Body')</p>
+                @endif
+                @if (App\Tools::siteUses(LOG_MODEL_COURSES))
+                    <p><a class="btn btn-primary btn-lg" href="/start" role="button">@LANG('fp.Start') &raquo;</a></p>
+                @endif
+            </div>
+        </div>
     @endif
-
-</div>
 
 @endif
 
-<div class="container page-normal" style="clear:both;">
+<div class="container page-normal">
 
 <!--------------------------------------------------------------------------------------->
 <!-- PHRASE OF THE DAY -->
 <!--------------------------------------------------------------------------------------->
-    <div class="card card-potd truncate mt-3">
-        <a href="/">
-            <div class="card-header card-header-potd">
-                <div>@LANG('content.Phrase of the day')</div>
-	            <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
-            </div>
-            <div class="card-body card-body-potd">
-                <p>¡Qué horrible fue el error que cometí cuando arreglé la llave para arrancar el carro!</p>
-            </div>
-        </a>
+@if (isset($fotd))
+    <div class="card card-potd truncate mt-3" style="max-width:700px;">
+        <div class="card-header card-header-potd">
+            <div>@LANG('content.Phrase of the day')</div>
+            <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
+        </div>
+        <div class="card-body card-body-potd">
+            <p>{{$fotd}}</p>
+        </div>
     </div>
+@endif
 
 <!--------------------------------------------------------------------------------------->
 <!-- VOCAB LISTS (Logged in only) -->
