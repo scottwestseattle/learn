@@ -123,4 +123,5 @@ return [
 'Restart' => '重新开始',
 'Translation' => '翻译',
 'or' => '要么',
+'Not Found' => '记录不存在',
 ];

@@ -123,4 +123,5 @@ return [
 'Restart' => 'Reiniciar',
 'Translation' => 'Traducción',
 'or' => 'o',
+'Not Found' => 'No encontrado',
 ];

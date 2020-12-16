@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use DB;
 use Auth;
+use Lang;
 
 use App\Course;
 use App\Definition;
@@ -127,9 +128,13 @@ class FrontPageController extends Controller
             $fotd = '¡Qué horrible fue el error que cometí cuando arreglé la llave para arrancar el carro!';
             $fotd = 'Sin entrar en pormenores, su semblante se volvió sombrío porque estaba horrorizado por el siniestro acontecimiento que presenció.';
             $fotd = 'Como dice el sabio, si me hubiera rendido, nunca habría llegado a ninguna parte.';
+            $wod = '<b>tener</b> - to have<br/><i>Tengo muchas ganas de ir.<br/>Hay que tener fe.</i>';
 
-            $files = scandir(base_path() . '/public/img/banners');
-			$ix = rand(1, count($files) - 2); // subtract 2 for '.' and '..'
+            $fotd = Word::getPotd();
+            $fotd = isset($fotd) ? $fotd : Lang::get('ui.Not Found');
+
+            $files = preg_grep('/^([^.])/', scandir(base_path() . '/public/img/banners')); // grep removes the hidden files
+			$ix = rand(1, count($files));
 			$banner = 'es-banner' . $ix . '.png';
 		}
 		else if ((Tools::getSiteLanguage() == LANGUAGE_ENGLISH))

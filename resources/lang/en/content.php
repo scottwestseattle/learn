@@ -187,4 +187,6 @@ return [
 'No lists' => 'No lists',
 'Phrase of the day' => 'Phrase of the day',
 'Practice this phrase out loud' => 'Practice this phrase out loud',
+'Word of the day' => 'Word of the day',
+'A new word to learn every day' => 'A new word to learn every day',
 ];

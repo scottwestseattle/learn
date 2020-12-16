@@ -112,6 +112,9 @@ define('WORDTYPE_USERLIST', 3);
 define('WORDTYPE_VOCABLIST', 4);
 define('WORDTYPE_USERLIST_LIMIT', 20);
 
+// VocabList types
+define('VOCABLISTTYPE_POTD', '2');
+
 define('TIMED_SLIDES_DEFAULT_BREAK_SECONDS', 20);
 define('TIMED_SLIDES_DEFAULT_SECONDS', 50);
 
@@ -230,11 +233,11 @@ class Controller extends BaseController
 		$this->viewData['titlePlural'] = $this->titlePlural;
 		$this->viewData['isAdmin'] = Tools::isAdmin();
 		$this->viewData['isSuperAdmin'] = Tools::isSuperAdmin();
-		
+
 		$referrer = Tools::getReferrer();
 		$this->viewData['referrer'] = $referrer['input'];
 		$this->viewData['referrerUrl'] = $referrer['url'];
-		
+
 		if ($this->getDomainName() == 'localhost')
 			$this->viewData['localhost'] = true;
 
@@ -527,14 +530,14 @@ class Controller extends BaseController
     public function pageNotFound404($model, $view = null, $parameters = null)
     {
 		$title = 'Page Not Found (404)';
-		$description = $model . '/' . $view . '/' . $parameters;			
+		$description = $model . '/' . $view . '/' . $parameters;
 		//$geo = new Geo;
 		//$desc = $geo->visitorInfoDebug();
-		Event::logError('controller', LOG_ACTION_VIEW, $title, $description);			
+		Event::logError('controller', LOG_ACTION_VIEW, $title, $description);
 		$data['title'] = '404';
 		$data['name'] = 'Page not found';
-		
-		return response()->view('errors.404', $data, 404);		
+
+		return response()->view('errors.404', $data, 404);
 	}
 
 	// can't use 'Request $request' because multiple Request classes are used
@@ -545,7 +548,7 @@ class Controller extends BaseController
 		{
 			$rc = $request->referrer;
 		}
-		
+
 		return $rc;
 	}
 }

@@ -650,7 +650,7 @@ class Tools
 			case SITE_ID_SPANISH50: // spanish50
 			case SITE_ID_LOCALHOST: // localhost
 				//$rc = ($model == LOG_MODEL_COURSES);
-				$rc = ($model == LOG_MODEL_ARTICLES || $model == LOG_MODEL_DEFINITIONS);
+				$rc = ($model == LOG_MODEL_ARTICLES || $model == LOG_MODEL_DEFINITIONS || $model == LOG_MODEL_WORDS);
 				break;
 			default:
 				break;

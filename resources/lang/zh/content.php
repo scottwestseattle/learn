@@ -187,4 +187,6 @@ return [
 'No lists' => '没有清单',
 'Phrase of the day' => '当天的词组',
 'Practice this phrase out loud' => '大声练习这个短语',
+'Word of the day' => '每日一词',
+'A new word to learn every day' => '每天学习一个新词',
 ];

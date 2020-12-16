@@ -18,7 +18,13 @@
 @else
 
     @if (isset($banner))
-        <div><img src="/img/banners/{{$banner}}" style="width:100%;" /></div>
+        <div><a href="/"><img src="/img/banners/{{$banner}}" style="width:100%;" /></a></div>
+        <div class="fpBannerImage" style="background-color:#4993FD">
+            <div class="container text-center pt-3 pb-2" >
+                <div class="mb-3 hidden-xs" style="font-size:24px; color:white; font-weight:200;">Welcome to Spanish50.com where we love the Spanish language and culture.</div>
+    		    <img src="/img/logo-main.png" style="max-width:300px;" />
+            </div>
+        </div>
     @else
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="app-color-primary fpBannerImage" style="min-height:300px;">
@@ -45,15 +51,37 @@
 <!-- PHRASE OF THE DAY -->
 <!--------------------------------------------------------------------------------------->
 @if (isset($fotd))
-    <div class="card card-potd truncate mt-3" style="max-width:700px;">
-        <div class="card-header card-header-potd">
-            <div>@LANG('content.Phrase of the day')</div>
-            <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
-        </div>
-        <div class="card-body card-body-potd">
-            <p>{{$fotd}}</p>
-        </div>
-    </div>
+
+	<div class="row row-course">
+		<div class="col-sm-12 col-lg-6 col-course" style="">
+		@if (false)
+		    <img src="/img/logo-main.png" style="width:300px;" />
+		@else
+            <div class="card card-wotd truncate mt-1" style="">
+                <div class="card-header card-header-potd">
+                    <div>@LANG('content.Word of the day')</div>
+                    <div class="small-thin-text">@LANG('content.A new word to learn every day')</div>
+                </div>
+                <div class="card-body card-body-potd">
+                    <p>{!!$wod!!}</p>
+                </div>
+            </div>
+        @endif
+		</div>
+
+		<div class="col-sm-12 col-lg-6 col-course">
+            <div class="card card-potd truncate mt-1" style="">
+                <div class="card-header card-header-potd">
+                    <div>@LANG('content.Phrase of the day')</div>
+                    <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
+                </div>
+                <div class="card-body card-body-potd">
+                    <p>{{$fotd}}</p>
+                </div>
+            </div>
+		</div>
+	</div>
+
 @endif
 
 <!--------------------------------------------------------------------------------------->
@@ -173,7 +201,7 @@
 <!--------------------------------------------------------------------------------------->
 <!-- WORD OF THE DAY (not used) -->
 <!--------------------------------------------------------------------------------------->
-    @if (isset($wod))
+    @if (false && isset($wod))
         <h3>@LANG('content.Word of the Day')</h3>
 		<div style="max-width:600px;">
 			<div class="card text-white bg-primary mb-3">
