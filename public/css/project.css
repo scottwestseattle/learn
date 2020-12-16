@@ -932,6 +932,16 @@ h1,h3 {
 	font-weight:200;
 }
 
+.large-thin-text {
+	font-size:22px;
+	font-weight:200;
+}
+
+.xl-thin-text {
+	font-size:26px;
+	font-weight:200;
+}
+
 .large-text {
 	font-size:18px;
 }

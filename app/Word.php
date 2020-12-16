@@ -602,4 +602,37 @@ class Word extends Model
 
 		return $record;
 	}
+
+    static public function getWotd()
+    {
+        $rc = null;
+
+        $record = self::getWotdRecord();
+        if (isset($record) && count($record) > 0)
+            $rc = $record[0];
+
+        return $rc;
+    }
+
+    static public function getWotdRecord()
+    {
+        $record = null;
+
+		try
+		{
+            $record = DB::table('words')
+                ->join('vocab_lists', 'vocab_lists.id', '=', 'words.vocab_list_id')
+                ->select('words.*')
+                ->where('vocab_lists.type_flag', VOCABLISTTYPE_WOTD)
+                ->orderByRaw('id DESC')
+                ->get();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting potd';
+			Event::logException('word', LOG_ACTION_SELECT, 0, null, $msg . ': ' . $e->getMessage());
+		}
+
+		return $record;
+	}
 }

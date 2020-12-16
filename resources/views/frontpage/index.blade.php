@@ -18,10 +18,17 @@
 @else
 
     @if (isset($banner))
+        <!--------------------------------------------------------------------------------------->
+        <!-- Banner -->
+        <!--------------------------------------------------------------------------------------->
         <div><a href="/"><img src="/img/banners/{{$banner}}" style="width:100%;" /></a></div>
+
+        <!--------------------------------------------------------------------------------------->
+        <!-- Tag line and Logo -->
+        <!--------------------------------------------------------------------------------------->
         <div class="fpBannerImage" style="background-color:#4993FD">
-            <div class="container text-center pt-3 pb-2" >
-                <div class="mb-3 hidden-xs" style="font-size:24px; color:white; font-weight:200;">Welcome to Spanish50.com where we love the Spanish language and culture.</div>
+            <div class="container text-center pt-2 pb-2" >
+                <div class="mb-3 mt-2 hidden-xs" style="font-size:24px; color:white; font-weight:200;">@LANG('fp.' . $jumboSlug)</div>
     		    <img src="/img/logo-main.png" style="max-width:300px;" />
             </div>
         </div>
@@ -48,27 +55,30 @@
 <div class="container page-normal">
 
 <!--------------------------------------------------------------------------------------->
-<!-- PHRASE OF THE DAY -->
+<!-- WORD AND PHRASE OF THE DAY -->
 <!--------------------------------------------------------------------------------------->
-@if (isset($fotd))
-
+@if (isset($wotd) || isset($potd))
 	<div class="row row-course">
+    @if (isset($wotd))
 		<div class="col-sm-12 col-lg-6 col-course" style="">
-		@if (false)
-		    <img src="/img/logo-main.png" style="width:300px;" />
-		@else
             <div class="card card-wotd truncate mt-1" style="">
                 <div class="card-header card-header-potd">
                     <div>@LANG('content.Word of the day')</div>
                     <div class="small-thin-text">@LANG('content.A new word to learn every day')</div>
                 </div>
                 <div class="card-body card-body-potd">
-                    <p>{!!$wod!!}</p>
+                    @if(isset($wotd))
+                        <div><b>{{$wotd->title}}</b> - <i>{{$wotd->description}}</i></div>
+                        <div class="large-thin-text">{{$wotd->examples}}</div>
+                    @else
+                        <div>@LANG('ui.Not Found')</div>
+                    @endif
                 </div>
             </div>
-        @endif
 		</div>
+    @endif
 
+    @if (isset($potd))
 		<div class="col-sm-12 col-lg-6 col-course">
             <div class="card card-potd truncate mt-1" style="">
                 <div class="card-header card-header-potd">
@@ -76,12 +86,12 @@
                     <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
                 </div>
                 <div class="card-body card-body-potd">
-                    <p>{{$fotd}}</p>
+                    <div class="xl-thin-text">{{$potd}}</div>
                 </div>
             </div>
 		</div>
+    @endif
 	</div>
-
 @endif
 
 <!--------------------------------------------------------------------------------------->

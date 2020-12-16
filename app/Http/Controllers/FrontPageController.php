@@ -125,13 +125,13 @@ class FrontPageController extends Controller
 			$randomWord = Definition::getRandomWord();
 			$jumboTitle = 'jumboTitleSpanish';
 			$logoFooter = 'logo-footer-es.png';
-            $fotd = '¡Qué horrible fue el error que cometí cuando arreglé la llave para arrancar el carro!';
-            $fotd = 'Sin entrar en pormenores, su semblante se volvió sombrío porque estaba horrorizado por el siniestro acontecimiento que presenció.';
-            $fotd = 'Como dice el sabio, si me hubiera rendido, nunca habría llegado a ninguna parte.';
-            $wod = '<b>tener</b> - to have<br/><i>Tengo muchas ganas de ir.<br/>Hay que tener fe.</i>';
 
-            $fotd = Word::getPotd();
-            $fotd = isset($fotd) ? $fotd : Lang::get('ui.Not Found');
+            // get word of the day
+            $wotd = Word::getWotd();
+
+            // get the phrase of the day
+            $potd = Word::getPotd();
+            $potd = isset($potd) ? $potd : Lang::get('ui.Not Found');
 
             $files = preg_grep('/^([^.])/', scandir(base_path() . '/public/img/banners')); // grep removes the hidden files
 			$ix = rand(1, count($files));
@@ -145,7 +145,6 @@ class FrontPageController extends Controller
 		return view('frontpage.index', $this->getViewData([
 			'courses' => $courses,
 			'vocabLists' => $vocabLists,
-			'wod' => $wod,
 			'articles' => $articles,
 			'lesson' => $lesson,
 			'jumboTitle' => $jumboTitle,
@@ -153,7 +152,9 @@ class FrontPageController extends Controller
 			'randomWord' => $randomWord,
 			'banner' => $banner,
 			'logoFooter' => $logoFooter,
-			'fotd' => $fotd,
+			'wod' => $wod,
+			'wotd' => $wotd,
+			'potd' => $potd,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

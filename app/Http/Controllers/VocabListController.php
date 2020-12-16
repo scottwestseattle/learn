@@ -169,7 +169,7 @@ class VocabListController extends Controller
 				}
 			}
 		}
-		
+
 		//dd('done');
 
 		return view(PREFIX . '.view', $this->getViewData([
@@ -195,6 +195,7 @@ class VocabListController extends Controller
 		$changes = '';
 
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
+		$record->type_flag = Tools::copyDirty($record->type_flag, $request->type_flag, $isDirty, $changes);
 
 		if ($isDirty)
 		{
@@ -320,7 +321,7 @@ class VocabListController extends Controller
 			'isMc' => true,
 			'returnPath' => '/' .  PREFIX . '/view/' . $vocabList->id . '',
 			'touchPath' => 'words/touch',
-			'parentTitle' => $vocabList->title,			
+			'parentTitle' => $vocabList->title,
 			'settings' => $settings,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
@@ -334,7 +335,7 @@ class VocabListController extends Controller
 			$question = $record->title;
 			$definition = Tools::getOrSetString($record->description, $question . ': definition not set');
 			$examples = $record->examples;
-			
+
             $qna[$cnt]['q'] = $question;
             $qna[$cnt]['a'] = $definition;
             $qna[$cnt]['definition'] = 'false';

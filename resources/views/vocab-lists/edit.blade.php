@@ -15,6 +15,15 @@
 			<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>
 		</div>
 
+        <div class="form-group">
+            <label for="type_flag">List Type:&nbsp;</label>
+            <select name="type_flag" id="type_flag">
+                <option value="0" {{$record->type_flag == 0 ? 'selected' : ''}}>Default</option>
+                <option value="{{VOCABLISTTYPE_POTD}}" {{$record->type_flag == VOCABLISTTYPE_POTD ? 'selected' : ''}}>Phrases of the day</option>
+                <option value="{{VOCABLISTTYPE_WOTD}}" {{$record->type_flag == VOCABLISTTYPE_WOTD ? 'selected' : ''}}>Words of the day</option>
+            </select>
+        </div>
+
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Save')</button>
 		</div>
