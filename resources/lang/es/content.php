@@ -189,4 +189,8 @@ return [
 'Practice this phrase out loud' => 'Practica esta frase en voz alta',
 'Word of the day' => 'Palabra del día',
 'A new word to learn every day' => 'Una nueva palabra para aprender todos los días',
+'SiteTitle-espdaily.com' => 'Aprenda español todos los días',
+'SiteTitle-spanish50.com' => 'Español en 50 lecciones',
+'SiteTitle-english50.com' => 'Aprenda inglés en 50 lecciones',
+'SiteTitle-localhost' => 'Mi nombre es localhost',
 ];

@@ -118,13 +118,14 @@ class FrontPageController extends Controller
 		$jumboTitle = null;
 		$jumboSlug = 'jumboSlug';
 		$banner = null;
-		$logoFooter = null;
-		$fotd = null;
+		$potd = null;
+		$wotd = null;
+		$supportMessage = null;
+
 		if (Tools::getSiteLanguage() == LANGUAGE_SPANISH)
 		{
 			$randomWord = Definition::getRandomWord();
 			$jumboTitle = 'jumboTitleSpanish';
-			$logoFooter = 'logo-footer-es.png';
 
             // get word of the day
             $wotd = Word::getWotd();
@@ -136,6 +137,7 @@ class FrontPageController extends Controller
             $files = preg_grep('/^([^.])/', scandir(base_path() . '/public/img/banners')); // grep removes the hidden files
 			$ix = rand(1, count($files));
 			$banner = 'es-banner' . $ix . '.png';
+			$supportMessage = Lang::get('content.Support Message');
 		}
 		else if ((Tools::getSiteLanguage() == LANGUAGE_ENGLISH))
 		{
@@ -151,10 +153,10 @@ class FrontPageController extends Controller
 			'jumboSlug' => $jumboSlug,
 			'randomWord' => $randomWord,
 			'banner' => $banner,
-			'logoFooter' => $logoFooter,
 			'wod' => $wod,
 			'wotd' => $wotd,
 			'potd' => $potd,
+			'supportMessage' => $supportMessage,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

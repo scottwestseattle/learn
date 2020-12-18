@@ -11,7 +11,7 @@ use DB;
 use App\Entry;
 
 class Tag extends Base
-{	
+{
     use SoftDeletes;
 
 	const _typeFlags = [
@@ -62,12 +62,12 @@ class Tag extends Base
 		// many to many
         return $this->belongsToMany('App\Definition')->orderBy('title');
     }
-	
+
     public function definitionsUser()
     {
 		return $this->belongsToMany('App\Definition')->wherePivot('user_id', Auth::id())->orderBy('title');
-    }	
-	
+    }
+
 	//////////////////////////////////////////////////////////////////////
 	//
 	// the basic CRUD functions
@@ -78,11 +78,11 @@ class Tag extends Base
 	{
 		$name = Tools::alphanum($name);
 		$record = null;
-		
+
 		if (isset($name) && strlen($name) > 0)
 		{
 			$record = self::get($name, $type, $userId);
-			
+
 			// if not found, add it
 			if (!isset($record))
 			{
@@ -92,19 +92,19 @@ class Tag extends Base
 		else
 		{
 			$msg = 'error getting tag: invalid name filtered to nothing';
-			Event::logError(LOG_MODEL_TAGS, LOG_ACTION_SELECT, 'getOrCreate()', $msg);			
+			Event::logError(LOG_MODEL_TAGS, LOG_ACTION_SELECT, 'getOrCreate()', $msg);
 		}
-		
+
 		return $record;
 	}
-	
+
     static public function get($name, $type, $userId = null)
     {
 		$record = null;
 		$name = Tools::alphanum($name, true);
 
 		if (isset($userId))
-		{			
+		{
 			$record = $record = Tag::select()
 					->where('deleted_at', null)
 					->where('name', $name)
@@ -123,17 +123,17 @@ class Tag extends Base
 
 		return $record;
     }
-	
+
     static public function getPivot($name, $type, $userId = null)
     {
 		$record = null;
 		$name = Tools::alphanum($name, true);
-		
+
 		$tag = DB::table('tags')
 			->join('definition_tag', function($join) use($userId) {
 				$join->on('definition_tag.tag_id', '=', 'tags.id');
 				$join->where('definition_tag.user_id', $userId);
-			})	
+			})
 			->select('tags.*')
 			->where('deleted_at', null)
 			->where('tags.name', $name)
@@ -147,21 +147,21 @@ class Tag extends Base
 			$record = Tag::select()
 					->where('id', $tag->id)
 					->first();
-		}	
+		}
 
 		return $record;
 	}
-	
+
     static public function getOld($name, $type, $userId = null)
     {
 		$record = null;
 		$name = Tools::alphanum($name, true);
-		
+
 		$tag = DB::table('tags')
 			->join('definition_tag', function($join) use($userId) {
 				$join->on('definition_tag.tag_id', '=', 'tags.id');
 				$join->where('definition_tag.user_id', $userId);
-			})	
+			})
 			->select('tags.*')
 			->where('deleted_at', null)
 			->where('tags.name', $name)
@@ -175,10 +175,10 @@ class Tag extends Base
 			$record = Tag::select()
 					->where('id', $tag->id)
 					->first();
-		}	
+		}
 
 		return $record;
-	}	
+	}
 
     static public function add($name, $type, $userId = null)
     {
@@ -211,12 +211,12 @@ class Tag extends Base
 			{
 				$msg = 'Error adding tag: ' . $record->name . ', userId: ' . intval($userId);
 				Event::logException(LOG_MODEL_TAGS, LOG_ACTION_ADD, $record->name, $msg, $e->getMessage());
-			}	
+			}
 		}
-		
+
 		return $record;
     }
-	
+
     static public function getById($id)
     {
 		$id = intval($id);
@@ -228,7 +228,7 @@ class Tag extends Base
 
 		return $record;
     }
-	
+
     static public function getByType($type)
     {
 		$type = intval($type);
@@ -239,5 +239,5 @@ class Tag extends Base
 				->get();
 
 		return $record;
-    }	
+    }
 }

@@ -92,7 +92,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 					@if (defined('LOG_MODEL_COURSES') && App\Tools::siteUses(LOG_MODEL_COURSES))
 						<li class="nav-item"><a class="nav-link" href="/courses">@LANG('content.Courses')</a></li>
 					@endif
-					@if ($isAdmin && defined('LOG_MODEL_BOOKS') && App\Tools::siteUses(LOG_MODEL_BOOKS))
+					@if (defined('LOG_MODEL_BOOKS') && App\Tools::siteUses(LOG_MODEL_BOOKS))
 						<li class="nav-item"><a class="nav-link" href="/books">@LANG('content.Books')</a></li>
 					@endif
 
@@ -181,26 +181,22 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 
 	<!-- FOOTER -->
 	<footer class="footer backin-black">
-		<div class="container marketing text-center pt-4 pb-4">
-
-			<a class="" href="/">
-			    @if (isset($logoFooter))
+		<div class="container text-center pt-4 pb-4">
+			    @if (true)
 			        <div>
-			            <img width="250" src="/img/{{$logoFooter}}" />
+			            <img width="175" src="/img/logo-main-{{\App\Tools::getDomainName()}}.png" />
 			        </div>
 			    @else
-				<div class="brand logo middle">
-					<svg class="bi app-color-primary-reverse" width="55" height="55" >
-						<use xlink:href="/img/bootstrap-icons.svg#brightness-high" />
-					</svg>
-				</div>
+                    <div class="brand logo middle">
+                        <svg class="bi app-color-primary-reverse" width="55" height="55" >
+                            <use xlink:href="/img/bootstrap-icons.svg#brightness-high" />
+                        </svg>
+                    </div>
 				@endif
 			</a>
 
-			<p style="font-size:2em;" class="footer-heading">{{$domainName}}</p>
-			@if (!isset($logoFooter))
-			<p style="font-size:1.2em;" class="">{{$siteTitleLite}}</p>
-			@endif
+			<p class="footer-heading">{{$domainName}}</p>
+			<p class="footer-text">{{$siteTitleLite}}</p>
 			<p>&copy; {{date("Y")}} {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
 			<span class="footer-links">
 				<a href="#">@LANG('ui.Back to Top')</a>&bull;

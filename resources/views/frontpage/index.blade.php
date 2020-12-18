@@ -29,7 +29,7 @@
         <div class="fpBannerImage" style="background-color:#4993FD">
             <div class="container text-center pt-2 pb-2" >
                 <div class="mb-3 mt-2 hidden-xs" style="font-size:24px; color:white; font-weight:200;">@LANG('fp.' . $jumboSlug)</div>
-    		    <img src="/img/logo-main.png" style="max-width:300px;" />
+    		    <img src="/img/logo-main-{{\App\Tools::getDomainName()}}.png" style="max-width:250px;" />
             </div>
         </div>
     @else
@@ -233,12 +233,29 @@
 <!--------------------------------------------------------------------------------------->
 <!-- BUY US A COFFEE BUTTON -->
 <!--------------------------------------------------------------------------------------->
-
-<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="Spanish50" data-color="#FFDD00" data-emoji=""  data-font="Cookie" data-text="Buy us a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>	<!-- SHOW VOCAB LISTS -->
+@if (isset($supportMessage))
+<div class="text-center">
+<script
+    type="text/javascript"
+    src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+    data-name="bmc-button"
+    data-slug="espdaily"
+    data-color="#FFDD00"
+    data-emoji=""
+    data-font="Cookie"
+    data-text="{{$supportMessage}}"
+    data-outline-color="#000000"
+    data-font-color="#000000"
+    data-coffee-color="#ffffff" >
+</script>
+@endif
+</div>
 
 </div>
 
+<!--------------------------------------------------------------------------------------->
 <!-- PRE-FOOTER SECTION -->
+<!--------------------------------------------------------------------------------------->
 <div class="mars-sky">
 	<div class="container marketing text-center">
 		<div class="pb-4 pt-3">

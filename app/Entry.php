@@ -22,27 +22,27 @@ class Entry extends Base
 		ENTRY_TYPE_ENTRY => 'Entry',
 //		ENTRY_TYPE_OTHER => 'Other',
 	];
-	
+
 	static public function getEntryTypes()
-	{		
+	{
 		return self::$entryTypes;
 	}
 
 	public function getTypeName()
-	{		
+	{
 		return self::$entryTypes[$this->type_flag];
 	}
 
 	static public function getTypeFlagName($type)
-	{		
+	{
 		return self::$entryTypes[$type];
 	}
-	
+
 	public function isBook()
 	{
 		return($this->type_flag == ENTRY_TYPE_BOOK);
 	}
-	
+
     public function user()
     {
     	return $this->belongsTo(User::class);
@@ -55,7 +55,7 @@ class Entry extends Base
     public function definitions()
     {
 		return $this->belongsToMany('App\Definition')->wherePivot('user_id', Auth::id())->orderBy('title');
-    }	
+    }
 
 	public function getDefinitions($userId)
 	{
@@ -86,7 +86,7 @@ class Entry extends Base
 				$join->on('definition_entry.entry_id', '=', 'entries.id');
 				$join->where('definition_entry.user_id', Auth::id());
 			})
-			->select(DB::raw('entries.id, entries.title, count(definition_entry.entry_id) as wc'))			
+			->select(DB::raw('entries.id, entries.title, count(definition_entry.entry_id) as wc'))
 			->where('entries.deleted_flag', 0)
 			->whereIn('entries.type_flag', array(ENTRY_TYPE_ARTICLE, ENTRY_TYPE_BOOK))
 			->groupBy('entries.id', 'entries.title')
@@ -110,7 +110,7 @@ class Entry extends Base
 					->where('deleted_flag', 0)
 					->where('id', $entryId)
 					->first();
-				
+
 				if (isset($record))
 				{
 					$record->addDefinitionUser($def);
@@ -118,22 +118,22 @@ class Entry extends Base
 				else
 				{
 					$info = 'entry not found, entry id: ' . $entryId . ', user id: ' . $userId . '';
-					Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);			
+					Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);
 				}
 			}
 			else
 			{
 				$info = 'def not set, user id: ' . $userId;
-				Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);			
+				Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);
 			}
 		}
 		else
 		{
 			$info = 'entry id not set, user id: ' . $userId;
-			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);			
+			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);
 		}
 	}
-	
+
     public function addDefinitionUser(Definition $def)
     {
 		if (Auth::check())
@@ -141,26 +141,26 @@ class Entry extends Base
 			$this->addDefinition($def, Auth::id());
 		}
 	}
-	
+
     public function addDefinition($def, $userId = null)
     {
 		if (isset($def) && isset($userId))
 		{
 			$this->definitions()->detach($def->id); // if it's already tagged, remove it so it will by updated
 			$this->definitions()->attach($def->id, ['user_id' => $userId]);
-			Event::logAdd(LOG_MODEL_ENTRIES, $def->title, 'added definition to entry', $def->id);			
+			Event::logAdd(LOG_MODEL_ENTRIES, $def->title, 'added definition to entry', $def->id);
 		}
 		else
 		{
 			$info = 'def or user not set, user id: ' . $userId;
-			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);			
+			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, 'error adding definition for user, ' . $info);
 		}
     }
 
     public function removeDefinitionUser($defId)
     {
 		$rc = '';
-		
+
 		if (Auth::check())
 		{
 			$def = Definition::getById($defId);
@@ -178,7 +178,7 @@ class Entry extends Base
 		{
 			$rc = 'not logged in';
 		}
-		
+
 		return $rc;
 	}
 
@@ -189,7 +189,7 @@ class Entry extends Base
 
     public function removeDefinitions()
     {
-		try 
+		try
 		{
 			$cnt = 0;
 			foreach($this->definitions as $record)
@@ -197,25 +197,25 @@ class Entry extends Base
 				$this->definitions()->detach($record->id);
 				$cnt++;
 			}
-				
-			Event::logDelete(LOG_MODEL_ENTRIES, 'removeDefinitions - removed ' . $cnt . ' definitions from entry', $this->id);			
+
+			Event::logDelete(LOG_MODEL_ENTRIES, 'removeDefinitions - removed ' . $cnt . ' definitions from entry', $this->id);
 		}
 		catch (\Exception $e)
 		{
 			$msg = 'Error removing words from vocabulary list';
 			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, 'removeDefinitions()', $msg, $e->getMessage());
 			Tools::flash('danger', $msg);
-		}	
+		}
     }
 
 	//////////////////////////////////////////////////////////////////
 	// Tags - many to many
 	//////////////////////////////////////////////////////////////////
-	
+
     public function tags()
     {
 		return $this->belongsToMany('App\Tag');
-    }	
+    }
 
 	//
 	// End of new tag code
@@ -224,13 +224,13 @@ class Entry extends Base
     {
     	return Tools::getSpeechLanguage($this->language_flag);
     }
-	
+
     protected function countView(Entry $entry)
-    {		
+    {
 		$entry->view_count++;
-		$entry->save();	
+		$entry->save();
 	}
-	
+
 	// get all locations that have at least one entry record
 	static public function getAdminIndex()
 	{
@@ -243,9 +243,9 @@ class Entry extends Base
 			AND entries.deleted_flag = 0
 			AND (entries.release_flag = 0 OR entries.location_id = null)
 		';
-		
+
 		$records = DB::select($q, [Tools::getSiteId(), ENTRY_TYPE_TOUR]);
-		
+
 		return $records;
 	}
 
@@ -265,14 +265,14 @@ class Entry extends Base
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.release_flag, entries.wip_flag, entries.updated_at, entries.permalink
 			ORDER BY entries.release_flag ASC, entries.wip_flag ASC, entries.display_date ASC, entries.id DESC
 		';
-				
+
 		$records = DB::select($q, [Tools::getSiteId(), ENTRY_TYPE_TOUR]);
-		
+
 		return $records;
 	}
 
 	static public function getArticles($limit = PHP_INT_MAX)
-	{			
+	{
 		$records = $record = Entry::select()
 				->where('deleted_flag', 0)
 				->where('entries.site_id', Tools::getSiteId())
@@ -289,7 +289,7 @@ class Entry extends Base
 	{
 		$string = Tools::alphanum($string);
 		$search = '%' . $string . '%';
-		
+
 		$records = $record = Entry::select()
 				->where('deleted_flag', 0)
 				->where('entries.site_id', Tools::getSiteId())
@@ -299,17 +299,17 @@ class Entry extends Base
 					->where('title', 'like', $search)
 					->orWhere('description_short', 'like', $search)
 					->orWhere('description', 'like', $search)
-					;})				
+					;})
 				->orderByRaw('type_flag, title')
 				->get();
 
 		return $records;
 	}
-	
-	
+
+
 	// get all entries for specified type
 	static public function getEntriesByType($type_flag, $limit = 0, $orderBy = ORDERBY_APPROVED)
-	{		
+	{
 		$q = '
 			SELECT *
 			FROM entries
@@ -327,9 +327,9 @@ class Entry extends Base
 		{
 			$q .= '	AND entries.site_id = ' . Tools::getSiteId() . ' ';
 		}
-				
+
 		$orderByPhrase = 'ORDER BY entries.display_date DESC, entries.id DESC';
-		
+
 		switch($orderBy)
 		{
 			case ORDERBY_APPROVED:
@@ -348,32 +348,32 @@ class Entry extends Base
 				// already set above
 				break;
 		}
-		
+
 		$q .= ' ' . $orderByPhrase . ' ';
-		
+
 		if ($limit > 0)
 			$q .= ' LIMIT ' . $limit . ' ';
 
 		//dd($q);
-		
+
 		$releaseFlag = self::getReleaseFlag();
-		
+
 		$records = DB::select($q, [$type_flag, $releaseFlag, ]);
-		
+
 		return $records;
 	}
 
 	static public function getReleaseFlag()
 	{
 		$rc = RELEASE_PUBLIC;
-		
+
 		if (Tools::isAdmin()) // admin sees all
 		{
 			$rc = RELEASE_NOTSET;
 		}
 		else if (Tools::isPaid()) // paid member
 		{
-			$rc = RELEASE_PAID;			
+			$rc = RELEASE_PAID;
 		}
 		else if (Auth::check()) // member logged in_array
 		{
@@ -382,16 +382,16 @@ class Entry extends Base
 
 		return $rc;
 	}
-	
+
 	static public function get($permalink, $id = null, $site_id = null)
 	{
 		$permalink = Tools::permalink($permalink);
-		
+
 		$record = null;
 		if (isset($permalink))
 		{
 			$id = intval($id); // clean the id
-			
+
 			$record = $record = Entry::select()
 					->where('deleted_flag', 0)
 					->where('release_flag', '>=', self::getReleaseFlag())
@@ -399,18 +399,18 @@ class Entry extends Base
 					->first();
 		}
 
-		//dd($record);	
+		//dd($record);
 		return $record;
 	}
-	
+
 	static public function getEntry($permalink)
-	{		
+	{
 		$q = '
-			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description, entries.description_short, entries.release_flag, entries.wip_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id 
+			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description, entries.description_short, entries.release_flag, entries.wip_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
-				, photo_main_gallery.filename as photo_gallery 
+				, photo_main_gallery.filename as photo_gallery
 				, CONCAT(photo_main_gallery.alt_text, " - ", photo_main_gallery.location) as photo_gallery_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", photo_main_gallery.parent_id, "/") as photo_gallery_path
 				, count(photos.id) as photo_count
@@ -419,9 +419,9 @@ class Entry extends Base
 				, locations_parent.name as location_parent
 			FROM entries
 			LEFT JOIN photos as photo_main
-				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0
 			LEFT JOIN photos as photo_main_gallery
-				ON photo_main_gallery.id = entries.photo_id AND photo_main_gallery.deleted_flag = 0 
+				ON photo_main_gallery.id = entries.photo_id AND photo_main_gallery.deleted_flag = 0
 			LEFT JOIN photos
 				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
 			LEFT JOIN locations
@@ -435,27 +435,27 @@ class Entry extends Base
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description, entries.description_short, entries.release_flag, entries.wip_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id
 				, photo, photo_title, photo_path
 				, photo_gallery, photo_gallery_title, photo_gallery_path
-				, location, location_parent, location_type 
-		
+				, location, location_parent, location_type
+
 				LIMIT 1
 		';
-						
+
 		$records = DB::select($q, [$permalink]);
-		
+
 		$records = count($records) > 0 ? $records[0] : null;
-			
+
 		return $records;
-	}	
-	
+	}
+
 	static public function getEntryNEW($permalink)
-	{		
+	{
 		$q = '
 			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description, entries.description_short, entries.release_flag, entries.wip_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id, entries.site_id
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
-				
-				, photo_main_gallery.filename as photo_gallery 
+
+				, photo_main_gallery.filename as photo_gallery
 				, CONCAT(photo_main_gallery.alt_text, " - ", photo_main_gallery.location) as photo_title_gallery
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", photo_main_gallery.parent_id) as photo_path_gallery
 
@@ -465,9 +465,9 @@ class Entry extends Base
 				, locations_parent.name as location_parent
 			FROM entries
 			LEFT JOIN photos as photo_main
-				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0
 			LEFT JOIN photos as photo_main_gallery
-				ON photo_main_gallery.id = entries.photo_id AND photo_main_gallery.deleted_flag = 0 
+				ON photo_main_gallery.id = entries.photo_id AND photo_main_gallery.deleted_flag = 0
 			LEFT JOIN photos
 				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
 			LEFT JOIN locations
@@ -482,28 +482,28 @@ class Entry extends Base
 				, photo, photo_title, photo_path
 				, photo_gallery, photo_title_gallery, photo_path_gallery
 				, location, location_parent
-		
+
 				LIMIT 1
 		';
-						
+
 		$records = DB::select($q, [$permalink]);
-		
+
 		$records = count($records) > 0 ? $records[0] : null;
-			
+
 		return $records;
 	}
-	
+
 	static protected function getNextPrevEntry($entry, $next = true)
 	{
 		$record = null;
-		
+
 		if (isset($entry) && isset($entry->display_date))
 		{
 			$display_date = $entry->display_date;
 			$id = $entry->id;
 			$type_flag = $entry->type_flag;
-		
-			$record = Entry::select() 
+
+			$record = Entry::select()
 				->where('entries.site_id', Tools::getSiteId())
 				->where('entries.deleted_flag', 0)
 				//->where('entries.release_flag', 1)
@@ -511,13 +511,13 @@ class Entry extends Base
 				->where('entries.type_flag', $type_flag)
 				->where('entries.display_date', $next ? '=' : '=', $display_date)
 				->where('entries.id', $next ? '>' : '<', $id)
-				->orderByRaw('entries.display_date ' . ($next ? 'ASC' : 'DESC') . ', entries.id ' . ($next ? 'ASC' : 'DESC '))			
+				->orderByRaw('entries.display_date ' . ($next ? 'ASC' : 'DESC') . ', entries.id ' . ($next ? 'ASC' : 'DESC '))
 				->first();
 		}
-				
+
 		return $record;
 	}
-	
+
 	static protected function getEntryCount($entry_type, $allSites)
 	{
 		$q = '
@@ -525,32 +525,32 @@ class Entry extends Base
 			FROM entries
 			WHERE 1=1
 				AND entries.deleted_flag = 0
-				AND entries.release_flag = 1 
+				AND entries.release_flag = 1
 				AND entries.type_flag = ?
 		';
-		
+
 		$q .= $allSites ? '' : ' AND entries.site_id = ' . Tools::getSiteId() . ' ';
-		
+
 		// get the list with the location included
 		$record = DB::select($q, [$entry_type]);
-		
+
 		return intval($record[0]->count);
-	}	
-	
+	}
+
 	static public function getStats()
 	{
 		$stats = [];
-		
+
 		$stats['articles'] = Entry::getEntryCount(ENTRY_TYPE_ARTICLE, /* allSites = */ false);
-		
+
 		return $stats;
 	}
-	
+
 	// Get a setting record where $name is the record permalink and has the format 'key|value'
 	static protected function getSetting($name)
-	{		
+	{
 		$record = null;
-		try {		
+		try {
 			$record = Entry::select()
 				->where('permalink', '=', $name)
 				->where('deleted_flag', 0)
@@ -561,17 +561,17 @@ class Entry extends Base
 			// todo: log me
 			//dump($e);
 		}
-	
+
 		$values = [];
-		
+
 		if (isset($record))
 		{
 			$lines = preg_split('/\r\n+/', $record->description, -1, PREG_SPLIT_NO_EMPTY);
-		
+
 			foreach($lines as $line)
-			{	
+			{
 				$parts = explode('|', $line);
-				
+
 				if (count($parts) > 1) // format is $key|$value
 					$values[trim($parts[0])] = trim($parts[1]);
 				else if (count($parts) == 1) // format is $key only
@@ -595,7 +595,7 @@ class Entry extends Base
     public function tagRecent()
     {
 		$readLocation = 0;
-		
+
 		if (Auth::check()) // only for logged in users
 		{
 			$recent = self::getRecentTag();
@@ -604,11 +604,11 @@ class Entry extends Base
 				$readLocation = $this->getReadLocation($recent->id);
 				$this->tags()->detach($recent->id, ['user_id' => Auth::id()]);
 			}
-			
+
 			$this->tags()->attach($recent->id, ['user_id' => Auth::id(), 'read_location' => $readLocation]);
 			$this->refresh();
 		}
-		
+
 		return $readLocation;
     }
 
@@ -616,10 +616,10 @@ class Entry extends Base
     {
 		return Tag::getOrCreate('recent', TAG_TYPE_SYSTEM);
 	}
-	
+
     public function removeTags()
     {
-		try 
+		try
 		{
 			$cnt = 0;
 			foreach($this->tags as $record)
@@ -635,31 +635,31 @@ class Entry extends Base
 			$msg = 'Error removing tags from entry';
 			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $this->title, $msg, $e->getMessage());
 			Tools::flash('danger', $msg);
-		}	
-    }	
-	
+		}
+    }
+
     public function setReadLocation($readLocation)
     {
 		$rc = false;
-		
+
 		if (Auth::check())
 		{
 			$recent = self::getRecentTag();
 			if (isset($recent)) // replace old one if exists
 				$this->tags()->detach($recent->id, ['user_id' => Auth::id()]);
-			
+
 			$this->tags()->attach($recent->id, ['user_id' => Auth::id(), 'read_location' => $readLocation]);
 			$this->refresh();
 			$rc = true;
 		}
-		
+
 		return $rc;
 	}
 
     private function getReadLocation($tagId)
     {
 		$readLocation = 0;
-		
+
 		if (Auth::check())
 		{
 			$record = DB::table('entry_tag')
@@ -667,23 +667,23 @@ class Entry extends Base
 					->where('entry_id', $this->id)
 					->where('user_id', Auth::id())
 					->first();
-					
+
 			if (isset($record))
 			{
 				$readLocation = $record->read_location;
 			}
 		}
-		
+
 		return intval($readLocation);
-	}	
+	}
 
 	static public function getRecentList($type, $limit = PHP_INT_MAX)
-	{			
+	{
 		$type = intval($type);
 		$records = [];
 		$tag = self::getRecentTag();
 		$logInfo = 'type_flag: ' . self::getTypeFlagName($type);
-		
+
 		if (isset($tag)) // should always exist
 		{
 			try
@@ -693,7 +693,7 @@ class Entry extends Base
 						$join->on('entry_tag.entry_id', '=', 'entries.id');
 						$join->where('entry_tag.user_id', Auth::id()); // works for users not logged in
 						$join->where('entry_tag.tag_id', $tag->id);
-					})			
+					})
 					->select('entries.*')
 					->where('entries.deleted_flag', 0)
 					->where('entries.site_id', Tools::getSiteId())
@@ -701,15 +701,17 @@ class Entry extends Base
 					->where('entries.release_flag', '>=', self::getReleaseFlag())
 					->orderByRaw('entry_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
 					->limit($limit)
-					->get();					
+					->get();
+
+				//dd($records);
 			}
 			catch (\Exception $e)
 			{
 				$msg = 'Error getting recent list';
 				Event::logException(LOG_MODEL, LOG_ACTION_INDEX, 'getRecentList', $msg . ', ' . $logInfo, $e->getMessage());
 				Session::flash('message.level', 'danger');
-				Session::flash('message.content', $msg);				
-			}	
+				Session::flash('message.content', $msg);
+			}
 		}
 		else
 		{
@@ -720,7 +722,7 @@ class Entry extends Base
 
 		return $records;
 	}
-		
+
 	static public function getBooksRecentOLD_NOT_USED($limit = PHP_INT_MAX) // need this?
 	{
 		$tag = Tag::getOrCreate(TAG_BOOK, TAG_TYPE_BOOK);
@@ -732,12 +734,12 @@ class Entry extends Base
 				->join('entry_tag', function($join) use ($tag) {
 					$join->on('entry_tag.entry_id', '=', 'entries.id');
 					$join->where('entry_tag.tag_id', $tag->id);
-				})	
+				})
 				->leftJoin('entry_tag as recent_tag', function($join) use ($tagRecent) {
 					$join->on('recent_tag.entry_id', '=', 'entries.id');
 					$join->where('recent_tag.user_id', Auth::id());
 					$join->where('recent_tag.tag_id', $tagRecent->id);
-				})							
+				})
 				->select('entries.*')
 				->where('entries.deleted_flag', 0)
 				->where('entries.release_flag', '>=', self::getReleaseFlag())
@@ -746,13 +748,13 @@ class Entry extends Base
 		}
 
 		return $records;
-	}	
+	}
 
 	// add or update system 'book' tag for entries.
 	// this is how book chapters are linked together
 	// update is the only public one so all calls come through here where type is checked
     public function updateBookTag()
-    {		
+    {
 		if (intval($this->type_flag) === ENTRY_TYPE_BOOK)
 		{
 			// non-book may have been changed to book
@@ -766,7 +768,7 @@ class Entry extends Base
 	}
 
     private function addBookTag()
-    {		
+    {
 		if (Tools::isAdmin()) // for now only admin can update a book
 		{
 			$tag = $this->getBookTag();
@@ -777,9 +779,9 @@ class Entry extends Base
 			}
 		}
     }
-	
+
     private function removeBookTag()
-    {		
+    {
 		if (Tools::isAdmin()) // for now only admin can update a book
 		{
 			// don't use getOrCreate() because it doesn't have to exist
@@ -791,14 +793,32 @@ class Entry extends Base
 			}
 		}
     }
-	
+
     static public function getBookTags()
     {
-		return Tag::getByType(TAG_TYPE_BOOK);
+        $tags = Tag::getByType(TAG_TYPE_BOOK);
+
+        // figure out which ones to show
+        $records = [];
+        $userLevel = self::getReleaseFlag();
+        foreach($tags as $record)
+        {
+            foreach($record->books as $r)
+            {
+                if ($r->release_flag >= $userLevel)
+                {
+                    $records[] = $record;
+                    break;
+                }
+            }
+        }
+
+		return $records;
 	}
-	
+
     private function getBookTag()
     {
+        //dd($this->source);
 		$name = $this->source;
 		return Tag::getOrCreate($name, TAG_TYPE_BOOK);
 	}
@@ -806,5 +826,5 @@ class Entry extends Base
 	//////////////////////////////////////////////////////////////////////
 	// End of Specialized - Recent Articles Tag
 	//////////////////////////////////////////////////////////////////////
-	
+
 }

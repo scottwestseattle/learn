@@ -189,4 +189,8 @@ return [
 'Practice this phrase out loud' => 'Practice this phrase out loud',
 'Word of the day' => 'Word of the day',
 'A new word to learn every day' => 'A new word to learn every day',
+'SiteTitle-espdaily.com' => 'Español Daily',
+'SiteTitle-spanish50.com' => 'Spanish in 50 Lessons',
+'SiteTitle-english50.com' => 'Learn English in 50 Lessons',
+'SiteTitle-localhost' => 'My name is localhost',
 ];

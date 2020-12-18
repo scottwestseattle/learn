@@ -189,4 +189,8 @@ return [
 'Practice this phrase out loud' => '大声练习这个短语',
 'Word of the day' => '每日一词',
 'A new word to learn every day' => '每天学习一个新词',
+'SiteTitle-espdaily.com' => '每日学习西班牙语',
+'SiteTitle-spanish50.com' => '在50课中学习西班牙语',
+'SiteTitle-english50.com' => '在50课中学习英语',
+'SiteTitle-localhost' => '我叫本地房东',
 ];

@@ -656,27 +656,27 @@ h1,h3 {
 	text-decoration: none;
 }
 
-.footer-heading {
-	font-weight: 300;
+.footer-heading, .footer-text {
+	font-weight: 200;
 	line-height: 1;
-	letter-spacing: -.05rem;
 	margin-top: 1rem;
 }
 
+.footer-heading {
+    font-size: 22px;
+}
 
 @media (min-width: 48em) { /* medium devices and up */
   .footer-heading {
-		font-size: 50px;
-		margin-top: 2rem;
+		font-size: 28px;
   }
 }
 
 @media (min-width: 62em) { /* large devices and up */
   .footer-heading {
-    margin-top: 3rem;
+		font-size: 35px;
   }
 }
-
 
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */

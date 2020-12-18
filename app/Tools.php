@@ -18,7 +18,7 @@ define('SITE_ID_SPANISH50', 3);
 define('SITE_ID_SPANISH',	4);
 define('SITE_ID_PLANCHA',	5);
 define('SITE_ID_TEST',		6);
-define('SITE_ID_',			7);
+define('SITE_ID_ESPDAILY',	7);
 
 class Tools
 {
@@ -31,6 +31,7 @@ class Tools
 		'spanish50.com'			=> SITE_ID_SPANISH50,
 		'spanish.codespace.us'	=> SITE_ID_SPANISH,
 		'plancha.codespace.us'	=> SITE_ID_PLANCHA,
+		'espdaily.com'			=> SITE_ID_ESPDAILY,
 	];
 
 	static private $_sitesLanguages = [
@@ -49,6 +50,7 @@ class Tools
 		'spanish.codespace.us'	=> LANGUAGE_SPANISH,
 		'english50.com'			=> LANGUAGE_ENGLISH,
 		'spanish50.com'			=> LANGUAGE_SPANISH,
+		'espdaily.com'			=> LANGUAGE_SPANISH,
 	];
 
     static public function getAccentChars()
@@ -612,6 +614,10 @@ class Tools
 		{
 			$siteId = self::$_sites[$domain];
 		}
+
+		if ($siteId == SITE_ID_ESPDAILY)
+		    $siteId = SITE_ID_SPANISH50; //todo: fix me asap!!
+
 		//dump($domain . " " . $siteId);
 
 		return $siteId;
@@ -647,10 +653,14 @@ class Tools
 			case SITE_ID_SPANISH: // spanish.codespace.us
 				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
 				break;
-			case SITE_ID_SPANISH50: // spanish50
-			case SITE_ID_LOCALHOST: // localhost
-				//$rc = ($model == LOG_MODEL_COURSES);
-				$rc = ($model == LOG_MODEL_ARTICLES || $model == LOG_MODEL_DEFINITIONS || $model == LOG_MODEL_WORDS);
+			case SITE_ID_SPANISH50:
+			case SITE_ID_ESPDAILY:
+			case SITE_ID_LOCALHOST:
+				$rc = ($model == LOG_MODEL_ARTICLES
+				    || $model == LOG_MODEL_DEFINITIONS
+				    || $model == LOG_MODEL_WORDS
+				    || $model == LOG_MODEL_BOOKS
+				    );
 				break;
 			default:
 				break;
@@ -790,13 +800,7 @@ class Tools
 	static public function getSiteTitle($withDomainName = true)
 	{
 		$d = self::getDomainName();
-		$s = '';
-
-		if ($d == 'spanish50.com')
-			$s = Lang::get('content.Site Title Spanish');
-		else
-			$s = Lang::get('content.Site Title English');
-
+		$s = Lang::get('content.SiteTitle-' . $d);
 		$s = $withDomainName ? $d . ' - ' . $s : $s;
 
 		return $s;
