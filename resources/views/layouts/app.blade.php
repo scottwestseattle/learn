@@ -184,7 +184,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 		<div class="container text-center pt-4 pb-4">
 			    @if (true)
 			        <div>
-			            <img width="175" src="/img/logo-main-{{\App\Tools::getDomainName()}}.png" />
+			            <img width="175" src="/img/logo-footer-{{\App\Tools::getDomainName()}}.png" />
 			        </div>
 			    @else
                     <div class="brand logo middle">

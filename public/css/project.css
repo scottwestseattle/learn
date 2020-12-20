@@ -1211,7 +1211,7 @@ h6 {
     margin-bottom:30px;
 }
 
-.card-potd, .card-potd a, .card-wotd {
+.card-potd, .card-potd a, .card-wotd, .card-votd {
 	min-height:200px;
 	color:white;
 	text-decoration:none;
@@ -1219,8 +1219,11 @@ h6 {
 }
 
 .card-wotd {
-	background-color: #5CB85C; /* minty green */
 	background-color: #fe5b4c; /* mars sky */
+}
+
+.card-votd {
+	background-color: #5CB85C; /* minty green */
 }
 
 .card-header-potd {

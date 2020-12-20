@@ -30,6 +30,33 @@
 		</ul>
 	</div>
 
+	@if (count($users) > 0)
+	<div class="form-group">
+		<h3 style="">Latest New Users ({{count($users)}} Total)&nbsp;<a href="/users/index"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
+		<div class="table-responsive">
+		<table class="table table-striped">
+			<tbody>
+			@foreach($users as $record)
+				<tr>
+					<td class="glyphicon-width"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
+					<td>{{$record->created_at}}</td>
+					<td><a href="/users/view/{{ $record->id }}">{{$record->name}}</a></td>
+					<td>{{$record->email}}</td>
+					<td><a target="_blank" href="https://www.ip2location.com/demo/{{$record->ip_register}}">{{$record->ip_register}}</a></td>
+					<td>{{$record->site_id}}</td>
+					<td class="glyphicon-width"><a href='/users/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
+				</tr>
+			    @if ($loop->index >= 2)
+			        @break
+			    @endif
+			@endforeach
+			</tbody>
+		</table>
+		</div>
+	</div>
+	<hr />
+	@endif
+
 	@if (isset($courses))
 	<div class="form-group">
 		<h3>@LANG('content.Unfinished Courses') ({{count($courses)}})&nbsp;<a href="/courses/admin"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
@@ -85,30 +112,6 @@
 		<h3 style="">Today's Visitors: {{count($visitors)}}&nbsp;<a href="/visitors"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
 	</div>
 	<p>&nbsp;</p>
-	@endif
-
-	@if (count($users) > 0)
-	<div class="form-group">
-		<h3 style="">Last New User ({{count($users)}} Total)&nbsp;<a href="/users/index"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
-		<div class="table-responsive">
-		<table class="table table-striped">
-			<tbody>
-			@foreach($users as $record)
-				<tr>
-					<td class="glyphicon-width"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-edit"></span></a></td>
-					<td>{{$record->created_at}}</td>
-					<td><a href="/users/view/{{ $record->id }}">{{$record->name}}</a></td>
-					<td>{{$record->email}}</td>
-					<td>{{$record->user_type}}</td>
-					<td class="glyphicon-width"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
-				</tr>
-				@break
-			@endforeach
-			</tbody>
-		</table>
-		</div>
-	</div>
-	<hr />
 	@endif
 
 	<div>

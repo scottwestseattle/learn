@@ -666,7 +666,7 @@ class Definition extends Base
 		$start = 0;
 		$end = 0;
 
-		//dd($parts);
+        //dd($parts); // scrapy
 		$parts = $parts[1];
 
 		$matches = count($parts);
@@ -681,6 +681,13 @@ class Definition extends Base
 			$word = '';
 			foreach($parts as $part)
 			{
+			    $partialMatch = 'View the conjugation';
+			    if (Str::startsWith($part, $partialMatch))
+			    {
+			        // fix the line that is specific to the verb looked up, looks like 'View the conjugation for to lose'
+			        $part = $partialMatch;
+			    }
+
 				switch($part)
 				{
 					// get rid of all of the trash
@@ -697,6 +704,7 @@ class Definition extends Base
 					case 'Imperfect':
 					case 'Present':
 					case 'Subjunctive':
+					case 'View the conjugation':
 						break;
 					default:
 						$word = $part;
@@ -845,7 +853,6 @@ class Definition extends Base
 		foreach($parts as $part)
 		{
 			$word = mb_strtolower(trim($part));
-
 			if (strlen($word) > 0)
 			{
 				// the clean is specific to the verb conjugator in SpanishDict.com

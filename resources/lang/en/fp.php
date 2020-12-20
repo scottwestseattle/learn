@@ -31,4 +31,5 @@ return [
 'jumboTitleSpanish' => 'Spanish in 50 Lessons',
 'jumboSlug' => 'Discover the content and tools you need to make learning a new language fun and easy.',
 'jumboTitleEnglish' => 'Learn English in 50 Lessons',
+'Subscribe to mailing list' => 'Enter your email address to subscribe to our mailing list',
 ];

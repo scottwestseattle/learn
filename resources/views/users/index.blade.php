@@ -18,7 +18,7 @@
 				<td>{{$record->email}}</td>
 				<td>@LANG('ui.' . $record->getUserType())</td>
 				<td>@LANG('ui.' . $record->getBlocked())</td>
-				<td>{{$record->site_id}}</td>
+				<td>{{App\Tools::getSiteName($record->site_id)}}</td>
 			</tr>
 		@endforeach</tbody>
 	</table>

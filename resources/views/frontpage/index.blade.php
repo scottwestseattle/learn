@@ -28,8 +28,36 @@
         <!--------------------------------------------------------------------------------------->
         <div class="fpBannerImage" style="background-color:#4993FD">
             <div class="container text-center pt-2 pb-2" >
-                <div class="mb-3 mt-2 hidden-xs" style="font-size:24px; color:white; font-weight:200;">@LANG('fp.' . $jumboSlug)</div>
-    		    <img src="/img/logo-main-{{\App\Tools::getDomainName()}}.png" style="max-width:250px;" />
+                <!-- div class="mb-3 mt-2 hidden-xs" style="font-size:24px; color:white; font-weight:200;">@LANG('fp.' . $jumboSlug)</div -->
+    		    <img src="/img/logo-{{\App\Tools::getDomainName()}}.png" />
+                <form method="POST" action="/subscribe">
+                    <div class="form-group text-center">
+                        <div class="input-group mt-2">
+                            <input name="email" id="email" type="email"
+                            class="form-control @error('email') is-invalid @enderror"
+                            value="{{ old('email') }}"
+                            autocomplete="email"
+                            maxlength="50"
+                            placeholder="@LANG('ui.Email Address')"
+                            required
+                            />
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-success" type="button">@LANG('ui.Subscribe')</button>
+                            </div>
+
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="mt-2 white small-thin-text">@LANG('fp.Subscribe to mailing list')</div>
+
+                    </div>
+                    <div class="form-group">
+                    </div>
+                    {{ csrf_field() }}
+                </form>
             </div>
         </div>
     @else
@@ -78,8 +106,23 @@
 		</div>
     @endif
 
+    @if (false && isset($potd))
+		<div class="col-sm-12 col-lg-6 col-course" style="">
+            <div class="card card-votd truncate mt-1" style="">
+                <div class="card-header card-header-potd">
+                    <div>@LANG('content.Verb of the day')</div>
+                    <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
+                </div>
+                <div class="card-body card-body-potd">
+                    <div><b>{{$wotd->title}}</b> - <i>{{$wotd->description}}</i></div>
+                    <div class="large-thin-text">{{$wotd->examples}}</div>
+                </div>
+            </div>
+		</div>
+    @endif
+
     @if (isset($potd))
-		<div class="col-sm-12 col-lg-6 col-course">
+		<div class="col-sm-12 col-lg-6 col-course" style="">
             <div class="card card-potd truncate mt-1" style="">
                 <div class="card-header card-header-potd">
                     <div>@LANG('content.Phrase of the day')</div>
@@ -91,7 +134,9 @@
             </div>
 		</div>
     @endif
+
 	</div>
+
 @endif
 
 <!--------------------------------------------------------------------------------------->

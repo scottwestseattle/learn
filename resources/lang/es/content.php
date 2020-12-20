@@ -193,4 +193,5 @@ return [
 'SiteTitle-spanish50.com' => 'Español en 50 lecciones',
 'SiteTitle-english50.com' => 'Aprenda inglés en 50 lecciones',
 'SiteTitle-localhost' => 'Mi nombre es localhost',
+'Support Message' => '¡Invítanos a un café!',
 ];

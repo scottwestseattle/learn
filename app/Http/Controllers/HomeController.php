@@ -71,7 +71,7 @@ class HomeController extends Controller
 	// word of the day
 	//
 	// this is the main function used in the cron
-	// cron settings: 
+	// cron settings:
 	// Minute: 0
 	// Hour: 7,19
 	// Day/Month/Weekday: *
@@ -200,7 +200,7 @@ class HomeController extends Controller
 		$quizes = null;
 		$vocabLists = null;
 		$stats['lessonDate'] = null;
-		
+
 		if (false && Tools::siteUses(LOG_MODEL_WORDS))
 		{
 			//
@@ -279,6 +279,7 @@ class HomeController extends Controller
 		$users = User::select()
 			->where('user_type', '<=', USER_UNCONFIRMED)
 			->orderByRaw('id DESC')
+			//->limit(5)
 			->get();
 
 		//

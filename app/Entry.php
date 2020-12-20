@@ -275,7 +275,7 @@ class Entry extends Base
 	{
 		$records = $record = Entry::select()
 				->where('deleted_flag', 0)
-				->where('entries.site_id', Tools::getSiteId())
+				->where('language_flag', Tools::getSiteLanguage())
 				->where('type_flag', ENTRY_TYPE_ARTICLE)
 				->where('release_flag', '>=', self::getReleaseFlag())
 				->orderByRaw('display_date DESC, id DESC')
@@ -696,7 +696,7 @@ class Entry extends Base
 					})
 					->select('entries.*')
 					->where('entries.deleted_flag', 0)
-					->where('entries.site_id', Tools::getSiteId())
+					->where('entries.language_flag', Tools::getSiteLanguage())
 					->where('entries.type_flag', $type)
 					->where('entries.release_flag', '>=', self::getReleaseFlag())
 					->orderByRaw('entry_tag.created_at DESC, entries.display_date DESC, entries.id DESC')

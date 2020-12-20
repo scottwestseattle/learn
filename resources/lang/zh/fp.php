@@ -31,4 +31,5 @@ return [
 'jumboTitleSpanish' => '在50课中学习西班牙语',
 'jumboSlug' => '发现使轻松有趣的学习新语言所需的内容和工具。',
 'jumboTitleEnglish' => '在50课中学习英语',
+'Subscribe to mailing list' => '输入您的电子邮件地址以订阅我们的邮件列表',
 ];

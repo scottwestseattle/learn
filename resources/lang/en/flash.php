@@ -29,4 +29,6 @@ return [
 'Error sending email' => 'Error sending email',
 'Error getting word of the day' => 'Error getting word of the day',
 'New list has been added' => 'New list has been added',
+'Error adding email address to mailing list' => 'Error adding email address to mailing list',
+'Email address added to mailing list' => 'Email address added to mailing list',
 ];

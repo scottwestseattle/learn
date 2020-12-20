@@ -124,4 +124,6 @@ return [
 'Translation' => 'Translation',
 'or' => 'or',
 'Not Found' => 'Not found',
+'Subscribe' => 'Subscribe',
+'Subscriber' => 'Subscriber',
 ];

@@ -31,4 +31,5 @@ return [
 'jumboTitleSpanish' => 'Aprende español en 50 lecciones',
 'jumboSlug' => 'Descubra el contenido y las herramientas que necesita para que aprender un nuevo idioma sea divertido y fácil.',
 'jumboTitleEnglish' => 'Aprende inglés en 50 lecciones',
+'Subscribe to mailing list' => 'Ingrese su correo electrónico para suscribirse',
 ];

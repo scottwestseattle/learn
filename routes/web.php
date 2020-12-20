@@ -36,6 +36,7 @@ Route::get('/books', 'EntryController@books');
 Route::get('/vocabulary', 'VocabListController@index');
 Route::get('/404/{model}/{view}/{parameters}', 'Controller@pageNotFound404');
 Route::get('/start', 'FrontPageController@start');
+Route::post('/subscribe', 'FrontPageController@subscribe');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');
@@ -59,7 +60,7 @@ Route::get('/courses/rss-reader', 'CourseController@rssReader');
 
 // Tags
 Route::group(['prefix' => 'tags'], function () {
-	
+
 	// index
 	Route::get('/', 'TagController@index');
 	Route::get('/view/{tag}', 'TagController@view');
@@ -79,12 +80,12 @@ Route::group(['prefix' => 'tags'], function () {
 	Route::get('/confirmdelete/{tag}','TagController@confirmdelete');
 	Route::get('/confirm-user-favorite-list-delete/{tag}','TagController@confirmUserFavoriteListDelete');
 	Route::post('/delete/{tag}','TagController@delete');
-	
+
 });
 
 // Definitions
 Route::group(['prefix' => 'definitions'], function () {
-	
+
 	Route::get('/', 'DefinitionController@index');
 	Route::get('/admin', 'DefinitionController@admin');
 	Route::get('/view/{definition}', 'DefinitionController@view');
@@ -106,12 +107,12 @@ Route::group(['prefix' => 'definitions'], function () {
 	Route::get('/toggle-wip/{definition}','DefinitionController@toggleWipAjax');
 	Route::get('/get-random-word/','DefinitionController@getRandomWordAjax');
 	Route::get('/scrape-definition/{word}','DefinitionController@scrapeDefinitionAjax');
-	
+
 	// search
 	Route::get('/search/{sort?}', 'DefinitionController@search');
 	Route::post('/search/{sort?}', 'DefinitionController@search');
 	Route::get('/search-ajax/{text?}', 'DefinitionController@searchAjax');
-		
+
 	// conjugations
 	Route::get('/conjugationsgen/{definition}', 'DefinitionController@conjugationsGen');
 	Route::get('/conjugationsgenajax/{text}', 'DefinitionController@conjugationsGenAjax');
@@ -127,13 +128,13 @@ Route::group(['prefix' => 'definitions'], function () {
 
 	// delete / confirm delete
 	Route::get('/confirmdelete/{definition}','DefinitionController@confirmdelete')->middleware('auth');
-	Route::post('/delete/{definition}','DefinitionController@delete')->middleware('auth');	
-	
+	Route::post('/delete/{definition}','DefinitionController@delete')->middleware('auth');
+
 });
 
 // Entries
 Route::group(['prefix' => 'entries'], function () {
-	
+
 	// misc
 //old	Route::get('/', 'EntryController@index');
 //old	Route::get('/index/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
@@ -152,7 +153,7 @@ Route::group(['prefix' => 'entries'], function () {
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
 	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
-		
+
 	// add/create
 	Route::get('/add','EntryController@add')->middleware('auth');
 	Route::post('/create','EntryController@create')->middleware('auth');
@@ -163,13 +164,13 @@ Route::group(['prefix' => 'entries'], function () {
 
 	// delete / confirm delete
 	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
-	Route::post('/delete/{entry}','EntryController@delete')->middleware('is_owner');	
-	Route::get('/delete/{entry}','EntryController@delete')->middleware('is_owner');	
-	
+	Route::post('/delete/{entry}','EntryController@delete')->middleware('is_owner');
+	Route::get('/delete/{entry}','EntryController@delete')->middleware('is_owner');
+
 	// permalink catch alls
 //old	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);
 	Route::get('/{permalink}', ['as' => 'entry.permalink', 'uses' => 'EntryController@permalink']);
-	Route::resource('entry', 'EntryController');		
+	Route::resource('entry', 'EntryController');
 });
 
 
@@ -186,11 +187,11 @@ Route::group(['prefix' => 'history'], function () {
 	// edit/update
 	Route::get('/edit/{history}','HistoryController@edit');
 	Route::post('/update/{history}','HistoryController@update');
-	
+
 	// delete
 	Route::get('/confirmdelete/{history}','HistoryController@confirmdelete');
 	Route::post('/delete/{history}','HistoryController@delete');
-	Route::get('/delete/{history}','HistoryController@delete');	
+	Route::get('/delete/{history}','HistoryController@delete');
 });
 
 // Vocabulary Lists

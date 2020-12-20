@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 use DB;
 use Auth;
@@ -161,21 +163,41 @@ class FrontPageController extends Controller
     }
 
     /**
-     * Show the original application front page.
+     * Subscribe to the mailing list
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index2()
+    public function subscribe(Request $request)
     {
-		if (Tools::isAdmin())
-		{
-		}
-		else if (Auth::check())
-		{
-		}
+        $user = new User;
+        $user->email = $request->email;
+        $user->name = $request->email;
+        $user->password = Hash::make('noway' . $request->email);
+        $user->ip_register = Tools::getIp();
+        $user->site_id = Tools::getSiteId();
+        $user->user_type = USER_SUBSCRIBER;
 
-		return view('frontpage.index2', $this->getViewData([
-		], LOG_MODEL, LOG_PAGE_INDEX));
+        $this->validate($request, [
+          'email' => 'required|regex:/(.+)@(.+)\.(.+)/i',
+        ]);
+
+        $details = ': ' . $user->email . ' (' . $user->ip_register . ')';
+        try
+        {
+            $user->save();
+
+            $msg = 'Email address added to mailing list';
+    		Tools::flash('success', $msg);
+            Event::logInfo(LOG_MODEL, LOG_ACTION_EMAIL, $msg . $details);
+        }
+        catch (\Exception $e)
+        {
+            $msg = 'Error adding email address to mailing list';
+            Event::logException(LOG_MODEL, LOG_ACTION_EMAIL, $msg . $details, null, $e->getMessage());
+            Tools::flash('danger', $msg);
+        }
+
+		return redirect()->back();
     }
 
     public function about()

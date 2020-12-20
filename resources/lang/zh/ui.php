@@ -124,4 +124,6 @@ return [
 'Translation' => '翻译',
 'or' => '要么',
 'Not Found' => '记录不存在',
+'Subscribe' => '订阅',
+'Subscriber' => '订户',
 ];
