@@ -41,6 +41,7 @@ class Tools
 		'english50.com'			=> 'en-EN',
 		'spanish.codespace.us'	=> 'es-ES',
 		'spanish50.com'			=> 'es-ES',
+		'espdaily.com'			=> 'es-ES',
 	];
 
 	static private $_sitesLanguageFlags = [

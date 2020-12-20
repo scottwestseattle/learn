@@ -43,7 +43,7 @@
 					<td><a href="/users/view/{{ $record->id }}">{{$record->name}}</a></td>
 					<td>{{$record->email}}</td>
 					<td><a target="_blank" href="https://www.ip2location.com/demo/{{$record->ip_register}}">{{$record->ip_register}}</a></td>
-					<td>{{$record->site_id}}</td>
+					<td>{{App\Tools::getSiteName($record->site_id)}}</td>
 					<td class="glyphicon-width"><a href='/users/confirmdelete/{{$record->id}}'><span class="glyphCustom-sm glyphicon glyphicon-delete"></span></a></td>
 				</tr>
 			    @if ($loop->index >= 2)
@@ -161,9 +161,10 @@
 		<div class="table-responsive">
 		<table class="table table-striped">
 			<tbody>
-				@foreach($sites as $record)
+				@foreach($sites as $key => $data)
 					<tr>
-						<td><a target="_blank" href="http://{{$record}}">{{$record}}</a></td>
+						<td><a target="_blank" href="http://{{$data}}">{{$data}}</a></td>
+						<td>{{$key}}</td>
 					</tr>
 				@endforeach
 			</tbody>

@@ -34,12 +34,12 @@
                     <div class="form-group text-center">
                         <div class="input-group mt-2">
                             <input name="email" id="email" type="email"
-                            class="form-control @error('email') is-invalid @enderror"
-                            value="{{ old('email') }}"
-                            autocomplete="email"
-                            maxlength="50"
-                            placeholder="@LANG('ui.Email Address')"
-                            required
+                                class="form-control @error('email') is-invalid @enderror"
+                                value="{{ old('email') }}"
+                                autocomplete="email"
+                                maxlength="50"
+                                placeholder="@LANG('ui.Email Address')"
+                                required
                             />
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-success" type="button">@LANG('ui.Subscribe')</button>
@@ -279,7 +279,7 @@
 <!-- BUY US A COFFEE BUTTON -->
 <!--------------------------------------------------------------------------------------->
 @if (isset($supportMessage))
-<div class="text-center">
+<div class="text-center mt-4 mb-4">
 <script
     type="text/javascript"
     src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
@@ -295,6 +295,16 @@
 </script>
 @endif
 </div>
+
+<!--------------------------------------------------------------------------------------->
+<!-- Podcasts -->
+<!--------------------------------------------------------------------------------------->
+@if ($siteLanguage == 'es-ES')
+<div>
+<iframe frameBorder="0" height="482" scrolling="no" src="https://playlist.megaphone.fm/?p=HSW5050863615&light=true"
+width="100%"></iframe>
+</div>
+@endif
 
 </div>
 

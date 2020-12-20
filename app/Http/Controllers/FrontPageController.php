@@ -146,6 +146,8 @@ class FrontPageController extends Controller
 			$jumboTitle = 'jumboTitleEnglish';
 		}
 
+        $siteLanguage = Tools::getLanguage();
+
 		return view('frontpage.index', $this->getViewData([
 			'courses' => $courses,
 			'vocabLists' => $vocabLists,
@@ -159,6 +161,7 @@ class FrontPageController extends Controller
 			'wotd' => $wotd,
 			'potd' => $potd,
 			'supportMessage' => $supportMessage,
+			'siteLanguage' => $siteLanguage,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

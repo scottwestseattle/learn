@@ -251,7 +251,7 @@ class HomeController extends Controller
 		//
 		// get Sites
 		//
-		$sites = Tools::getSites();
+		$sites = Tools::getSiteIds();
 
 		//
 		// get unapproved comments
