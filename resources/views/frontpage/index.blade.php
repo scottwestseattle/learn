@@ -14,22 +14,23 @@
 <!-- Header -->
 <!--------------------------------------------------------------------------------------->
 @if (Auth::check() && count($lesson) > 0)
-    <div class="mt-5"></div>
+    <!-- No photo banner or logo for signed-in user -->
+    <div style="height:5px;"></div>
 @else
-
     @if (isset($banner))
+    <div class="bg-none">
+
         <!--------------------------------------------------------------------------------------->
         <!-- Banner -->
         <!--------------------------------------------------------------------------------------->
         <div><a href="/"><img src="/img/banners/{{$banner}}" style="width:100%;" /></a></div>
 
         <!--------------------------------------------------------------------------------------->
-        <!-- Tag line and Logo -->
+        <!-- Logo and Subscribe Form-->
         <!--------------------------------------------------------------------------------------->
         <div class="fpBannerImage" style="background-color:#4993FD">
             <div class="container text-center pt-2 pb-2" >
-                <!-- div class="mb-3 mt-2 hidden-xs" style="font-size:24px; color:white; font-weight:200;">@LANG('fp.' . $jumboSlug)</div -->
-    		    <img src="/img/logo-{{\App\Tools::getDomainName()}}.png" />
+    		    <img src="/img/logo-{{\App\Tools::getDomainName()}}.png" style="max-width:250px;"/>
                 <form method="POST" action="/subscribe">
                     <div class="form-group text-center">
                         <div class="input-group mt-2">
@@ -60,6 +61,7 @@
                 </form>
             </div>
         </div>
+    </div>
     @else
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="app-color-primary fpBannerImage" style="min-height:300px;">
@@ -77,10 +79,38 @@
             </div>
         </div>
     @endif
-
 @endif
 
-<div class="container page-normal">
+<div class="container page-normal mt-2 bg-none">
+
+<!--------------------------------------------------------------------------------------->
+<!-- Dictionary, Lists, and Books shortcuts widget -->
+<!--------------------------------------------------------------------------------------->
+
+    <div class="hidden-xs mb-3"></div>
+    <div class="d-block d-md-none d-flex justify-content-center text-center bg-none p-0 mt-3">
+
+        <div class="" style="width: 33%;">
+            <a class="purple" href="/definitions">
+                <div class="glyphicon glyphicon-font" style="font-size:35px;"></div>
+                <div class="" style="font-size:10px;">@LANG('content.Dictionary')</div>
+            </a>
+        </div>
+
+        <div class="" style="width: 33%;">
+            <a class="purple" href="/vocabulary">
+                <div class="glyphicon glyphicon-th-list" style="font-size:35px;"></div>
+                <div class="" style="font-size:10px;">@LANG('content.Lists')</div>
+            </a>
+        </div>
+
+        <div class="" style="width: 33%;">
+            <a class="purple" href="/books">
+                <div class="glyphicon glyphicon-book" style="font-size:35px;"></div>
+                <div class="" style="font-size:10px;">@LANG('content.Books')</div>
+            </a>
+        </div>
+    </div>
 
 <!--------------------------------------------------------------------------------------->
 <!-- WORD AND PHRASE OF THE DAY -->
@@ -314,7 +344,7 @@ width="100%"></iframe>
 <div class="mars-sky">
 	<div class="container marketing text-center">
 		<div class="pb-4 pt-3">
-			<img src="/img/image5.png" width="100%" style="max-width: 300px;" />
+			<img src="/img/image5.png" style="max-width: 200px;" />
 			@if (isset($randomWord))
 				@component('components.random-word', ['record' => $randomWord])@endcomponent
 			@else

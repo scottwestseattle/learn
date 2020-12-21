@@ -168,12 +168,36 @@ h1,h3 {
 	color: white;
 }
 
+.bg-yellow {
+    background-color: yellow;
+}
+
+.bg-gray {
+    background-color: LightGray;
+}
+
+.bg-none {
+}
+
+.bg-oolong {
+	background-color: #FF6900;
+	color: white;
+}
+
+.oolong {
+	color: #FF6900;
+}
+
 .green {
 	color:green;
 }
 
 .red {
 	color:red;
+}
+
+.darkRed {
+    color:darkRed;
 }
 
 .teal {
@@ -196,10 +220,13 @@ h1,h3 {
 	color:#989898;
 }
 
+.purple {
+    color:purple;
+}
+
 .danger {
 	color:red;
 }
-
 
 .fpheader {
     padding: 2rem 1rem;
