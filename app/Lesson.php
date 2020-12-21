@@ -936,11 +936,14 @@ class Lesson extends Base
     	return $record;
 	}
 
-	static public function setCurrentLocation($lessonId)
+	static public function setCurrentLocation($courseId, $lessonId, $lastLesson)
 	{
 		if (Auth::check())
 		{
-			Event::logTracking(LOG_MODEL_LESSONS, LOG_ACTION_VIEW, $lessonId);
+		    if ($lastLesson)
+		        Event::clearTracking(LOG_MODEL_LESSONS, LOG_ACTION_VIEW, $courseId);
+		    else
+			    Event::logTracking(LOG_MODEL_LESSONS, LOG_ACTION_VIEW, $lessonId, $courseId);
 		}
 		else
 		{
@@ -1050,7 +1053,7 @@ class Lesson extends Base
 	}
 
 	public function getTime()
-	{		
+	{
 		$seconds = isset($this->seconds) ? intval($this->seconds) : TIMED_SLIDES_DEFAULT_SECONDS;
 		$breakSeconds = isset($this->break_seconds) ? intval($this->break_seconds) : TIMED_SLIDES_DEFAULT_BREAK_SECONDS;
 
@@ -1062,27 +1065,27 @@ class Lesson extends Base
 
 		return $rc;
 	}
-	
+
 	static public function getTimes($records)
 	{
 		$seconds = 0;
 		$breakSeconds = 0;
-		
+
 		foreach($records as $record)
 		{
 			$seconds += isset($record->seconds) ? intval($record->seconds) : TIMED_SLIDES_DEFAULT_SECONDS;
 			$breakSeconds += isset($record->break_seconds) ? intval($record->break_seconds) : TIMED_SLIDES_DEFAULT_BREAK_SECONDS;
 		}
-		
+
 		$rc['seconds'] = $seconds;
 		$rc['breakSeconds'] = $breakSeconds;
-		
+
 		$rc['timeSeconds'] = Tools::secondsToTime($seconds);
 		$rc['timeTotal'] = Tools::secondsToTime($seconds + $breakSeconds);
-		
+
 		return $rc;
 	}
-	
+
 	// the new version was moved to Quiz but isn't being used
 	static private function formatButton($text, $id, $class)
     {
@@ -1098,5 +1101,5 @@ class Lesson extends Base
 		//dump($button);
 
 		return $button;
-	}	
+	}
 }

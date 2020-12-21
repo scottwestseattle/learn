@@ -31,4 +31,6 @@ return [
 'New list has been added' => 'New list has been added',
 'Error adding email address to mailing list' => 'Error adding email address to mailing list',
 'Email address added to mailing list' => 'Email address added to mailing list',
+'Entry has been added' => 'Entry has been added',
+'Entry has been updated' => 'Entry has been updated',
 ];

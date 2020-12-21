@@ -30,7 +30,7 @@ class Course extends Base
 
     public function lessons()
     {
-    	return $this->hasMany('App\Lesson', 'parent_id', 'id')->orderBy('lesson_number');
+    	return $this->hasMany('App\Lesson', 'parent_id', 'id')->where('lessons.deleted_flag', 0)->orderBy('lesson_number');
     }
 
     public function isTimedSlides()
@@ -96,7 +96,7 @@ class Course extends Base
 		$public = array_search('public', $parms) !== false;
 		$siteId = Tools::getSiteId();
 		$siteIdCondition = '=';
-		
+
 		$showAll = (array_search('all', $parms) !== false);
 		if ($showAll && Tools::isSuperAdmin())
 		{
@@ -104,7 +104,7 @@ class Course extends Base
 			$siteId = 0;
 			$siteIdCondition = '>=';
 		}
-			
+
 		if (!$public && Tools::isAdmin())
 		{
 			if ($showAll)
@@ -178,7 +178,7 @@ class Course extends Base
 			->where('type_flag', '=', COURSETYPE_TIMED_SLIDES)
 			->orderBy('display_order')
 			->get();
-		
+
 		return $records;
 	}
 
@@ -190,10 +190,10 @@ class Course extends Base
 			->where('type_flag', '=', COURSETYPE_SPANISH)
 			->orderBy('display_order')
 			->get();
-			
+
 		return $records;
 	}
-	
+
     static public function getRssFlat()
     {
 		$records = Course::select(
@@ -211,9 +211,9 @@ class Course extends Base
 			->get();
 
 		//dd($records);
-		
+
 		return $records;
-	}	
+	}
 
     public function getStatus()
     {

@@ -15,7 +15,7 @@ class EventController extends Controller
 
 		parent::__construct();
     }
-	
+
     public function index($type_flag = null)
     {
 		$type = intval($type_flag);
@@ -57,10 +57,10 @@ class EventController extends Controller
 		$totals['exception'] = Event::select()->where('site_id', SITE_ID)->where('deleted_flag', 0)->where('type_flag', LOG_TYPE_EXCEPTION)->count();
 		$totals['other'] = Event::select()->where('site_id', SITE_ID)->where('deleted_flag', 0)->where('type_flag', LOG_TYPE_OTHER)->count();
 		$totals['all'] = $totals['info'] + $totals['warning'] + $totals['error'] + $totals['exception'] + $totals['other'];
-		
+
 		return view($this->prefix . '.index', $this->getViewData([
 			'records' => $records,
 			'totals' => $totals,
-		]));		
+		]));
     }
 }

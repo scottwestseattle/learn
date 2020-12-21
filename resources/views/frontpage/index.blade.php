@@ -229,59 +229,59 @@
 	<!-- END OF COURSES -->
 
 <!--------------------------------------------------------------------------------------->
-<!-- ARTICLES -->
+<!-- ARTICLES NEW SMALL -->
 <!--------------------------------------------------------------------------------------->
-	@if (App\Tools::siteUses(LOG_MODEL_ARTICLES))
-		<h3>@LANG('content.Latest Articles')</h3>
-		<div class="text-center mt-3">
-			<div style="display: inline-block; width: 95%;">
-				<table>
-				<?php $count = 0; ?>
-				@foreach($articles as $record)
+@if (App\Tools::siteUses(LOG_MODEL_ARTICLES))
+    <h3 class="mt-2">@LANG('content.Latest Articles')</h3>
+    <div class="text-center mt-2" style="">
+        <div style="display: inline-block; width:100%">
+            <table style="width:100%;">
+            <?php $count = 0; ?>
+            @foreach($articles as $record)
 
-				<tr class="drop-box-ghost" style="vertical-align:middle;">
-					<td style="min-width:75px; font-size: 1.5em; padding:10px; color: white; background-color: #74b567; margin-bottom:10px;" >
-						<div style="margin:0; padding:0; line-height:100%;">
-							<div style="font-family:impact; font-size:1.7em; margin:10px 0 10px 0;">{{++$count}}</div>
-						</div>
-					</td>
-					<td style="color:default; padding: 0 10px; text-align:left; padding:15px;">
-						<table>
-						<tbody>
-							<tr><td style="padding-bottom:10px; font-size:1.3em; font-weight:normal;"><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
-							<tr><td style="padding-bottom:10px; font-size:.8em; font-weight:10;">
-								<div style="float:left;">
-									@component('components.icon-read', ['href' => "/entries/read/$record->id"])@endcomponent
-									<div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
-									<div style="margin-right:15px; margin-bottom:5px; float:left;"><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
+            <tr class="drop-box-ghost-small" style="vertical-align:middle;">
+                <td style="min-width:40px; font-size: 14px; padding:5px; color: white; background-color: #74b567; margin-bottom:10px;" >
+                    <div style="margin:0; padding:0; line-height:100%;">
+                        <div style="font-family:impact; font-size:1.7em; margin:10px 0 10px 0;">{{++$count}}</div>
+                    </div>
+                </td>
+                <td style="color:default; text-align:left; padding:5px 10px;">
+                    <table>
+                    <tbody>
+                        <tr><td style="padding-bottom:5px; font-size: 14px; font-weight:normal;"><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
+                        <tr><td style="font-size:.8em; font-weight:100;">
+                            <div style="float:left;">
+                                @component('components.icon-read', ['href' => "/entries/read/$record->id"])@endcomponent
+                                <div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
+                                <div style="margin-right:15px; margin-bottom:5px; float:left;"><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
 
-									@if (App\User::isAdmin())
-										<div style="margin-right:15px; float:left;">
-											@component('components.control-button-publish', ['record' => $record, 'btnStyle' => 'btn-xxs', 'prefix' => 'entries', 'showPublic' => true])@endcomponent
-										</div>
-									@endif
+                                @if (App\User::isAdmin())
+                                    <div style="margin-right:15px; float:left;">
+                                        @component('components.control-button-publish', ['record' => $record, 'btnStyle' => 'btn-xxs', 'prefix' => 'entries', 'showPublic' => true])@endcomponent
+                                    </div>
+                                @endif
 
-								</div>
-								<div style="float:left;">
-									@if (App\User::isAdmin())
-									<div style="margin-right:5px; float:left;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
-									<div style="margin-right:0px; float:left;"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
-									@endif
-								</div>
-							</td></tr>
-						</tbody>
-						</table>
-					</td>
-				</tr>
+                            </div>
+                            <div style="float:left;">
+                                @if (App\User::isAdmin())
+                                <div style="margin-right:5px; float:left;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
+                                <div style="margin-right:0px; float:left;"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
+                                @endif
+                            </div>
+                        </td></tr>
+                    </tbody>
+                    </table>
+                </td>
+            </tr>
 
-				<tr><td>&nbsp;</td><td></td></tr>
+            <tr style="" class=""><td colspan="2"><div style="height:15px;">&nbsp;</div></td></tr>
 
-				@endforeach
-				</table>
-			</div>
-			<div class="mb-4"><a href="/articles">@LANG('content.Show All Articles')</a></div>
-		</div>
-	@endif
+            @endforeach
+            </table>
+            <div class="mb-4"><a class="btn btn-sm btn-success" role="button" href="/articles">@LANG('content.Show All Articles')</a></div>
+        </div>
+    </div>
+@endif
 
 <!--------------------------------------------------------------------------------------->
 <!-- WORD OF THE DAY (not used) -->
@@ -306,10 +306,23 @@
     @endif
 
 <!--------------------------------------------------------------------------------------->
+<!-- Podcasts -->
+<!--------------------------------------------------------------------------------------->
+@if ($siteLanguage == 'es-ES')
+<div>
+    <iframe frameBorder="0" height="482" scrolling="no" src="https://playlist.megaphone.fm/?p=HSW5050863615&light=true"
+    width="100%">
+    </iframe>
+</div>
+@endif
+
+</div>
+
+<!--------------------------------------------------------------------------------------->
 <!-- BUY US A COFFEE BUTTON -->
 <!--------------------------------------------------------------------------------------->
 @if (isset($supportMessage))
-<div class="text-center mt-4 mb-4">
+<div class="text-center mb-4">
 <script
     type="text/javascript"
     src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
@@ -325,19 +338,6 @@
 </script>
 @endif
 </div>
-
-<!--------------------------------------------------------------------------------------->
-<!-- Podcasts -->
-<!--------------------------------------------------------------------------------------->
-@if ($siteLanguage == 'es-ES')
-<div>
-<iframe frameBorder="0" height="482" scrolling="no" src="https://playlist.megaphone.fm/?p=HSW5050863615&light=true"
-width="100%"></iframe>
-</div>
-@endif
-
-</div>
-
 <!--------------------------------------------------------------------------------------->
 <!-- PRE-FOOTER SECTION -->
 <!--------------------------------------------------------------------------------------->

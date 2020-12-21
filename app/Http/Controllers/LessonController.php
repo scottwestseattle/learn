@@ -29,7 +29,7 @@ class LessonController extends Controller
 	public function __construct ()
 	{
         $this->middleware('is_admin')->except([
-			'index', 'review', 'reviewmc', 'read', 'view', 
+			'index', 'review', 'reviewmc', 'read', 'view',
 			'start', 'permalink', 'logQuiz', 'rss', 'rssReader'
 		]);
 
@@ -250,8 +250,6 @@ class LessonController extends Controller
 
 	public function view(Lesson $lesson)
     {
-		Lesson::setCurrentLocation($lesson->id);
-
 		$lesson->text = Tools::convertToHtml($lesson->text);
 
 		if ($lesson->format_flag == LESSON_FORMAT_AUTO)
@@ -263,9 +261,13 @@ class LessonController extends Controller
 		$next = Lesson::getNext($lesson);
 		$nextChapter = $lesson->getNextChapter();
 
+        $lastLesson = (!isset($next) && !isset($nextChapter)); // if on last lesson
+		Lesson::setCurrentLocation($lesson->parent_id, $lesson->id, $lastLesson);
+
 		// count the <p>'s as sentences
 		preg_match_all('#<p>#is', $lesson->text, $matches, PREG_SET_ORDER);
 		$sentenceCount = count($matches);
+
 		// if there's a table, count the rows, add it to the count
 		if (strpos($lesson->text, '<table') !== false)
 		{
@@ -275,11 +277,11 @@ class LessonController extends Controller
 
 		// only vocab pages may have vocab
 		$vocab = $lesson->getVocab();
-		
+
 		// get course time to show
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
-				
-		$times = Lesson::getTimes($records);		
+
+		$times = Lesson::getTimes($records);
 
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $lesson,
@@ -331,7 +333,7 @@ class LessonController extends Controller
 
 		$isDirty = false;
 		$changes = '';
-		
+
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->title_chapter = Tools::copyDirty($record->title_chapter, $request->title_chapter, $isDirty, $changes);
 		$record->description = Tools::copyDirty($record->description, $request->description, $isDirty, $changes);
@@ -589,7 +591,7 @@ class LessonController extends Controller
 				$qna[$cnt]['id'] = $cnt;
 				$qna[$cnt]['ix'] = $cnt; // this will be the button id, just needs to be unique
 				$qna[$cnt]['options'] = '';
-				
+
 				if (!isset($qna[$cnt]['a']))
 					throw new \Exception('parse error: ' . $q);
 			}
@@ -601,7 +603,7 @@ class LessonController extends Controller
 
 		return $qna;
 	}
-	
+
 	public function reviewOrig(Lesson $lesson, $reviewType = null)
     {
 		$prev = Lesson::getPrev($lesson);
@@ -709,24 +711,24 @@ class LessonController extends Controller
 
     public function read(Request $request, Lesson $lesson)
     {
-		$record = $lesson;		
+		$record = $lesson;
 		$text = [];
-		
+
 		//$title = Tools::getSentences($record->title);
 		$text = str_replace("<br />", "\r\n", $record->text);
 		$text = Tools::getSentences($text);
 		//$text = array_merge($title, $text);
 		//dd($text);
-		
+
 		$record['lines'] = $text;
-				
+
     	return view('shared.reader', $this->getViewData([
 			'record' => $record,
 			'readLocation' => null,
 			'speechLanguage' => 'es-ES',
 			'contentType' => 'Lesson',
 		]));
-    }	
+    }
 
     public function logQuiz($lessonId, $score)
     {
@@ -767,18 +769,18 @@ class LessonController extends Controller
 	}
 
 	public function start(Lesson $lesson)
-    {		
+    {
 		Lesson::setCurrentLocation($lesson->id);
 
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
-		
+
 		if (false) // one time fix for file namespace
 		{
 			foreach($records as $record)
 			{
 				$photo = str_replace('-', '_', $record->main_photo);
 				$photo = str_replace(' ', '_', $photo);
-				
+
 				if ($photo != $record->main_photo)
 				{
 					//dump($photo);
@@ -787,7 +789,7 @@ class LessonController extends Controller
 				}
 			}
 		}
-		
+
 		$times = Lesson::getTimes($records);
 
 		// get background images by random album
@@ -798,7 +800,7 @@ class LessonController extends Controller
 		$album = $bgAlbums[$ix];
         $bgs = Tools::getPhotos('/img/backgrounds/' . $album . '/');
 		//dump($album);
-		
+
         foreach($bgs as $key => $value)
         {
             $bgs[$key] = 0;
@@ -815,18 +817,18 @@ class LessonController extends Controller
 			'bgAlbum' => $album,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
-	
+
     public function rssReader(Lesson $lesson)
     {
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
 
 		$qna = [];
-		
+
 		foreach ($records as $record)
 		{
 			$lines = explode("\r\n", strip_tags(html_entity_decode($record->text)));
 			//dd($lines);
-			
+
 			$cnt = 0;
 			foreach($lines as $line)
 			{
@@ -840,14 +842,14 @@ class LessonController extends Controller
 
 					if (count($parts) > 0)
 						$qna[$cnt]['q'] = $parts[0];
-						
+
 					if (count($parts) > 1)
 						$qna[$cnt]['a'] = $parts[1];
-					
+
 					$cnt++;
 				}
 			}
-			
+
 			$record['qna'] = $qna;
 		}
 
@@ -856,7 +858,7 @@ class LessonController extends Controller
 			'records' => $records,
 			], LOG_MODEL, LOG_PAGE_VIEW));
 	}
-	
+
 	public function rss(Lesson $lesson)
     {
 		$records = Lesson::getIndex($lesson->parent_id, $lesson->lesson_number);
@@ -866,5 +868,5 @@ class LessonController extends Controller
 			'records' => $records,
 			], LOG_MODEL, LOG_PAGE_VIEW));
     }
-	
+
 }

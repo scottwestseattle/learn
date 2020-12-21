@@ -23,6 +23,9 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 
 Latest DB Changes:
 
+12/21/2020
+ALTER TABLE `definitions` ADD `wotd_at` TIMESTAMP NULL COMMENT 'the date when it was the wotd' AFTER `last_viewed_at`;
+
 2/6/2020
 ALTER TABLE `lessons` ADD `reps` SMALLINT NULL AFTER `main_photo`;
 ALTER TABLE `lessons` ADD `seconds` SMALLINT NULL AFTER `reps`;

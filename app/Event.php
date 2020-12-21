@@ -100,14 +100,44 @@ class Event extends Base
 		Event::add(LOG_TYPE_EXCEPTION, $model, $action, $title, null, $record_id, $error);
 	}
 
+    static public function logInfo($model, $action, $title)
+	{
+		Event::add(LOG_TYPE_INFO, $model, $action, $title);
+	}
+
     static public function logTracking($model, $action, $record_id = null, $extraInfo = null)
     {
 		Event::add(LOG_TYPE_TRACKING, $model, $action, 'Tracking', null, $record_id, null, null, $extraInfo);
 	}
 
-    static public function logInfo($model, $action, $title)
-	{
-		Event::add(LOG_TYPE_INFO, $model, $action, $title);
+    static public function clearTracking($model, $action, $course_id)
+    {
+		$records = Event::select()
+			->where('extrainfo', $course_id)
+			->where('user_id', Auth::id())
+			->where('model_flag', $model)
+			->where('action_flag', $action)
+			->where('deleted_flag', 0)
+			->orderByRaw('id DESC')
+			->get();
+//		dd($records);
+
+		foreach($records as $record)
+		{
+			try
+			{
+				$record->deleteSafe();
+			}
+			catch (\Exception $e)
+			{
+			    $message = 'Error deleting course tracking records';
+				Event::logException(LOG_MODEL, LOG_ACTION_DELETE, 'clearTracking', $record_id, $msg . ": " . $e->getMessage());
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);
+				break;
+			}
+		}
+
 	}
 
 	// this is the add for all records

@@ -31,4 +31,6 @@ return [
 'New list has been added' => '已添加新列表',
 'Error adding email address to mailing list' => '将电子邮件地址添加到邮件列表时出错',
 'Email address added to mailing list' => '电子邮件地址已添加到邮件列表',
+'Entry has been added' => '条目已添加',
+'Entry has been updated' => '条目已更新',
 ];

@@ -3,15 +3,15 @@
 @section('content')
 
 <div class="container page-normal">
-		
+
 	@component('events.menu-submenu')@endcomponent
 
 	@component('events.menu-submenu-filter', ['totals' => $totals])@endcomponent
-				
+
 	<h3>@LANG('ui.Events') ({{$records->count()}})</h3>
-		
+
 	<div class="table-responsive">
-		
+
 		<table style="width:100%;" class="">
 			<tbody>
 			<?php $cnt = 0; ?>
@@ -25,7 +25,7 @@
 					if ($record->type_flag == 5) $type = 'Tracking';
 					if ($record->type_flag == 99) $type = 'Other';
 				?>
-				
+
 				<tr>
 					<td>
 						<table style="margin-bottom:0;" class="table">
@@ -37,7 +37,7 @@
 								<th>Type</th>
 								<th>Model</th>
 								<th>Action</th>
-							</tr>			
+							</tr>
 							@endif
 							<tr>
 								<td>{{$record->created_at}}</td>
@@ -72,11 +72,14 @@
 						@if (isset($record->record_id) && $record->record_id > 0)
 							<div style="">Record Id: {{$record->record_id}}</div>
 						@endif
-					</td>
+						@if (isset($record->extraInfo) && strlen($record->extraInfo) > 0)
+							<div style="">Extra: {{$record->extraInfo}}</div>
+						@endif
+						</td>
 				</tr>
 			@endforeach
 			</tbody>
 		</table>
-	</div>	
+	</div>
 </div>
 @endsection

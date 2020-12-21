@@ -565,6 +565,10 @@ h1,h3 {
 	box-shadow: 1px 1px 10px 1px #e0e0e0;
 }
 
+.drop-box-ghost-small {
+	box-shadow: 1px 1px 5px 1px #e0e0e0;
+}
+
 /* spacing for the lesson prev/next buttons */
 .page-nav-buttons {
 	margin: 10px 0;
