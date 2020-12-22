@@ -28,17 +28,17 @@ class DefinitionController extends Controller
 	public function __construct ()
 	{
 		$public = [
-			'index', 'view', 'find', 'search', 'list', 
-			'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponentAjax', 
+			'index', 'view', 'find', 'search', 'list',
+			'conjugationsGen', 'conjugationsGenAjax', 'conjugationsComponentAjax', 'verbs',
 			'getAjax', 'translateAjax', 'wordExistsAjax', 'searchAjax',	'getRandomWordAjax',
 			'heartAjax', 'unheartAjax', // leave these as public so everyone can see the option
 			'setFavoriteList',
 			'reviewNewest', 'reviewNewestVerbs', 'reviewRandomWords', 'reviewRandomVerbs',
 		];
-		
+
         $this->middleware('is_admin')->except($public);
         $this->middleware('auth')->only('setFavoriteList');
-			
+
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
 		$this->titlePlural = TITLE_PLURAL;
@@ -98,7 +98,7 @@ class DefinitionController extends Controller
 			'favoriteLists' => Definition::getUserFavoriteLists(),
 		]));
 	}
-	
+
 	//
 	// This is now the main index/search page
 	//
@@ -110,9 +110,9 @@ class DefinitionController extends Controller
 
 		if ($sort == DEFINITIONS_SEARCH_NOTSET)
 		{
-			// check if a previous sort was used 
+			// check if a previous sort was used
 			$sort = session('definitionSort', 0);
-			
+
 			// check if a previous search word was used
 			$search = session('definitionSearch', '');
 		}
@@ -120,11 +120,11 @@ class DefinitionController extends Controller
 		{
 			// save current sort value for next time
 			session(['definitionSort' => $sort]);
-			
+
 			// clear any previous search word if any kind of sort is set
-			session(['definitionSearch' => null]);			
+			session(['definitionSearch' => null]);
 		}
-		
+
 		try
 		{
 			if (isset($search) && strlen($search) > 0)
@@ -145,7 +145,7 @@ class DefinitionController extends Controller
 			'favoriteLists' => Definition::getUserFavoriteLists(),
 		]));
     }
-		
+
 	// open the conjugations view
     public function conjugationsGen(Request $request, Definition $definition)
     {
@@ -158,18 +158,18 @@ class DefinitionController extends Controller
 			$forms = $records['forms'];
 			$records = $records['records'];
 		}
-		
+
 		return view(PREFIX . '.conjugations', $this->getViewData([
 			'record' => $record,
 			'records' => $records,
 			'status' => $status,
 		]));
-    }	
-	
+    }
+
     public function conjugationsGenAjax(Request $request, $text)
     {
 		$forms = null;
-		
+
 		$scraped = Definition::isIrregular($text);
 		if ($scraped['irregular'])
 		{
@@ -187,17 +187,17 @@ class DefinitionController extends Controller
 				//dd($forms);
 			}
 		}
-		
+
 		return $forms;
-    }	
+    }
 
     public function scrapeDefinitionAjax(Request $request, $word)
     {
 		$rc = Definition::scrapeDefinition($word);
-		
+
 		return $rc;
-    }	
-	
+    }
+
 	public function conjugationsComponentAjax(Request $request, Definition $definition)
     {
 		$record = $definition;
@@ -205,22 +205,22 @@ class DefinitionController extends Controller
 
 		return view(PREFIX . '.component-conjugations', $this->getViewData([
 			'record' => $record,
-			], LOG_MODEL, LOG_PAGE_VIEW));		
+			], LOG_MODEL, LOG_PAGE_VIEW));
     }
-	
+
 
     public function wordExistsAjax(Request $request, $text)
     {
 		$rc = '';
-		
+
 		$record = Definition::get($text);
 		if (isset($record))
-		{ 
+		{
 			$rc = "<a href='/definitions/view/" . $record->id . "'>" . $record->title . ": already in dictionary (show)</a>&nbsp;<a href='/definitions/edit/" . $record->id . "'>(edit)</a>";
 		}
-			
+
 		return $rc;
-    }	
+    }
 
     public function admin(Request $request, $parent_id = null)
     {
@@ -247,7 +247,7 @@ class DefinitionController extends Controller
     public function add($word = null)
     {
 		$word = Tools::alpha($word);
-		
+
 		return view(PREFIX . '.add', $this->getViewData([
 				'word' => $word,
 			]));
@@ -262,7 +262,7 @@ class DefinitionController extends Controller
 			Tools::flash('danger', 'record already exists');
 			return redirect('/' . PREFIX . '/edit/' . $record->id);
 		}
-		
+
 		$record = new Definition();
 
 		$record->user_id 		= Auth::id();
@@ -285,10 +285,10 @@ class DefinitionController extends Controller
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Record not added: error getting conjugations';			
+			$msg = 'Record not added: error getting conjugations';
 			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $msg, null, $e->getMessage());
 			Tools::flash('danger', $msg . ' - see events');
-			return back();			
+			return back();
 		}
 
 		try
@@ -299,7 +299,7 @@ class DefinitionController extends Controller
 
 			$msg = 'New record has been added';
 			Tools::flash('success', $msg);
-			
+
 			return redirect('/' . PREFIX . '/view/' . $record->id);
 		}
 		catch (\Exception $e)
@@ -344,7 +344,7 @@ class DefinitionController extends Controller
     {
 		$record = $definition;
 		$forms = null;
-		
+
 		if (isset($record->forms))
 		{
 			// make it prettier
@@ -357,8 +357,8 @@ class DefinitionController extends Controller
 			//{
 			//	$forms = $records['formsPretty'];
 			//	$record->forms = $forms;
-			//}	
-		}		
+			//}
+		}
 
 		return view(PREFIX . '.edit', $this->getViewData([
 			'record' => $record,
@@ -387,7 +387,7 @@ class DefinitionController extends Controller
 		{
 			// this will check if a raw conjugations has been entered and if so, clean it
 			// if it's not raw, then it just sends it back
-			$conj = Definition::getConjugations($request->conjugations);			
+			$conj = Definition::getConjugations($request->conjugations);
 			$record->conjugations = Tools::copyDirty($record->conjugations, $conj['full'], $isDirty, $changes);
 			$record->conjugations_search = Tools::copyDirty($record->conjugations, $conj['search'], $isDirty, $changes);
 		}
@@ -504,25 +504,25 @@ class DefinitionController extends Controller
 
 		return $rc;
 	}
-	
+
     public function getAjax(Request $request, $text, $entryId)
-    {	
+    {
 		$entryId = intval($entryId);
-		
+
 		// 1. see if we already have it in the dictionary
 		$record = Definition::search($text);
 		if (isset($record))
 		{
 			// when a user looks up a word, add it to his def list for the entry being read
 			Entry::addDefinitionUserStatic($entryId, $record);
-			
+
 			$xlate = null;
 			if (!isset($record->translation_en))
-			{				
+			{
 				$rc = "<a target='_blank' href='/definitions/view/$record->id'>$record->title</a>&nbsp;";
 				if (Tools::isAdmin())
 					$rc .= "<a target='_blank' href='/definitions/edit/$record->id'>(edit)</a>";
-				
+
 				$rc .= "<div class='mt-2'>found but translation not set</div>";
 			}
 			else
@@ -539,35 +539,35 @@ class DefinitionController extends Controller
 				$xlate = nl2br($record->translation_en);
 
 				$rc = "<a target='_blank' href='/definitions/view/$record->id'>$record->title</a><div>$xlate</div>";
-			}								
+			}
 		}
 		else
 		{
 			// 2. not in our list, show link to MS Translate ajax
 			$rc = "<a href='' onclick='event.preventDefault(); xlate(\"" . $text . "\");'>Translate</a>";
-			
+
 			if (Tools::isAdmin())
 				$rc .= "<a class='ml-3' target='_blank' href='/definitions/add/" . $text . "'>Add</a>";
-			
+
 		}
 
 		return $rc;
 	}
 
     public function translateAjax(Request $request, $text, $entryId = null)
-    {	
+    {
 		$entryId = intval($entryId);
 		$rc = self::translateMicrosoft($text);
-		
+
 		if (strlen($rc['error']) == 0) // no errors
 		{
 			// add the translation to our dictionary for next time
 			$translation = strtolower($rc['data']);
 			$def = Definition::add($text, /* definition = */ null, $translation);
-			
+
 			// when a user translates a word, add it to his def list for the entry being read
 			Entry::addDefinitionUserStatic($entryId, $def);
-			
+
 			if (isset($def))
 			{
 				$rc = "<a href='/definitions/view/$def->id/' target='_blank'>$def->title</a><div class='green mt-1'>$translation</div>";
@@ -580,14 +580,14 @@ class DefinitionController extends Controller
 		else
 		{
 			$rc = '<div>' . $rc['error'] . '</div>';
-			
+
 			if (Tools::isAdmin())
 				$rc .= "<div><a class='ml-3' target='_blank' href='/definitions/add/" . $text . "'>Add</a></div>";
 		}
-		
+
 		return $rc;
 	}
-	
+
     static public function translateMicrosoft($text)
     {
 		$rc = ['error' => '', 'data' => ''];
@@ -597,17 +597,17 @@ class DefinitionController extends Controller
 			$rc['error'] = 'empty string';
 			return $rc;
 		}
-		
+
 		// NOTE: Be sure to uncomment the following line in your php.ini file.
 		// ;extension=php_openssl.dll
 		// You might need to set the full path, for example:
 		// extension="C:\Program Files\Php\ext\php_openssl.dll"
-		
+
 		// Prepare variables
 		//$text = 'comulgar';
 		$path = "/translate?api-version=3.0";
 		$params = "&to=en";
-		
+
 		// Prepare cURL command
 		$key = env('MICROSOFT_API_KEY', '');
 		$host = 'api-apc.cognitive.microsofttranslator.com';
@@ -620,13 +620,13 @@ class DefinitionController extends Controller
 			mt_rand( 0, 0x3fff ) | 0x8000,
 			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
 		);
-				
+
 		$requestBody = array (
 			array (
 				'Text' => $text,
 			),
 		);
-		
+
 		$content = json_encode($requestBody);
 		//dd($content);
 
@@ -647,24 +647,24 @@ class DefinitionController extends Controller
 			)
 		);
 		//dd($options);
-		
+
 		$context  = stream_context_create($options);
-		
+
 		$url = 'https://' . $host . $path . $params;
 		//dd($url);
-		
+
 		try {
 			$json = file_get_contents($url, false, $context);
 		}
 		catch (\Exception $e)
 		{
 			$msg = 'Error Translating: ' . $text;
-			
+
 			if (strpos($e->getMessage(), '401') !== FALSE)
 			{
 				$msg .= ' - 401 Unauthorized';
 			}
-			
+
 			Event::logException(LOG_MODEL, LOG_ACTION_TRANSLATE, $msg, null, $e->getMessage());
 			$result = $msg;
 			$rc['error'] = $msg;
@@ -674,16 +674,16 @@ class DefinitionController extends Controller
 
 		$json = json_decode($json);
 		//dd($json);
-		
+
 		if (count($json) > 0)
 		{
 			$json = $json[0]->translations;
 			if (count($json) > 0)
 			{
 				//dd($json[0]);
-				
+
 				$xlate = strtolower($json[0]->text);
-				if ($text == $xlate) 
+				if ($text == $xlate)
 				{
 					// if translation is same as the word, then it probably wasn't found
 					$rc['error'] = 'translation not found';
@@ -695,7 +695,7 @@ class DefinitionController extends Controller
 			}
 			//dd($rc);
 		}
-	
+
 		return $rc;
 	}
 
@@ -709,7 +709,7 @@ class DefinitionController extends Controller
 		{
 			$word = Word::getDefinition($word);
 			//$duplicate = Definition::exists($record->title) ? 'Duplicate: ' : '';
-			
+
 			if (isset($word))
 			{
 				// word already exists
@@ -762,7 +762,7 @@ class DefinitionController extends Controller
 	}
 
     public function confirmdelete(Definition $definition)
-    {		
+    {
 		return view(PREFIX . '.confirmdelete', $this->getViewData([
 			'record' => $definition,
 		]));
@@ -776,7 +776,7 @@ class DefinitionController extends Controller
 		{
 			$record->removeTags();
 			$record->removeEntries();
-				
+
 			$record->delete();
 			Event::logDelete(LOG_MODEL, $record->title, $record->id);
 			Tools::flash('success', 'Record has been deleted');
@@ -836,23 +836,23 @@ class DefinitionController extends Controller
     {
 		$record = Definition::search($text);
 		if (isset($record))
-		{ 
+		{
 			// update the view timestamp so it will move to the back of the list
 			$record->updateLastViewedTime();
-			
+
 			// format the examples to display as separate sentences
 			$record->examples = Tools::splitSentences($record->examples);
-			
+
 			$record->conjugations = Definition::getConjugationsPretty($record->conjugations);
 		}
-		
+
 		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record,
 			'word' => Tools::alphanum($text, true),
 			'favoriteLists' => null,
-			], LOG_MODEL, LOG_PAGE_VIEW));		
+			], LOG_MODEL, LOG_PAGE_VIEW));
 	}
-	
+
 	public function view(Definition $definition)
     {
 		$record = $definition;
@@ -906,8 +906,8 @@ class DefinitionController extends Controller
 		Event::logInfo(LOG_MODEL, LOG_ACTION_TOUCH, 'touch ' . $word->title . ': ' . $rc);
 
 		return $rc;
-    }	
-	
+    }
+
 	public function setFavoriteList(Request $request, Definition $definition, $tagFromId, $tagToId)
     {
 		$record = $definition;
@@ -927,7 +927,7 @@ class DefinitionController extends Controller
 
 		return back();
     }
-	
+
 	public function heartAjax(Request $request, Definition $definition)
     {
 		$record = $definition;
@@ -961,7 +961,7 @@ class DefinitionController extends Controller
         $rc = '';
 
         if (Auth::check())
-        {	
+        {
 			if ($record->removeTagFavorite())
             {
                 $rc = ''; // no msg means, no error
@@ -980,7 +980,7 @@ class DefinitionController extends Controller
 
 		return $rc;
     }
-	
+
 	public function toggleWipAjax(Request $request, Definition $definition, $done = true)
     {
 		$record = $definition;
@@ -988,7 +988,7 @@ class DefinitionController extends Controller
 		$rc = $record->toggleWip();
 
 		$msg = $record->title . ' (' . $record->id . ') ' . ' set to ' . ($rc ? 'finished' : 'unfinished');
-		
+
 		Event::logInfo(LOG_MODEL, LOG_ACTION_EDIT, $msg);
 
 		//$rc = $msg;
@@ -1017,8 +1017,8 @@ class DefinitionController extends Controller
 			'lists' => Definition::getUserFavoriteLists(),
 //			'favoriteListsOptions' => Definition::getUserFavoriteListsOptions(),
 		]));
-    }	
-	
+    }
+
     public function review(Request $request, Tag $tag, $reviewType = null)
     {
 		$reviewType = intval($reviewType);
@@ -1035,8 +1035,8 @@ class DefinitionController extends Controller
 			'touchPath' => '',
 			'parentTitle' => $tag->name,
 			'settings' => $settings,
-			], LOG_MODEL, LOG_PAGE_VIEW));		
-    }	
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
 
     public function reviewNewest(Request $request, $reviewType = null)
     {
@@ -1054,9 +1054,9 @@ class DefinitionController extends Controller
 			'touchPath' => '',
 			'parentTitle' => 'Title Note Used',
 			'settings' => $settings,
-			], LOG_MODEL, LOG_PAGE_VIEW));		
-    }	
-	
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
     public function reviewNewestVerbs(Request $request, $reviewType = null)
     {
 		$reviewType = intval($reviewType);
@@ -1073,9 +1073,9 @@ class DefinitionController extends Controller
 			'touchPath' => '',
 			'parentTitle' => 'Title Note Used',
 			'settings' => $settings,
-			], LOG_MODEL, LOG_PAGE_VIEW));		
-    }	
-	
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
     public function reviewRandomWords(Request $request, $reviewType = null)
     {
 		$reviewType = intval($reviewType);
@@ -1092,9 +1092,9 @@ class DefinitionController extends Controller
 			'touchPath' => '',
 			'parentTitle' => 'Title Note Used',
 			'settings' => $settings,
-			], LOG_MODEL, LOG_PAGE_VIEW));		
-    }    
-	
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
 	public function reviewRandomVerbs(Request $request, $reviewType = null)
     {
 		$reviewType = intval($reviewType);
@@ -1111,15 +1111,28 @@ class DefinitionController extends Controller
 			'touchPath' => '',
 			'parentTitle' => 'Title Note Used',
 			'settings' => $settings,
-			], LOG_MODEL, LOG_PAGE_VIEW));		
-    }	
-	
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
+
     public function getRandomWordAjax(Request $request)
     {
 		$record = Definition::getRandomWord();
-		
+
 		return view('components.random-word', $this->getViewData([
 			'record' => $record,
-			], LOG_MODEL));			
-	}	
+			], LOG_MODEL));
+	}
+
+	public function verbs(Request $request, $verb)
+    {
+		$record = Definition::get($verb);
+
+		if (isset($record->conjugations))
+			$record->conjugations = Definition::getConjugationsFull($record->conjugations);
+//dd($record);
+		return view('definitions.verb', $this->getViewData([
+			'record' => $record,
+			'headers' => Definition::$_verbConjugations,
+			], LOG_MODEL, LOG_PAGE_VIEW));
+    }
 }

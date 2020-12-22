@@ -37,6 +37,7 @@ Route::get('/vocabulary', 'VocabListController@index');
 Route::get('/404/{model}/{view}/{parameters}', 'Controller@pageNotFound404');
 Route::get('/start', 'FrontPageController@start');
 Route::post('/subscribe', 'FrontPageController@subscribe');
+Route::get('/verbs/{verb}', 'DefinitionController@verbs');
 
 // Site Admin Pages
 Route::get('/admin', 'HomeController@admin')->middleware('is_admin')->name('admin');

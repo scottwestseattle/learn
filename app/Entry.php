@@ -800,7 +800,7 @@ class Entry extends Base
 
         // figure out which ones to show
         $records = [];
-        $userLevel = self::getReleaseFlag();
+        $userLevel = self::getReleaseFlag(); // get the user's level to see which books can be shown
         foreach($tags as $record)
         {
             foreach($record->books as $r)

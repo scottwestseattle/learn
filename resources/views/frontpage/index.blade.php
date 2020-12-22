@@ -11,19 +11,17 @@
 <!--------------------------------------------------------------------------------------->
 
 <!--------------------------------------------------------------------------------------->
-<!-- Header -->
+<!-- Banner Photo -->
 <!--------------------------------------------------------------------------------------->
+<div><a href="/"><img src="/img/banners/{{$banner}}" style="width:100%;" /></a></div>
+
 @if (Auth::check() && count($lesson) > 0)
-    <!-- No photo banner or logo for signed-in user -->
-    <div style="height:5px;"></div>
+    <!-- No logo or subscribe for signed-in user -->
+    <!-- div style="height:5px;"></div -->
 @else
     @if (isset($banner))
     <div class="bg-none">
 
-        <!--------------------------------------------------------------------------------------->
-        <!-- Banner -->
-        <!--------------------------------------------------------------------------------------->
-        <div><a href="/"><img src="/img/banners/{{$banner}}" style="width:100%;" /></a></div>
 
         <!--------------------------------------------------------------------------------------->
         <!-- Logo and Subscribe Form-->
@@ -90,26 +88,34 @@
     <div class="hidden-xs mb-3"></div>
     <div class="d-block d-md-none d-flex justify-content-center text-center bg-none p-0 mt-3">
 
-        <div class="" style="width: 33%;">
+        <div class="" style="width: 25%;">
+            <a class="purple" href="/articles">
+                <div class="glyphicon glyphicon-globe" style="font-size:35px;"></div>
+                <div class="" style="font-size:10px;">@LANG('content.Articles')</div>
+            </a>
+        </div>
+
+        <div class="" style="width: 25%;">
+            <a class="purple" href="/books">
+                <div class="glyphicon glyphicon-book" style="font-size:35px;"></div>
+                <div class="" style="font-size:10px;">@LANG('content.Books')</div>
+            </a>
+        </div>
+
+        <div class="" style="width: 25%;">
             <a class="purple" href="/definitions">
                 <div class="glyphicon glyphicon-font" style="font-size:35px;"></div>
                 <div class="" style="font-size:10px;">@LANG('content.Dictionary')</div>
             </a>
         </div>
 
-        <div class="" style="width: 33%;">
+        <div class="" style="width: 25%;">
             <a class="purple" href="/vocabulary">
                 <div class="glyphicon glyphicon-th-list" style="font-size:35px;"></div>
                 <div class="" style="font-size:10px;">@LANG('content.Lists')</div>
             </a>
         </div>
 
-        <div class="" style="width: 33%;">
-            <a class="purple" href="/books">
-                <div class="glyphicon glyphicon-book" style="font-size:35px;"></div>
-                <div class="" style="font-size:10px;">@LANG('content.Books')</div>
-            </a>
-        </div>
     </div>
 
 <!--------------------------------------------------------------------------------------->

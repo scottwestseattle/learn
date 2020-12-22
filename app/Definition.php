@@ -33,6 +33,21 @@ class Definition extends Base
 {
     use SoftDeletes;
 
+    static public $_verbConjugations = [
+        'Participles',
+        'Present',
+        'Past',
+        'Past Perfect',
+        'Conditional',
+        'Future',
+        'Subjunctive Present',
+        'Subjunctive Imperfect',
+        'Subjunctive Imperfect 2',
+        'Subjunctive Future',
+        'Imperative',
+        'Imperative Negative',
+    ];
+
     public function entries()
     {
 		return $this->belongsToMany('App\Entry');
@@ -1059,6 +1074,59 @@ class Definition extends Base
 		$rc['search'] = $search;
 
 		return $rc;
+	}
+
+    static public function getConjugationsFull($conj)
+    {
+		$conj = self::getConjugationsPretty($conj);
+
+		if (isset($conj))
+		{
+		    $pronouns = ['yo', 'tu', 'usted', 'nosotros', 'vosotros', 'ustedes'];
+		    $fullSize = count($pronouns);
+		    foreach($conj as $record)
+		    {
+                // looks like: mato, mata, mata, matais, matamos, matan
+                $tenses = [];
+                $parts = explode(',', $record);
+                if (count($parts) == $fullSize)
+                {
+                    foreach($parts as $key => $part)
+                    {
+                        $part = trim($part);
+                        if (strlen($part) > 0)
+                        {
+                            $tenses[] = $pronouns[$key] . ' ' . $part;
+                        }
+                    }
+                    $conj['tenses'][] = $tenses;
+                }
+                else
+                {
+                    // this will skip the first line which is the participle
+                    if (array_key_exists('tenses', $conj))
+                    {
+                        $tenses = [];
+                        if (count($parts) == ($fullSize - 1))
+                        {
+                            // the imperatives only have 5 tenses
+                            foreach($parts as $key => $part)
+                            {
+                                $part = trim($part);
+                                if (strlen($part) > 0)
+                                {
+                                    // start on 'tu'
+                                    $tenses[] = $pronouns[$key + 1] . ' ' . $part;
+                                }
+                            }
+                            $conj['tenses'][] = $tenses;
+                        }
+                    }
+                }
+			}
+		}
+
+		return $conj;
 	}
 
     static public function getConjugationsPretty($conj)
