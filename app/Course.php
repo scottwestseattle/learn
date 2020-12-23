@@ -156,15 +156,39 @@ class Course extends Base
 		}
 		else
 		{
+		    $typeFlag = -1;
+		    $language = Tools::getSiteLanguage();
+		    if ($language == LANGUAGE_SPANISH)
+		        $typeFlag = COURSETYPE_SPANISH;
+		    else if ($language == LANGUAGE_ENGLISH)
+		        $typeFlag = COURSETYPE_ENGLISH;
+
+
 			// public
-			$records = Course::select()
-				->where('deleted_flag', 0)
-				->where('site_id', $siteIdCondition, $siteId)
-				->where('release_flag', '>=', RELEASE_PUBLIC)
-				->orderBy('type_flag')
-				->orderBy('site_id')
-				->orderBy('display_order')
-				->get();
+			if ($typeFlag >= 0)
+            {
+                // use type flag for Spanish and English sites
+                $records = Course::select()
+                    ->where('deleted_flag', 0)
+                    ->where('type_flag', $typeFlag)
+                    ->where('release_flag', '>=', RELEASE_PUBLIC)
+                    ->orderBy('type_flag')
+                    ->orderBy('site_id')
+                    ->orderBy('display_order')
+                    ->get();
+			}
+			else
+			{
+			    // user site_id for the non-language sites
+                $records = Course::select()
+                    ->where('deleted_flag', 0)
+                    ->where('site_id', $siteId)
+                    ->where('release_flag', '>=', RELEASE_PUBLIC)
+                    ->orderBy('type_flag')
+                    ->orderBy('site_id')
+                    ->orderBy('display_order')
+                    ->get();
+			}
 		}
 
 		return $records;
