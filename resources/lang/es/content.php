@@ -194,4 +194,5 @@ return [
 'SiteTitle-english50.com' => 'Aprenda inglés en 50 lecciones',
 'SiteTitle-localhost' => 'Mi nombre es localhost',
 'Support Message' => '¡Invítanos a un café!',
+'Verb not found' => 'Verbo no encontrado',
 ];

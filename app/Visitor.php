@@ -80,14 +80,61 @@ class Visitor extends Model
 			AND site_id = ?
 			AND deleted_flag = 0
  			AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s"))
-			ORDER BY id DESC
+			ORDER BY created_at DESC
 		';
 
 		$records = DB::select($q, [SITE_ID, $fromDate, $toDate]);
-//dump($fromDate);
-//dump($toDate);
-//dump(SITE_ID);
-//dd($records);
+
+		return $records;
+    }
+
+    static public function getVisitorsGrouped($date = null)
+    {
+		if (isset($date))
+		{
+			$date = DateTime::createFromFormat('Y-m-d', $date);
+
+			$month = intval($date->format("m"));
+			$year = intval($date->format("Y"));
+			$day = intval($date->format("d"));
+		}
+		else
+		{
+			$month = intval(date("m"));
+			$year = intval(date("Y"));
+			$day = intval(date("d"));
+		}
+
+		$fromTime = ' 00:00:00';
+		$toTime = ' 23:23:59';
+
+		$fromDate = '' . $year . '-' . $month . '-' . $day . ' ' . $fromTime;
+		$toDate = '' . $year . '-' . $month . '-' . $day . ' ' . $toTime;
+
+		$q = '
+            SELECT
+                count(id) as count
+                , max(id) as record_id
+                , max(host_name) as host_name
+                , max(referrer) as referrer
+                , max(user_agent) as user_agent
+                , max(page) as page
+                , max(domain_name) as domain_name
+                , max(model) as model
+                , max(created_at) as updated_at
+                , ip_address
+                        FROM visitors
+                        WHERE 1=1
+                        AND site_id = ?
+                        AND deleted_flag = 0
+                        AND site_id = 0
+                        AND deleted_flag = 0
+                        AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s"))
+                        GROUP BY ip_address
+                        ORDER BY record_id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID, $fromDate, $toDate]);
 
 		return $records;
     }

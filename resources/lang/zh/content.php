@@ -194,4 +194,5 @@ return [
 'SiteTitle-english50.com' => '在50课中学习英语',
 'SiteTitle-localhost' => '我叫本地房东',
 'Support Message' => '邀请我们喝咖啡！',
+'Verb not found' => '找不到动词',
 ];

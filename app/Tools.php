@@ -1201,4 +1201,46 @@ class Tools
 
 		return $rc;
 	}
+
+/* windows versions
+Windows NT 4.0 = Windows NT 4.0
+Windows NT 5.0 = Windows 2000
+Windows NT 5.1 = Windows XP
+Windows NT 5.2 = Windows Server 2003 and XP x64 edition
+Windows NT 6.0 = Windows Vista
+Windows NT 6.1 = Windows 7
+Windows NT 6.2 = Windows 8
+Windows NT 6.3 = Windows 8.1
+Windows NT 10.0 = Windows 10.
+*/
+
+	static public function getDevice($agent)
+	{
+	    $rc = $agent;
+
+	    if (stristr($agent, 'Macintosh') !== false)
+	        $rc = "Mac";
+	    else if (stristr($agent, 'Ubuntu') !== false)
+	        $rc = "Ubuntu";
+	    else if (stristr($agent, 'Linux x86_64') !== false)
+	        $rc = "Linux x86/64";
+	    else if (stristr($agent, 'Windows NT 10') !== false)
+	        $rc = "Windows 10";
+	    else if (stristr($agent, 'Windows NT 6.1') !== false)
+	        $rc = "Windows 7";
+	    else if (stristr($agent, 'Windows NT 6.2') !== false)
+	        $rc = "Windows 8";
+	    else if (stristr($agent, 'Windows NT 6.3') !== false)
+	        $rc = "Windows 8.1";
+	    else if (stristr($agent, 'Windows NT 5.0') !== false)
+	        $rc = "Windows 2000";
+	    else if (stristr($agent, 'Windows NT 5.1') !== false)
+	        $rc = "Windows XP";
+	    else if (stristr($agent, 'Windows NT 5.1') !== false)
+	        $rc = "Windows Server 2003/XP x64";
+	    else if (stristr($agent, 'Android 10') !== false && stristr($agent, 'Mobile Safari') !== false)
+	        $rc = "Android Mobile";
+
+	    return $rc;
+	}
 }

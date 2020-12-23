@@ -33,7 +33,7 @@
 	@if (count($users) > 0)
 	<div class="form-group">
 		<h3 style="">Latest New Users ({{count($users)}} Total)&nbsp;<a href="/users/index"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
-		<div class="table-responsive">
+		<div class="table-responsive" style="font-size: 12px;">
 		<table class="table table-striped">
 			<tbody>
 			@foreach($users as $record)
@@ -86,8 +86,8 @@
 	@if (isset($comments))
 	<div>
 		<h3 style="color:red;">Comments to Approve ({{count($comments)}})</h3>
-		<div class="table-responsive">
-		<table class="table table-striped">
+		<div class="table-responsive" style="font-size: 12px;">
+		<table class="table table-striped table-sm">
 			<tbody>
 				<tr><th></th><th>Created</th><th>Name</th><th>Comment</th><th></th></tr>
 				@foreach($comments as $record)
@@ -110,6 +110,21 @@
 	@if (isset($visitors))
 	<div class="form-group">
 		<h3 style="">Today's Visitors: {{count($visitors)}}&nbsp;<a href="/visitors"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
+		<div class="table-responsive" style="font-size: 12px;">
+		<table class="table table-striped table-sm">
+			<tbody>
+				@foreach($visitors as $record)
+					<tr>
+						<td>{{$record['date']}}</td>
+						<td><a href="https://whatismyipaddress.com/ip/{{$record['ip']}}" target="_blank">{{$record['ip']}}</a> ({{$record['count']}})</td>
+						<td>{{$record['domain_name']}}</td>
+						<td>{{$record['agent']}}</td>
+						<td>{{$record['ref']}}</td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
+		</div>
 	</div>
 	<p>&nbsp;</p>
 	@endif
@@ -119,8 +134,8 @@
 @if (false)
 		@component('events.menu-submenu-events-filter')@endcomponent
 @endif
-		<div class="table-responsive">
-		<table class="table table-striped">
+		<div class="table-responsive" style="font-size: 12px;">
+		<table class="table table-striped table-sm">
 			<tbody>
 				<tr>
 					<th>Timestamp</th>

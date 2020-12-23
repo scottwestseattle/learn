@@ -285,7 +285,10 @@ class HomeController extends Controller
 		//
 		// get today's visitors
 		//
-		$visitors = VisitorController::removeRobots(Visitor::getVisitors());
+		$visitors = VisitorController::removeRobots(Visitor::getVisitorsGrouped());
+		//dd($visitors);
+
+
 		$ip = Tools::getIp();
 		return view('home.admin', $this->getViewData([
 			'sites' => $sites,
