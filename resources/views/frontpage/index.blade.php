@@ -13,7 +13,11 @@
 <!--------------------------------------------------------------------------------------->
 <!-- Banner Photo -->
 <!--------------------------------------------------------------------------------------->
-<div><a href="/"><img src="/img/banners/{{$banner}}" style="width:100%;" /></a></div>
+@if (isset($banner))
+    <div><a href="/"><img src="/img/banners/{{$banner}}" style="width:100%;" /></a></div>
+@else
+    <div style="height:5px;"></div>
+@endif
 
 @if (Auth::check() && count($lesson) > 0)
     <!-- No logo or subscribe for signed-in user -->
@@ -21,7 +25,6 @@
 @else
     @if (isset($banner))
     <div class="bg-none">
-
 
         <!--------------------------------------------------------------------------------------->
         <!-- Logo and Subscribe Form-->
@@ -61,6 +64,8 @@
         </div>
     </div>
     @else
+
+        @if (false)
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="app-color-primary fpBannerImage" style="min-height:300px;">
             <div class="container text-center" >
@@ -76,6 +81,8 @@
                 @endif
             </div>
         </div>
+        @endif
+
     @endif
 @endif
 

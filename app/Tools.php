@@ -639,6 +639,40 @@ class Tools
 		return $rc;
 	}
 
+	static public function getIconFolder()
+	{
+		$rc = null;
+
+		switch(self::getSiteId())
+		{
+			case SITE_ID_ENGLISH50:
+				$rc = 'icons-english';
+				break;
+			default:
+				break;
+		}
+
+		return $rc;
+	}
+
+	static public function hasLogo()
+	{
+		$rc = false;
+
+		switch(self::getSiteId())
+		{
+			case SITE_ID_SPANISH50:
+			case SITE_ID_ESPDAILY:
+			case SITE_ID_LOCALHOST:
+				$rc = true;
+				break;
+			default:
+				break;
+		}
+
+		return $rc;
+	}
+
 	static public function siteUses($model)
 	{
 		$rc = false;

@@ -3,6 +3,7 @@
 $domainName = isset($domainName) ? $domainName : App\Tools::getDomainName();
 $siteTitle = isset($siteTitle) ? $siteTitle : App\Tools::getSiteTitle();
 $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitle(false);
+$iconFolder = App\Tools::getIconFolder();
 ?>
 <html lang="en">
 <head>
@@ -14,13 +15,26 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	<meta name="csrf-token" content="{{ csrf_token() }}" />
 
 	<!-- Icon -->
-	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#ffc40d">
-    <meta name="theme-color" content="#ffffff">
+	@if (isset($iconFolder))
+        <link rel="apple-touch-icon" sizes="180x180" href="/{{$iconFolder}}/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/{{$iconFolder}}/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/{{$iconFolder}}/favicon-16x16.png">
+        <link rel="manifest" href="/{{$iconFolder}}/site.webmanifest">
+        <link rel="mask-icon" href="/{{$iconFolder}}/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="/{{$iconFolder}}/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/{{$iconFolder}}/browserconfig.xml">
+        <meta name="theme-color" content="#ffffff">
+    @else
+        <!-- use the default icon in the public folder -->
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#ffc40d">
+        <meta name="theme-color" content="#ffffff">
+    @endif
 
 	<!-- Title -->
 	<title>{{$siteTitle}}</title>
@@ -182,9 +196,9 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	<!-- FOOTER -->
 	<footer class="footer backin-black">
 		<div class="container text-center pt-4 pb-4">
-			    @if (true)
+			    @if (App\Tools::hasLogo())
 			        <div>
-			            <img width="175" src="/img/logo-footer-{{\App\Tools::getDomainName()}}.png" />
+			            <img width="175" src="/img/logo-footer-{{App\Tools::getDomainName()}}.png" />
 			        </div>
 			    @else
                     <div class="brand logo middle">

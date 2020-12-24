@@ -14,7 +14,7 @@
 			@if (false)
 			<li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
 			@endif
-			<li>{{$domain}} ({{$ip}})</li>
+			<li>{{$domain}} ({{$ip}}) ({{App\Tools::getIconPrefix()}})</li>
 			<li>{{substr(base_path(), 0, 28)}}...</li>
 			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}, SITE_ID: {{SITE_ID}}, Site: {{\App\Tools::getSiteId()}}</li>
 			<li>Life:&nbsp;{{env('SESSION_LIFETIME', 0)}}, New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</li>
@@ -57,7 +57,7 @@
 	<hr />
 	@endif
 
-	@if (isset($courses))
+	@if (isset($courses) && count($courses) > 0)
 	<div class="form-group">
 		<h3>@LANG('content.Unfinished Courses') ({{count($courses)}})&nbsp;<a href="/courses/admin"><span class="glyphCustom glyphicon glyphicon-list"></span></a></h3>
 		<div class="table-responsive">
