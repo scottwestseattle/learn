@@ -28,7 +28,7 @@
         <!--------------------------------------------------------------------------------------->
         <div class="fpBannerImage" style="background-color:#4993FD">
             <div class="container text-center pt-2 pb-2" >
-    		    <img src="/img/logo-{{\App\Tools::getDomainName()}}.png" style="max-width:250px;"/>
+    		    <img src="/img/logo-{{\App\Tools::getDomainName()}}.png" style="max-width:200px;"/>
                 <form method="POST" action="/subscribe">
                     <div class="form-group text-center">
                         <div class="input-group mt-2">

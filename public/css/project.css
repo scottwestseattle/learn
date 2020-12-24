@@ -953,18 +953,25 @@ h1,h3 {
 	font-weight:100;
 }
 
-.small-thin-text {
+.small-text, .small-thin-text {
 	font-size:12px;
+}
+.small-thin-text {
 	font-weight:200;
 }
 
-.medium-thin-text {
+.medium-text, .medium-thin-text {
 	font-size:15px;
+	font-weight: normal;
+}
+.medium-thin-text {
 	font-weight:200;
 }
 
-.large-thin-text {
+.large-text, .large-thin-text {
 	font-size:22px;
+}
+.large-thin-text {
 	font-weight:200;
 }
 

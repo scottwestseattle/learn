@@ -15,8 +15,10 @@ class VisitorController extends Controller
 		parent::__construct();
     }
 
-    public function index(Request $request)
+    public function index(Request $request, $all = null)
     {
+        $all = ($all == 'all');
+
 		$showBots = false;
 
 		if (isset($request->showbots))
@@ -28,8 +30,7 @@ class VisitorController extends Controller
 
 		$date = isset($dates['from_date']) ? $dates['from_date'] : null;
 
-		$records = Visitor::getVisitors($date);
-
+		$records = Visitor::getVisitors($all, $date);
 		$records = VisitorController::removeRobots($records, $showBots);
 
 		$vdata = $this->getViewData([
@@ -73,8 +74,19 @@ class VisitorController extends Controller
 				$new = 'UptimeBot';
 			else if (stripos($agent, 'crawl') !== FALSE)
 				$new = $agent;
-			else if (stripos($agent, 'bot') !== FALSE)
-				$new = $agent;
+			else if (stripos($agent, 'dataprovider.com') !== FALSE)
+				$new = 'DataProvider.com';
+			else if (stripos($agent, 'Go-Http-Client') !== FALSE)
+				$new = 'Go-Http-Client';
+			else if (stripos($agent, 'DuckDuckGo') !== FALSE)
+				$new = 'DuckDuckGo';
+			else if (stripos($agent, 'Netcraft') !== FALSE)
+				$new = 'Netcraft.com';
+			else if (stripos($agent, 'Nimbostratus-Bot') !== FALSE)
+				$new = 'NimbostratusBot';
+			else if (stripos($agent, 'Screaming Frog') !== FALSE)
+				$new = 'Screaming Frog SEO';
+			// look at host name too
 			else if (stripos($record->host_name, 'spider') !== FALSE)
 				$new = $record->host_name;
 			else if (stripos($record->host_name, 'crawl') !== FALSE)

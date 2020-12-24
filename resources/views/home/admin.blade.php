@@ -116,9 +116,10 @@
 				@foreach($visitors as $record)
 					<tr>
 						<td>{{$record['date']}}</td>
-						<td><a href="https://whatismyipaddress.com/ip/{{$record['ip']}}" target="_blank">{{$record['ip']}}</a> ({{$record['count']}})</td>
-						<td>{{$record['domain_name']}}</td>
-						<td>{{$record['agent']}}</td>
+						<?php $cnt = $record['count']; $count = ($cnt > 1) ? '<b>(' . $cnt . ')</b>' : ''; ?>
+						<td class="medium-text"><a href="https://whatismyipaddress.com/ip/{{$record['ip']}}" target="_blank">{{$record['ip']}}</a> {!!$count!!}</td>
+						<td class="medium-text">{{$record['domain_name']}}</td>
+						<td class="medium-text">{{$record['agent']}}</td>
 						<td>{{$record['ref']}}</td>
 					</tr>
 				@endforeach

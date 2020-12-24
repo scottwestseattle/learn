@@ -50,12 +50,11 @@ class Visitor extends Model
 		}
 	}
 
-    static public function getVisitors($date = null)
+    static public function getVisitors($all, $date)
     {
 		if (isset($date))
 		{
 			$date = DateTime::createFromFormat('Y-m-d', $date);
-
 			$month = intval($date->format("m"));
 			$year = intval($date->format("Y"));
 			$day = intval($date->format("d"));
@@ -73,15 +72,44 @@ class Visitor extends Model
 		$fromDate = '' . $year . '-' . $month . '-' . $day . ' ' . $fromTime;
 		$toDate = '' . $year . '-' . $month . '-' . $day . ' ' . $toTime;
 
-		$q = '
-			SELECT *
-			FROM visitors
-			WHERE 1=1
-			AND site_id = ?
-			AND deleted_flag = 0
- 			AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s"))
-			ORDER BY created_at DESC
-		';
+        if ($all)
+        {
+            $q = '
+                SELECT *
+                FROM visitors
+                WHERE 1=1
+                AND site_id = ?
+                AND deleted_flag = 0
+                AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s"))
+                ORDER BY created_at DESC
+            ';
+		}
+        else
+        {
+            $q = '
+                SELECT
+                    count(id) as count
+                    , max(id) as record_id
+                    , max(host_name) as host_name
+                    , max(referrer) as referrer
+                    , GROUP_CONCAT(DISTINCT user_agent) as user_agent
+                    , max(page) as page
+                    , max(domain_name) as domain_name
+                    , max(model) as model
+                    , max(created_at) as updated_at
+                    , ip_address
+                            FROM visitors
+                            WHERE 1=1
+                            AND site_id = ?
+                            AND deleted_flag = 0
+                            AND site_id = 0
+                            AND deleted_flag = 0
+                            AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s"))
+                            GROUP BY ip_address
+                            ORDER BY record_id DESC
+            ';
+		}
+
 
 		$records = DB::select($q, [SITE_ID, $fromDate, $toDate]);
 
@@ -117,7 +145,7 @@ class Visitor extends Model
                 , max(id) as record_id
                 , max(host_name) as host_name
                 , max(referrer) as referrer
-                , max(user_agent) as user_agent
+                , GROUP_CONCAT(DISTINCT user_agent) as user_agent
                 , max(page) as page
                 , max(domain_name) as domain_name
                 , max(model) as model

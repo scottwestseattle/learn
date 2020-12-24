@@ -370,7 +370,7 @@ Route::group(['prefix' => 'translations'], function () {
 Route::group(['prefix' => 'visitors'], function () {
 
 	// index
-	Route::get('/', 'VisitorController@index');
+	Route::get('/{all?}', 'VisitorController@index');
 	Route::post('/', 'VisitorController@index');
 });
 
