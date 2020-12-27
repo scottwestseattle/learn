@@ -34,8 +34,9 @@
     		    <img src="/img/logo-{{\App\Tools::getDomainName()}}.png" style="max-width:200px;"/>
                 <form method="POST" action="/subscribe">
                     <div class="form-group text-center">
-                        <div class="input-group mt-2">
+                        <div class="input-group mt-2" style="max-width:600px; margin:0 auto;">
                             <input name="email" id="email" type="email"
+                                style="font-weight:200; font-size:18px;"
                                 class="form-control @error('email') is-invalid @enderror"
                                 value="{{ old('email') }}"
                                 autocomplete="email"
