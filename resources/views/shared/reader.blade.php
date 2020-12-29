@@ -12,9 +12,9 @@
 	data-language="{{$speechLanguage}}"
 	data-type="{{$record->type_flag}}"
 	data-contenttype="{{$contentType}}"
-	data-contentid="{{$record->id}}" 
-	data-isadmin="{{$isAdmin ? 1 : 0}}" 
-	data-userid="{{Auth::id()}}" 
+	data-contentid="{{$record->id}}"
+	data-isadmin="{{$isAdmin ? 1 : 0}}"
+	data-userid="{{Auth::id()}}"
 	data-readlocation={{$readLocation}}
 ></div>
 
@@ -35,7 +35,7 @@
 @endforeach
 
 <div class="container">
-	
+
 	<!-------------------------------------------------------->
 	<!-- Header -->
 	<!-------------------------------------------------------->
@@ -48,12 +48,12 @@
 			<span class="glyphReader"><a href="{{$referrerUrl}}"><span class="glyphicon glyphicon-circle-arrow-up"></span></a></span>
 			<span class="glyphReader"><a onclick="event.preventDefault(); reload()" href=""><span id="button-repeat" class="glyphicon glyphicon-repeat"></span></a></span>
 			<span class="glyphReader"><a onclick="zoom(event, -3);" href=""><span class="glyphicon glyphicon-zoom-out"></span></a></span>
-			<span class="glyphReader"><a onclick="zoom(event, 3);" href=""><span class="glyphicon glyphicon-zoom-in"></span></a></span>				
+			<span class="glyphReader"><a onclick="zoom(event, 3);" href=""><span class="glyphicon glyphicon-zoom-in"></span></a></span>
 			<span class="glyphReader"><a onclick="toggleActiveTab(event, '#tab3', '#tab1', '.tab-body');" href=""><span class="glyphicon glyphicon-cog"></span></a></span>
 			@if (Auth::check())
 				<span class="glyphReader"><a onclick="toggleActiveTab(event, '#tab2', '#tab1', '.tab-body');" href=""><span class="glyphicon glyphicon-th-list"></span></a></span>
-			@endif			
-			
+			@endif
+
 			@if (false)
 			<span class="glyphReader"><a onclick="setActiveTab(event, '#tab1', '.tab-body');" href=""><span class="glyphicon glyphicon-volume-up"></span></a></span>
 			@endif
@@ -68,7 +68,7 @@
 		<!-- Start Panel - Index -->
 		<!---------------------------------------------------------------------------------------------------------------->
 		<div id="panel-start" class="slide-panel">
-			
+
 			<div class="text-center">
 				<div class="small-thin-text">{{count($record['lines'])}} lines</div>
 				<div id="slideTitle" style="font-size:18px" class="mb-2">{{$record->title}}</div>
@@ -88,7 +88,7 @@
 		<!---------------------------------------------------------------------------------------------------------------->
 		<!-- Run Panel -->
 		<!---------------------------------------------------------------------------------------------------------------->
-		
+
 		<div id="run-panel" class="container-fluid" style="xpadding-bottom:60px;"><!-- padding is to make the elements scroll correctly -->
 		  <div class="row">
 			<div id="panel-run-col-text" class="" style="width:100%;" >
@@ -105,9 +105,10 @@
 				</div><!-- panel-run -->
 			</div>
 		  </div>
-		</div>	
+		</div>
+
 	</div>
-	
+
 	<!--------------------------------------------------------------->
 	<!-- tab 2 ------------------------------------------------------->
 	<!--------------------------------------------------------------->
@@ -115,8 +116,8 @@
 		<div id="panel-run-col-defs" class="mt-3">
 			<div id="defs" style=""></div>
 		</div>
-	</div>	
-	
+	</div>
+
 	<!--------------------------------------------------------------->
 	<!-- tab 3 ------------------------------------------------------->
 	<!--------------------------------------------------------------->
@@ -126,7 +127,7 @@
 			<div><span class="small-thin-text" id="language"></span></div>
 			<div id="languages" class="mt-1" style="display:default; font-size:10px;"><select onchange="changeVoice();" name="select" id="select"></select></div>
 			</div>
-			
+
 			<div class="">
 				<div class="middle mr-1"><a onclick="zoom(event, -3)" href=""><span class="glyphicon glyphReader glyphicon-zoom-out glyph-zoom-button"></span></a></div>
 				<div class="middle" id="readFontSize">Font Size: 18</div>
@@ -134,18 +135,33 @@
 			</div>
 		</div>
 	</div>
-	
+
+
+      <section class="main-controls">
+        <canvas class="visualizer" height="60px"></canvas>
+        <div id="buttons">
+          <button class="record">Record</button>
+          <button class="stop">Stop</button>
+        </div>
+      </section>
+
+      <section class="sound-clips">
+      </section>
+
 	<!--------------------------------------------------------------->
 	<!-- Bottom panel ----------------------------------------------->
-	<!--------------------------------------------------------------->	
+	<!--------------------------------------------------------------->
 	<div id="bottom-panel" class="btn-panel-bottom m-0 pb-1">
 		<div class="glyphReaderMove mr-4"><a onclick="event.preventDefault(); prev()" href=""><span class="glyphicon glyphicon-backward"></span></a></div>
 		<div id="pause"  class="glyphReaderPlay mr-4 mb-1"><a onclick="event.preventDefault(); pause()" href=""><span class="glyphicon glyphicon-pause"></span></a></div>
 		<div id="resume" class="glyphReaderPlay mr-4"><a onclick="event.preventDefault(); resume()" href=""><span class="glyphicon glyphcircle glyphicon-play"></span></a></div>
 		<div class="glyphReaderMove"><a onclick="event.preventDefault(); next()" href=""><span class="glyphicon glyphicon-forward"></span></a></div>
 	</div>
-	
+
 
 </div><!-- container -->
 
 @endsection
+
+<script src="/js/recorder.js"></script>
+

@@ -14,8 +14,11 @@
 <!-- Banner Photo -->
 <!--------------------------------------------------------------------------------------->
 @if (isset($banner))
-    <div><a href="/"><img src="/img/banners/{{$banner}}" style="width:100%;" /></a></div>
+    <div class="" style="background-image: url(/img/banners/{{$banner}}); background-size: 100%; background-repeat: no-repeat; xposition: relative;">
+        <a href="/"><img src="/img/{{App::getLocale()}}-spacer.png" style="width:100%;" /></a>
+    </div>
 @else
+    <div><a href="/"><img src="/img/banners/{{$banner}}" style="width:100%;" /></a></div>
     <div style="height:5px;"></div>
 @endif
 

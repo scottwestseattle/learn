@@ -1263,6 +1263,8 @@ Windows NT 10.0 = Windows 10.
 	        $rc = "iPad";
 	    else if (stristr($agent, 'Linux x86_64') !== false)
 	        $rc = "Linux x86/64";
+	    else if (stristr($agent, 'X11; Linux i686; rv:6.0') !== false && stristr($agent, 'Firefox/6') !== false)
+	        $rc = "Linux (FF6)";
 	    else if (stristr($agent, 'Windows NT 10') !== false)
 	        $rc = "Win10";
 	    else if (stristr($agent, 'Windows NT 9') !== false)

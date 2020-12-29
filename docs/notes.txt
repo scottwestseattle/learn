@@ -1,5 +1,12 @@
-SAMPLES
--------
+
+How to install a Let's Encrypt ssl cert
+0. Add the new domain as an add-on domain
+1. From the GreenGeeks screen, click the “Security” section on the left of your screen
+2. Add SSL Certificate
+3. Select a service: "codespace"
+4. Select the new domain that was added
+5. Select "Let's Encrypt" / Confirm and Create / continue
+---------------------------------------------------------
 
 Implement Soft Deletes:
 1. Add to model:
@@ -23,7 +30,8 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 
 Latest DB Changes:
 
-12/21/2020
+Dec 2020
+ALTER TABLE `definitions` ADD `rank` INT NULL COMMENT 'populariaty ranking' AFTER `wip_flag`;
 ALTER TABLE `definitions` ADD `wotd_at` TIMESTAMP NULL COMMENT 'the date when it was the wotd' AFTER `last_viewed_at`;
 
 2/6/2020

@@ -44,23 +44,25 @@ $(document).ready(function() {
 			_readFontSize = _maxFontsize;
 	}
 	setFontSize();
-	
-	window.speechSynthesis.cancel();	
+
+	window.speechSynthesis.cancel();
 	setTimeout(loadVoices, 500);
 	loadData();
 	getReadLocation();
 	deck.start();
-	
+
 	$("#pause").hide();
 	$("#resume").show();
 	ajaxexec('/entries/get-definitions-user/' + parseInt(deck.contentId, 10) + '', '#defs');
 
 	_bottomPanelHeight = $("#bottom-panel").outerHeight(); // needed for scrolling
 	//console.log("bottom panel height: " + _bottomPanelHeight);
+
+	loadRecorder();
 });
 
 $(window).on('unload', function() {
-	window.speechSynthesis.cancel();	
+	window.speechSynthesis.cancel();
 });
 
 $(document).keyup(function(event) {
@@ -96,7 +98,7 @@ function deck() {
 	this.contentId 		 = 'contentIdNotSet';	// id of the content being read
 	this.readLocationTag = 'readLocation';		// readLocation session id tag
 	this.readLocationOtherDevice = 0;			// read location from another device for logged in user
-	
+
 	this.getId = function(index) {
 		return this.slides[this.slides[index].order].id;
 	}
@@ -116,8 +118,8 @@ function deck() {
 		this.setStates(RUNSTATE_COUNTDOWN);
 	    deck.showSlide();
 		this.runSlide();
-	}	
-	
+	}
+
     // this shows the current slide
 	this.runSlide = function() {
 
@@ -214,7 +216,7 @@ function deck() {
         $(".slideDescription").text(deck.slides[curr].description);
 		$('#selected-word').text('');
 		$('#selected-word-definition').text('');
-		
+
 		if ($('#tab1').is(':visible'))
 			window.scroll(0, 0); // scroll to top
 
@@ -224,12 +226,12 @@ function deck() {
 	    var slide = deck.slides[curr];
 		read(slide.description, _lastCharIndex);
 	}
-	
+
 	this.readSlide = function() {
 	    var slide = deck.slides[curr];
         //debug("read slide " + (curr+1) + ": " + slide.description, _debug);
 		read(slide.description, 0);
-		
+
         //$("#slideCount").text(slide.number + " of " + deck.slides.length);
         //$(".slideDescription").text(deck.slides[curr].description);
 	}
@@ -297,15 +299,15 @@ function loadData()
 		deck.language = container.data('language');			// this is the language that the web site is in
 		deck.isAdmin = container.data('isadmin') == '1';
 		deck.userId = parseInt(container.data('userid'), 10);
-		
+
 		// use these to create a unique session id tag, looks like: 'readLocationEntry23'
 		deck.contentType = container.data('contenttype');
 		deck.contentId = container.data('contentid');
 		deck.readLocationTag += deck.contentType + deck.contentId;
-		
+
 		// this is the read location from the db
 		deck.readLocationOtherDevice = container.data('readlocation');
-    });	
+    });
 }
 
 function first()
@@ -325,7 +327,7 @@ function prev()
 	pause();
 	_cancelled = true;
 	_lastCharIndex = 0;
-	
+
 	curr--;
 	if (curr < 0)
 		curr = max - 1;
@@ -334,26 +336,26 @@ function prev()
 }
 
 function incLine(e, count)
-{	
-	e.preventDefault(); 
+{
+	e.preventDefault();
 
 	_incLine += count + 1;
-	
+
 	// put the line on multiples of 50
 	mod = _incLine % 50;
 	_incLine -= (mod + 1);
-	
+
 	if (_incLine < 0)
 		_incLine = 0;
 	else if (_incLine >= max)
 		_incLine = 0;
-	
+
 	$('#button-start-reading').text("Start reading from the beginning");
 	$('#readCurrLine').text("Line " + (_incLine + 1));
 	$('#button-continue-reading').show();
 	$('#button-continue-reading').text("Continue reading from line " + (_incLine + 1));
 
-	curr = _incLine;	
+	curr = _incLine;
 }
 
 function next()
@@ -361,7 +363,7 @@ function next()
 	pause();
 	_cancelled = true;
 	_lastCharIndex = 0;
-	
+
 	curr++;
 	if (curr >= max)
 		curr = 0;
@@ -387,27 +389,27 @@ function run()
 	resume();
 }
 
-function runContinue() 
+function runContinue()
 {
 	// not starting at the beginning
-	
+
 	if (_incLine != 0) // if line selector was used (+-50) then use that
 		curr = _incLine;
 	else 			  // use last location from the session
 		curr = parseInt(localStorage[deck.readLocationTag], 10);
-	
+
 	$("#pause").show();
-	$("#resume").hide();	
+	$("#resume").hide();
 	startClock();
 	deck.run(/* fromBeginning = */ false);
 }
 
-function runContinueOther() 
+function runContinueOther()
 {
 	curr = deck.readLocationOtherDevice;
-	
+
 	$("#pause").show();
-	$("#resume").hide();	
+	$("#resume").hide();
 	startClock();
 	deck.run(/* fromBeginning = */ false);
 }
@@ -441,7 +443,7 @@ function resume()
 		startClock();
 		deck.run(_incLine == 0); // if line has been inc'ing then don't start at the beginning.
 	}
-	
+
 	$("#pause").show();
 	$("#resume").hide();
 }
@@ -481,8 +483,8 @@ var _utter = null;
 function read(text, charIndex)
 {
 	_cancelled = false;
-	clearTimeout(_speechTimerId);	
-	
+	clearTimeout(_speechTimerId);
+
 	_utter = new SpeechSynthesisUtterance();
 
 	if (deck.voice != null)
@@ -494,19 +496,19 @@ function read(text, charIndex)
 	{
 		_utter.lang = deck.language; // if voice not found, try to the language from the web site
 	}
-	
+
 	_utter.text = text.substring(charIndex);
 	_utter.onend = function(event) {
 		if (!_paused && !_cancelled)
 			readNext();
-		
+
 		_cancelled = false;
 	}
-	
+
 	var wordIndex = -1;
 	var charIndexPrev = -1;
 	_utter.onboundary = function(event) {
-		
+
 		// Highlight browser support
 		// Windows 10 - Edge
 		// Windows 10 - Chrome (Microsoft voices only)
@@ -519,17 +521,17 @@ function read(text, charIndex)
 		// MacBook - Safari
 		// MacBook - Chrome
 		// MacBook - Firefox
-		
+
 		// Not Supported:
 		// Windows 10 - Chrome - Google Voices
 		// Android - Chrome (only has Google voices, need to install more)
 		// Android - TOR (no voices)```````````````````````````````````````````
 		// Android - Opera (no voices)```````````````````````````````````````````
-		
+
 		if (event.name == "word")
 		{
 			//debug(event.charLength + ' / ' + event.wordLength, _debug);
-			var cases = -1; 
+			var cases = -1;
 			if (typeof event.charLength !== 'undefined')
 			{
 				if (event.charLength < text.length)
@@ -569,10 +571,10 @@ function read(text, charIndex)
 					word = words[0];
 					var before = (start > 0) ? text.substring(0, start) : "";
 					var after = text.substring(start + word.length);
-					$("#slideDescription").html(before + '<span class="highlight-word">' + word + '</span>' + after);					
+					$("#slideDescription").html(before + '<span class="highlight-word">' + word + '</span>' + after);
 				}
 			}
-			
+
 			//
 			// make sure element is visible in the viewport
 			//
@@ -581,32 +583,32 @@ function read(text, charIndex)
 
 			// case 4: onBoundary not implemented so highlighting isn't possible
 		}
-	}	
-	
+	}
+
 	window.speechSynthesis.speak(_utter);
-	_speechTimerId = setTimeout(speechBugWorkaround, 10000);		
+	_speechTimerId = setTimeout(speechBugWorkaround, 10000);
 }
 
 function speechBugWorkaround()
-{		
+{
 	//debug("reset speech", _debug);
 	window.speechSynthesis.resume(); // fix to keep speech from stopping
-	
+
 	if (window.speechSynthesis.speaking)
 	{
 		clearTimeout(_speechTimerId);
-		_speechTimerId = setTimeout(speechBugWorkaround, 10000);		
+		_speechTimerId = setTimeout(speechBugWorkaround, 10000);
 	}
 }
 
 function readNext()
-{	
+{
 	curr++;
-	
+
 	if (curr >= max)
 	{
 		curr = 0;
-        end();		
+        end();
 	}
 	else
 	{
@@ -622,15 +624,15 @@ function tts(text)
 
         utter.lang = 'es-US';
         utter.text = text;
-		
+
         window.speechSynthesis.speak(utter);
-		
+
     }
 }
 
 function loadVoices()
 {
-	_voices = window.speechSynthesis.getVoices();	
+	_voices = window.speechSynthesis.getVoices();
 
 	if (_voices.length == 0 && _voicesLoadAttempts++ < 10)
 	{
@@ -638,15 +640,15 @@ function loadVoices()
 		setTimeout(loadVoices, 500);
 		return;
 	}
-	
-	//tts('ready with ' + _voices.length + ' voices');	
-	
-	var voiceSelect = document.querySelector('select');	
+
+	//tts('ready with ' + _voices.length + ' voices');
+
+	var voiceSelect = document.querySelector('select');
 	var found = 0;
-	
+
 	if (_voices.length > 0)
 	{
-		for(i = 0; i < _voices.length ; i++) 
+		for(i = 0; i < _voices.length ; i++)
 		{
 			var option = document.createElement('option');
 			option.textContent = _voices[i].name + ' (' + _voices[i].lang + ')';
@@ -658,7 +660,7 @@ function loadVoices()
 
 			option.setAttribute('data-lang', _voices[i].lang);
 			option.setAttribute('data-name', _voices[i].name);
-			
+
 			var showOnlyDeckLanguage = true; // change to false for testing languages
 			if (showOnlyDeckLanguage) // normal path
 			{
@@ -666,19 +668,19 @@ function loadVoices()
 				if (deck.language.startsWith("es") && (_voices[i].lang.startsWith("es") || _voices[i].lang.startsWith("spa")))
 				{
 					if (found == 0)
-					{								
+					{
 						found++;
 					}
-					
+
 					voiceSelect.appendChild(option);
 				}
 				else if (deck.language.startsWith("en") && _voices[i].lang.startsWith("en"))
 				{
 					if (found == 0)
-					{								
+					{
 						found++;
 					}
-					
+
 					voiceSelect.appendChild(option);
 				}
 			}
@@ -688,7 +690,7 @@ function loadVoices()
 				found++;
 				voiceSelect.appendChild(option);
 			}
-		}		
+		}
 	}
 	else
 	{
@@ -736,7 +738,7 @@ function changeVoice()
 {
 	var index = $("select")[0].selectedIndex;
 	saveSelectedVoice(index);
-	
+
 	var voice = $("select").children("option:selected").val();
 	deck.voice = _voices[voice];
 	if (_utter != null)
@@ -845,10 +847,10 @@ function touch(q)
 
 var _dictionary = "_blank";
 var _selectedWordThrottle = ""; // used to slow down ajax definition calls for selected words
-function getSelectedText(clicks) 
+function getSelectedText(clicks)
 {
 	pause();
-	
+
     var text = "";
     if (window.getSelection) {
         text = window.getSelection().toString();
@@ -867,7 +869,7 @@ function getSelectedText(clicks)
 		}
 		//console.log('sent ajax for: ' + text);
 		_selectedWordThrottle = text;
-		
+
 		// copy selected text
 		var succeed;
 		try
@@ -886,7 +888,7 @@ function getSelectedText(clicks)
 			if (false && deck.isAdmin)
 				html += "&nbsp;<a target='_blank' href='/definitions/add/" + text + "'>(add)</a>";
 			html+= "</div>";
-	
+
 		//_hotWords.push(text + ": ");
 		$('#selected-word').html(html);
 		$('#selected-word-definition').text('');
@@ -899,27 +901,27 @@ function removeDefinitionUser(url)
 	ajaxexec(url, '', false, translateCallback);
 }
 
-function translateCallback(definition) 
+function translateCallback(definition)
 {
 	ajaxexec('/entries/get-definitions-user/' + parseInt(deck.contentId, 10) + '', '#defs');
 }
 
-function xlate(word) 
+function xlate(word)
 {
 	$('#selected-word-definition').text('translating...');
-	ajaxexec('/definitions/translate/' + word + '/' + deck.contentId + '', '#selected-word-definition', false, translateCallback);	
+	ajaxexec('/definitions/translate/' + word + '/' + deck.contentId + '', '#selected-word-definition', false, translateCallback);
 }
-		
+
 function zoom(event, amount)
 {
-	event.preventDefault(); 	
-	
+	event.preventDefault();
+
 	//var size = $("#slideDescription").css("font-size");
 	_readFontSize += amount;
-	
+
 	if (_readFontSize > _maxFontSize) // don't go crazy
 		_readFontSize = _maxFontSize;
-		
+
 	localStorage['readFontSize'] = _readFontSize;
 	setFontSize();
 }
@@ -928,7 +930,7 @@ function setFontSize()
 {
 	$("#slideDescription").css("font-size", _readFontSize + "px");
 	$("#slideTitle").css("font-size", _readFontSize + "px");
-	
+
 	$("#readFontSize").css("font-size", _readFontSize + "px");
 	$(".glyph-zoom-button").css("font-size", _readFontSize + "px");
 	$("#readFontSize").text("Text Size: " + _readFontSize);
@@ -953,23 +955,23 @@ function getReadLocation()
 {
 	var location = parseInt(localStorage[deck.readLocationTag], 10);
 	var multipleLocations = (location != deck.readLocationOtherDevice);
-	
+
 	if (location > 0 && location < max)
 	{
 		$('#button-start-reading').text("Start reading from the beginning");
 		$('#button-continue-reading').show();
 		$('#button-continue-reading').text("Continue reading from line " + (location + 1));
 	}
-	
+
 	if (multipleLocations && deck.readLocationOtherDevice > 0 && deck.readLocationOtherDevice < max)
 	{
 		$('#button-start-reading').text("Start reading from the beginning");
 		$('#button-continue-reading').html("Continue reading from line " + (location + 1) + ""); // "<br/><span class='small-thin-text'>(location on this device)</span>");
-		
+
 		$('#button-continue-reading-other').show();
 		$('#button-continue-reading-other').html("Continue reading from line " + (deck.readLocationOtherDevice + 1) + "<br/><span class='small-thin-text'>(location from a different session)</span>");
 	}
-	
+
 	$('#readCurrLine').text("Line " + (curr + 1));
 	//debug("getReadLocation: " + location, _debug);
 }
@@ -984,7 +986,7 @@ function toggleShowDefinitions()
 		{
 			$('#panel-run-col-defs').hide();
 			$('#panel-run-col-defs').removeClass('col-md-4');
-			$('#panel-run-col-text').removeClass('col-md-8');		
+			$('#panel-run-col-text').removeClass('col-md-8');
 		}
 		else
 		{
@@ -997,7 +999,7 @@ function toggleShowDefinitions()
 
 function startClock()
 {
-	_startTime = new Date();	
+	_startTime = new Date();
 	clearTimeout(_clockTimerId);
 	_clockTimerId = setTimeout(showElapsedTime, 1000);
 }
@@ -1015,38 +1017,38 @@ function showElapsedTime()
 function getElapsedTime()
 {
 	var time = '';
-	
+
 	// get run time
 	if (_startTime != null)
 	{
 		endTime = new Date();
 		var timeDiff = endTime - _startTime; //in ms
 		timeDiff /= 1000; // to seconds
-		var seconds = Math.round(timeDiff);		
+		var seconds = Math.round(timeDiff);
 		var total = seconds;
 
 		if (seconds < 10)
 			time = '00:0' + seconds;
 		else
 			time = '00:' + seconds
-		
+
 		if (seconds >= 60)
 		{
 			minutes = Math.round(seconds / 60);
 			seconds = seconds % 60;
-			
+
 			if (minutes >= 60)
 			{
 				hours = Math.round(minutes / 60);
 				minutes = minutes % 60;
-				
+
 				if (minutes < 10)
 					minutes = "0" + minutes;
 				if (seconds < 10)
 					seconds = "0" + seconds;
 				if (hours < 10)
 					hours = "0" + hours;
-				
+
 				time = hours + ":" + minutes + ":" + seconds;
 			}
 			else
@@ -1055,10 +1057,10 @@ function getElapsedTime()
 					minutes = "0" + minutes;
 				if (seconds < 10)
 					seconds = "0" + seconds;
-				
-				time = minutes + ":" + seconds;				
+
+				time = minutes + ":" + seconds;
 			}
-		}		
+		}
 	}
 
 	return time;

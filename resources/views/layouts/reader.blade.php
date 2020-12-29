@@ -21,7 +21,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	@if (true)
 	<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
 	@endif
-	
+
     <script src="{{ asset('js/project.js') }}"></script>
 	<script src="{{ asset('js/reader.js') }}"></script>
 
@@ -31,6 +31,7 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
     <!-- Custom styles for this template -->
     <link href="/css/project.css" rel="stylesheet">
     <link href="/css/glyphicons.css" rel="stylesheet">
+    <link href="/css/recorder.css" rel="stylesheet" type="text/css">
 
 </head>
 

@@ -275,6 +275,7 @@ class DefinitionController extends Controller
 		$record->examples		= $request->examples;
 		$record->permalink		= Tools::createPermalink($request->title);
 		$record->wip_flag		= WIP_DEFAULT;
+		//TODO: $record->rank   		= null;
 
 		try
 		{
