@@ -10,27 +10,16 @@
 <!--------------------------------------------------------------------------------------->
 <!--------------------------------------------------------------------------------------->
 
-<!--------------------------------------------------------------------------------------->
-<!-- Banner Photo -->
-<!--------------------------------------------------------------------------------------->
-@if (isset($banner))
-    <div class="" style="background-image: url(/img/banners/{{$banner}}); background-size: 100%; background-repeat: no-repeat; xposition: relative;">
-        <a href="/"><img src="/img/{{App::getLocale()}}-spacer.png" style="width:100%;" /></a>
-    </div>
-@else
-    <!-- div style="height:5px;"></div -->
-@endif
-
 @if (Auth::check() && count($lesson) > 0)
     <!-- No logo or subscribe for signed-in user -->
     <!-- div style="height:5px;"></div -->
 @else
-    @if (isset($banner))
+    <div class="bg-none">
 
         <!--------------------------------------------------------------------------------------->
         <!-- Logo and Subscribe Form-->
         <!--------------------------------------------------------------------------------------->
-        @if (!Auth::check())
+        @if (App\Tools::siteUses(ID_FEATURE_SUBSCRIBE))
         <div class="fpBannerImage" style="background-color:#4993FD">
             <div class="container text-center pt-2 pb-2" >
     		    <img src="/img/logo-{{\App\Tools::getDomainName()}}.png" style="max-width:200px;"/>
@@ -66,36 +55,56 @@
             </div>
         </div>
         @endif
+    </div>
 
-    @else
-
-        @if (!Auth::check() && isset($jumboTitle))
-        <!-- Main jumbotron for a primary marketing message or call to action -->
-        <div class="app-color-primary" style="min-height:300px;">
-            <div class="container text-center pt-4" >
-                @if (isset($jumboTitle))
-                    <h1 class="banner-title">@LANG('fp.' . $jumboTitle)</h1>
-                    <p>@LANG('fp.' . $jumboSlug)</p>
-                @else
-                    <h1 class="">@LANG('fp.Frontpage Header Title')</h1>
-                    <p>@LANG('fp.Frontpage Header Body')</p>
-                @endif
-                @if (App\Tools::siteUses(ID_FEATURE_COURSES))
-                    <p><a class="btn btn-primary btn-lg" href="/start" role="button">@LANG('fp.Start') &raquo;</a></p>
-                @endif
-            </div>
-        </div>
-        @endif
-
-    @endif
 @endif
 
-<div class="container page-normal mt-2 bg-none">
+<div class="container page-normal mt-1 bg-none">
+
+<!--------------------------------------------------------------------------------------->
+<!-- The record form -->
+<!--------------------------------------------------------------------------------------->
+<div class="text-center mt-4 pt-2 pl-4 pr-4 pb-2 bg-gray" style="min-height: 300px;">
+
+	<form method="POST" action="/entries/create/">
+        <h3 class="mt-2">Speak Clearer</h3>
+		<div class="form-group form-control-big">
+		    <div>
+            <textarea
+                onblur=""
+                type="text"
+                id="textEdit"
+                name="title"
+                class="form-control"
+                onfocus="setFocus($(this))"
+                value=""
+                placeholder="Enter or paste practice text here"
+                rows="5"
+            ></textarea>
+            </div>
+            <div id="textShow" style="display:none; font-size:1.5em;">
+                Show text here.
+            </div>
+        </div>
+    </form>
+
+    <section class="main-controls">
+        <canvas class="visualizer" height="60px"></canvas>
+        <div id="buttons">
+            <button class="record">Record</button>
+            <button id="buttonRead" class="stop">Read</button>
+            <button id="buttonEdit" class="edit" onclick="toggleTextView()">Show</button>
+        </div>
+    </section>
+
+    <section class="sound-clips">
+    </section>
+
+</div>
 
 <!--------------------------------------------------------------------------------------->
 <!-- Dictionary, Lists, and Books shortcuts widget -->
 <!--------------------------------------------------------------------------------------->
-@if ($showShortcutWidgets)
     <div class="hidden-xs mb-3"></div>
     <div class="d-block d-md-none d-flex justify-content-center text-center bg-none p-0 mt-3">
 
@@ -105,18 +114,14 @@
                 <div class="" style="font-size:10px;">@LANG('content.Articles')</div>
             </a>
         </div>
+
         <div class="" style="width: 25%;">
             <a class="purple" href="/books">
                 <div class="glyphicon glyphicon-book" style="font-size:35px;"></div>
                 <div class="" style="font-size:10px;">@LANG('content.Books')</div>
             </a>
         </div>
-        <div class="" style="width: 25%;">
-            <a class="purple" href="/definitions">
-                <div class="glyphicon glyphicon-font" style="font-size:35px;"></div>
-                <div class="" style="font-size:10px;">@LANG('content.Dictionary')</div>
-            </a>
-        </div>
+
         <div class="" style="width: 25%;">
             <a class="purple" href="/vocabulary">
                 <div class="glyphicon glyphicon-th-list" style="font-size:35px;"></div>
@@ -125,7 +130,6 @@
         </div>
 
     </div>
-@endif
 
 <!--------------------------------------------------------------------------------------->
 <!-- WORD AND PHRASE OF THE DAY -->
@@ -205,45 +209,6 @@
 	<!-- END OF VOCAB LISTS -->
 
 <!--------------------------------------------------------------------------------------->
-<!-- COURSES (Logged in only) -->
-<!--------------------------------------------------------------------------------------->
-	@if (App\Tools::siteUses(ID_FEATURE_COURSES))
-		@if (Auth::check())
-
-		@if (isset($lesson['course']))
-		<h3>@LANG('content.Courses in Progress')</h3>
-		<div class="row row-course m-1">
-				<div class="alert alert-primary" role="alert">
-					<h3 class="alert-heading mt-0">{{$lesson['course']->title}}</h3>
-					@if (isset($lesson['lesson']))
-						<hr>
-						<h4>@LANG('content.Chapter') {{$lesson['lesson']->getFullName()}}</h4>
-						<p>@LANG('content.Last viewed on') {{$lesson['date']}}</p>
-						<p><a class="btn btn-primary btn-lg" href="/lessons/view/{{$lesson['lesson']->id}}" role="button">@LANG('content.Continue Lesson') &raquo;</a></p>
-					@endif
-				</div>
-		</div>
-		@endif
-
-		@else
-		<h3>@LANG('content.Courses') ({{count($courses)}})</h3>
-		<div class="row row-course">
-			@foreach($courses as $record)
-			<div class="col-sm-4 col-course"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
-				<div class="card card-course {{$record->getCardColor()}} truncate">
-				<a href="/courses/view/{{$record->id}}">
-					<div class="card-header">{{$record->title}}</div>
-					<div class="card-body"><p class="card-text">{{$record->description}}</p></div>
-				</a>
-				</div>
-			</div>
-			@endforeach
-		</div>
-		@endif
-	@endif
-	<!-- END OF COURSES -->
-
-<!--------------------------------------------------------------------------------------->
 <!-- ARTICLES NEW SMALL -->
 <!--------------------------------------------------------------------------------------->
 @if (App\Tools::siteUses(ID_FEATURE_ARTICLES))
@@ -298,39 +263,6 @@
     </div>
 @endif
 
-<!--------------------------------------------------------------------------------------->
-<!-- WORD OF THE DAY (not used) -->
-<!--------------------------------------------------------------------------------------->
-    @if (false && isset($wod))
-        <h3>@LANG('content.Word of the Day')</h3>
-		<div style="max-width:600px;">
-			<div class="card text-white bg-primary mb-3">
-				<div class="card-header"><h4>{{$wod->title}}</h4></div>
-				<div class="card-body">
-					<p class="card-text">
-						<p>{{$wod->description}}</p>
-						@if (isset($wod->examples))
-							@foreach($wod->examples as $example)
-								<p><i>{{$example}}</i></p>
-							@endforeach
-						@endif
-					</p>
-				</div>
-			</div>
-		</div>
-    @endif
-
-<!--------------------------------------------------------------------------------------->
-<!-- Podcasts -->
-<!--------------------------------------------------------------------------------------->
-@if ($siteLanguage == 'es-ES')
-<div>
-    <iframe frameBorder="0" height="482" scrolling="no" src="https://playlist.megaphone.fm/?p=HSW5050863615&light=true"
-    width="100%">
-    </iframe>
-</div>
-@endif
-
 </div>
 
 <!--------------------------------------------------------------------------------------->
@@ -356,6 +288,7 @@
 <!--------------------------------------------------------------------------------------->
 <!-- PRE-FOOTER SECTION -->
 <!--------------------------------------------------------------------------------------->
+@if (App\Tools::siteUses(ID_FEATURE_PREFOOTER))
 <div class="mars-sky">
 	<div class="container marketing text-center">
 		<div class="pb-4 pt-3">
@@ -369,5 +302,38 @@
 		</div>
 	</div>
 </div>
+@endif
 
 @endsection
+
+<script>
+
+function toggleTextView()
+{
+    if ($('#textShow').is(':visible'))
+    {
+        setEdit();
+    }
+    else
+    {
+        setShow();
+    }
+
+}
+
+function setEdit()
+{
+    $('#buttonEdit').text('Show');
+    $('#textEdit').show();
+    $('#textShow').hide();
+}
+
+function setShow()
+{
+    $('#textShow').html($('#textEdit').val())
+    $('#buttonEdit').text('Edit');
+    $('#textEdit').hide();
+    $('#textShow').show();
+}
+
+</script>

@@ -11,14 +11,15 @@ use Lang;
 use App\User;
 use DateTime;
 
-define('SITE_ID_LOCALHOST',	0);
-define('SITE_ID_ENGLISH',	1);
-define('SITE_ID_ENGLISH50', 2);
-define('SITE_ID_SPANISH50', 3);
-define('SITE_ID_SPANISH',	4);
-define('SITE_ID_PLANCHA',	5);
-define('SITE_ID_TEST',		6);
-define('SITE_ID_ESPDAILY',	7);
+define('SITE_ID_LOCALHOST',	    0);
+define('SITE_ID_ENGLISH',	    1);
+define('SITE_ID_ENGLISH50',     2);
+define('SITE_ID_SPANISH50',     3);
+define('SITE_ID_SPANISH',	    4);
+define('SITE_ID_PLANCHA',	    5);
+define('SITE_ID_TEST',		    6);
+define('SITE_ID_ESPDAILY',	    7);
+define('SITE_ID_SPEAKCLEARER',  8);
 
 class Tools
 {
@@ -32,6 +33,7 @@ class Tools
 		'spanish.codespace.us'	=> SITE_ID_SPANISH,
 		'plancha.codespace.us'	=> SITE_ID_PLANCHA,
 		'espdaily.com'			=> SITE_ID_ESPDAILY,
+		'speakclearer.com'		=> SITE_ID_SPEAKCLEARER,
 	];
 
 	static private $_sitesLanguages = [
@@ -42,16 +44,18 @@ class Tools
 		'spanish.codespace.us'	=> 'es-ES',
 		'spanish50.com'			=> 'es-ES',
 		'espdaily.com'			=> 'es-ES',
+		'espdaily.com'			=> 'en-EN',
 	];
 
 	static private $_sitesLanguageFlags = [
-		//'localhost'			=> LANGUAGE_ENGLISH,
-		'localhost'				=> LANGUAGE_SPANISH,
+		'localhost'			=> LANGUAGE_ENGLISH,
+		//'localhost'				=> LANGUAGE_SPANISH,
 		'english.codespace.us'	=> LANGUAGE_ENGLISH,
 		'spanish.codespace.us'	=> LANGUAGE_SPANISH,
 		'english50.com'			=> LANGUAGE_ENGLISH,
 		'spanish50.com'			=> LANGUAGE_SPANISH,
 		'espdaily.com'			=> LANGUAGE_SPANISH,
+		'speakclearer.com'		=> LANGUAGE_ENGLISH,
 	];
 
     static public function getAccentChars()
@@ -673,37 +677,57 @@ class Tools
 		return $rc;
 	}
 
-	static public function siteUses($model)
+	static public function siteUsesShortcutWidgets()
+	{
+	    return self::siteUses(ID_FEATURE_ARTICLES)
+	        && self::siteUses(ID_FEATURE_DICTIONARY)
+	        && self::siteUses(ID_FEATURE_LISTS)
+	        && self::siteUses(ID_FEATURE_BOOKS)
+        ;
+    }
+
+	static public function siteUses($feature)
 	{
 		$rc = false;
 		$siteId = self::getSiteId();
 		switch($siteId)
 		{
-			case SITE_ID_ENGLISH:	// english.codespace
-			case SITE_ID_ENGLISH50: // english50
-				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
-				break;
-			case SITE_ID_PLANCHA:
-				$rc = ($model == LOG_MODEL_COURSES);
-				break;
-			case SITE_ID_SPANISH: // spanish.codespace.us
-				$rc = ($model == LOG_MODEL_ARTICLES); // only articles
-				break;
-			case SITE_ID_SPANISH50:
-			case SITE_ID_ESPDAILY:
+			case SITE_ID_SPEAKCLEARER:
 			case SITE_ID_LOCALHOST:
-				$rc = ($model == LOG_MODEL_ARTICLES
-				    || $model == LOG_MODEL_DEFINITIONS
-				    || $model == LOG_MODEL_WORDS
-				    || $model == LOG_MODEL_BOOKS
+				$rc = ($feature == ID_FEATURE_RECORD
+				    || $feature == ID_FEATURE_ARTICLES
 				    );
 				break;
+
+			case SITE_ID_ENGLISH:	// english.codespace
+			case SITE_ID_ENGLISH50:
+				$rc = ($feature == ID_FEATURE_ARTICLES
+				    || $feature == ID_FEATURE_PREFOOTER
+				    );
+				break;
+
+			case SITE_ID_PLANCHA:
+				$rc = ($feature == ID_FEATURE_COURSES);
+				break;
+
+			case SITE_ID_SPANISH: // spanish.codespace.us
+				$rc = ($feature == ID_FEATURE_ARTICLES); // only articles
+				break;
+
+			case SITE_ID_SPANISH50:
+			case SITE_ID_ESPDAILY:
+				$rc = ($feature == ID_FEATURE_ARTICLES
+				    || $feature == ID_FEATURE_BOOKS
+				    || $feature == ID_FEATURE_DICTIONARY
+				    || $feature == ID_FEATURE_LISTS
+				    || $feature == ID_FEATURE_SUBSCRIBE
+				    || $feature == ID_FEATURE_PREFOOTER
+				    );
+				break;
+
 			default:
 				break;
 		}
-
-		if (User::isAdmin())
-		    $rc = true; // show everything
 
 		return $rc;
 	}

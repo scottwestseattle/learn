@@ -17,8 +17,6 @@ Route::get('/welcome', function () {    return view('welcome');  });
 Auth::routes();
 
 /* public pages */
-Route::get('/', 'FrontPageController@index');
-
 Route::get('/index2', 'FrontPageController@index2')->name('index2'); /* original version of the frontpage */
 Route::get('/about', 'FrontPageController@about')->name('about');
 Route::get('/contact', 'FrontPageController@contact')->name('contact');
@@ -405,4 +403,6 @@ Route::group(['prefix' => 'samples'], function () {
 	Route::get('/publish/{course}','SampleController@publish');
 	Route::post('/publishupdate/{course}','SampleController@publishupdate');
 });
+
+Route::get('/{bannerIx?}', 'FrontPageController@index');
 

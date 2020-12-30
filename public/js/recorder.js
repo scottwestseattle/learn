@@ -7,42 +7,33 @@ var canvas = null;
 var mainSection = null;
 
 // visualiser setup - create web audio api context and canvas
-let audioCtx;
+let audioCtx = null;
 var canvasCtx = null;
 
-function loadRecorder()
-{
-    record = document.querySelector('.record');
-    stop = document.querySelector('.stop');
-    soundClips = document.querySelector('.sound-clips');
-    canvas = document.querySelector('.visualizer');
-    mainSection = document.querySelector('.main-controls');
-
-    canvasCtx = canvas.getContext("2d");
-
-    // disable stop button while not recording
-    stop.disabled = true;
-
-    // size our window
-    window.onresize();
-}
 
 ///////////////////////////////////////////////////
 // main block for doing the audio recording
 ///////////////////////////////////////////////////
 
+  const constraints = { audio: true };
+
 if (navigator.mediaDevices.getUserMedia) {
   console.log('getUserMedia supported.');
 
-  const constraints = { audio: true };
   let chunks = [];
 
   let onSuccess = function(stream) {
+
+    console.log('onSuccess');
+
     const mediaRecorder = new MediaRecorder(stream);
 
     visualize(stream);
 
     record.onclick = function() {
+
+        if (typeof setShow === "function") // if function is defined call it
+            setShow();
 
         if (mediaRecorder.state == "inactive")
         {
@@ -67,18 +58,6 @@ if (navigator.mediaDevices.getUserMedia) {
             record.textContent = "Record";
         }
 
-    }
-
-    stop.onclick = function() {
-      mediaRecorder.stop();
-      console.log(mediaRecorder.state);
-      console.log("recorder stopped");
-      record.style.background = "";
-      record.style.color = "";
-      // mediaRecorder.requestData();
-
-      stop.disabled = true;
-      record.disabled = false;
     }
 
     mediaRecorder.onstop = function(e) {
@@ -139,13 +118,20 @@ if (navigator.mediaDevices.getUserMedia) {
     mediaRecorder.ondataavailable = function(e) {
       chunks.push(e.data);
     }
+
+    console.log('end of setup');
   }
 
   let onError = function(err) {
     console.log('The following error occured: ' + err);
   }
 
-  navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
+    console.log('starting getUserMedia... ');
+
+    // this triggers the permission dialog
+    navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
+
+    console.log('end of getUserMedia init');
 
 } else {
    console.log('getUserMedia not supported on your browser!');
@@ -210,4 +196,25 @@ function visualize(stream) {
 
 window.onresize = function() {
     canvas.width = mainSection.offsetWidth;
+}
+
+function loadRecorder()
+{
+    record = document.querySelector('.record');
+    //stop = document.querySelector('.stop');
+    soundClips = document.querySelector('.sound-clips');
+    canvas = document.querySelector('.visualizer');
+    mainSection = document.querySelector('.main-controls');
+
+    canvasCtx = canvas.getContext("2d");
+
+    // disable stop button while not recording
+    //stop.disabled = true;
+
+    // size our window
+    window.onresize();
+
+    //record.onclick = function() {
+    //    //navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
+    //    }
 }

@@ -201,7 +201,7 @@ class HomeController extends Controller
 		$vocabLists = null;
 		$stats['lessonDate'] = null;
 
-		if (false && Tools::siteUses(LOG_MODEL_WORDS))
+		if (false && Tools::siteUses(ID_FEATURE_LISTS))
 		{
 			//
 			// user's vocab lists
@@ -209,7 +209,7 @@ class HomeController extends Controller
 			$vocabLists = VocabList::getIndex(['owned']);
 		}
 
-		if (Tools::siteUses(LOG_MODEL_LESSONS))
+		if (Tools::siteUses(ID_FEATURE_COURSES))
 		{
 			//
 			// get user's last viewed lesson so he can resume where he left off
@@ -332,25 +332,25 @@ class HomeController extends Controller
 						throw new \Exception("dangerous search characters");
 					}
 
-					if (Tools::siteUses(LOG_MODEL_ARTICLES))
+					if (Tools::siteUses(ID_FEATURE_ARTICLES))
 					{
 						$entries = Entry::search($search);
 						$count += (isset($entries) ? count($entries) : 0);
 					}
 
-					if (Tools::siteUses(LOG_MODEL_DEFINITIONS))
+					if (Tools::siteUses(ID_FEATURE_DICTIONARY))
 					{
 						$definitions = Definition::searchGeneral($search);
 						$count += (isset($definitions) ? count($definitions) : 0);
 					}
 
-					if (Tools::siteUses(LOG_MODEL_LESSONS))
+					if (Tools::siteUses(ID_FEATURE_COURSES))
 					{
 						$lessons = Lesson::search($search);
 						$count += (isset($lessons) ? count($lessons) : 0);
 					}
 
-					if (Tools::siteUses(LOG_MODEL_WORDS))
+					if (Tools::siteUses(ID_FEATURE_LISTS))
 					{
 						$words = Word::search($search);
 						$count += (isset($words) ? count($words) : 0);

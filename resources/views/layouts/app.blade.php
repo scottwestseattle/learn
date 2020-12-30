@@ -50,6 +50,12 @@ $iconFolder = App\Tools::getIconFolder();
 	<script src="/js/loadTinyMce.js"></script>
 @endif
 
+    @if (App\Tools::siteUses(ID_FEATURE_RECORD))
+        <link href="/css/recorder.css" rel="stylesheet">
+        <script src="{{ asset('/js/recorder.js') }}"></script>
+        <script src="{{ asset('/js/reader.js') }}"></script>
+    @endif
+
 	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet">
 
@@ -94,19 +100,19 @@ $iconFolder = App\Tools::getIconFolder();
 
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
-					@if (defined('LOG_MODEL_ARTICLES') && App\Tools::siteUses(LOG_MODEL_ARTICLES))
+					@if (defined('ID_FEATURE_ARTICLES') && App\Tools::siteUses(ID_FEATURE_ARTICLES))
 						<li class="nav-item"><a class="nav-link" href="/articles">@LANG('content.Articles')</a></li>
 					@endif
-					@if (defined('LOG_MODEL_DEFINITIONS') && App\Tools::siteUses(LOG_MODEL_DEFINITIONS))
+					@if (defined('ID_FEATURE_DICTIONARY') && App\Tools::siteUses(ID_FEATURE_DICTIONARY))
 						<li class="nav-item"><a class="nav-link" href="/definitions">@LANG('content.Dictionary')</a></li>
 					@endif
-					@if (defined('LOG_MODEL_WORDS') && App\Tools::siteUses(LOG_MODEL_WORDS))
+					@if (defined('ID_FEATURE_LISTS') && App\Tools::siteUses(ID_FEATURE_LISTS))
 						<li class="nav-item"><a class="nav-link" href="/vocabulary">@LANG('content.Lists')</a></li>
 					@endif
-					@if (defined('LOG_MODEL_COURSES') && App\Tools::siteUses(LOG_MODEL_COURSES))
+					@if (defined('ID_FEATURE_COURSES') && App\Tools::siteUses(ID_FEATURE_COURSES))
 						<li class="nav-item"><a class="nav-link" href="/courses">@LANG('content.Courses')</a></li>
 					@endif
-					@if (defined('LOG_MODEL_BOOKS') && App\Tools::siteUses(LOG_MODEL_BOOKS))
+					@if (defined('ID_FEATURE_BOOKS') && App\Tools::siteUses(ID_FEATURE_BOOKS))
 						<li class="nav-item"><a class="nav-link" href="/books">@LANG('content.Books')</a></li>
 					@endif
 

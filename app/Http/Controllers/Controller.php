@@ -42,6 +42,7 @@ define('LOG_MODEL_ENTRIES', 'entries');
 define('LOG_MODEL_EVENTS', 'events');
 define('LOG_MODEL_HOME', 'home');
 define('LOG_MODEL_LESSONS', 'lessons');
+define('LOG_MODEL_RECORD', 'record');
 define('LOG_MODEL_SITES', 'sites');
 define('LOG_MODEL_TAGS', 'tags');
 define('LOG_MODEL_TRANSLATIONS', 'translations');
@@ -172,6 +173,16 @@ define('DEFINITIONS_SEARCH_ALL', 10);
 define('DEFINITIONS_SEARCH_NEWEST_VERBS', 11);
 define('DEFINITIONS_SEARCH_RANDOM_VERBS', 12);
 define('DEFINITIONS_SEARCH_RANDOM_WORDS', 13);
+
+// optional features
+define('ID_FEATURE_ARTICLES',   1);
+define('ID_FEATURE_BOOKS',      2);
+define('ID_FEATURE_COURSES',    3);
+define('ID_FEATURE_DICTIONARY', 4);
+define('ID_FEATURE_PREFOOTER',  6);
+define('ID_FEATURE_LISTS',      7);
+define('ID_FEATURE_RECORD',     8);
+define('ID_FEATURE_SUBSCRIBE',  9);
 
 class Controller extends BaseController
 {

@@ -136,17 +136,17 @@
 		</div>
 	</div>
 
-
-      <section class="main-controls">
+    <section class="main-controls">
         <canvas class="visualizer" height="60px"></canvas>
         <div id="buttons">
-          <button class="record">Record</button>
-          <button class="stop">Stop</button>
+            <button class="record">Record</button>
+            <button class="read" onclick="readPage()">Read</button>
+            <button class="">Settings</button>
         </div>
-      </section>
+    </section>
 
-      <section class="sound-clips">
-      </section>
+    <section class="sound-clips">
+    </section>
 
 	<!--------------------------------------------------------------->
 	<!-- Bottom panel ----------------------------------------------->

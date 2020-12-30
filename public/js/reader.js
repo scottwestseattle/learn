@@ -53,12 +53,13 @@ $(document).ready(function() {
 
 	$("#pause").hide();
 	$("#resume").show();
-	ajaxexec('/entries/get-definitions-user/' + parseInt(deck.contentId, 10) + '', '#defs');
+	//ajaxexec('/entries/get-definitions-user/' + parseInt(deck.contentId, 10) + '', '#defs');
 
 	_bottomPanelHeight = $("#bottom-panel").outerHeight(); // needed for scrolling
 	//console.log("bottom panel height: " + _bottomPanelHeight);
 
-	loadRecorder();
+    if (typeof loadRecorder === "function") // if function is defined call it
+	    loadRecorder();
 });
 
 $(window).on('unload', function() {
@@ -389,6 +390,15 @@ function run()
 	resume();
 }
 
+_readPage = false;
+function readPage()
+{
+    //sbw
+	var slide = deck.slides[curr];
+    _readPage = true; // stop after reading the current page
+	read(slide.description, 0);
+}
+
 function runContinue()
 {
 	// not starting at the beginning
@@ -499,8 +509,14 @@ function read(text, charIndex)
 
 	_utter.text = text.substring(charIndex);
 	_utter.onend = function(event) {
-		if (!_paused && !_cancelled)
+		if (!_readPage && !_paused && !_cancelled)
 			readNext();
+		else if (_readPage)
+		{
+		    // clear the word highlight
+			$("#slideDescription span").removeClass("highlight-word");
+    		_readPage = false; // finished reading page
+		}
 
 		_cancelled = false;
 	}

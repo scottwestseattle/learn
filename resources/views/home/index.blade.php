@@ -50,7 +50,7 @@
 	<hr />
 	@endif
 
-	@if (App\Tools::siteUses(LOG_MODEL_COURSES))
+	@if (App\Tools::siteUses(ID_FEATURE_COURSES))
         @if (Auth::check() && isset($course))
             <div class="mb-5">
                 <div class="">

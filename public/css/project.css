@@ -247,6 +247,10 @@ h1,h3 {
 	backgruond-size:auto;
 }
 
+.banner-title {
+    font-size: 48px;
+}
+
 .fpheader p {
 	font-size: 1.3em;
 }

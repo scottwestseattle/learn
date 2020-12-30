@@ -47,8 +47,9 @@ class FrontPageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index($bannerIx = null)
     {
+        $bannerIx = isset($bannerIx) ? intval($bannerIx) : null;
 		$courses = []; // make this countable so view will always work
 		$vocabLists = [];
 		$articles = [];
@@ -57,7 +58,7 @@ class FrontPageController extends Controller
 		$randomWord = null;
 
         // get word of the day
-		if (false && Tools::siteUses(LOG_MODEL_WORDS))
+		if (false && Tools::siteUses(ID_FEATURE_LISTS))
 		{
 			$wod = Word::getWod(User::getSuperAdminUserId());
 
@@ -79,7 +80,7 @@ class FrontPageController extends Controller
 			}
 		}
 
-		if (Tools::siteUses(LOG_MODEL_LESSONS) && Auth::check())
+		if (Tools::siteUses(ID_FEATURE_COURSES) && Auth::check())
 		{
 			//
 			// get user's last viewed lesson so he can resume where he left off
@@ -88,7 +89,7 @@ class FrontPageController extends Controller
 			$lesson['course'] = isset($lesson['lesson']) ? $lesson['lesson']->course : null;
 		}
 
-		if (Tools::siteUses(LOG_MODEL_COURSES))
+		if (Tools::siteUses(ID_FEATURE_COURSES))
 		{
 			try
 			{
@@ -102,7 +103,7 @@ class FrontPageController extends Controller
 			}
 		}
 
-		if (Tools::siteUses(LOG_MODEL_ARTICLES))
+		if (Tools::siteUses(ID_FEATURE_ARTICLES))
 		{
 			try
 			{
@@ -124,7 +125,7 @@ class FrontPageController extends Controller
 		$wotd = null;
 		$supportMessage = null;
 
-		if (Tools::getSiteLanguage() == LANGUAGE_SPANISH)
+        if (Tools::getSiteLanguage() == LANGUAGE_SPANISH)
 		{
 			$randomWord = Definition::getRandomWord();
 			$jumboTitle = 'jumboTitleSpanish';
@@ -137,8 +138,18 @@ class FrontPageController extends Controller
             $potd = isset($potd) ? $potd : Lang::get('ui.Not Found');
 
             $files = preg_grep('/^([^.])/', scandir(base_path() . '/public/img/banners')); // grep removes the hidden files
-			$ix = rand(1, count($files));
-			$banner = 'es-banner' . $ix . '.png';
+            $fileCount = count($files);
+            $lastIx = $fileCount;
+            if (isset($bannerIx))
+            {
+                $ix = ($bannerIx <= $fileCount && $bannerIx > 0) ? $bannerIx : $lastIx;
+            }
+            else
+            {
+                $ix = rand(1, $fileCount);
+            }
+            $banner = 'es-banner' . $ix . '.png';
+
 			$supportMessage = Lang::get('content.Support Message');
 		}
 		else if ((Tools::getSiteLanguage() == LANGUAGE_ENGLISH))
@@ -148,7 +159,9 @@ class FrontPageController extends Controller
 
         $siteLanguage = Tools::getLanguage();
 
-		return view('frontpage.index', $this->getViewData([
+        $view = Tools::siteUses(ID_FEATURE_RECORD) ? 'frontpage.index-record' : 'frontpage.index';
+
+		return view($view, $this->getViewData([
 			'courses' => $courses,
 			'vocabLists' => $vocabLists,
 			'articles' => $articles,
@@ -162,6 +175,7 @@ class FrontPageController extends Controller
 			'potd' => $potd,
 			'supportMessage' => $supportMessage,
 			'siteLanguage' => $siteLanguage,
+			'showShortcutWidgets' => Tools::siteUsesShortcutWidgets(),
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

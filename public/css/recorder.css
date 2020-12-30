@@ -44,7 +44,8 @@ canvas {
 #buttons button {
   font-size: 1rem;
   padding: 1rem;
-  width: calc(50% - 0.25rem);
+  width: calc(30% - 0.25rem);
+  xwidth: 30%;
 }
 
 button {
