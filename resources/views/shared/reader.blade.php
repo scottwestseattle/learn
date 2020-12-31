@@ -124,8 +124,10 @@
 	<div id="tab3" class="tab-body" style="display:none;">
 		<div class="text-center mt-3">
 			<div class="mb-5">
-			<div><span class="small-thin-text" id="language"></span></div>
-			<div id="languages" class="mt-1" style="display:default; font-size:10px;"><select onchange="changeVoice();" name="select" id="select"></select></div>
+                <div><span class="small-thin-text" id="language"></span></div>
+                <div id="languages" class="mt-1" style="display:default; font-size:10px;">
+                    <select onchange="changeVoice();" name="select" id="select"></select>
+                </div>
 			</div>
 
 			<div class="">
@@ -139,9 +141,10 @@
     <section class="main-controls">
         <canvas class="visualizer" height="60px"></canvas>
         <div id="buttons">
-            <button class="record">Record</button>
-            <button class="read" onclick="readPage()">Read</button>
-            <button class="">Settings</button>
+            <button id="buttonRecord" class="record" onclick="startRecording()">Record</button>
+            <button id="buttonPlayback" class="playback" onclick="playRecording()">Play</button>
+            <button id="buttonRead" class="" onClick="readPage()">Robot</button>
+
         </div>
     </section>
 

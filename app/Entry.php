@@ -275,12 +275,58 @@ class Entry extends Base
 	{
 		$records = $record = Entry::select()
 				->where('deleted_flag', 0)
-				->where('language_flag', Tools::getSiteLanguage())
+				->where('language_flag', Tools::getSiteLanguageCondition(), Tools::getSiteLanguage())
 				->where('type_flag', ENTRY_TYPE_ARTICLE)
 				->where('release_flag', '>=', self::getReleaseFlag())
 				->orderByRaw('display_date DESC, id DESC')
 				->limit($limit)
 				->get();
+
+		return $records;
+	}
+
+	static public function getRecentList($type, $limit = PHP_INT_MAX)
+	{
+		$type = intval($type);
+		$records = [];
+		$tag = self::getRecentTag();
+		$logInfo = 'type_flag: ' . self::getTypeFlagName($type);
+
+		if (isset($tag)) // should always exist
+		{
+			try
+			{
+				$records = DB::table('entries')
+					->leftJoin('entry_tag', function($join) use ($tag) {
+						$join->on('entry_tag.entry_id', '=', 'entries.id');
+						$join->where('entry_tag.user_id', Auth::id()); // works for users not logged in
+						$join->where('entry_tag.tag_id', $tag->id);
+					})
+					->select('entries.*')
+					->where('entries.deleted_flag', 0)
+					->where('entries.language_flag', Tools::getSiteLanguageCondition(), Tools::getSiteLanguage())
+					->where('entries.type_flag', $type)
+					->where('entries.release_flag', '>=', self::getReleaseFlag())
+					->orderByRaw('entry_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
+					->limit($limit)
+					->get();
+
+				//dd($records);
+			}
+			catch (\Exception $e)
+			{
+				$msg = 'Error getting recent list';
+				Event::logException(LOG_MODEL, LOG_ACTION_INDEX, 'getRecentList', $msg . ', ' . $logInfo, $e->getMessage());
+				Session::flash('message.level', 'danger');
+				Session::flash('message.content', $msg);
+			}
+		}
+		else
+		{
+			$msg = 'Error getting recent list, recent tag not found';
+			Event::logError(LOG_MODEL, LOG_ACTION_INDEX, 'getRecentList', $msg . ', ' . $logInfo);
+			Tools::flash('danger', $msg);
+		}
 
 		return $records;
 	}
@@ -675,79 +721,6 @@ class Entry extends Base
 		}
 
 		return intval($readLocation);
-	}
-
-	static public function getRecentList($type, $limit = PHP_INT_MAX)
-	{
-		$type = intval($type);
-		$records = [];
-		$tag = self::getRecentTag();
-		$logInfo = 'type_flag: ' . self::getTypeFlagName($type);
-
-		if (isset($tag)) // should always exist
-		{
-			try
-			{
-				$records = DB::table('entries')
-					->leftJoin('entry_tag', function($join) use ($tag) {
-						$join->on('entry_tag.entry_id', '=', 'entries.id');
-						$join->where('entry_tag.user_id', Auth::id()); // works for users not logged in
-						$join->where('entry_tag.tag_id', $tag->id);
-					})
-					->select('entries.*')
-					->where('entries.deleted_flag', 0)
-					->where('entries.language_flag', Tools::getSiteLanguage())
-					->where('entries.type_flag', $type)
-					->where('entries.release_flag', '>=', self::getReleaseFlag())
-					->orderByRaw('entry_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
-					->limit($limit)
-					->get();
-
-				//dd($records);
-			}
-			catch (\Exception $e)
-			{
-				$msg = 'Error getting recent list';
-				Event::logException(LOG_MODEL, LOG_ACTION_INDEX, 'getRecentList', $msg . ', ' . $logInfo, $e->getMessage());
-				Session::flash('message.level', 'danger');
-				Session::flash('message.content', $msg);
-			}
-		}
-		else
-		{
-			$msg = 'Error getting recent list, recent tag not found';
-			Event::logError(LOG_MODEL, LOG_ACTION_INDEX, 'getRecentList', $msg . ', ' . $logInfo);
-			Tools::flash('danger', $msg);
-		}
-
-		return $records;
-	}
-
-	static public function getBooksRecentOLD_NOT_USED($limit = PHP_INT_MAX) // need this?
-	{
-		$tag = Tag::getOrCreate(TAG_BOOK, TAG_TYPE_BOOK);
-		$records = null;
-		if (isset($tag))
-		{
-			$tagRecent = self::getRecentTag();
-			$records = DB::table('entries')
-				->join('entry_tag', function($join) use ($tag) {
-					$join->on('entry_tag.entry_id', '=', 'entries.id');
-					$join->where('entry_tag.tag_id', $tag->id);
-				})
-				->leftJoin('entry_tag as recent_tag', function($join) use ($tagRecent) {
-					$join->on('recent_tag.entry_id', '=', 'entries.id');
-					$join->where('recent_tag.user_id', Auth::id());
-					$join->where('recent_tag.tag_id', $tagRecent->id);
-				})
-				->select('entries.*')
-				->where('entries.deleted_flag', 0)
-				->where('entries.release_flag', '>=', self::getReleaseFlag())
-				->orderByRaw('recent_tag.created_at DESC, entries.display_date DESC, entries.id DESC')
-				->get($limit);
-		}
-
-		return $records;
 	}
 
 	// add or update system 'book' tag for entries.

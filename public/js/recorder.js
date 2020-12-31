@@ -15,7 +15,13 @@ var canvasCtx = null;
 // main block for doing the audio recording
 ///////////////////////////////////////////////////
 
-  const constraints = { audio: true };
+const constraints = { audio: true };
+var _audio = null;
+var _mediaRecorder = null;
+
+function startMediaRecorder()
+{
+    console.log('startMediaRecorder()...');
 
 if (navigator.mediaDevices.getUserMedia) {
   console.log('getUserMedia supported.');
@@ -26,41 +32,11 @@ if (navigator.mediaDevices.getUserMedia) {
 
     console.log('onSuccess');
 
-    const mediaRecorder = new MediaRecorder(stream);
+    _mediaRecorder = new MediaRecorder(stream);
 
     visualize(stream);
 
-    record.onclick = function() {
-
-        if (typeof setShow === "function") // if function is defined call it
-            setShow();
-
-        if (mediaRecorder.state == "inactive")
-        {
-            var clips = document.querySelector('article');
-            if (clips)
-            {
-                clips.innerHTML = "";
-            }
-
-            mediaRecorder.start();
-            console.log(mediaRecorder.state);
-            console.log("recorder started");
-            record.style.background = "red";
-            record.textContent = "Stop";
-        }
-        else
-        {
-            mediaRecorder.stop();
-            console.log(mediaRecorder.state);
-            console.log("recorder started");
-            record.style.background = "#0088cc";
-            record.textContent = "Record";
-        }
-
-    }
-
-    mediaRecorder.onstop = function(e) {
+    _mediaRecorder.onstop = function(e) {
       console.log("data available after MediaRecorder.stop() called.");
 
       //const clipName = prompt('Enter a name for your sound clip?','My unnamed clip');
@@ -113,14 +89,17 @@ if (navigator.mediaDevices.getUserMedia) {
       }
 
       audio.play();
+      _audio = audio;
     }
 
-    mediaRecorder.ondataavailable = function(e) {
+    _mediaRecorder.ondataavailable = function(e) {
       chunks.push(e.data);
     }
 
-    console.log('end of setup');
-  }
+    setTimeout(runRecord, 500)
+
+    console.log('end of onSuccess');
+  } // end of onSuccess
 
   let onError = function(err) {
     console.log('The following error occured: ' + err);
@@ -135,6 +114,66 @@ if (navigator.mediaDevices.getUserMedia) {
 
 } else {
    console.log('getUserMedia not supported on your browser!');
+}
+
+} // end of function
+
+function startRecording()
+{
+    console.log('startRecording...');
+
+    if (_mediaRecorder == null)
+    {
+        record.style.background = "orange";
+        record.textContent = "Waiting...";
+        startMediaRecorder();
+    }
+    else
+    {
+        runRecord();
+    }
+}
+
+function runRecord()
+{
+    console.log('runRecord...');
+
+    if (_mediaRecorder.state == "inactive")
+    {
+        var clips = document.querySelector('article');
+        if (clips)
+        {
+            clips.innerHTML = "";
+        }
+
+        try {
+            _mediaRecorder.start();
+            console.log(_mediaRecorder.state);
+            console.log("recordering...");
+            record.style.background = "red";
+            record.textContent = "Stop";
+        }
+        catch(e)
+        {
+            console.log(_mediaRecorder.state);
+            console.log(e)
+        }
+    }
+    else
+    {
+        try {
+            _mediaRecorder.stop();
+            console.log(_mediaRecorder.state);
+            console.log("recorder started");
+            record.style.background = "#0088cc";
+            record.textContent = "Record";
+        }
+        catch(e)
+        {
+            console.log(_mediaRecorder.state);
+            console.log(e)
+        }
+    }
 }
 
 function visualize(stream) {
@@ -200,6 +239,7 @@ window.onresize = function() {
 
 function loadRecorder()
 {
+    console.log('loading recorder...');
     record = document.querySelector('.record');
     //stop = document.querySelector('.stop');
     soundClips = document.querySelector('.sound-clips');

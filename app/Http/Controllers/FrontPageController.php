@@ -159,7 +159,13 @@ class FrontPageController extends Controller
 
         $siteLanguage = Tools::getLanguage();
 
-        $view = Tools::siteUses(ID_FEATURE_RECORD) ? 'frontpage.index-record' : 'frontpage.index';
+        $view = 'frontpage.index';
+        $loadSpeechModules = false;
+        if (Tools::siteUses(ID_FEATURE_RECORD))
+        {
+            $view = 'frontpage.index-record';
+            $loadSpeechModules = true;
+        }
 
 		return view($view, $this->getViewData([
 			'courses' => $courses,
@@ -176,6 +182,7 @@ class FrontPageController extends Controller
 			'supportMessage' => $supportMessage,
 			'siteLanguage' => $siteLanguage,
 			'showShortcutWidgets' => Tools::siteUsesShortcutWidgets(),
+			'loadSpeechModules' => $loadSpeechModules,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

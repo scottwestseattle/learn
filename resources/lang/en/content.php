@@ -195,4 +195,5 @@ return [
 'SiteTitle-localhost' => 'My name is localhost',
 'Support Message' => 'Buy us a coffee!',
 'Verb not found' => 'Verb not found',
+'SiteTitle-speakclearer.com' => 'Tools for improving your accent',
 ];

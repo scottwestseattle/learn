@@ -42,7 +42,6 @@ $iconFolder = App\Tools::getIconFolder();
     <!-- Scripts -->
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 	<script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
-
     <script src="{{ asset('/js/project.js') }}"></script>
 
 @if (isset($tinymce))
@@ -50,8 +49,7 @@ $iconFolder = App\Tools::getIconFolder();
 	<script src="/js/loadTinyMce.js"></script>
 @endif
 
-    @if (App\Tools::siteUses(ID_FEATURE_RECORD))
-        <link href="/css/recorder.css" rel="stylesheet">
+    @if (isset($loadSpeechModules) && $loadSpeechModules)
         <script src="{{ asset('/js/recorder.js') }}"></script>
         <script src="{{ asset('/js/reader.js') }}"></script>
     @endif
@@ -66,6 +64,9 @@ $iconFolder = App\Tools::getIconFolder();
     <link href="/css/project.css" rel="stylesheet">
     <link href="/css/glyphicons.css" rel="stylesheet">
     <link href="/css/glyphicons-short.css" rel="stylesheet">
+    @if (App\Tools::siteUses(ID_FEATURE_RECORD))
+        <link href="/css/recorder.css" rel="stylesheet">
+    @endif
 
 </head>
 

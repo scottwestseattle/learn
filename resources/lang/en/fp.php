@@ -32,4 +32,5 @@ return [
 'jumboSlug' => 'Discover the content and tools you need to make learning a new language fun and easy.',
 'jumboTitleEnglish' => 'Learn English in 50 Lessons',
 'Subscribe to mailing list' => 'Enter your email address to subscribe to our mailing list',
+'recorderTextInit' => 'Our goal is to provide a platform for language learners to improve their accents. Enter or paste any text here and practice saying it out loud. Hit the "Record" button to record your voice and play it back. Hit the "Robot" button to hear how it should sound.',
 ];

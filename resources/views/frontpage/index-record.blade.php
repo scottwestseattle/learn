@@ -2,6 +2,36 @@
 
 @section('content')
 
+<!-------------------------------------------------------->
+<!-- Add misc data needed by the JS during runtime -->
+<!-------------------------------------------------------->
+<div class="data-misc"
+	data-count="1"
+	data-touchpath=""
+	data-max="1"
+	data-language="en-EN"
+	data-type="1"
+	data-contenttype="frontpage"
+	data-contentid="1"
+	data-isadmin="0"
+	data-userid="0"
+	data-readlocation=0
+></div>
+
+	<!-------------------------------------------------------->
+	<!-- Add the body lines to read -->
+	<!-------------------------------------------------------->
+	<div class="data-slides"
+	    data-title="No title"
+	    data-number="1"
+	    data-description="No text to read"
+	    data-id="0"
+	    data-seconds="10"
+	    data-between="2"
+	    data-countdown="1"
+	>
+	</div>
+
 <!--------------------------------------------------------------------------------------->
 <!--------------------------------------------------------------------------------------->
 <!--------------------------------------------------------------------------------------->
@@ -14,49 +44,6 @@
     <!-- No logo or subscribe for signed-in user -->
     <!-- div style="height:5px;"></div -->
 @else
-    <div class="bg-none">
-
-        <!--------------------------------------------------------------------------------------->
-        <!-- Logo and Subscribe Form-->
-        <!--------------------------------------------------------------------------------------->
-        @if (App\Tools::siteUses(ID_FEATURE_SUBSCRIBE))
-        <div class="fpBannerImage" style="background-color:#4993FD">
-            <div class="container text-center pt-2 pb-2" >
-    		    <img src="/img/logo-{{\App\Tools::getDomainName()}}.png" style="max-width:200px;"/>
-                <form method="POST" action="/subscribe">
-                    <div class="form-group text-center">
-                        <div class="input-group mt-2" style="max-width:600px; margin:0 auto;">
-                            <input name="email" id="email" type="email"
-                                style="font-weight:200; font-size:18px;"
-                                class="form-control @error('email') is-invalid @enderror"
-                                value="{{ old('email') }}"
-                                autocomplete="email"
-                                maxlength="50"
-                                placeholder="@LANG('ui.Email Address')"
-                                required
-                            />
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-success" type="button">@LANG('ui.Subscribe')</button>
-                            </div>
-
-                            @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="mt-2 white small-thin-text">@LANG('fp.Subscribe to mailing list')</div>
-
-                    </div>
-                    <div class="form-group">
-                    </div>
-                    {{ csrf_field() }}
-                </form>
-            </div>
-        </div>
-        @endif
-    </div>
-
 @endif
 
 <div class="container page-normal mt-1 bg-none">
@@ -64,36 +51,45 @@
 <!--------------------------------------------------------------------------------------->
 <!-- The record form -->
 <!--------------------------------------------------------------------------------------->
-<div class="text-center mt-4 pt-2 pl-4 pr-4 pb-2 bg-gray" style="min-height: 300px;">
+<div class="text-center mt-4" style="xmin-height: 300px; padding:10 5 5 5;">
 
 	<form method="POST" action="/entries/create/">
         <h3 class="mt-2">Speak Clearer</h3>
-		<div class="form-group form-control-big">
-		    <div>
+		<div class="">
+		    <div style="xmin-height: 300px; ">
             <textarea
-                onblur=""
-                type="text"
                 id="textEdit"
                 name="title"
                 class="form-control"
-                onfocus="setFocus($(this))"
-                value=""
                 placeholder="Enter or paste practice text here"
                 rows="5"
-            ></textarea>
+            >@LANG('fp.recorderTextInit')</textarea>
             </div>
-            <div id="textShow" style="display:none; font-size:1.5em;">
+            <div id="textShow" style="display:none; xmin-height: 200px; font-size:1.5em;">
                 Show text here.
+
+                <div id="languages" class="mt-1" style="display:default; font-size:10px;">
+                    <select onchange="changeVoice();" name="select" id="select"></select>
+                </div>
+
             </div>
         </div>
     </form>
 
+    <div>
+        <a href="" onclick="saveSnippet(event)">Save<a/>
+        <a href="" onclick="event.preventDefault(); $('#textEdit').val('');" class="ml-2">Clear<a/>
+        <a href="" onclick="copySnippet(event)" class="ml-2">Copy<a/>
+        <a href="" onclick="pasteSnippet(event)" class="ml-2">Paste<a/>
+    </div>
+
     <section class="main-controls">
         <canvas class="visualizer" height="60px"></canvas>
         <div id="buttons">
-            <button class="record">Record</button>
-            <button id="buttonRead" class="stop">Read</button>
-            <button id="buttonEdit" class="edit" onclick="toggleTextView()">Show</button>
+            <button id="buttonRecord" class="record" onclick="startRecording()">Record</button>
+            <button id="buttonPlayback" class="playback" onclick="playRecording()">Play</button>
+            <button id="buttonRead" class="" onClick="readPage($('#textEdit').val())">Robot</button>
+            <!-- button id="buttonEdit" class="edit" onclick="toggleTextView()">Playback</button -->
         </div>
     </section>
 
@@ -308,6 +304,21 @@
 
 <script>
 
+function saveSnippet(event)
+{
+    event.preventDefault();
+}
+
+function copySnippet(event)
+{
+    event.preventDefault();
+}
+
+function pasteSnippet(event)
+{
+    event.preventDefault();
+}
+
 function toggleTextView()
 {
     if ($('#textShow').is(':visible'))
@@ -323,6 +334,9 @@ function toggleTextView()
 
 function setEdit()
 {
+    return;
+
+    console.log('setEdit');
     $('#buttonEdit').text('Show');
     $('#textEdit').show();
     $('#textShow').hide();
@@ -330,10 +344,19 @@ function setEdit()
 
 function setShow()
 {
+    return;
+
+    console.log('setShow');
     $('#textShow').html($('#textEdit').val())
     $('#buttonEdit').text('Edit');
     $('#textEdit').hide();
     $('#textShow').show();
+}
+
+function playRecording()
+{
+    if (_audio != null)
+        _audio.play();
 }
 
 </script>

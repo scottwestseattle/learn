@@ -134,6 +134,7 @@ define('ORDERBY_DATE', 2);
 define('ORDERBY_VIEWS', 3);
 
 // Languages
+define('LANGUAGE_ALL',    -1);
 define('LANGUAGE_ENGLISH', 0);
 define('LANGUAGE_SPANISH', 1);
 

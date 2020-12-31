@@ -48,14 +48,15 @@ class Tools
 	];
 
 	static private $_sitesLanguageFlags = [
-		'localhost'			=> LANGUAGE_ENGLISH,
-		//'localhost'				=> LANGUAGE_SPANISH,
 		'english.codespace.us'	=> LANGUAGE_ENGLISH,
 		'spanish.codespace.us'	=> LANGUAGE_SPANISH,
 		'english50.com'			=> LANGUAGE_ENGLISH,
 		'spanish50.com'			=> LANGUAGE_SPANISH,
 		'espdaily.com'			=> LANGUAGE_SPANISH,
-		'speakclearer.com'		=> LANGUAGE_ENGLISH,
+		'speakclearer.com'		=> LANGUAGE_ALL,
+		'localhost'			=> LANGUAGE_ALL,
+		//'localhost'			=> LANGUAGE_ENGLISH,
+		//'localhost'			=> LANGUAGE_SPANISH,
 	];
 
     static public function getAccentChars()
@@ -843,6 +844,12 @@ class Tools
 	{
 		return self::getLanguageFlag();
 	}
+
+	static public function getSiteLanguageCondition()
+	{
+	    $language = self::getSiteLanguage();
+        return ($language == LANGUAGE_ALL) ? '>=' : '=';
+    }
 
 	static public function getLanguageFlag()
 	{

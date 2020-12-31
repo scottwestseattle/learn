@@ -32,4 +32,5 @@ return [
 'jumboSlug' => 'Descubra el contenido y las herramientas que necesita para que aprender un nuevo idioma sea divertido y fácil.',
 'jumboTitleEnglish' => 'Aprende inglés en 50 lecciones',
 'Subscribe to mailing list' => 'Ingrese su correo electrónico para suscribirse',
+'recorderTextInit' => 'Nuestro objetivo es proporcionar una plataforma para que los estudiantes de idiomas pueden mejorar sus acentos. Ingrese o pegue cualquier texto aquí y practique decirlo en voz alta. Pulse el botón "Grabar" para grabar tu voz y reproducirla. Pulse el botón "Robot" para escuchar cómo debería sonar.',
 ];

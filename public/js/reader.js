@@ -58,8 +58,11 @@ $(document).ready(function() {
 	_bottomPanelHeight = $("#bottom-panel").outerHeight(); // needed for scrolling
 	//console.log("bottom panel height: " + _bottomPanelHeight);
 
+    console.log('page load ready');
     if (typeof loadRecorder === "function") // if function is defined call it
 	    loadRecorder();
+	else
+	    console.log('loadRecorder not found');
 });
 
 $(window).on('unload', function() {
@@ -390,13 +393,38 @@ function run()
 	resume();
 }
 
-_readPage = false;
-function readPage()
+function resume()
 {
-    //sbw
-	var slide = deck.slides[curr];
+	if (_paused)
+	{
+		_paused = false;
+		deck.readSlideResume(); // picks up at curr	+ _lastCharIndex
+	}
+	else
+	{
+		// resuming without being paused means play was clicked from start panel
+		startClock();
+		deck.run(_incLine == 0); // if line has been inc'ing then don't start at the beginning.
+	}
+
+	$("#pause").show();
+	$("#resume").hide();
+}
+
+_readPage = false;
+function readPage(readText = '')
+{
+	window.speechSynthesis.cancel();
     _readPage = true; // stop after reading the current page
-	read(slide.description, 0);
+
+    //sbw
+    if (readText.length == 0)
+    {
+    	var slide = deck.slides[curr];
+    	readText = slide.description;
+    }
+
+	read(readText, 0);
 }
 
 function runContinue()
@@ -438,24 +466,6 @@ function pause()
 	window.speechSynthesis.cancel();
 	$("#pause").hide();
 	$("#resume").show();
-}
-
-function resume()
-{
-	if (_paused)
-	{
-		_paused = false;
-		deck.readSlideResume(); // picks up at curr	+ _lastCharIndex
-	}
-	else
-	{
-		// resuming without being paused means play was clicked from start panel
-		startClock();
-		deck.run(_incLine == 0); // if line has been inc'ing then don't start at the beginning.
-	}
-
-	$("#pause").show();
-	$("#resume").hide();
 }
 
 function mute()

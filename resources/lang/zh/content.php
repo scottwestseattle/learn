@@ -195,4 +195,5 @@ return [
 'SiteTitle-localhost' => '我叫本地房东',
 'Support Message' => '邀请我们喝咖啡！',
 'Verb not found' => '找不到动词',
+'SiteTitle-speakclearer.com' => '改善口音的工具',
 ];
