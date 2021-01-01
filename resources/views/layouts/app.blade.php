@@ -49,10 +49,10 @@ $iconFolder = App\Tools::getIconFolder();
 	<script src="/js/loadTinyMce.js"></script>
 @endif
 
-    @if (isset($loadSpeechModules) && $loadSpeechModules)
-        <script src="{{ asset('/js/recorder.js') }}"></script>
-        <script src="{{ asset('/js/reader.js') }}"></script>
-    @endif
+@if (isset($loadSpeechModules) && $loadSpeechModules)
+    <script src="{{ asset('/js/recorder.js') }}"></script>
+    <script src="{{ asset('/js/reader.js') }}"></script>
+@endif
 
 	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -64,9 +64,9 @@ $iconFolder = App\Tools::getIconFolder();
     <link href="/css/project.css" rel="stylesheet">
     <link href="/css/glyphicons.css" rel="stylesheet">
     <link href="/css/glyphicons-short.css" rel="stylesheet">
-    @if (App\Tools::siteUses(ID_FEATURE_RECORD))
-        <link href="/css/recorder.css" rel="stylesheet">
-    @endif
+@if (isset($loadSpeechModules) && $loadSpeechModules)
+    <link href="/css/recorder.css" rel="stylesheet">
+@endif
 
 </head>
 

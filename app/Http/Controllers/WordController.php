@@ -20,13 +20,18 @@ define('TITLE_LC', 'word');
 define('TITLE_PLURAL', 'Words');
 define('REDIRECT', '/words');
 define('REDIRECT_ADMIN', '/words/admin');
+define('SNIPPET_USER_ID', 0);
 
 class WordController extends Controller
 {
 	public function __construct ()
 	{
-        $this->middleware('is_admin')->except(['index', 'translate', 'getajax', 'updateajax', 'addUser', 'createUser', 'editUser', 'updateUser'
-            , 'confirmDeleteUser', 'deleteUser', 'view', 'touch']);
+        $this->middleware('is_admin')->except([
+            'index', 'translate', 'getajax', 'updateajax', 'addUser',
+            'createUser', 'editUser', 'updateUser',
+            'confirmDeleteUser', 'deleteUser', 'view', 'touch',
+            'createSnippet'
+        ]);
 
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
@@ -243,6 +248,72 @@ class WordController extends Controller
 			return redirect('/words/add/' . $parent_id);
 		else
 			return redirect('/words/indexowner/');
+    }
+
+    public function createSnippet(Request $request)
+    {
+        $msg = null;
+        $raw = trim($request->textEdit);
+        $snippet = Tools::alphanum($raw); // trim the trash
+        $tag = "Text";
+
+		try
+		{
+            if (strlen($snippet) != strlen($raw))
+            {
+                $msg = "$tag has invalid characters";
+    			Event::logError(LOG_MODEL, LOG_ACTION_ADD, 'chars removed: ' . $snippet);
+		        throw new \Exception($msg); // nope!
+            }
+
+            $msg = null;
+
+            $exists = false;
+            $record = Word::getSnippet($snippet, 'description');
+            if ($record)
+            {
+                // if it already exists and hasn't changed only let the admin update it
+                $exists = true;
+            }
+            else
+            {
+                $record = new Word();
+                $record->title 			= 'snippet ' . Tools::getTimestamp();
+                $record->permalink		= Tools::createPermalink($record->title);
+                $record->user_id        = SNIPPET_USER_ID;
+                $record->type_flag 		= WORDTYPE_SNIPPET;
+                $record->description	= Tools::trunc($snippet, 500, ' (truncated)');
+            }
+
+            $record->language_flag  = $request->language_flag;
+
+		    if (strlen($snippet) < 10)
+                $msg = "$tag is too short";
+
+            if ($exists && !Tools::isAdmin())
+                $msg = "$tag already exists";
+
+            if (isset($msg))
+		        throw new \Exception($msg); // nope!
+
+			$record->save();
+
+			Event::logAdd(LOG_MODEL, $record->title, $record->description, $record->id);
+			$msg = $exists ? "$tag has been updated" : "New $tag has been saved";
+			Tools::flash('success', $msg);
+
+    		return redirect('/' . $record->id);
+		}
+		catch (\Exception $e)
+		{
+		    //dump($record);
+		    //dd($e->getMessage());
+			$msg = isset($msg) ? $msg : "Error adding new $tag";
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $snippet, null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return back();
     }
 
     public function addVocabListWord(VocabList $vocabList)
@@ -598,6 +669,8 @@ class WordController extends Controller
 			return redirect('/words/add/' . $word->lesson_id);
 		else if ($word->type_flag == WORDTYPE_VOCABLIST)
 			return redirect('/vocab-lists/view/' . $word->vocab_list_id);
+		else if ($word->type_flag == WORDTYPE_SNIPPET)
+			return redirect('/');
 		else
 			return redirect('/words/add-user');
     }

@@ -196,4 +196,6 @@ return [
 'Support Message' => 'Buy us a coffee!',
 'Verb not found' => 'Verb not found',
 'SiteTitle-speakclearer.com' => 'Tools for improving your accent',
+'Latest Practice Text' => 'Latest Practice Text',
+'Show All' => 'Show All',
 ];

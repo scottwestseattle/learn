@@ -642,7 +642,7 @@ class EntryController extends Controller
 		$records = Entry::getRecentList(ENTRY_TYPE_BOOK);
 		foreach($records as $record)
 		{
-			if ($record->language_flag == LANGUAGE_SPANISH)
+			if ($record->language_flag == LANGUAGE_ES)
 			{
 				$stats = Tools::getWordStats($record->description, $words);
 				$wordCount += $stats['wordCount'];

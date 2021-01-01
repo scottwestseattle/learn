@@ -196,4 +196,6 @@ return [
 'Support Message' => '¡Invítanos a un café!',
 'Verb not found' => 'Verbo no encontrado',
 'SiteTitle-speakclearer.com' => 'Herramientas para mejorar su acento',
+'Latest Practice Text' => 'Último texto de práctica',
+'Show All' => 'Mostrar todo',
 ];

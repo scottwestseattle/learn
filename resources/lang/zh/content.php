@@ -196,4 +196,6 @@ return [
 'Support Message' => '邀请我们喝咖啡！',
 'Verb not found' => '找不到动词',
 'SiteTitle-speakclearer.com' => '改善口音的工具',
+'Latest Practice Text' => '练习文字',
+'Show All' => '显示所有',
 ];

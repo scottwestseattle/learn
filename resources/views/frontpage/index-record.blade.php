@@ -9,7 +9,7 @@
 	data-count="1"
 	data-touchpath=""
 	data-max="1"
-	data-language="en-EN"
+	data-language={{App\Tools::getSpeechLanguage($snippet->language_flag)}}
 	data-type="1"
 	data-contenttype="frontpage"
 	data-contentid="1"
@@ -53,17 +53,17 @@
 <!--------------------------------------------------------------------------------------->
 <div class="text-center mt-4" style="xmin-height: 300px; padding:10 5 5 5;">
 
-	<form method="POST" action="/entries/create/">
+	<form method="POST" action="/words/create-snippet">
         <h3 class="mt-2">Speak Clearer</h3>
 		<div class="">
 		    <div style="xmin-height: 300px; ">
             <textarea
                 id="textEdit"
-                name="title"
+                name="textEdit"
                 class="form-control"
                 placeholder="Enter or paste practice text here"
                 rows="5"
-            >@LANG('fp.recorderTextInit')</textarea>
+            >{{$snippet->description}}</textarea>
             </div>
             <div id="textShow" style="display:none; xmin-height: 200px; font-size:1.5em;">
                 Show text here.
@@ -74,22 +74,28 @@
 
             </div>
         </div>
+        <div>
+        @component('components.control-dropdown-language', [
+            'record' => $snippet,
+			'options' => $snippetLanguages,
+			'selected_option' => $snippet->language_flag,
+			'field_name' => 'language_flag',
+			'select_class' => 'mt-1 mr-2',
+		])@endcomponent
+            <button type="submit" class="btn btn-primary btn-xs">Save</button>
+            <a href="" onclick="event.preventDefault(); $('#textEdit').val(''); $('#textEdit').focus();" class="ml-2">Clear<a/>
+            <a href="" onclick="event.preventDefault(); copySnippet(event)" class="ml-2">Copy<a/>
+            <a href="" onclick="pasteSnippet(event)" class="ml-2">Paste<a/>
+        </div>
+		{{csrf_field()}}
     </form>
-
-    <div>
-        <a href="" onclick="saveSnippet(event)">Save<a/>
-        <a href="" onclick="event.preventDefault(); $('#textEdit').val('');" class="ml-2">Clear<a/>
-        <a href="" onclick="copySnippet(event)" class="ml-2">Copy<a/>
-        <a href="" onclick="pasteSnippet(event)" class="ml-2">Paste<a/>
-    </div>
 
     <section class="main-controls">
         <canvas class="visualizer" height="60px"></canvas>
         <div id="buttons">
-            <button id="buttonRecord" class="record" onclick="startRecording()">Record</button>
-            <button id="buttonPlayback" class="playback" onclick="playRecording()">Play</button>
-            <button id="buttonRead" class="" onClick="readPage($('#textEdit').val())">Robot</button>
-            <!-- button id="buttonEdit" class="edit" onclick="toggleTextView()">Playback</button -->
+            <button id="buttonRecord" class="record" onclick="event.preventDefault(); startRecording()">Record</button>
+            <button id="buttonPlayback" class="playback" onclick="event.preventDefault(); playRecording()">Play</button>
+            <button id="buttonRead" class="" onClick="event.preventDefault(); readPage($('#textEdit').val())">Robot</button>
         </div>
     </section>
 
@@ -98,114 +104,68 @@
 
 </div>
 
+
 <!--------------------------------------------------------------------------------------->
-<!-- Dictionary, Lists, and Books shortcuts widget -->
+<!-- SNIPPETS -->
 <!--------------------------------------------------------------------------------------->
-    <div class="hidden-xs mb-3"></div>
-    <div class="d-block d-md-none d-flex justify-content-center text-center bg-none p-0 mt-3">
+@if (isset($snippets) && count($snippets) > 0)
+    <h3 class="mt-2">@LANG('content.Latest Practice Text') <span style="font-size:.8em;">({{count($snippets)}})</span></h3>
+    <div class="text-center mt-2" style="">
+        <div style="display: inline-block; width:100%">
+            <table style="width:100%;">
+            <?php $count = 0; ?>
+            @foreach($snippets as $record)
 
-        <div class="" style="width: 25%;">
-            <a class="purple" href="/articles">
-                <div class="glyphicon glyphicon-globe" style="font-size:35px;"></div>
-                <div class="" style="font-size:10px;">@LANG('content.Articles')</div>
-            </a>
+            <tr class="drop-box-ghost-small" style="vertical-align:middle;">
+                <td class="text-center" style="width:30px; font-size: 14px; padding:5px; margin-bottom:10px;" >
+                    <div style="margin:0; padding:0; line-height:100%;">
+                        <div style="font-family:impact; font-size:1.7em; margin:10px 0 10px 0;">
+                            <img width="30" src="/img/flags/{{App\Tools::getSpeechLanguageShort($record->language_flag)}}.png" />
+                        </div>
+                    </div>
+                </td>
+                <td style="color:default; text-align:left; padding:5px 10px;">
+                    <table>
+                    <tbody>
+                        <tr>
+                            <td style="padding-bottom:5px; font-size: 14px; font-weight:normal;">
+                                <a href="/{{$record->id}}">{{App\Tools::trunc($record->description, 200)}}</a>
+                            </td>
+                        </tr>
+                        <tr><td style="font-size:.8em; font-weight:100;">
+                            <div style="float:left;">
+                                <div style="margin-right:15px; margin-bottom:5px; float:left;"><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
+
+                                @if (false && App\User::isAdmin())
+                                    <div style="margin-right:15px; float:left;">
+                                        @component('components.control-button-publish', ['record' => $record, 'btnStyle' => 'btn-xxs', 'prefix' => 'entries', 'showPublic' => true])@endcomponent
+                                    </div>
+                                @endif
+
+                            </div>
+                            <div style="float:left;">
+                                @if (App\User::isAdmin())
+                                <div style="margin-right:5px; float:left;"><a href='/words/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
+                                <div style="margin-right:0px; float:left;"><a href='/words/delete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
+                                @endif
+                            </div>
+                        </td></tr>
+                    </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr style="" class=""><td colspan="2"><div style="height:15px;">&nbsp;</div></td></tr>
+
+            @endforeach
+            </table>
+            <div class="mb-4"><a class="btn btn-sm btn-success" role="button" href="/articles">@LANG('content.Show All')</a></div>
         </div>
-
-        <div class="" style="width: 25%;">
-            <a class="purple" href="/books">
-                <div class="glyphicon glyphicon-book" style="font-size:35px;"></div>
-                <div class="" style="font-size:10px;">@LANG('content.Books')</div>
-            </a>
-        </div>
-
-        <div class="" style="width: 25%;">
-            <a class="purple" href="/vocabulary">
-                <div class="glyphicon glyphicon-th-list" style="font-size:35px;"></div>
-                <div class="" style="font-size:10px;">@LANG('content.Lists')</div>
-            </a>
-        </div>
-
     </div>
-
-<!--------------------------------------------------------------------------------------->
-<!-- WORD AND PHRASE OF THE DAY -->
-<!--------------------------------------------------------------------------------------->
-@if (isset($wotd) || isset($potd))
-	<div class="row row-course">
-    @if (isset($wotd))
-		<div class="col-sm-12 col-lg-6 col-course" style="">
-            <div class="card card-wotd truncate mt-1" style="">
-                <div class="card-header card-header-potd">
-                    <div>@LANG('content.Word of the day')</div>
-                    <div class="small-thin-text">@LANG('content.A new word to learn every day')</div>
-                </div>
-                <div class="card-body card-body-potd">
-                    @if(isset($wotd))
-                        <div><b>{{$wotd->title}}</b> - <i>{{$wotd->description}}</i></div>
-                        <div class="large-thin-text">{{$wotd->examples}}</div>
-                    @else
-                        <div>@LANG('ui.Not Found')</div>
-                    @endif
-                </div>
-            </div>
-		</div>
-    @endif
-
-    @if (false && isset($potd))
-		<div class="col-sm-12 col-lg-6 col-course" style="">
-            <div class="card card-votd truncate mt-1" style="">
-                <div class="card-header card-header-potd">
-                    <div>@LANG('content.Verb of the day')</div>
-                    <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
-                </div>
-                <div class="card-body card-body-potd">
-                    <div><b>{{$wotd->title}}</b> - <i>{{$wotd->description}}</i></div>
-                    <div class="large-thin-text">{{$wotd->examples}}</div>
-                </div>
-            </div>
-		</div>
-    @endif
-
-    @if (isset($potd))
-		<div class="col-sm-12 col-lg-6 col-course" style="">
-            <div class="card card-potd truncate mt-1" style="">
-                <div class="card-header card-header-potd">
-                    <div>@LANG('content.Phrase of the day')</div>
-                    <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
-                </div>
-                <div class="card-body card-body-potd">
-                    <div class="xl-thin-text">{{$potd}}</div>
-                </div>
-            </div>
-		</div>
-    @endif
-
-	</div>
-
 @endif
 
 <!--------------------------------------------------------------------------------------->
-<!-- VOCAB LISTS (Logged in only) -->
-<!--------------------------------------------------------------------------------------->
-	@if (isset($vocabLists) && count($vocabLists) > 0)
-		<h3>@LANG('content.Vocabulary') ({{count($vocabLists)}})</h3>
-		<div class="row row-course">
-			@foreach($vocabLists as $record)
-			<div class="col-sm-4 col-course"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
-				<div class="card card-vocab-list truncate">
-				<a href="/vocab-lists/view/{{$record->id}}">
-					<div class="card-header">{{$record->title}}</div>
-					<div class="card-body"><p class="card-text">Word Count: {{$record->words->count()}}</p></div>
-				</a>
-				</div>
-			</div>
-			@endforeach
-		</div>
-	@endif
-	<!-- END OF VOCAB LISTS -->
-
-<!--------------------------------------------------------------------------------------->
-<!-- ARTICLES NEW SMALL -->
+<!-- ARTICLES -->
 <!--------------------------------------------------------------------------------------->
 @if (App\Tools::siteUses(ID_FEATURE_ARTICLES))
     <h3 class="mt-2">@LANG('content.Latest Articles')</h3>
@@ -216,7 +176,7 @@
             @foreach($articles as $record)
 
             <tr class="drop-box-ghost-small" style="vertical-align:middle;">
-                <td style="min-width:40px; font-size: 14px; padding:5px; color: white; background-color: #74b567; margin-bottom:10px;" >
+                <td class="text-center" style="width:30px; font-size: 14px; padding:5px; color: white; background-color: #74b567; margin-bottom:10px;" >
                     <div style="margin:0; padding:0; line-height:100%;">
                         <div style="font-family:impact; font-size:1.7em; margin:10px 0 10px 0;">{{++$count}}</div>
                     </div>
@@ -317,6 +277,9 @@ function copySnippet(event)
 function pasteSnippet(event)
 {
     event.preventDefault();
+
+    $('#textEdit').val('');
+    $('#textEdit').focus();
 }
 
 function toggleTextView()

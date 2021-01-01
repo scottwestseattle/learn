@@ -47,9 +47,11 @@ class FrontPageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($bannerIx = null)
+    public function index($id = null)
     {
-        $bannerIx = isset($bannerIx) ? intval($bannerIx) : null;
+        $bannerIx = isset($id) && Tools::siteUses(ID_FEATURE_BANNERPHOTO) ? intval($id) : null;
+        $snippetId = isset($id) && Tools::siteUses(ID_FEATURE_RECORD) ? intval($id) : null;
+
 		$courses = []; // make this countable so view will always work
 		$vocabLists = [];
 		$articles = [];
@@ -103,11 +105,12 @@ class FrontPageController extends Controller
 			}
 		}
 
+        $recorder = Tools::siteUses(ID_FEATURE_RECORD);
 		if (Tools::siteUses(ID_FEATURE_ARTICLES))
 		{
 			try
 			{
-				$articles = Entry::getArticles(3);
+				$articles = Entry::getArticles($recorder ? 10 : 3);
 			}
 			catch (\Exception $e)
 			{
@@ -125,7 +128,7 @@ class FrontPageController extends Controller
 		$wotd = null;
 		$supportMessage = null;
 
-        if (Tools::getSiteLanguage() == LANGUAGE_SPANISH)
+        if (Tools::getSiteLanguage() == LANGUAGE_ES)
 		{
 			$randomWord = Definition::getRandomWord();
 			$jumboTitle = 'jumboTitleSpanish';
@@ -152,7 +155,7 @@ class FrontPageController extends Controller
 
 			$supportMessage = Lang::get('content.Support Message');
 		}
-		else if ((Tools::getSiteLanguage() == LANGUAGE_ENGLISH))
+		else if ((Tools::getSiteLanguage() == LANGUAGE_EN))
 		{
 			$jumboTitle = 'jumboTitleEnglish';
 		}
@@ -161,10 +164,33 @@ class FrontPageController extends Controller
 
         $view = 'frontpage.index';
         $loadSpeechModules = false;
-        if (Tools::siteUses(ID_FEATURE_RECORD))
+        $snippets = null;
+        $snippet = null;
+        $snippetLanguages = null;
+        if ($recorder)
         {
             $view = 'frontpage.index-record';
             $loadSpeechModules = true;
+
+            $snippets = Word::getSnippets(['limit' => 10]);
+            $snippet = Word::getSnippet($snippetId);
+            if (!isset($snippet))
+            {
+                $snippet = new Word();
+                $snippet->description = Lang::get('fp.recorderTextInit');
+                $snippet->language_flag = Tools::getLanguageFlagFromLocale();
+            }
+
+            $snippetLanguages = [
+                LANGUAGE_EN => 'English',
+                LANGUAGE_ES => 'Spanish',
+                LANGUAGE_ZH => 'Chinese',
+                LANGUAGE_RU => 'Russian',
+                LANGUAGE_FR => 'French',
+                LANGUAGE_IT => 'Italian',
+                LANGUAGE_DE => 'German',
+            ];
+
         }
 
 		return view($view, $this->getViewData([
@@ -183,6 +209,9 @@ class FrontPageController extends Controller
 			'siteLanguage' => $siteLanguage,
 			'showShortcutWidgets' => Tools::siteUsesShortcutWidgets(),
 			'loadSpeechModules' => $loadSpeechModules,
+			'snippets' => $snippets,
+			'snippet' => $snippet,
+			'snippetLanguages' => $snippetLanguages,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

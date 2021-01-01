@@ -266,7 +266,7 @@ class DefinitionController extends Controller
 		$record = new Definition();
 
 		$record->user_id 		= Auth::id();
-		$record->language_id 	= LANGUAGE_SPANISH;
+		$record->language_id 	= LANGUAGE_ES;
 		$record->title 			= $request->title;
 		$record->forms 			= Definition::formatForms($request->forms);
 		$record->definition		= $request->definition;

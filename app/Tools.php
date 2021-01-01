@@ -47,16 +47,23 @@ class Tools
 		'espdaily.com'			=> 'en-EN',
 	];
 
+    // NOT USED YET, NEED?
+    static private $_localeLanguageFlags = [
+        'es' => LANGUAGE_ES,
+        'en' => LANGUAGE_EN,
+        'zh' => LANGUAGE_ZH,
+    ];
+
 	static private $_sitesLanguageFlags = [
-		'english.codespace.us'	=> LANGUAGE_ENGLISH,
-		'spanish.codespace.us'	=> LANGUAGE_SPANISH,
-		'english50.com'			=> LANGUAGE_ENGLISH,
-		'spanish50.com'			=> LANGUAGE_SPANISH,
-		'espdaily.com'			=> LANGUAGE_SPANISH,
+		'english.codespace.us'	=> LANGUAGE_EN,
+		'spanish.codespace.us'	=> LANGUAGE_ES,
+		'english50.com'			=> LANGUAGE_EN,
+		'spanish50.com'			=> LANGUAGE_ES,
+		'espdaily.com'			=> LANGUAGE_ES,
 		'speakclearer.com'		=> LANGUAGE_ALL,
-		'localhost'			=> LANGUAGE_ALL,
-		//'localhost'			=> LANGUAGE_ENGLISH,
-		//'localhost'			=> LANGUAGE_SPANISH,
+		'localhost'			    => LANGUAGE_ALL,
+		//'localhost'			=> LANGUAGE_EN,
+		//'localhost'			=> LANGUAGE_ES,
 	];
 
     static public function getAccentChars()
@@ -500,7 +507,7 @@ class Tools
 		{
 			// replace all chars except alphanums, some punctuation, accent chars, and whitespace
 			$base = "a-zA-Z0-9 \r\n";
-			$punct = "!@.,()-+=?!';";
+			$punct = "!@.,()\-+=?¿¡!';:\“\”\"";
 
 			$match = $base . self::$_accents;
 			if (!$strict)
@@ -723,6 +730,7 @@ class Tools
 				    || $feature == ID_FEATURE_LISTS
 				    || $feature == ID_FEATURE_SUBSCRIBE
 				    || $feature == ID_FEATURE_PREFOOTER
+				    || $feature == ID_FEATURE_BANNERPHOTO
 				    );
 				break;
 
@@ -817,15 +825,36 @@ class Tools
 		return self::$_sites;
 	}
 
+	static public function getSpeechLanguageShort($language_flag)
+	{
+	    $rc = self::getSpeechLanguage($language_flag);
+
+	    return(substr($rc, 0, 2));
+    }
+
 	static public function getSpeechLanguage($language_flag)
 	{
-		if ($language_flag == LANGUAGE_ENGLISH)
+		if ($language_flag == LANGUAGE_EN)
 			return 'en-EN';
-		else if ($language_flag == LANGUAGE_SPANISH)
+		else if ($language_flag == LANGUAGE_ES)
 			return 'es-ES';
+		else if ($language_flag == LANGUAGE_ZH)
+			return 'zh-ZH';
 		else
 			return 'en-EN';
 	}
+
+	static public function getLanguageFlagFromLocale()
+	{
+	    $rc = null;
+
+	    $locale = App::getLocale();
+
+	    if (in_array($locale, self::$_localeLanguageFlags))
+            $rc = self::$_localeLanguageFlags[$locale];
+
+        return $rc;
+    }
 
 	static public function getLanguage()
 	{
@@ -853,7 +882,7 @@ class Tools
 
 	static public function getLanguageFlag()
 	{
-		$rc = LANGUAGE_ENGLISH;
+		$rc = LANGUAGE_EN;
 
 		$domain = self::getDomainName();
 		if (array_key_exists($domain, self::$_sitesLanguageFlags))
@@ -909,9 +938,8 @@ class Tools
 		return $string;
 	}
 
-	static public function trunc($string, $length)
+	static public function trunc($string, $length, $ellipsis = '...')
 	{
-		$ellipsis = '...';
 		$newLength = $length - strlen($ellipsis);
 		$string = (strlen($string) > $length) ? substr($string, 0, $newLength) . $ellipsis : $string;
 

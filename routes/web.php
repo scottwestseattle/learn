@@ -233,6 +233,7 @@ Route::group(['prefix' => 'words'], function () {
 	// add/create
 	Route::get('/add/{parent_id?}','WordController@add');
 	Route::post('/create','WordController@create');
+	Route::post('/create-snippet','WordController@createSnippet');
 	Route::get('/add-user', 'WordController@addUser')->middleware('auth');
 	Route::post('/create-user','WordController@createUser')->middleware('auth');
 	Route::get('/add-vocab-word/{vocabList}','WordController@addVocabListWord');
@@ -250,6 +251,7 @@ Route::group(['prefix' => 'words'], function () {
 	// delete
 	Route::get('/confirmdelete/{word}','WordController@confirmdelete');
 	Route::post('/delete/{word}','WordController@delete');
+	Route::get('/delete/{word}','WordController@delete');
 	Route::get('/confirmdelete-user/{word}','WordController@confirmDeleteUser')->middleware('is_owner');
 	Route::post('/delete-user/{word}','WordController@deleteUser')->middleware('is_owner');
 
@@ -404,5 +406,5 @@ Route::group(['prefix' => 'samples'], function () {
 	Route::post('/publishupdate/{course}','SampleController@publishupdate');
 });
 
-Route::get('/{bannerIx?}', 'FrontPageController@index');
+Route::get('/{id?}', 'FrontPageController@index');
 

@@ -158,9 +158,9 @@ class Course extends Base
 		{
 		    $typeFlag = -1;
 		    $language = Tools::getSiteLanguage();
-		    if ($language == LANGUAGE_SPANISH)
+		    if ($language == LANGUAGE_ES)
 		        $typeFlag = COURSETYPE_SPANISH;
-		    else if ($language == LANGUAGE_ENGLISH)
+		    else if ($language == LANGUAGE_EN)
 		        $typeFlag = COURSETYPE_ENGLISH;
 
 

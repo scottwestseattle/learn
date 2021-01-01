@@ -107,11 +107,12 @@ define('POS_ADVERB', 4);
 define('POS_OTHER', 20);
 
 // word types
-define('WORDTYPE_LESSONLIST', 1);
-define('WORDTYPE_LESSONLIST_USERCOPY', 2);
-define('WORDTYPE_USERLIST', 3);
-define('WORDTYPE_VOCABLIST', 4);
-define('WORDTYPE_USERLIST_LIMIT', 20);
+define('WORDTYPE_LESSONLIST',           1);
+define('WORDTYPE_LESSONLIST_USERCOPY',  2);
+define('WORDTYPE_USERLIST',             3);
+define('WORDTYPE_VOCABLIST',            4);
+define('WORDTYPE_SNIPPET',              5);
+define('WORDTYPE_USERLIST_LIMIT',       20);
 
 // VocabList types
 define('VOCABLISTTYPE_POTD', '2');
@@ -134,9 +135,15 @@ define('ORDERBY_DATE', 2);
 define('ORDERBY_VIEWS', 3);
 
 // Languages
-define('LANGUAGE_ALL',    -1);
-define('LANGUAGE_ENGLISH', 0);
-define('LANGUAGE_SPANISH', 1);
+define('LANGUAGE_ALL', -1);
+define('LANGUAGE_EN', 0);
+define('LANGUAGE_ES', 1);
+define('LANGUAGE_FR', 2);
+define('LANGUAGE_IT', 3);
+define('LANGUAGE_DE', 4);
+define('LANGUAGE_PT', 5);
+define('LANGUAGE_RU', 6);
+define('LANGUAGE_ZH', 7);
 
 // Tags
 define('TAG_RECENT', 'recent');
@@ -184,6 +191,7 @@ define('ID_FEATURE_PREFOOTER',  6);
 define('ID_FEATURE_LISTS',      7);
 define('ID_FEATURE_RECORD',     8);
 define('ID_FEATURE_SUBSCRIBE',  9);
+define('ID_FEATURE_BANNERPHOTO', 10);
 
 class Controller extends BaseController
 {

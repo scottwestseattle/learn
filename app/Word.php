@@ -153,7 +153,7 @@ class Word extends Model
 		return $rc;
     }
 
-    static public function exists($word, $parent_id = null)
+    static public function exists($word, $parent_id = null, $field = 'title')
     {
 		$count = 0;
 
@@ -163,13 +163,13 @@ class Word extends Model
 			{
 				$count = Word::select()
 					->where('lesson_id', 'like', $parent_id)
-					->where('title', $word)
+					->where($field, $word)
 					->count();
 			}
 			else
 			{
 				$count = Word::select()
-					->where('title', $word)
+					->where($field, $word)
 					->count();
 			}
 		}
@@ -318,6 +318,51 @@ class Word extends Model
 		return $rc;
     }
 
+	static public function getSnippets($parms = null)
+	{
+		$records = [];
+
+		$limit = is_array($parms) && array_key_exists('limit', $parms) ? $parms['limit'] : PHP_INT_MAX;
+		$orderBy = is_array($parms) && array_key_exists('orderBy', $parms) ? $parms['orderBy'] : 'id DESC';
+
+		try
+		{
+			$records = Word::select()
+				->where('type_flag', WORDTYPE_SNIPPET)
+				->orderByRaw($orderBy)
+				->limit($limit)
+				->get();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting phrases';
+			Event::logException('word', LOG_ACTION_SELECT, 'getSnippets()', null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $records;
+	}
+
+	static public function getSnippet($value, $column = 'id')
+	{
+		$record = null;
+
+		try
+		{
+			$record = Word::select()
+				->where($column, $value)
+				->where('type_flag', WORDTYPE_SNIPPET)
+				->first();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting phrase';
+			Event::logException('word', LOG_ACTION_SELECT, 'getSnippets()', null, $msg . ': ' . $e->getMessage());
+			Tools::flash('danger', $msg);
+		}
+
+		return $record;
+	}
 	static public function getWodIndex($parms = null)
 	{
 		$records = [];

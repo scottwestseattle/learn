@@ -31,6 +31,8 @@ SELECT * FROM `words` WHERE type_flag = 3 AND deleted_flag = 0 ORDER BY last_vie
 Latest DB Changes:
 
 Dec 2020
+ALTER TABLE `words` CHANGE `LANGUAGE_FLAG` `language_flag` TINYINT(4) NULL DEFAULT NULL COMMENT 'see LANGUAGE_* for values';
+ALTER TABLE `words` ADD `LANGUAGE_FLAG` TINYINT NULL COMMENT 'see LANGUAGE_* for values' AFTER `type_flag`;
 ALTER TABLE `definitions` ADD `rank` INT NULL COMMENT 'populariaty ranking' AFTER `wip_flag`;
 ALTER TABLE `definitions` ADD `wotd_at` TIMESTAMP NULL COMMENT 'the date when it was the wotd' AFTER `last_viewed_at`;
 
