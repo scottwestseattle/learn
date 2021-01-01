@@ -254,7 +254,7 @@ class WordController extends Controller
     {
         $msg = null;
         $raw = trim($request->textEdit);
-        $snippet = Tools::alphanum($raw); // trim the trash
+        $snippet = Tools::alphanumHarsh($raw); // trim the trash
         $tag = "Text";
 
 		try

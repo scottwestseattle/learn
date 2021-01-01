@@ -514,9 +514,38 @@ class Tools
 				$match .= $punct;
 
 			$text = preg_replace("/[^" . $match . "]+/", "", trim($text));
-		}
+        }
 
 		return $text;
+	}
+
+/*
+
+Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben und ihre Akzente zu verbessern. Geben Sie hier einen beliebigen Text ein und üben Sie, ihn laut auszusprechen. Verwenden Sie die Schaltfläche "Aufnehmen", um Ihre Stimme aufzunehmen und wiederzugeben. Verwenden Sie die Taste "Roboter", um zu hören, wie es klingen soll.
+
+*/
+	static public function alphanumHarsh($text)
+	{
+	    $debug = false;
+	    //$debug = true;
+	    $clean = null;
+
+		if (isset($text))
+		{
+			// replace all chars except alphanums, some punctuation, accent chars, and whitespace
+            $clean = preg_replace("/[^[:alnum:] '’“”\",.()?¿¡!@;:»«\-\r\n]/u", '', $text);
+
+            if ($debug)
+            {
+                $c1 = strlen($text);
+                $c2 = strlen($clean);
+                dump('text: ' . $c1 . ' / ' . 'clean: ' . $c2);
+                dump('texto: ' . $text);
+                dd('clean: ' . $clean);
+            }
+		}
+
+		return $clean;
 	}
 
 	static public function alpha($text)
@@ -827,9 +856,19 @@ class Tools
 
 	static public function getSpeechLanguageShort($language_flag)
 	{
-	    $rc = self::getSpeechLanguage($language_flag);
+        $languageFlags = [
+            LANGUAGE_DE => 'de',
+            LANGUAGE_EN => 'en',
+            LANGUAGE_ES => 'es',
+            LANGUAGE_FR => 'fr',
+            LANGUAGE_IT => 'it',
+            LANGUAGE_PT => 'pt',
+            LANGUAGE_RU => 'ru',
+            LANGUAGE_ZH => 'zh',
+            //LANGUAGE_ => '',
+        ];
 
-	    return(substr($rc, 0, 2));
+	    return $languageFlags[$language_flag];
     }
 
 	static public function getSpeechLanguage($language_flag)
