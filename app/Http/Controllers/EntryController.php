@@ -151,6 +151,7 @@ class EntryController extends Controller
 			'entryTypes' => Entry::getEntryTypes(),
 			'dates' => Controller::getDateControlDates(),
 			'filter' => Controller::getFilter($request, /* today = */ true),
+			'languageOptions' => Tools::siteUses(ID_FEATURE_RECORD) ? Tools::getLanguageOptions() : null,
 		]);
 
 		return view('entries.add', $vdata);
@@ -173,7 +174,7 @@ class EntryController extends Controller
 		$entry->display_date 		= Controller::getSelectedDate($request);
 		$entry->release_flag 		= RELEASE_PUBLIC;
 		$entry->wip_flag 			= WIP_FINISHED;
-		$entry->language_flag		= Tools::getLanguageFlag();
+		$entry->language_flag		= isset($request->language_flag) ? $request->language_flag : Tools::getLanguageFlag();
 		$entry->type_flag 			= $request->type_flag;
 
 		$entry->permalink			= Tools::trimNull($request->permalink);
@@ -413,6 +414,7 @@ class EntryController extends Controller
 			'dates' => Controller::getDateControlDates(),
 			'filter' => $dates,
 			'index' => $entry->type_flag == ENTRY_TYPE_ARTICLE ? 'articles' : 'books',
+			'languageOptions' => Tools::siteUses(ID_FEATURE_RECORD) ? Tools::getLanguageOptions() : null,
 		]);
 
 		return view('entries.edit', $vdata);
@@ -432,7 +434,7 @@ class EntryController extends Controller
 		$record->source_credit		= Tools::trimNull($request->source_credit);
 		$record->source_link		= Tools::trimNull($request->source_link);
 		$record->display_date 		= Controller::getSelectedDate($request);
-		$record->language_flag		= Tools::getLanguageFlag();
+		$record->language_flag		= isset($request->language_flag) ? $request->language_flag : Tools::getLanguageFlag();
 
 		$record->type_flag 			= intval($request->type_flag);
 		$record->updateBookTag();
@@ -545,8 +547,8 @@ class EntryController extends Controller
     	return view('shared.reader', $this->getViewData([
 			'record' => $record,
 			'readLocation' => (Auth::check() ? $readLocation : null),
-			'speechLanguage' => $record->getSpeechLanguage(),
 			'contentType' => 'Entry',
+			'languageCodes' => Tools::getSpeechLanguage($record->language_flag),
 		]));
     }
 

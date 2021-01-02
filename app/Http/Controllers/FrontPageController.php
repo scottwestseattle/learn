@@ -167,6 +167,7 @@ class FrontPageController extends Controller
         $snippets = null;
         $snippet = null;
         $snippetLanguages = null;
+        $languageCodes = null;
         if ($recorder)
         {
             $view = 'frontpage.index-record';
@@ -181,16 +182,8 @@ class FrontPageController extends Controller
                 $snippet->language_flag = Tools::getLanguageFlagFromLocale();
             }
 
-            $snippetLanguages = [
-                LANGUAGE_EN => 'English',
-                LANGUAGE_ES => 'Spanish',
-                LANGUAGE_ZH => 'Chinese',
-                LANGUAGE_RU => 'Russian',
-                LANGUAGE_FR => 'French',
-                LANGUAGE_IT => 'Italian',
-                LANGUAGE_DE => 'German',
-            ];
-
+            $snippetLanguages = Tools::getLanguageOptions();
+            $languageCodes = Tools::getSpeechLanguage($snippet->language_flag);
         }
 
 		return view($view, $this->getViewData([
@@ -212,6 +205,7 @@ class FrontPageController extends Controller
 			'snippets' => $snippets,
 			'snippet' => $snippet,
 			'snippetLanguages' => $snippetLanguages,
+			'languageCodes' => $languageCodes,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

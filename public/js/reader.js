@@ -92,6 +92,7 @@ function deck() {
 	this.slides = [];   // slides
 	this.speech = null;
 	this.language = "";
+	this.languageLong = "";
 	this.isAdmin = false;
 	this.userId = 0;
 
@@ -301,6 +302,8 @@ function loadData()
 		deck.quizTextDone = container.data('quiztext-done');
 		deck.touchPath = container.data('touchpath');
 		deck.language = container.data('language');			// this is the language that the web site is in
+		deck.languageLong = container.data('language-long');		// long version like: eng-BGR
+		//console.log('languages: ' + deck.language + ", " + deck.languageLong);
 		deck.isAdmin = container.data('isadmin') == '1';
 		deck.userId = parseInt(container.data('userid'), 10);
 
@@ -414,17 +417,26 @@ function resume()
 _readPage = false;
 function readPage(readText = '')
 {
-	window.speechSynthesis.cancel();
-    _readPage = true; // stop after reading the current page
+    window.speechSynthesis.cancel();
 
-    //sbw
-    if (readText.length == 0)
+    if (_readPage)
     {
-    	var slide = deck.slides[curr];
-    	readText = slide.description;
+        // already reading...
+        _readPage = false;
     }
+    else
+    {
+        // start reading...
+        _readPage = true; // stop after reading the current page
 
-	read(readText, 0);
+        if (readText.length == 0)
+        {
+            var slide = deck.slides[curr];
+            readText = slide.description;
+        }
+
+        read(readText, 0);
+    }
 }
 
 function runContinue()
@@ -669,16 +681,40 @@ function loadVoices()
 
 	//tts('ready with ' + _voices.length + ' voices');
 
-	var voiceSelect = document.querySelector('select');
+	var voiceSelect = document.querySelector('#selectVoice');
 	var found = 0;
 
 	if (_voices.length > 0)
 	{
+	    var langCodeSize = 3;
+	    var deckLang = deck.language.substring(0, langCodeSize);
+
+	    // figure out how the voices are formatted, either 'en-US' or 'eng-USA', 'es-ES' or 'spa-ESP'
+	    if (_voices.length > 0 && _voices[0].lang.length > 5)
+	    {
+	        // using 3 letter language and country codes: 'spa-ESP'
+	        langCodeSize = 4; // include the '-'
+    	    deckLang = deck.languageLong.substring(0, langCodeSize);
+	    }
+
+        // quick check to see if there are any matches
+        var showAll = true;
+		for(i = 0; i < _voices.length ; i++)
+		{
+            var lang = _voices[i].lang.substring(0, langCodeSize);
+            if (deckLang == lang)
+            {
+                // if at least one found, bail out
+                showAll = false;
+                break;
+            }
+		}
+
 		for(i = 0; i < _voices.length ; i++)
 		{
 			var option = document.createElement('option');
 			option.textContent = _voices[i].name + ' (' + _voices[i].lang + ')';
-			option.value = i; //_voices[i].lang;
+			option.value = i;
 
 			if(_voices[i].default) {
 			  option.textContent += ' (default)';
@@ -687,35 +723,18 @@ function loadVoices()
 			option.setAttribute('data-lang', _voices[i].lang);
 			option.setAttribute('data-name', _voices[i].name);
 
-			var showOnlyDeckLanguage = true; // change to false for testing languages
-			if (showOnlyDeckLanguage) // normal path
-			{
-				// look for voices which map the language we are looking for and save the first one
-				if (deck.language.startsWith("es") && (_voices[i].lang.startsWith("es") || _voices[i].lang.startsWith("spa")))
-				{
-					if (found == 0)
-					{
-						found++;
-					}
+            var lang = _voices[i].lang.substring(0, langCodeSize);
+            //console.log('looking for: ' + deckLang + ', voice: ' + lang);
 
-					voiceSelect.appendChild(option);
-				}
-				else if (deck.language.startsWith("en") && _voices[i].lang.startsWith("en"))
-				{
-					if (found == 0)
-					{
-						found++;
-					}
+            if (showAll || deckLang == lang)
+            {
+                if (found == 0)
+                {
+                    found++;
+                }
 
-					voiceSelect.appendChild(option);
-				}
-			}
-			else
-			{
-				// load all languages for testing
-				found++;
-				voiceSelect.appendChild(option);
-			}
+                voiceSelect.appendChild(option);
+            }
 		}
 	}
 	else
@@ -762,10 +781,10 @@ function setSelectedVoice(voiceSelect)
 
 function changeVoice()
 {
-	var index = $("select")[0].selectedIndex;
+	var index = $("#selectVoice")[0].selectedIndex;
 	saveSelectedVoice(index);
 
-	var voice = $("select").children("option:selected").val();
+	var voice = $("#selectVoice").children("option:selected").val();
 	deck.voice = _voices[voice];
 	if (_utter != null)
 	{

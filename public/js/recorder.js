@@ -136,7 +136,7 @@ function startRecording()
 
 function runRecord()
 {
-    console.log('runRecord...');
+    //console.log('runRecord...');
 
     if (_mediaRecorder.state == "inactive")
     {
@@ -148,8 +148,8 @@ function runRecord()
 
         try {
             _mediaRecorder.start();
-            console.log(_mediaRecorder.state);
-            console.log("recordering...");
+            //console.log(_mediaRecorder.state);
+            //console.log("recordering...");
             record.style.background = "red";
             record.textContent = "Stop";
         }
@@ -163,8 +163,8 @@ function runRecord()
     {
         try {
             _mediaRecorder.stop();
-            console.log(_mediaRecorder.state);
-            console.log("recorder started");
+            //console.log(_mediaRecorder.state);
+            //console.log("recorder started");
             record.style.background = "#0088cc";
             record.textContent = "Record";
         }
@@ -241,20 +241,16 @@ function loadRecorder()
 {
     console.log('loading recorder...');
     record = document.querySelector('.record');
-    //stop = document.querySelector('.stop');
+    play = document.querySelector('.play');
     soundClips = document.querySelector('.sound-clips');
     canvas = document.querySelector('.visualizer');
     mainSection = document.querySelector('.main-controls');
 
     canvasCtx = canvas.getContext("2d");
 
-    // disable stop button while not recording
-    //stop.disabled = true;
+    // disable play button while not recording
+    //play.disabled = true;
 
     // size our window
     window.onresize();
-
-    //record.onclick = function() {
-    //    //navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
-    //    }
 }

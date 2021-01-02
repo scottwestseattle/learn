@@ -9,7 +9,8 @@
 	data-count="{{count($record['lines'])}}"
 	data-touchpath="{{(isset($touchPath) ? $touchPath : '')}}"
 	data-max="{{count($record['lines'])}}"
-	data-language="{{$speechLanguage}}"
+	data-language="{{$languageCodes['short']}}"
+	data-language-long="{{$languageCodes['long']}}"
 	data-type="{{$record->type_flag}}"
 	data-contenttype="{{$contentType}}"
 	data-contentid="{{$record->id}}"
@@ -126,7 +127,7 @@
 			<div class="mb-5">
                 <div><span class="small-thin-text" id="language"></span></div>
                 <div id="languages" class="mt-1" style="display:default; font-size:10px;">
-                    <select onchange="changeVoice();" name="select" id="select"></select>
+                    <select onchange="changeVoice();" name="selectVoice" id="selectVoice"></select>
                 </div>
 			</div>
 

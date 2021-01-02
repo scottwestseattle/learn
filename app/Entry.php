@@ -222,7 +222,7 @@ class Entry extends Base
 	//
     public function getSpeechLanguage()
     {
-    	return Tools::getSpeechLanguage($this->language_flag);
+    	return Tools::getSpeechLanguage($this->language_flag)['short'];
     }
 
     protected function countView(Entry $entry)

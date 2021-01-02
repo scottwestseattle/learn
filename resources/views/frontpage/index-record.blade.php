@@ -9,7 +9,8 @@
 	data-count="1"
 	data-touchpath=""
 	data-max="1"
-	data-language={{App\Tools::getSpeechLanguage($snippet->language_flag)}}
+	data-language={{$languageCodes['short']}}
+	data-language-long={{$languageCodes['long']}}
 	data-type="1"
 	data-contenttype="frontpage"
 	data-contentid="1"
@@ -18,19 +19,19 @@
 	data-readlocation=0
 ></div>
 
-	<!-------------------------------------------------------->
-	<!-- Add the body lines to read -->
-	<!-------------------------------------------------------->
-	<div class="data-slides"
-	    data-title="No title"
-	    data-number="1"
-	    data-description="No text to read"
-	    data-id="0"
-	    data-seconds="10"
-	    data-between="2"
-	    data-countdown="1"
-	>
-	</div>
+<!-------------------------------------------------------->
+<!-- Add the body lines to read -->
+<!-------------------------------------------------------->
+<div class="data-slides"
+    data-title="No title"
+    data-number="1"
+    data-description="No text to read"
+    data-id="0"
+    data-seconds="10"
+    data-between="2"
+    data-countdown="1"
+>
+</div>
 
 <!--------------------------------------------------------------------------------------->
 <!--------------------------------------------------------------------------------------->
@@ -51,10 +52,10 @@
 <!--------------------------------------------------------------------------------------->
 <!-- The record form -->
 <!--------------------------------------------------------------------------------------->
-<div class="text-center mt-4" style="xmin-height: 300px; padding:10 5 5 5;">
+<div class="text-center mt-4 p-1" style="">
 
 	<form method="POST" action="/words/create-snippet">
-        <h3 class="mt-2">Speak Clearer</h3>
+        <h3 class="mt-0 pt-0">Speak Clearer</h3>
 		<div class="">
 		    <div style="xmin-height: 300px; ">
             <textarea
@@ -62,17 +63,19 @@
                 name="textEdit"
                 class="form-control"
                 placeholder="Enter or paste practice text here"
-                rows="5"
+                rows="7"
             >{{$snippet->description}}</textarea>
             </div>
+
+            @if (false)
             <div id="textShow" style="display:none; xmin-height: 200px; font-size:1.5em;">
                 Show text here.
-
                 <div id="languages" class="mt-1" style="display:default; font-size:10px;">
                     <select onchange="changeVoice();" name="select" id="select"></select>
                 </div>
-
             </div>
+            @endif
+
         </div>
         <div>
         @component('components.control-dropdown-language', [
@@ -82,11 +85,13 @@
 			'field_name' => 'language_flag',
 			'select_class' => 'mt-1 mr-2',
 		])@endcomponent
+            <select onchange="changeVoice();" name="selectVoice" id="selectVoice"></select>
             <button type="submit" class="btn btn-primary btn-xs">Save</button>
-            <a href="" onclick="event.preventDefault(); $('#textEdit').val(''); $('#textEdit').focus();" class="ml-2">Clear<a/>
-            <a href="" onclick="event.preventDefault(); copySnippet(event)" class="ml-2">Copy<a/>
-            <a href="" onclick="pasteSnippet(event)" class="ml-2">Paste<a/>
+            <a href="" onclick="event.preventDefault(); $('#textEdit').val(''); $('#textEdit').focus();" class="ml-1">Clear<a/>
+            <!-- a href="" onclick="event.preventDefault(); copySnippet(event)" class="ml-2">Copy<a/>
+            <a href="" onclick="pasteSnippet(event)" class="ml-2">Paste<a/ -->
         </div>
+
 		{{csrf_field()}}
     </form>
 
@@ -94,7 +99,7 @@
         <canvas class="visualizer" height="60px"></canvas>
         <div id="buttons">
             <button id="buttonRecord" class="record" onclick="event.preventDefault(); startRecording()">Record</button>
-            <button id="buttonPlayback" class="playback" onclick="event.preventDefault(); playRecording()">Play</button>
+            <button id="buttonPlay" class="play" onclick="event.preventDefault(); playRecording()">Play</button>
             <button id="buttonRead" class="" onClick="event.preventDefault(); readPage($('#textEdit').val())">Robot</button>
         </div>
     </section>
@@ -103,7 +108,6 @@
     </section>
 
 </div>
-
 
 <!--------------------------------------------------------------------------------------->
 <!-- SNIPPETS -->
@@ -117,13 +121,6 @@
             @foreach($snippets as $record)
 
             <tr class="drop-box-ghost-small" style="vertical-align:middle;">
-                <td class="text-center" style="width:30px; font-size: 14px; padding:5px; margin-bottom:10px;" >
-                    <div style="margin:0; padding:0; line-height:100%;">
-                        <div style="font-family:impact; font-size:1.7em; margin:10px 0 10px 0;">
-                            <img width="30" src="/img/flags/{{App\Tools::getSpeechLanguageShort($record->language_flag)}}.png" />
-                        </div>
-                    </div>
-                </td>
                 <td style="color:default; text-align:left; padding:5px 10px;">
                     <table>
                     <tbody>
@@ -132,24 +129,28 @@
                                 <a href="/{{$record->id}}">{{App\Tools::trunc($record->description, 200)}}</a>
                             </td>
                         </tr>
-                        <tr><td style="font-size:.8em; font-weight:100;">
-                            <div style="float:left;">
-                                <div style="margin-right:15px; margin-bottom:5px; float:left;"><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
+                        <tr>
+                            <td style="font-size:.8em; font-weight:100;">
+                                <div class="float-left mr-3">
+                                    <img width="25" src="/img/flags/{{App\Tools::getSpeechLanguageShort($record->language_flag)}}.png" />
+                                </div>
+                                <div class="float-left" style="margin-top:2px;">
+                                    <div class=""><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
 
-                                @if (false && App\User::isAdmin())
-                                    <div style="margin-right:15px; float:left;">
-                                        @component('components.control-button-publish', ['record' => $record, 'btnStyle' => 'btn-xxs', 'prefix' => 'entries', 'showPublic' => true])@endcomponent
-                                    </div>
-                                @endif
-
-                            </div>
-                            <div style="float:left;">
-                                @if (App\User::isAdmin())
-                                <div style="margin-right:5px; float:left;"><a href='/words/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
-                                <div style="margin-right:0px; float:left;"><a href='/words/delete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
-                                @endif
-                            </div>
-                        </td></tr>
+                                    @if (false && App\User::isAdmin())
+                                        <div style="margin-right:15px; float:left;">
+                                            @component('components.control-button-publish', ['record' => $record, 'btnStyle' => 'btn-xxs', 'prefix' => 'entries', 'showPublic' => true])@endcomponent
+                                        </div>
+                                    @endif
+                                </div>
+                                <div style="float:left;">
+                                    @if (App\User::isAdmin())
+                                    <div style="margin-right:5px; float:left;"><a href='/words/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
+                                    <div style="margin-right:0px; float:left;"><a href='/words/delete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                     </table>
                 </td>
@@ -176,35 +177,34 @@
             @foreach($articles as $record)
 
             <tr class="drop-box-ghost-small" style="vertical-align:middle;">
-                <td class="text-center" style="width:30px; font-size: 14px; padding:5px; color: white; background-color: #74b567; margin-bottom:10px;" >
-                    <div style="margin:0; padding:0; line-height:100%;">
-                        <div style="font-family:impact; font-size:1.7em; margin:10px 0 10px 0;">{{++$count}}</div>
-                    </div>
-                </td>
                 <td style="color:default; text-align:left; padding:5px 10px;">
                     <table>
                     <tbody>
                         <tr><td style="padding-bottom:5px; font-size: 14px; font-weight:normal;"><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
-                        <tr><td style="font-size:.8em; font-weight:100;">
-                            <div style="float:left;">
-                                @component('components.icon-read', ['href' => "/entries/read/$record->id"])@endcomponent
-                                <div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
-                                <div style="margin-right:15px; margin-bottom:5px; float:left;"><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
+                        <tr>
+                            <td style="font-size:.8em; font-weight:100;">
+                                <div class="float-left mr-3">
+                                    <img width="25" src="/img/flags/{{App\Tools::getSpeechLanguageShort($record->language_flag)}}.png" />
+                                </div>
+                                <div style="float:left;">
+                                    @component('components.icon-read', ['href' => "/entries/read/$record->id"])@endcomponent
+                                    <div style="margin-right:15px; float:left;">{{$record->view_count}} @LANG('content.views')</div>
+                                    <div style="margin-right:15px; margin-bottom:5px; float:left;"><a href="/entries/stats/{{$record->id}}">{{str_word_count($record->description)}} @LANG('content.words')</a></div>
 
-                                @if (App\User::isAdmin())
-                                    <div style="margin-right:15px; float:left;">
-                                        @component('components.control-button-publish', ['record' => $record, 'btnStyle' => 'btn-xxs', 'prefix' => 'entries', 'showPublic' => true])@endcomponent
-                                    </div>
-                                @endif
-
-                            </div>
-                            <div style="float:left;">
-                                @if (App\User::isAdmin())
-                                <div style="margin-right:5px; float:left;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
-                                <div style="margin-right:0px; float:left;"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
-                                @endif
-                            </div>
-                        </td></tr>
+                                    @if (App\User::isAdmin())
+                                        <div style="margin-right:15px; float:left;">
+                                            @component('components.control-button-publish', ['record' => $record, 'btnStyle' => 'btn-xxs', 'prefix' => 'entries', 'showPublic' => true])@endcomponent
+                                        </div>
+                                    @endif
+                                </div>
+                                <div style="float:left;">
+                                    @if (App\User::isAdmin())
+                                    <div style="margin-right:5px; float:left;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-edit"></span></a></div>
+                                    <div style="margin-right:0px; float:left;"><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphCustom-lt glyphicon glyphicon-trash"></span></a></div>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                     </table>
                 </td>

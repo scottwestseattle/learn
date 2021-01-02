@@ -854,33 +854,66 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 		return self::$_sites;
 	}
 
-	static public function getSpeechLanguageShort($language_flag)
+	static public function getSpeechLanguageShort($id)
+	{
+        $rc = self::getSpeechLanguage($id);
+
+	    return substr($rc['short'], 0, 2);
+    }
+
+	static public function getLanguageOptions()
+	{
+        return [
+            LANGUAGE_EN => 'English',
+            LANGUAGE_ES => 'Spanish',
+            LANGUAGE_ZH => 'Chinese',
+            LANGUAGE_RU => 'Russian',
+            LANGUAGE_FR => 'French',
+            LANGUAGE_IT => 'Italian',
+            LANGUAGE_DE => 'German',
+        ];
+    }
+
+	static public function getSpeechLanguage($id)
 	{
         $languageFlags = [
-            LANGUAGE_DE => 'de',
-            LANGUAGE_EN => 'en',
-            LANGUAGE_ES => 'es',
-            LANGUAGE_FR => 'fr',
-            LANGUAGE_IT => 'it',
-            LANGUAGE_PT => 'pt',
-            LANGUAGE_RU => 'ru',
-            LANGUAGE_ZH => 'zh',
+            LANGUAGE_DE => 'de-DE',
+            LANGUAGE_EN => 'en-EN',
+            LANGUAGE_ES => 'es-ES',
+            LANGUAGE_FR => 'fr-FR',
+            LANGUAGE_IT => 'it-IT',
+            LANGUAGE_PT => 'pt-PT',
+            LANGUAGE_RU => 'ru-RU',
+            LANGUAGE_ZH => 'zh-ZH',
             //LANGUAGE_ => '',
         ];
 
-	    return $languageFlags[$language_flag];
-    }
+        $languageFlagsAlt = [
+            LANGUAGE_DE => 'ger-GER',
+            LANGUAGE_EN => 'eng-GBR',
+            LANGUAGE_ES => 'spa-ESP',
+            LANGUAGE_FR => 'fra-FRA',
+            LANGUAGE_IT => 'ita-ITA',
+            LANGUAGE_PT => 'por-POR',
+            LANGUAGE_RU => 'rus-RUS',
+            LANGUAGE_ZH => 'chi-CHI',
+            //LANGUAGE_ => '',
+        ];
 
-	static public function getSpeechLanguage($language_flag)
-	{
-		if ($language_flag == LANGUAGE_EN)
-			return 'en-EN';
-		else if ($language_flag == LANGUAGE_ES)
-			return 'es-ES';
-		else if ($language_flag == LANGUAGE_ZH)
-			return 'zh-ZH';
-		else
-			return 'en-EN';
+        $rc['short'] = 'en-EN';
+        $rc['long'] = 'eng-GBR';
+
+        if (array_key_exists($id, $languageFlags))
+        {
+            $rc['short'] = $languageFlags[$id];
+        }
+
+        if (array_key_exists($id, $languageFlagsAlt))
+        {
+            $rc['long'] = $languageFlagsAlt[$id];
+        }
+
+	    return $rc;
 	}
 
 	static public function getLanguageFlagFromLocale()
