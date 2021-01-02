@@ -534,6 +534,7 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 		{
 			// replace all chars except alphanums, some punctuation, accent chars, and whitespace
             $clean = preg_replace("/[^[:alnum:] '’“”\",.()?¿¡!@;:»«\-\r\n]/u", '', $text);
+            $chino = '\。\，';
 
             if ($debug)
             {
@@ -871,6 +872,7 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
             LANGUAGE_FR => 'French',
             LANGUAGE_IT => 'Italian',
             LANGUAGE_DE => 'German',
+            LANGUAGE_KO => 'Korean',
         ];
     }
 
@@ -885,6 +887,7 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
             LANGUAGE_PT => 'pt-PT',
             LANGUAGE_RU => 'ru-RU',
             LANGUAGE_ZH => 'zh-ZH',
+            LANGUAGE_KO => 'ko-KO',
             //LANGUAGE_ => '',
         ];
 
@@ -897,6 +900,7 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
             LANGUAGE_PT => 'por-POR',
             LANGUAGE_RU => 'rus-RUS',
             LANGUAGE_ZH => 'chi-CHI',
+            LANGUAGE_KO => 'kor-KOR',
             //LANGUAGE_ => '',
         ];
 

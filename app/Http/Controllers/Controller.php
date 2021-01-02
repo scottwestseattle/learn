@@ -144,6 +144,7 @@ define('LANGUAGE_DE', 4);
 define('LANGUAGE_PT', 5);
 define('LANGUAGE_RU', 6);
 define('LANGUAGE_ZH', 7);
+define('LANGUAGE_KO', 8);
 
 // Tags
 define('TAG_RECENT', 'recent');

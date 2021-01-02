@@ -88,8 +88,8 @@
             <select onchange="changeVoice();" name="selectVoice" id="selectVoice"></select>
             <button type="submit" class="btn btn-primary btn-xs">Save</button>
             <a href="" onclick="event.preventDefault(); $('#textEdit').val(''); $('#textEdit').focus();" class="ml-1">Clear<a/>
-            <!-- a href="" onclick="event.preventDefault(); copySnippet(event)" class="ml-2">Copy<a/>
-            <a href="" onclick="pasteSnippet(event)" class="ml-2">Paste<a/ -->
+            <a href="" onclick="copySnippet(event)" class="ml-2">Copy<a/>
+            <!-- a href="" onclick="pasteSnippet(event)" class="ml-2">Paste<a/ -->
         </div>
 
 		{{csrf_field()}}
@@ -272,14 +272,39 @@ function saveSnippet(event)
 function copySnippet(event)
 {
     event.preventDefault();
+
+    var txtarea = document.getElementById('textEdit');
+    var start = txtarea.selectionStart;
+    var finish = txtarea.selectionEnd;
+    if (start != finish) // doesn't work
+    {
+        // already selected, use the current selection
+        //console.log(start);
+        //console.log(finish);
+        txtarea.select(); // just select it all for now
+    }
+    else
+    {
+        txtarea.select();
+    }
+
+    // copy the selection
+    var succeed;
+    try {
+        succeed = document.execCommand("copy");
+        //console.log('text copied: ' + succeed);
+    } catch(e) {
+        succeed = false;
+		//console.log('error copying text');
+	}
 }
 
 function pasteSnippet(event)
 {
     event.preventDefault();
 
-    $('#textEdit').val('');
     $('#textEdit').focus();
+    document.execCommand("paste");
 }
 
 function toggleTextView()
