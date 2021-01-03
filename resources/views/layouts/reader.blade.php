@@ -22,8 +22,9 @@ $siteTitleLite = isset($siteTitleLite) ? $siteTitleLite : App\Tools::getSiteTitl
 	<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
 	@endif
 
-    <script src="{{ asset('js/project.js') }}"></script>
-	<script src="{{ asset('js/reader.js') }}"></script>
+    <script src="{{ asset('/js/project.js') }}"></script>
+    <script src="{{ asset('/js/recorder.js') }}"></script>
+	<script src="{{ asset('/js/reader.js') }}"></script>
 
 	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet">

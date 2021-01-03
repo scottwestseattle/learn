@@ -636,6 +636,7 @@ class Word extends Model
                 ->join('vocab_lists', 'vocab_lists.id', '=', 'words.vocab_list_id')
                 ->select('words.*')
                 ->where('vocab_lists.type_flag', VOCABLISTTYPE_POTD)
+                ->whereNull('words.deleted_at')
                 ->orderByRaw('id DESC')
                 ->get();
 		}
@@ -669,6 +670,7 @@ class Word extends Model
                 ->join('vocab_lists', 'vocab_lists.id', '=', 'words.vocab_list_id')
                 ->select('words.*')
                 ->where('vocab_lists.type_flag', VOCABLISTTYPE_WOTD)
+                ->whereNull('words.deleted_at')
                 ->orderByRaw('id DESC')
                 ->get();
 		}

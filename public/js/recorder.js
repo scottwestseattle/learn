@@ -67,7 +67,11 @@ if (navigator.mediaDevices.getUserMedia) {
       soundClips.appendChild(clipContainer);
 
       audio.controls = true;
+      console.log('chunks: ' + chunks.length);
+
       const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+      console.log('blob created: ' + blob);
+
       chunks = [];
       const audioURL = window.URL.createObjectURL(blob);
       audio.src = audioURL;
@@ -76,6 +80,7 @@ if (navigator.mediaDevices.getUserMedia) {
       deleteButton.onclick = function(e) {
         let evtTgt = e.target;
         evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
+        _audio = null;
       }
 
       clipLabel.onclick = function() {
@@ -88,7 +93,10 @@ if (navigator.mediaDevices.getUserMedia) {
         }
       }
 
-      audio.play();
+      audio.play().catch(function (error) {
+        console.log('audio play error: ' + error.message);
+      })
+
       _audio = audio;
     }
 
@@ -156,7 +164,7 @@ function runRecord()
         catch(e)
         {
             console.log(_mediaRecorder.state);
-            console.log(e)
+            console.log('record start error: ' + e)
         }
     }
     else
@@ -253,4 +261,12 @@ function loadRecorder()
 
     // size our window
     window.onresize();
+}
+
+function playRecording()
+{
+    if (_audio != null)
+        _audio.play().catch(function (error) {
+        console.log('audio play from big button error: ' + error.message);
+      })
 }

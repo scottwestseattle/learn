@@ -341,10 +341,4 @@ function setShow()
     $('#textShow').show();
 }
 
-function playRecording()
-{
-    if (_audio != null)
-        _audio.play();
-}
-
 </script>

@@ -167,5 +167,3 @@
 
 @endsection
 
-<script src="/js/recorder.js"></script>
-
