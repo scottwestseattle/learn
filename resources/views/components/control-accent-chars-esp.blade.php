@@ -1,7 +1,7 @@
 <?php
 	$id = isset($target) ? $target : 0;
 	$tinymce = isset($tinymce);
-	$flat = isset($flat);
+	$flat = isset($flat) && $flat;
 	$hidden = $tinymce ? '' : 'hidden';
 ?>
 
@@ -31,8 +31,8 @@
 @else
 
 <div class="data-accent-chars ml-2">
-	<div id="accent-chars-esp" class="dropdown">
-		<span class="dropdown-trigger">Ñ</span>
+	<div id="accent-chars" class="dropdown">
+		<button id="dropdown-trigger-button" onclick="event.preventDefault();">ñ</button>
 		<div class="dropdown-content accent-buttons">
 			<button onclick="event.preventDefault(); insertChar('á', '{{$id}}', '{{$tinymce}}')">á</button>
 			<button onclick="event.preventDefault(); insertChar('é', '{{$id}}', '{{$tinymce}}')">é</button>

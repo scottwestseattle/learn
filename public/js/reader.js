@@ -423,6 +423,8 @@ function readPage(readText = '')
     {
         // already reading...
         _readPage = false;
+        $("#pause").hide();
+        $("#readPage").show();
     }
     else
     {
@@ -436,6 +438,9 @@ function readPage(readText = '')
         }
 
         read(readText, 0);
+
+        $("#pause").show();
+        $("#readPage").hide();
     }
 }
 
@@ -476,8 +481,10 @@ function pause()
 {
 	_paused = true;
 	window.speechSynthesis.cancel();
+
 	$("#pause").hide();
-	$("#resume").show();
+    $("#resume").show();
+    $("#readPage").show();
 }
 
 function mute()
@@ -538,6 +545,9 @@ function read(text, charIndex)
 		    // clear the word highlight
 			$("#slideDescription span").removeClass("highlight-word");
     		_readPage = false; // finished reading page
+
+            $("#pause").hide();
+            $("#readPage").show();
 		}
 
 		_cancelled = false;

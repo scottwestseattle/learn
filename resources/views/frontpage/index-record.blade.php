@@ -99,11 +99,11 @@
     </form>
 
     <section class="main-controls">
-        <canvas class="visualizer" height="60px"></canvas>
+        <canvas id="feedback" class="visualizer" height="40px"></canvas>
         <div id="buttons">
-            <button id="buttonRecord" class="record" onclick="event.preventDefault(); startRecording()">Record</button>
-            <button id="buttonPlay" class="play" onclick="event.preventDefault(); playRecording()">Play</button>
-            <button id="buttonRead" class="" onClick="event.preventDefault(); readPage($('#textEdit').val())">Robot</button>
+            <button id="buttonRecord" onclick="event.preventDefault(); startRecording()">Record</button>
+            <button id="buttonPlay" onclick="event.preventDefault(); playRecording()">Play</button>
+            <button id="buttonRead" onClick="event.preventDefault(); readPage($('#textEdit').val())">Robot</button>
         </div>
     </section>
 

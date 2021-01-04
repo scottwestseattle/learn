@@ -11,7 +11,7 @@
 	<form method="POST" action="/entries/create">
 		<div class="form-control-big">
 
-			@component('components.control-accent-chars-esp', ['visible' => true, 'flat' => true])@endcomponent
+			@component('components.control-accent-chars-esp', ['visible' => true, 'flat' => false])@endcomponent
 
 			@if (isset($type_flag))
 				<input type="hidden" name="type_flag" value="{{$type_flag}}">

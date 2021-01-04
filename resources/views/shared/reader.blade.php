@@ -140,13 +140,14 @@
 	</div>
 
     <section class="main-controls">
-        <canvas class="visualizer" height="60px"></canvas>
+        <canvas id="feedback" class="visualizer" height="40px"></canvas>
+        @if (false)
         <div id="buttons">
             <button id="buttonRecord" class="record" onclick="startRecording()">Record</button>
             <button id="buttonPlayback" class="playback" onclick="playRecording()">Play</button>
             <button id="buttonRead" class="" onClick="readPage()">Robot</button>
-
         </div>
+        @endif
     </section>
 
     <section class="sound-clips">
@@ -157,8 +158,10 @@
 	<!--------------------------------------------------------------->
 	<div id="bottom-panel" class="btn-panel-bottom m-0 pb-1">
 		<div class="glyphReaderMove mr-4"><a onclick="event.preventDefault(); prev()" href=""><span class="glyphicon glyphicon-backward"></span></a></div>
-		<div id="pause"  class="glyphReaderPlay mr-4 mb-1"><a onclick="event.preventDefault(); pause()" href=""><span class="glyphicon glyphicon-pause"></span></a></div>
-		<div id="resume" class="glyphReaderPlay mr-4"><a onclick="event.preventDefault(); resume()" href=""><span class="glyphicon glyphcircle glyphicon-play"></span></a></div>
+		<div id="buttonRecordGlyph" class="glyphReaderPlay mr-3"><a onclick="event.preventDefault(); startRecording()" href=""><span class="glyphicon glyphicon-record"></span></a></div>
+		<div id="resume" class="glyphReaderPlay mr-3"><a onclick="event.preventDefault(); resume()" href=""><span class="glyphicon glyphcircle glyphicon-play"></span></a></div>
+		<div id="pause"  class="glyphReaderPlay mr-3 mb-1"><a onclick="event.preventDefault(); pause()" href=""><span class="glyphicon glyphicon-pause"></span></a></div>
+		<div id="readPage" class="glyphReaderPlay mr-3"><a onclick="event.preventDefault(); readPage()" href=""><span class="glyphicon glyphicon-play-circle"></span></a></div>
 		<div class="glyphReaderMove"><a onclick="event.preventDefault(); next()" href=""><span class="glyphicon glyphicon-forward"></span></a></div>
 	</div>
 

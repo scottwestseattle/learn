@@ -132,8 +132,7 @@ function startRecording()
 
     if (_mediaRecorder == null)
     {
-        record.style.background = "orange";
-        record.textContent = "Waiting...";
+        setRecordButton("Waiting...", "orange", "orange", /* recording = */ true);
         startMediaRecorder();
     }
     else
@@ -158,8 +157,7 @@ function runRecord()
             _mediaRecorder.start();
             //console.log(_mediaRecorder.state);
             //console.log("recordering...");
-            record.style.background = "red";
-            record.textContent = "Stop";
+            setRecordButton("Stop", "red", "red", /* recording = */ true);
         }
         catch(e)
         {
@@ -173,8 +171,7 @@ function runRecord()
             _mediaRecorder.stop();
             //console.log(_mediaRecorder.state);
             //console.log("recorder started");
-            record.style.background = "#0088cc";
-            record.textContent = "Record";
+            setRecordButton("Record", "#0088cc", "#4993FD", /* recording = */ false);
         }
         catch(e)
         {
@@ -183,6 +180,29 @@ function runRecord()
         }
     }
 }
+
+function setRecordButton(text, color, colorGlyph, recording = false)
+{
+    if (record)
+    {
+        record.style.background = color;
+        record.textContent = "Record";
+    }
+    else
+    {
+        $('#buttonRecordGlyph a').css("color", colorGlyph != null ? colorGlyph : color);
+    }
+
+    if (recording)
+    {
+        $('#feedback').show();
+    }
+    else
+    {
+        $('#feedback').hide();
+    }
+}
+
 
 function visualize(stream) {
   if(!audioCtx) {
@@ -209,11 +229,13 @@ function visualize(stream) {
 
     analyser.getByteTimeDomainData(dataArray);
 
-    canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+    canvasCtx.fillStyle = 'rgb(255, 255, 255)'; // white
+    //canvasCtx.fillStyle = 'rgb(200, 200, 200)'; // orig gray
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
     canvasCtx.lineWidth = 2;
-    canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
+    canvasCtx.strokeStyle = 'red';
+    //canvasCtx.strokeStyle = 'rgb(0, 0, 0)'; // orig black
 
     canvasCtx.beginPath();
 
@@ -247,13 +269,17 @@ window.onresize = function() {
 
 function loadRecorder()
 {
-    console.log('loading recorder...');
-    record = document.querySelector('.record');
-    play = document.querySelector('.play');
+    //console.log('loading recorder...');
+
+    // record and play are optional
+    record = document.querySelector('#buttonRecord');
+    play = document.querySelector('#buttonPlay');
+
     soundClips = document.querySelector('.sound-clips');
-    canvas = document.querySelector('.visualizer');
     mainSection = document.querySelector('.main-controls');
 
+    // the feedback canvas widget
+    canvas = document.querySelector('.visualizer');
     canvasCtx = canvas.getContext("2d");
 
     // disable play button while not recording
