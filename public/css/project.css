@@ -361,10 +361,14 @@ h1,h3 {
 }
 
 .dropdown-content a {
-    color: black;
+    color: white;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
+}
+
+.dropdown a {
+    xcolor: white;
 }
 
 .dropdown:hover .dropdown-content {
@@ -378,12 +382,13 @@ h1,h3 {
 .dropdown-trigger {
 	color: #286090;
 	font-weight: bold;
+	font-size: 12px;
 }
 
 .dropdown-content button, .flat-content button {
 	padding: 0 3px;
 	width:25px;
-	color: #286090;
+	color: white;
 	border: 0;
 	background: "#efefef";
 	box-shadow: none;

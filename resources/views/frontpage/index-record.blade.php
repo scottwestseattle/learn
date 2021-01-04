@@ -90,6 +90,9 @@
             <a href="" onclick="event.preventDefault(); $('#textEdit').val(''); $('#textEdit').focus();" class="ml-1">Clear<a/>
             <a href="" onclick="copySnippet(event)" class="ml-2">Copy<a/>
             <!-- a href="" onclick="pasteSnippet(event)" class="ml-2">Paste<a/ -->
+
+	    @component('components.control-accent-chars-esp', ['visible' => true, 'target' => 'textEdit'])@endcomponent
+
         </div>
 
 		{{csrf_field()}}

@@ -1,12 +1,12 @@
-<?php 
-	$id = isset($target) ? $target : 0; 
+<?php
+	$id = isset($target) ? $target : 0;
 	$tinymce = isset($tinymce);
 	$flat = isset($flat);
 	$hidden = $tinymce ? '' : 'hidden';
 ?>
 
 @if ($flat)
-	
+
 	<div id="accent-chars" style="clear:both;" class="data-accent-chars flat-content mb-1 {{$hidden}}">
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('á', '{{$id}}', '{{$tinymce}}')">á</button>
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('é', '{{$id}}', '{{$tinymce}}')">é</button>
@@ -18,19 +18,19 @@
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('Á', '{{$id}}', '{{$tinymce}}')">Á</button>
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('É', '{{$id}}', '{{$tinymce}}')">É</button>
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('Í', '{{$id}}', '{{$tinymce}}')">Í</button>
-		<button tabindex="-1" onclick="event.preventDefault(); insertChar('Ñ', '{{$id}}', '{{$tinymce}}')">Ñ</button>	
+		<button tabindex="-1" onclick="event.preventDefault(); insertChar('Ñ', '{{$id}}', '{{$tinymce}}')">Ñ</button>
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('Ó', '{{$id}}', '{{$tinymce}}')">Ó</button>
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('Ú', '{{$id}}', '{{$tinymce}}')">Ú</button>
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('Ü', '{{$id}}', '{{$tinymce}}')">Ü</button>
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('¿', '{{$id}}', '{{$tinymce}}')">¿</button>
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('¡', '{{$id}}', '{{$tinymce}}')">¡</button>
-		<button tabindex="-1" onclick="event.preventDefault(); insertChar('&rarr;', '{{$id}}', '{{$tinymce}}')">&rarr;</button>	
-		
-	</div>	
-	
+		<button tabindex="-1" onclick="event.preventDefault(); insertChar('&rarr;', '{{$id}}', '{{$tinymce}}')">&rarr;</button>
+
+	</div>
+
 @else
-	
-<div class="data-accent-chars">
+
+<div class="data-accent-chars ml-2">
 	<div id="accent-chars-esp" class="dropdown">
 		<span class="dropdown-trigger">Ñ</span>
 		<div class="dropdown-content accent-buttons">
@@ -47,9 +47,9 @@
 			<button onclick="event.preventDefault(); insertChar('Ó', '{{$id}}', '{{$tinymce}}')">Ó</button>
 			<button onclick="event.preventDefault(); insertChar('Ú', '{{$id}}', '{{$tinymce}}')">Ú</button>
 			<button onclick="event.preventDefault(); insertChar('Ü', '{{$id}}', '{{$tinymce}}')">Ü</button>
-			<button onclick="event.preventDefault(); insertChar('Ñ', '{{$id}}', '{{$tinymce}}')">Ñ</button>		
-			<button onclick="event.preventDefault(); insertChar('¿', '{{$id}}', '{{$tinymce}}')">¿</button>	
-			<button onclick="event.preventDefault(); insertChar('¡', '{{$id}}', '{{$tinymce}}')">¡</button>	
+			<button onclick="event.preventDefault(); insertChar('Ñ', '{{$id}}', '{{$tinymce}}')">Ñ</button>
+			<button onclick="event.preventDefault(); insertChar('¿', '{{$id}}', '{{$tinymce}}')">¿</button>
+			<button onclick="event.preventDefault(); insertChar('¡', '{{$id}}', '{{$tinymce}}')">¡</button>
 		</div>
 	</div>
 </div>
