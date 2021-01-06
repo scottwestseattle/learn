@@ -385,7 +385,7 @@ h1,h3 {
     padding: 3px 5px;
     border-radius: 2px;
 	border: 0;
-	background: "#efefef";
+	background: #0088cc;
 	box-shadow: none;
 }
 
@@ -393,7 +393,6 @@ h1,h3 {
 	padding: 0 3px;
 	width:25px;
 	border: 0;
-	background-color: #0088cc;
 	box-shadow: none;
 	border-radius: 3px;
 	margin:3px;
@@ -401,10 +400,12 @@ h1,h3 {
 
 .dropdown-content button {
 	color: white;
+	background: #0088cc;
 }
 
 .flat-content button {
-	color: "#286090";
+	color: #0088cc;
+	background: #efefef;
 }
 
 

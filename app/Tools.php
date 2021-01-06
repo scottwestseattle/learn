@@ -44,7 +44,6 @@ class Tools
 		'spanish.codespace.us'	=> 'es-ES',
 		'spanish50.com'			=> 'es-ES',
 		'espdaily.com'			=> 'es-ES',
-		'espdaily.com'			=> 'en-EN',
 	];
 
     // NOT USED YET, NEED?
@@ -63,7 +62,7 @@ class Tools
 		'speakclearer.com'		=> LANGUAGE_ALL,
 		'localhost'			    => LANGUAGE_ALL,
 		//'localhost'			=> LANGUAGE_EN,
-		//'localhost'			=> LANGUAGE_ES,
+		//'localhost'           => LANGUAGE_ES,
 	];
 
     static public function getAccentChars()
@@ -754,6 +753,7 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 
 			case SITE_ID_SPANISH50:
 			case SITE_ID_ESPDAILY:
+			//case SITE_ID_LOCALHOST:
 				$rc = ($feature == ID_FEATURE_ARTICLES
 				    || $feature == ID_FEATURE_BOOKS
 				    || $feature == ID_FEATURE_DICTIONARY

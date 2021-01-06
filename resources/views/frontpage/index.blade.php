@@ -14,9 +14,13 @@
 <!-- Banner Photo -->
 <!--------------------------------------------------------------------------------------->
 @if (isset($banner))
-    <div class="" style="background-image: url(/img/banners/{{$banner}}); background-size: 100%; background-repeat: no-repeat; xposition: relative;">
+
+<div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/load-loop.gif'); " >
+    <div class="" style="background-image: url(/img/banners/{{$banner}}); background-size: 100%; background-repeat: no-repeat;">
         <a href="/"><img src="/img/{{App::getLocale()}}-spacer.png" style="width:100%;" /></a>
     </div>
+</div>
+
 @else
     <!-- div style="height:5px;"></div -->
 @endif
