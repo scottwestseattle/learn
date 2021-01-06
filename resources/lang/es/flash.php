@@ -33,4 +33,6 @@ return [
 'Email address added to mailing list' => 'Dirección de correo electrónico agregada a la lista de correo',
 'Entry has been added' => 'Se ha agregado la entrada',
 'Entry has been updated' => 'Se ha actualizado la entrada',
+'New Text has been saved' => 'Se ha guardado el nuevo texto',
+'Text has been updated' => 'Se ha actualizado el texto',
 ];

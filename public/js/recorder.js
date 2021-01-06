@@ -49,11 +49,15 @@ if (navigator.mediaDevices.getUserMedia) {
       const clipLabel = document.createElement('p');
       const audio = document.createElement('audio');
       const deleteButton = document.createElement('button');
+      const playButton = document.createElement('button');
 
       clipContainer.classList.add('clip');
       audio.setAttribute('controls', '');
       deleteButton.textContent = 'Delete';
-      deleteButton.className = 'delete';
+      deleteButton.className = 'playback';
+      playButton.textContent = 'Play';
+      playButton.className = 'playback';
+      playButton.id = 'playbackPlay';
 
       if(clipName === null) {
         clipLabel.textContent = '';
@@ -64,6 +68,7 @@ if (navigator.mediaDevices.getUserMedia) {
       clipContainer.appendChild(audio);
       clipContainer.appendChild(clipLabel);
       clipContainer.appendChild(deleteButton);
+      clipContainer.appendChild(playButton);
       soundClips.appendChild(clipContainer);
 
       audio.controls = true;
@@ -78,9 +83,17 @@ if (navigator.mediaDevices.getUserMedia) {
       console.log("recorder stopped");
 
       deleteButton.onclick = function(e) {
+        e.preventDefault();
         let evtTgt = e.target;
         evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
         _audio = null;
+      }
+
+      playButton.onclick = function(e) {
+        e.preventDefault();
+        audio.play().catch(function (error) {
+            console.log('audio play from button error: ' + error.message);
+        });
       }
 
       clipLabel.onclick = function() {
@@ -95,7 +108,7 @@ if (navigator.mediaDevices.getUserMedia) {
 
       audio.play().catch(function (error) {
         console.log('audio play error: ' + error.message);
-      })
+      });
 
       _audio = audio;
     }

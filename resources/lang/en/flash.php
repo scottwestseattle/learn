@@ -33,4 +33,6 @@ return [
 'Email address added to mailing list' => 'Email address added to mailing list',
 'Entry has been added' => 'Entry has been added',
 'Entry has been updated' => 'Entry has been updated',
+'New Text has been saved' => 'New Text has been saved',
+'Text has been updated' => 'Text has been updated',
 ];

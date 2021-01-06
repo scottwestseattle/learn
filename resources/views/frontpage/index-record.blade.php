@@ -76,12 +76,14 @@
 			'select_class' => 'mt-1 mr-2',
 		])@endcomponent
             <select onchange="changeVoice();" name="selectVoice" id="selectVoice"></select>
-            <button type="submit" class="btn btn-primary btn-xs">Save</button>
-            <a href="" onclick="event.preventDefault(); $('#textEdit').val(''); $('#textEdit').focus();" class="ml-1">Clear<a/>
-            <a href="" onclick="copySnippet(event)" class="ml-2">Copy<a/>
+            <!-- button type="submit" class="btn btn-primary btn-xs">Save</button -->
+            <a href="" onclick="event.preventDefault(); $('#textEdit').val(''); $('#textEdit').focus();" class="ml-1">@LANG('ui.Clear')<a/>
+            <a href="" onclick="copySnippet(event)" class="ml-1">@LANG('ui.Copy')<a/>
             <!-- a href="" onclick="pasteSnippet(event)" class="ml-2">Paste<a/ -->
 
-	    @component('components.control-accent-chars-esp', ['visible' => true, 'target' => 'textEdit'])@endcomponent
+        @if (!App\Tools::isMobile())
+    	    @component('components.control-accent-chars-esp', ['visible' => true, 'target' => 'textEdit'])@endcomponent
+        @endif
 
         </div>
 
@@ -91,9 +93,9 @@
     <section class="main-controls">
         <canvas id="feedback" class="visualizer hidden" height="40px"></canvas>
         <div id="buttons">
-            <button id="buttonRecord" onclick="event.preventDefault(); startRecording()">Record</button>
-            <button id="buttonPlay" onclick="event.preventDefault(); playRecording()">Play</button>
-            <button id="buttonRead" onClick="event.preventDefault(); readPage($('#textEdit').val())">Robot</button>
+            <button id="buttonRecord" onclick="event.preventDefault(); startRecording()">@LANG('ui.Record')</button>
+            <button id="buttonRead" onClick="event.preventDefault(); readPage($('#textEdit').val())">@LANG('ui.Robot')</button>
+            <button id="buttonSave" onclick="">@LANG('ui.Save')</button>
         </div>
     </section>
 
@@ -162,7 +164,7 @@
 <!-- ARTICLES -->
 <!--------------------------------------------------------------------------------------->
 @if (App\Tools::siteUses(ID_FEATURE_ARTICLES))
-    <h3 class="mt-2">@LANG('content.Latest Articles')</h3>
+    <h3 class="mt-2">@LANG('content.Latest Articles') <span style="font-size:.8em;">({{count($articles)}})</span></h3>
     <div class="text-center mt-2" style="">
         <div style="display: inline-block; width:100%">
             <table style="width:100%;">
@@ -207,7 +209,7 @@
 
             @endforeach
             </table>
-            <div class="mb-4"><a class="btn btn-sm btn-success" role="button" href="/articles">@LANG('content.Show All Articles')</a></div>
+            <div class="mb-4"><a class="btn btn-sm btn-success" role="button" href="/articles">@LANG('content.Show All')</a></div>
         </div>
     </div>
 @endif

@@ -696,14 +696,14 @@ function loadVoices()
 
 	if (_voices.length > 0)
 	{
-	    var langCodeSize = 3;
+	    var langCodeSize = 2;
 	    var deckLang = deck.language.substring(0, langCodeSize);
 
 	    // figure out how the voices are formatted, either 'en-US' or 'eng-USA', 'es-ES' or 'spa-ESP'
 	    if (_voices.length > 0 && _voices[0].lang.length > 5)
 	    {
 	        // using 3 letter language and country codes: 'spa-ESP'
-	        langCodeSize = 4; // include the '-'
+	        langCodeSize = 3;
     	    deckLang = deck.languageLong.substring(0, langCodeSize);
 	    }
 

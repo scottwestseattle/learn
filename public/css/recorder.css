@@ -44,8 +44,7 @@ canvas {
 #buttons button {
   font-size: 1rem;
   padding: 1rem;
-  width: calc(30% - 0.25rem);
-  xwidth: 30%;
+  width: calc(30% - 0.25rem);x
 }
 
 button {
@@ -101,10 +100,15 @@ audio {
   float: right;
 }
 
-button.delete {
+button.playback {
   background: #f00;
-  padding: 0.5rem 0.75rem;
+  padding: 0.2rem 0.75rem;
+  margin-right: 5px;
   font-size: 0.8rem;
+}
+
+button#playbackPlay {
+  background: #0088cc;
 }
 
 /* Checkbox hack to control information box display */

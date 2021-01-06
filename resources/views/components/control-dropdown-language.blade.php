@@ -22,9 +22,9 @@
 
 	@foreach ($options as $key => $value)
 		@if (isset($selected_option) && $key == $selected_option)
-			<option value="{{$key}}" selected>Text is {{$value}}</option>
+			<option value="{{$key}}" selected>@LANG('ui.' . $value)</option>
 		@else
-			<option value="{{$key}}">Text is {{$value}}</option>
+			<option value="{{$key}}">@LANG('ui.' . $value)</option>
 		@endif
 	@endforeach
 

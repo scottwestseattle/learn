@@ -33,4 +33,6 @@ return [
 'Email address added to mailing list' => '电子邮件地址已添加到邮件列表',
 'Entry has been added' => '条目已添加',
 'Entry has been updated' => '条目已更新',
+'New Text has been saved' => '新文本已保存',
+'Text has been updated' => '文字已更新',
 ];
