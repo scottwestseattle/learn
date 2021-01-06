@@ -24,19 +24,19 @@ function mobile()
 {
     if (navigator.userAgent.match(/Android/i))
 		return true;
-	
+
 	if (navigator.userAgent.match(/iPhone|iPad|iPod/i))
 		return true;
-	
+
 	if (navigator.userAgent.match(/BlackBerry/i))
 		return true;
-		
+
 	if (navigator.userAgent.match(/Opera Mini/i))
 		return true;
-		
+
 	if (navigator.userAgent.match(/IEMobile/i))
 		return true;
-	
+
 	return false;
 }
 
@@ -156,7 +156,7 @@ function convertAccentChars(text)
 	text = text.replace(/[ÓÒÖÔòóôöõø]+/g, "o");
 	text = text.replace(/[ÙÚÜÛùúûü]+/g, "u");
 	text = text.replace(/Ÿÿ/g, "y");
-	
+
 	return text;
 }
 
@@ -680,7 +680,7 @@ function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = n
 
 	debug('ajaxexec: url: ' + url, debugOn);
 	//debug('ajaxexec: resultsId: ' + resultsId, debugOn);
-	
+
 	xhttp.onreadystatechange = function()
 	{
 		//alert(this.status);
@@ -688,7 +688,7 @@ function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = n
 		if (this.status == 404) // page not found?
 		{
 			debug('ajaxexec: 404', debugOn);
-			
+
 			if (resultsId.length > 0)
 				$(resultsId).text('Server Error 404');
 		}
@@ -705,7 +705,7 @@ function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = n
 					//$(resultsId).text('definition: ' + this.responseText);
 					if (this.responseText.startsWith('<'))
 					{
-						debug('ajaxexec: html returned', debugOn);						
+						debug('ajaxexec: html returned', debugOn);
 						$(resultsId).html(this.responseText);
 					}
 					else if (resultsInput) // put results in an input
@@ -724,16 +724,16 @@ function ajaxexec(url, resultsId = '', resultsInput = false, resultsCallback = n
 				{
 					debug('ajaxexec: results empty', debugOn);
 				}
-				
+
 				if (resultsCallback != null)
 					resultsCallback(this.responseText);
-				
+
 				//debug(this.responseText);
 			}
 			else
 			{
 				debug('ajaxexec: 500');
-				
+
 				if (resultsId.length > 0)
 					$(resultsId).text('Server Error ' + this.status);
 			}
@@ -777,12 +777,16 @@ function setFloat(obj, id)
 
 function setFocus(obj, accentsId = null)
 {
+    // turns on the accent char helper except for mobile
+    if (isMobile.any())
+        return;
+
 	if (accentsId != null)
 	{
 		$(accentsId).insertBefore(obj);
 		$(accentsId).show();
 	}
-	
+
 	prevFocus = obj;
 }
 
@@ -802,7 +806,7 @@ function insertChar(char, id, isTinyMce)
 
 	if (id != 0 && id != '0')
 	{
-		// if we're using the id parameter 
+		// if we're using the id parameter
 		txtarea = document.getElementById(id);
 	}
 	else if (!prevFocus || prevFocus == 'undefined')
@@ -813,10 +817,10 @@ function insertChar(char, id, isTinyMce)
 	else
 	{
 		//
-		// if we're using previous focus instead of the id 
+		// if we're using previous focus instead of the id
 		//
 		var focusId = prevFocus.attr('id');
-		
+
 		if (!focusId)
 		{
 			console.log('"id" must be set for each control that calls this component');
@@ -873,7 +877,7 @@ function setActiveTab(event, tabIdShow, tabBodyClass, tabLinkClass = null)
 {
 	event.preventDefault();
 
-	$(tabBodyClass).hide();	
+	$(tabBodyClass).hide();
 	$(tabIdShow).show();
 
 	if (tabLinkClass != null)
@@ -888,9 +892,9 @@ function toggleActiveTab(event, tabIdShow, tabIdMain, tabBodyClass)
 	event.preventDefault();
 
 	var idShow = tabIdShow;
-	
-	// if the target is already visible, then toggle to main tab	
-	if ($(tabIdShow).is(':visible')) 
+
+	// if the target is already visible, then toggle to main tab
+	if ($(tabIdShow).is(':visible'))
 		idShow = tabIdMain;
 
 	$(tabBodyClass).hide();	// hide all tabs
@@ -1048,7 +1052,7 @@ function getWordForms(word, wordForms, pluralOnly)
 	var root = word.substring(0, word.length - 1);
 	word = word.trim();
 	wordForms = wordForms.trim();
-	
+
 	// if it ends in a consonant, add 'as', else add 's'
 	// paciente = pacientes
 	// alto = altos, alta, altas
@@ -1081,7 +1085,7 @@ function getWordForms(word, wordForms, pluralOnly)
 	{
 		gen += word + 'es';
 	}
-	
+
 	if (wordForms.length > 0)
 	{
 		if (!wordForms.endsWith(',') && !wordForms.endsWith(';'))
@@ -1089,7 +1093,7 @@ function getWordForms(word, wordForms, pluralOnly)
 		else
 			wordForms += ' ';
 	}
-	 
+
 	return wordForms + gen;
 }
 
@@ -1113,8 +1117,8 @@ function scrollTo(className, heightAdjustment = 0)
 	if ((bottom_of_screen > bottom_of_element) && (top_of_screen < top_of_element))
 	{
 		// the element is visible, don't scroll
-	} 
-	else 
+	}
+	else
 	{
 		// the element is not visible, scroll to it
 		window.scroll(position.left, position.top);
@@ -1124,17 +1128,17 @@ function scrollTo(className, heightAdjustment = 0)
 function translateOnWebsite(event, destination, text)
 {
 	event.preventDefault();
-	
+
 	if (destination == 'spanishdict')
 		window.open("https://www.spanishdict.com/translate/" + text + "");
 	else if (destination == 'rae')
-		window.open("https://dle.rae.es/" + text + "");		
+		window.open("https://dle.rae.es/" + text + "");
 	else // everything else goes to google
 		window.open("https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text=" + text + "");
 }
 
 function isAlphanum(keyCode)
-{	
+{
 	if (keyCode >= 65 && keyCode <= 90) // a-z, A-Z
 		return true;
 
@@ -1143,18 +1147,18 @@ function isAlphanum(keyCode)
 
 	if (keyCode >= 48 && keyCode <= 57) // 0-9
 		return true;
-	
+
 	return false;
 }
 
 function isDelete(keyCode)
-{	
+{
 	if (keyCode == 8) // backspace
 		return true;
 
 	if (keyCode == 46) // delete
 		return true;
-	
+
 	return false;
 }
 
@@ -1172,13 +1176,13 @@ function searchDefinitions(event, textId, resultsId)
 	else
 	{
 		// if it's not a printable character OR delete
-		var doit = isAlphanum(event.keyCode) || isDelete(event.keyCode); 
+		var doit = isAlphanum(event.keyCode) || isDelete(event.keyCode);
 		if (!doit)
 			return;
 	}
-	
+
 	var debugOn = false;
-	
+
 	if (_delaySearchId != 0)
 	{
 		clearTimeout(_delaySearchId);
@@ -1194,11 +1198,11 @@ function searchDefinitions(event, textId, resultsId)
 		debug('search: not calling duplicate search: ' + _lastSearchWord, debugOn);
 		return;
 	}
-	
-	$(resultsId).html('');	
+
+	$(resultsId).html('');
 
 	//if (searchText.length != 1) // don't use so we can see all the words that start with a letter
-	{		
+	{
 		_delaySearchId = setTimeout(function(){
 			debug('search server call on timer: ' + searchText, debugOn);
 			_lastSearchWord = searchText;
@@ -1218,8 +1222,8 @@ function searchDefinitionsCallack()
 
 function heartDefinition(event, recordId, resultsId)
 {
-	event.preventDefault();	
-	
+	event.preventDefault();
+
 	var target = '#' + event.target.id;
 	if ($(target).hasClass('glyphicon-heart-empty'))
 	{
@@ -1239,14 +1243,14 @@ function heartDefinition(event, recordId, resultsId)
 
 function unheartDefinition(event, recordId, resultsId)
 {
-	event.preventDefault();		
+	event.preventDefault();
 	var target = '#' + event.target.id;
 	ajaxexec('/definitions/unheart/' + recordId + '', resultsId);
 }
 
 function toggleWip(event, recordId, resultsId)
 {
-	event.preventDefault();	
+	event.preventDefault();
 	ajaxexec('/definitions/toggle-wip/' + recordId + '', resultsId);
 	var target = '#' + event.target.id;
 	if ($(target).hasClass('glyphicon-ok-circle'))

@@ -66,16 +66,6 @@
                 rows="7"
             >{{$snippet->description}}</textarea>
             </div>
-
-            @if (false)
-            <div id="textShow" style="display:none; xmin-height: 200px; font-size:1.5em;">
-                Show text here.
-                <div id="languages" class="mt-1" style="display:default; font-size:10px;">
-                    <select onchange="changeVoice();" name="select" id="select"></select>
-                </div>
-            </div>
-            @endif
-
         </div>
         <div>
         @component('components.control-dropdown-language', [
@@ -99,7 +89,7 @@
     </form>
 
     <section class="main-controls">
-        <canvas id="feedback" class="visualizer" height="40px"></canvas>
+        <canvas id="feedback" class="visualizer hidden" height="40px"></canvas>
         <div id="buttons">
             <button id="buttonRecord" onclick="event.preventDefault(); startRecording()">Record</button>
             <button id="buttonPlay" onclick="event.preventDefault(); playRecording()">Play</button>
