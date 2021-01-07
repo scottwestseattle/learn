@@ -525,6 +525,7 @@ function read(text, charIndex)
 	clearTimeout(_speechTimerId);
 
 	_utter = new SpeechSynthesisUtterance();
+	_utter.volume = 1; // range is 0-1
 
 	if (deck.voice != null)
 	{

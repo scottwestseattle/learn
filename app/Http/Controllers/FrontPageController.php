@@ -185,6 +185,10 @@ class FrontPageController extends Controller
             $snippetLanguages = Tools::getLanguageOptions();
             $languageCodes = Tools::getSpeechLanguage($snippet->language_flag);
         }
+        else
+        {
+            $languageCodes = Tools::getSpeechLanguage();
+        }
 
 		return view($view, $this->getViewData([
 			'courses' => $courses,

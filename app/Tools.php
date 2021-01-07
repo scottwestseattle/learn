@@ -876,8 +876,11 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
         ];
     }
 
-	static public function getSpeechLanguage($id)
+	static public function getSpeechLanguage($id = null)
 	{
+	    if (!isset($id))
+	        $id = self::getSiteLanguage();
+
         $languageFlags = [
             LANGUAGE_DE => 'de-DE',
             LANGUAGE_EN => 'en-EN',

@@ -721,12 +721,14 @@ class LessonController extends Controller
 		//dd($text);
 
 		$record['lines'] = $text;
+        $languageCodes = Tools::getSpeechLanguage($record->language_flag);
 
     	return view('shared.reader', $this->getViewData([
 			'record' => $record,
 			'readLocation' => null,
 			'speechLanguage' => 'es-ES',
 			'contentType' => 'Lesson',
+			'languageCodes' => $languageCodes,
 		]));
     }
 
