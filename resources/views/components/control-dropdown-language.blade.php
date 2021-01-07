@@ -1,3 +1,7 @@
+@php
+$label_class = isset($label_class) ? $label_class : null;
+$select_class = isset($select_class) ? $select_class : null;
+@endphp
 @if (isset($options) && count($options) > 0)
 
 	@if (isset($label))
@@ -6,7 +10,7 @@
 			<div>
 		@endif
 
-		<label for="{{$field_name}}">{{$label}}</label>
+		<label for="{{$field_name}}" class="{{$label_class}}">{{$label}}</label>
 
 		@if (isset($label_div))
 			</div>

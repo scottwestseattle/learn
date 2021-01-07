@@ -55,6 +55,7 @@ if (navigator.mediaDevices.getUserMedia) {
       audio.setAttribute('controls', '');
       deleteButton.textContent = 'Delete';
       deleteButton.className = 'playback';
+      deleteButton.id = 'playbackDelete';
       playButton.textContent = 'Play';
       playButton.className = 'playback';
       playButton.id = 'playbackPlay';
@@ -286,7 +287,6 @@ function loadRecorder()
 
     // record and play are optional
     record = document.querySelector('#buttonRecord');
-    play = document.querySelector('#buttonPlay');
 
     soundClips = document.querySelector('.sound-clips');
     mainSection = document.querySelector('.main-controls');
@@ -294,9 +294,6 @@ function loadRecorder()
     // the feedback canvas widget
     canvas = document.querySelector('.visualizer');
     canvasCtx = canvas.getContext("2d");
-
-    // disable play button while not recording
-    //play.disabled = true;
 
     // size our window
     window.onresize();

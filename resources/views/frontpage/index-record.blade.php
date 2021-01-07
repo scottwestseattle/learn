@@ -67,7 +67,8 @@
             >{{$snippet->description}}</textarea>
             </div>
         </div>
-        <div>
+
+        <span class='mini-menu'>
         @component('components.control-dropdown-language', [
             'record' => $snippet,
 			'options' => $snippetLanguages,
@@ -76,26 +77,23 @@
 			'select_class' => 'mt-1 mr-2',
 		])@endcomponent
             <select onchange="changeVoice();" name="selectVoice" id="selectVoice"></select>
-            <!-- button type="submit" class="btn btn-primary btn-xs">Save</button -->
             <a href="" onclick="event.preventDefault(); $('#textEdit').val(''); $('#textEdit').focus();" class="ml-1">@LANG('ui.Clear')<a/>
             <a href="" onclick="copySnippet(event)" class="ml-1">@LANG('ui.Copy')<a/>
-            <!-- a href="" onclick="pasteSnippet(event)" class="ml-2">Paste<a/ -->
+        </span>
 
         @if (!App\Tools::isMobile())
-    	    @component('components.control-accent-chars-esp', ['visible' => true, 'target' => 'textEdit'])@endcomponent
+    	    @component('components.control-accent-chars-esp', ['label_class' => 'white', 'visible' => true, 'target' => 'textEdit'])@endcomponent
         @endif
-
-        </div>
 
 		{{csrf_field()}}
     </form>
 
     <section class="main-controls">
         <canvas id="feedback" class="visualizer hidden" height="40px"></canvas>
-        <div id="buttons">
-            <button id="buttonRecord" onclick="event.preventDefault(); startRecording()">@LANG('ui.Record')</button>
-            <button id="buttonRead" onClick="event.preventDefault(); readPage($('#textEdit').val())">@LANG('ui.Robot')</button>
-            <button id="buttonSave" onclick="">@LANG('ui.Save')</button>
+        <div id="record-buttons">
+            <button id="buttonRecord" class="btn-primary" onclick="event.preventDefault(); startRecording()">@LANG('ui.Record')</button>
+            <button id="buttonRead" class="bg-purple" onClick="event.preventDefault(); readPage($('#textEdit').val())">@LANG('ui.Robot')</button>
+            <button id="buttonSave" class="btn-success">@LANG('ui.Save')</button>
         </div>
     </section>
 

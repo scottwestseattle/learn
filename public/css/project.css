@@ -172,6 +172,10 @@ h1,h3 {
     background-color: yellow;
 }
 
+.bg-purple {
+    background-color: purple;
+}
+
 .bg-gray {
     background-color: LightGray;
 }
@@ -209,7 +213,7 @@ h1,h3 {
 	color:teal;
 }
 
-.white {
+.white, .white a {
 	color:white;
 }
 

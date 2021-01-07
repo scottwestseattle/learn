@@ -1,3 +1,5 @@
+/* need this?
+
 * {
   margin: 0;
   padding: 0;
@@ -26,8 +28,26 @@ h1, h2 {
   padding: 0.5rem 0 0 0;
 }
 
+label {
+  font-size: 3rem;
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  z-index: 5;
+  cursor: pointer;
+  background-color: black;
+  border-radius: 10px;
+}
+
+*/
+
 .main-controls {
   padding: 0.5rem 0;
+}
+
+.mini-menu, .mini-menu a, .mini-menu a:hover {
+    font-size: 12px;
+    text-decoration: none;
 }
 
 canvas {
@@ -35,38 +55,43 @@ canvas {
   margin-bottom: 0.5rem;
 }
 
-#buttons {
+#record-buttons {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-#buttons button {
+#record-buttons button {
   font-size: 1rem;
   padding: 1rem;
-  width: calc(30% - 0.25rem);x
-}
-
-button {
-  font-size: 1rem;
-  background: #0088cc;
+  width: calc(33% - 0.25rem);
   text-align: center;
   color: white;
   border: none;
   transition: all 0.2s;
   padding: 0.5rem;
+  border-radius: 3px;
 }
 
-button:hover, button:focus {
+#record-buttons button:hover, #record-buttons button:focus {
   box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 1);
-  background: #0ae;
 }
 
-button:active {
-  box-shadow: inset 0px 0px 20px rgba(0,0,0,0.5);
-  transform: translateY(2px);
+button.playback {
+  padding: 0.2rem 0.75rem;
+  color: white;
+  border: none;
+  font-size: 10px;
 }
 
+button#playbackDelete {
+  background: red;
+}
+
+button#playbackPlay {
+  background: #0088cc;
+  margin-right: 5px;
+}
 
 /* Make the clips use as much space as possible, and
  * also show a scrollbar when there are too many clips to show
@@ -100,29 +125,7 @@ audio {
   float: right;
 }
 
-button.playback {
-  background: #f00;
-  padding: 0.2rem 0.75rem;
-  margin-right: 5px;
-  font-size: 0.8rem;
-}
-
-button#playbackPlay {
-  background: #0088cc;
-}
-
 /* Checkbox hack to control information box display */
-
-label {
-  font-size: 3rem;
-  position: absolute;
-  top: 2px;
-  right: 3px;
-  z-index: 5;
-  cursor: pointer;
-  background-color: black;
-  border-radius: 10px;
-}
 
 input[type=checkbox] {
    position: absolute;
