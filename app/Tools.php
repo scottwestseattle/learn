@@ -723,6 +723,26 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
         ;
     }
 
+	static public function siteView()
+	{
+	    $rc = 'index';
+		$siteId = self::getSiteId();
+
+		switch($siteId)
+		{
+			case SITE_ID_SPEAKCLEARER:
+			case SITE_ID_LOCALHOST:
+				$rc = 'index-record';
+				break;
+
+			default:
+				break;
+		}
+
+		return $rc;
+	}
+
+
 	static public function siteUses($feature)
 	{
 		$rc = false;

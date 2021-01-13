@@ -146,25 +146,15 @@
                 <div class="card-body card-body-potd">
                     @if(isset($wotd))
                         <div><b>{{$wotd->title}}</b> - <i>{{$wotd->description}}</i></div>
-                        <div class="large-thin-text">{{$wotd->examples}}</div>
+                        <div class="large-thin-text">
+                            {{$wotd->examples}}
+                            @component('components.icon-read', ['nodiv' => true, 'onclick' => "event.preventDefault(); readPage($('#wotd').val())"])@endcomponent
+                        </div>
+
+                        <input type="hidden" id="wotd" value="{{$wotd->examples}}" />
                     @else
                         <div>@LANG('ui.Not Found')</div>
                     @endif
-                </div>
-            </div>
-		</div>
-    @endif
-
-    @if (false && isset($potd))
-		<div class="col-sm-12 col-lg-6 col-course" style="">
-            <div class="card card-votd truncate mt-1" style="">
-                <div class="card-header card-header-potd">
-                    <div>@LANG('content.Verb of the day')</div>
-                    <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
-                </div>
-                <div class="card-body card-body-potd">
-                    <div><b>{{$wotd->title}}</b> - <i>{{$wotd->description}}</i></div>
-                    <div class="large-thin-text">{{$wotd->examples}}</div>
                 </div>
             </div>
 		</div>
@@ -178,7 +168,11 @@
                     <div class="small-thin-text">@LANG('content.Practice this phrase out loud')</div>
                 </div>
                 <div class="card-body card-body-potd">
-                    <div class="xl-thin-text">{{$potd}}</div>
+                    <div class="xl-thin-text">
+                        {{$potd}}
+                        @component('components.icon-read', ['nodiv' => true, 'onclick' => "event.preventDefault(); readPage($('#potd').val())"])@endcomponent
+                    </div>
+                    <input type="hidden" id="potd" value="{{$potd}}" />
                 </div>
             </div>
 		</div>
@@ -248,6 +242,12 @@
 	<!-- END OF COURSES -->
 
 <!--------------------------------------------------------------------------------------->
+<!-- SNIPPETS -->
+<!--------------------------------------------------------------------------------------->
+
+@component('shared.snippets', ['options' => $options])@endcomponent
+
+<!--------------------------------------------------------------------------------------->
 <!-- ARTICLES NEW SMALL -->
 <!--------------------------------------------------------------------------------------->
 @if (App\Tools::siteUses(ID_FEATURE_ARTICLES))
@@ -297,7 +297,7 @@
 
             @endforeach
             </table>
-            <div class="mb-4"><a class="btn btn-sm btn-success" role="button" href="/articles">@LANG('content.Show All Articles')</a></div>
+            <div class="mb-4"><a class="btn btn-sm btn-success" role="button" href="/articles">@LANG('ui.Show All')</a></div>
         </div>
     </div>
 @endif
@@ -327,7 +327,7 @@
 <!--------------------------------------------------------------------------------------->
 <!-- Podcasts -->
 <!--------------------------------------------------------------------------------------->
-@if ($siteLanguage == 'es-ES')
+@if ($options['siteLanguage'] == 'es-ES')
 <div>
     <iframe frameBorder="0" height="482" scrolling="no" src="https://playlist.megaphone.fm/?p=HSW5050863615&light=true"
     width="100%">

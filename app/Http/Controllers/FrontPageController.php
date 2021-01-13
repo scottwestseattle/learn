@@ -50,7 +50,6 @@ class FrontPageController extends Controller
     public function index($id = null)
     {
         $bannerIx = isset($id) && Tools::siteUses(ID_FEATURE_BANNERPHOTO) ? intval($id) : null;
-        $snippetId = isset($id) && Tools::siteUses(ID_FEATURE_RECORD) ? intval($id) : null;
 
 		$courses = []; // make this countable so view will always work
 		$vocabLists = [];
@@ -105,7 +104,10 @@ class FrontPageController extends Controller
 			}
 		}
 
+        // voice recorder
         $recorder = Tools::siteUses(ID_FEATURE_RECORD);
+
+        // articles
 		if (Tools::siteUses(ID_FEATURE_ARTICLES))
 		{
 			try
@@ -160,37 +162,42 @@ class FrontPageController extends Controller
 			$jumboTitle = 'jumboTitleEnglish';
 		}
 
-        $siteLanguage = Tools::getLanguage();
-
         $view = 'frontpage.index';
-        $loadSpeechModules = false;
-        $snippets = null;
-        $snippet = null;
-        $snippetLanguages = null;
-        $languageCodes = null;
+
+        //
+        // all the stuff for the speak and record module
+        //
+        $options = [];
+
+        $snippetsLimit = $recorder ? 10 : 5;
+        $snippets = Word::getSnippets(['limit' => $snippetsLimit]);
+        $options['records'] = $snippets;
+
+        $options['showAllButton'] = true;
+        $options['loadSpeechModules'] = true;
+        $options['siteLanguage'] = Tools::getLanguage();
+        $options['snippetLanguages'] = Tools::getLanguageOptions();
+
+        // not implemented yet
+        $options['snippet'] = null; //Word::getSnippet();
+        if (!isset($options['snippet']))
+        {
+            $options['snippet'] = new Word();
+            $options['snippet']->description = Lang::get('fp.recorderTextInit');
+            $options['snippet']->language_flag = Tools::getLanguageFlagFromLocale();
+        }
+
+        $options['languageCodes'] = null;
         if ($recorder)
         {
-            $view = 'frontpage.index-record';
-            $loadSpeechModules = true;
-
-            $snippets = Word::getSnippets(['limit' => 10]);
-            $snippet = Word::getSnippet($snippetId);
-            if (!isset($snippet))
-            {
-                $snippet = new Word();
-                $snippet->description = Lang::get('fp.recorderTextInit');
-                $snippet->language_flag = Tools::getLanguageFlagFromLocale();
-            }
-
-            $snippetLanguages = Tools::getLanguageOptions();
-            $languageCodes = Tools::getSpeechLanguage($snippet->language_flag);
+            $options['languageCodes'] = Tools::getSpeechLanguage($options['snippet']->language_flag);
         }
         else
         {
-            $languageCodes = Tools::getSpeechLanguage();
+            $options['languageCodes'] = Tools::getSpeechLanguage();
         }
 
-		return view($view, $this->getViewData([
+		return view('frontpage.' . Tools::siteView(), $this->getViewData([
 			'courses' => $courses,
 			'vocabLists' => $vocabLists,
 			'articles' => $articles,
@@ -203,13 +210,8 @@ class FrontPageController extends Controller
 			'wotd' => $wotd,
 			'potd' => $potd,
 			'supportMessage' => $supportMessage,
-			'siteLanguage' => $siteLanguage,
 			'showShortcutWidgets' => Tools::siteUsesShortcutWidgets(),
-			'loadSpeechModules' => $loadSpeechModules,
-			'snippets' => $snippets,
-			'snippet' => $snippet,
-			'snippetLanguages' => $snippetLanguages,
-			'languageCodes' => $languageCodes,
+            'options' => $options,
 		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 

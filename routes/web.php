@@ -224,6 +224,7 @@ Route::group(['prefix' => 'vocab-lists'], function () {
 // Words
 Route::group(['prefix' => 'words'], function () {
 	Route::get('/index', 'WordController@indexUser');
+    Route::get('/practice', 'WordController@snippets');
 	Route::get('/indexowner/{parent_id?}', 'WordController@indexowner');
 	Route::get('/admin', 'WordController@admin');
 	Route::get('/view/{word}','WordController@view');

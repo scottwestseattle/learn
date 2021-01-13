@@ -32,5 +32,6 @@ return [
 'jumboSlug' => 'Discover the content and tools you need to make learning a new language fun and easy.',
 'jumboTitleEnglish' => 'Learn English in 50 Lessons',
 'Subscribe to mailing list' => 'Enter your email address to subscribe to our mailing list',
-'recorderTextInit' => 'Speak Clearer is for language learners to practice speaking and improve their accents. Enter any text here and practice saying it out loud. Use the "Record" button to record your voice and play it back. Use the "Robot" button to hear how it should sound.',
+'recorderTextInit' => 'This space is to practice speaking and improve your accent. Enter any text here and practice saying it out loud. Use the "Record" button to record your voice and play it back. Use the "Robot" button to hear how it should sound.',
+'Practice Speaking' => 'Practice Speaking',
 ];

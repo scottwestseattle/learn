@@ -49,7 +49,7 @@ $iconFolder = App\Tools::getIconFolder();
 	<script src="/js/loadTinyMce.js"></script>
 @endif
 
-@if (isset($loadSpeechModules) && $loadSpeechModules)
+@if (isset($options['loadSpeechModules']) && $options['loadSpeechModules'])
     <script src="{{ asset('/js/recorder.js') }}"></script>
     <script src="{{ asset('/js/reader.js') }}"></script>
 @endif
@@ -64,7 +64,7 @@ $iconFolder = App\Tools::getIconFolder();
     <link href="/css/project.css" rel="stylesheet">
     <link href="/css/glyphicons.css" rel="stylesheet">
     <link href="/css/glyphicons-short.css" rel="stylesheet">
-@if (isset($loadSpeechModules) && $loadSpeechModules)
+@if (isset($options['loadSpeechModules']) && $options['loadSpeechModules'])
     <link href="/css/recorder.css" rel="stylesheet">
 @endif
 

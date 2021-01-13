@@ -41,7 +41,7 @@ return [
 'Site' => 'Sitio',
 'yes' => 'sí',
 'no' => 'no',
-'Show All' => 'Mostrar Todos',
+'Show All' => 'Mostrar todos',
 'Sample' => 'Muestra',
 'Logout' => 'Cerrar Sesión',
 'Show Phone Number' => 'Número de Teléfono',

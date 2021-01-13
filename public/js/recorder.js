@@ -306,3 +306,14 @@ function playRecording()
         console.log('audio play from big button error: ' + error.message);
       })
 }
+
+function copyToReader(event, fromId, toId, scrollClass)
+{
+    event.preventDefault();
+    //console.log('from: ' + $(fromId).val());
+    $(toId).val($(fromId).val());
+
+	var e = $(scrollClass).first();
+	var position = e.offset();
+    window.scroll(position.left, position.top - 60);
+}

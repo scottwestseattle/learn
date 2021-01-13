@@ -32,5 +32,6 @@ return [
 'jumboSlug' => 'Descubra el contenido y las herramientas que necesita para que aprender un nuevo idioma sea divertido y fácil.',
 'jumboTitleEnglish' => 'Aprende inglés en 50 lecciones',
 'Subscribe to mailing list' => 'Ingrese su correo electrónico para suscribirse',
-'recorderTextInit' => 'Speak Clearer es para que los estudiantes de idiomas practiquen el habla y mejoren sus acentos.  Ingrese cualquier texto aquí y practique decirlo en voz alta.  Utilice el botón "Grabar" para grabar su voz y reproducirla.  Utilice el botón "Robot" para escuchar cómo debería sonar.',
+'recorderTextInit' => 'Este espacio es para practicar el habla y mejorar tu acento. Ingrese cualquier texto aquí y practique decirlo en voz alta. Utilice el botón "Grabar" para grabar su voz y reproducirla. Utilice el botón "Robot" para escuchar cómo debería sonar.',
+'Practice Speaking' => 'Práctica del habla',
 ];

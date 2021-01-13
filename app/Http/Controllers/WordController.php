@@ -30,7 +30,7 @@ class WordController extends Controller
             'index', 'translate', 'getajax', 'updateajax', 'addUser',
             'createUser', 'editUser', 'updateUser',
             'confirmDeleteUser', 'deleteUser', 'view', 'touch',
-            'createSnippet'
+            'createSnippet', 'snippets'
         ]);
 
 		$this->prefix = PREFIX;
@@ -302,7 +302,7 @@ class WordController extends Controller
 			$msg = $exists ? "$tag has been updated" : "New $tag has been saved";
 			Tools::flash('success', $msg);
 
-    		return redirect('/' . $record->id);
+    		return redirect('/');
 		}
 		catch (\Exception $e)
 		{
@@ -790,5 +790,32 @@ class WordController extends Controller
 		Event::logInfo(LOG_MODEL, LOG_ACTION_TOUCH, 'touch ' . $word->title . ': ' . $rc);
 
 		return $rc;
+    }
+
+	public function snippets()
+    {
+        //
+        // all the stuff for the speak and record module
+        //
+        $options = [];
+        $options['showAllButton'] = false;
+        $options['loadSpeechModules'] = true;
+        $options['siteLanguage'] = Tools::getLanguage();
+        $options['records'] = Word::getSnippets();
+        $options['snippetLanguages'] = Tools::getLanguageOptions();
+        $options['languageCodes'] = Tools::getSpeechLanguage();
+
+        // not implemented yet
+        $options['snippet'] = null; //Word::getSnippet();
+        if (!isset($options['snippet']))
+        {
+            $options['snippet'] = new Word();
+            $options['snippet']->description = Lang::get('fp.recorderTextInit');
+            $options['snippet']->language_flag = Tools::getLanguageFlagFromLocale();
+        }
+
+		return view('words.snippets', $this->getViewData([
+		    'options' => $options,
+		], LOG_MODEL, LOG_PAGE_INDEX));
     }
 }
