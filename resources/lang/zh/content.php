@@ -198,4 +198,5 @@ return [
 'SiteTitle-speakclearer.com' => '改善口音的工具',
 'Practice Text' => '练习文字',
 'Show All' => '显示所有',
+'Enter text to read' => '输入文字阅读',
 ];

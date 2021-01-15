@@ -148,10 +148,10 @@
                         <div><b>{{$wotd->title}}</b> - <i>{{$wotd->description}}</i></div>
                         <div class="large-thin-text">
                             {{$wotd->examples}}
-                            @component('components.icon-read', ['nodiv' => true, 'onclick' => "event.preventDefault(); readPage($('#wotd').val())"])@endcomponent
+                            @component('components.icon-read', ['color' => 'white', 'nodiv' => true, 'onclick' => "event.preventDefault(); readPage($('#wotd').val())"])@endcomponent
                         </div>
 
-                        <input type="hidden" id="wotd" value="{{$wotd->examples}}" />
+                        <input type="hidden" id="wotd" value="{{$wotd->title . '. ' . $wotd->examples}}" />
                     @else
                         <div>@LANG('ui.Not Found')</div>
                     @endif
@@ -170,7 +170,7 @@
                 <div class="card-body card-body-potd">
                     <div class="xl-thin-text">
                         {{$potd}}
-                        @component('components.icon-read', ['nodiv' => true, 'onclick' => "event.preventDefault(); readPage($('#potd').val())"])@endcomponent
+                        @component('components.icon-read', ['color' => 'white', 'nodiv' => true, 'onclick' => "event.preventDefault(); readPage($('#potd').val())"])@endcomponent
                     </div>
                     <input type="hidden" id="potd" value="{{$potd}}" />
                 </div>

@@ -218,7 +218,7 @@ $iconFolder = App\Tools::getIconFolder();
 
 			<p class="footer-heading">{{$domainName}}</p>
 			<p class="footer-text">{{$siteTitleLite}}</p>
-			<p>&copy; {{date("Y")}} {{$domainName}} - @LANG('ui.All Rights Reserved')</p>
+			<p>@LANG('ui.All Rights Reserved') &copy; 2019 &ndash; {{date("Y")}}</p>
 			<span class="footer-links">
 				<a href="#">@LANG('ui.Back to Top')</a>&bull;
 				<a href="/privacy">@LANG('ui.Privacy Policy')</a>&bull;

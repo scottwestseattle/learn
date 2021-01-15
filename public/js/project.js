@@ -134,7 +134,13 @@ function urlEncode(fromId, toId)
 	var toElem = document.getElementById(toId);
 	if (fromElem && toElem)
 	{
+	    // convert accent chars
 		text = convertAccentChars(fromElem.value);
+
+	    // remove punctuation
+	    text = text.replace(/[.,\/#?'!$%\^&\*;:{}=\-_`~()]/g, "");
+
+		// convert all whitespace to '-'
 		toElem.value = encodeURI(text.replace(/[\W_]+/g, "-").toLowerCase());
 	}
 	else

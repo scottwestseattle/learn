@@ -302,7 +302,7 @@ class WordController extends Controller
 			$msg = $exists ? "$tag has been updated" : "New $tag has been saved";
 			Tools::flash('success', $msg);
 
-    		return redirect('/');
+    		return redirect($request->returnUrl);
 		}
 		catch (\Exception $e)
 		{
@@ -804,6 +804,13 @@ class WordController extends Controller
         $options['records'] = Word::getSnippets();
         $options['snippetLanguages'] = Tools::getLanguageOptions();
         $options['languageCodes'] = Tools::getSpeechLanguage();
+        $options['returnUrl'] = '/words/practice';
+
+        // get the snippets for the appropriate langauge
+		$languageId = Tools::getSiteLanguage();
+		$languageFlagCondition = ($languageId == LANGUAGE_ALL) ? '>=' : '=';
+        $snippets = Word::getSnippets(['languageId' => $languageId, 'languageFlagCondition' => $languageFlagCondition]);
+        $options['records'] = $snippets;
 
         // not implemented yet
         $options['snippet'] = null; //Word::getSnippet();
@@ -811,7 +818,7 @@ class WordController extends Controller
         {
             $options['snippet'] = new Word();
             $options['snippet']->description = Lang::get('fp.recorderTextInit');
-            $options['snippet']->language_flag = Tools::getLanguageFlagFromLocale();
+            $options['snippet']->language_flag = $languageId;
         }
 
 		return view('words.snippets', $this->getViewData([

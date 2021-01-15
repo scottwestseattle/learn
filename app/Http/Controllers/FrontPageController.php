@@ -169,14 +169,18 @@ class FrontPageController extends Controller
         //
         $options = [];
 
+        // get the snippets for the appropriate langauge
+		$languageId = Tools::getSiteLanguage();
+		$languageFlagCondition = ($languageId == LANGUAGE_ALL) ? '>=' : '=';
         $snippetsLimit = $recorder ? 10 : 5;
-        $snippets = Word::getSnippets(['limit' => $snippetsLimit]);
+        $snippets = Word::getSnippets(['limit' => $snippetsLimit, 'languageId' => $languageId, 'languageFlagCondition' => $languageFlagCondition]);
         $options['records'] = $snippets;
 
+        $options['siteLanguage'] = Tools::getLanguage();
         $options['showAllButton'] = true;
         $options['loadSpeechModules'] = true;
-        $options['siteLanguage'] = Tools::getLanguage();
         $options['snippetLanguages'] = Tools::getLanguageOptions();
+        $options['returnUrl'] = '/';
 
         // not implemented yet
         $options['snippet'] = null; //Word::getSnippet();
@@ -184,7 +188,7 @@ class FrontPageController extends Controller
         {
             $options['snippet'] = new Word();
             $options['snippet']->description = Lang::get('fp.recorderTextInit');
-            $options['snippet']->language_flag = Tools::getLanguageFlagFromLocale();
+            $options['snippet']->language_flag = $languageId;
         }
 
         $options['languageCodes'] = null;
@@ -196,7 +200,7 @@ class FrontPageController extends Controller
         {
             $options['languageCodes'] = Tools::getSpeechLanguage();
         }
-
+//dd($options);
 		return view('frontpage.' . Tools::siteView(), $this->getViewData([
 			'courses' => $courses,
 			'vocabLists' => $vocabLists,

@@ -21,7 +21,7 @@
 <div class="data-slides"
     data-title="No title"
     data-number="1"
-    data-description="No text to read"
+    data-description="@LANG('content.Enter text to read')"
     data-id="0"
     data-seconds="10"
     data-between="2"
@@ -42,9 +42,10 @@
                 id="textEdit"
                 name="textEdit"
                 class="form-control textarea-control"
-                placeholder="Enter or paste practice text here"
+                placeholder="{{$options['snippet']->description}}"
                 rows="7"
-            >{{$options['snippet']->description}}</textarea>
+                style="font-size:18px;"
+            ></textarea>
             </div>
         </div>
 
@@ -64,6 +65,8 @@
         @if (!App\Tools::isMobile())
     	    @component('components.control-accent-chars-esp', ['label_class' => 'white', 'visible' => true, 'target' => 'textEdit'])@endcomponent
         @endif
+
+        <input type="hidden" name="returnUrl" value="{{$options['returnUrl']}}" />
 
 		{{csrf_field()}}
     </form>
@@ -134,3 +137,84 @@
         </div>
     </div>
 @endif
+
+<script>
+
+function saveSnippet(event)
+{
+    event.preventDefault();
+}
+
+function copySnippet(event)
+{
+    event.preventDefault();
+
+    var txtarea = document.getElementById('textEdit');
+    var start = txtarea.selectionStart;
+    var finish = txtarea.selectionEnd;
+    if (start != finish) // doesn't work
+    {
+        // already selected, use the current selection
+        //console.log(start);
+        //console.log(finish);
+        txtarea.select(); // just select it all for now
+    }
+    else
+    {
+        txtarea.select();
+    }
+
+    // copy the selection
+    var succeed;
+    try {
+        succeed = document.execCommand("copy");
+        //console.log('text copied: ' + succeed);
+    } catch(e) {
+        succeed = false;
+		//console.log('error copying text');
+	}
+}
+
+function pasteSnippet(event)
+{
+    event.preventDefault();
+
+    $('#textEdit').focus();
+    document.execCommand("paste");
+}
+
+function toggleTextView()
+{
+    if ($('#textShow').is(':visible'))
+    {
+        setEdit();
+    }
+    else
+    {
+        setShow();
+    }
+
+}
+
+function setEdit()
+{
+    return;
+
+    console.log('setEdit');
+    $('#buttonEdit').text('Show');
+    $('#textEdit').show();
+    $('#textShow').hide();
+}
+
+function setShow()
+{
+    return;
+
+    console.log('setShow');
+    $('#textShow').html($('#textEdit').val())
+    $('#buttonEdit').text('Edit');
+    $('#textEdit').hide();
+    $('#textShow').show();
+}
+
+</script>

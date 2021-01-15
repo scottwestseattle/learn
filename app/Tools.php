@@ -37,8 +37,8 @@ class Tools
 	];
 
 	static private $_sitesLanguages = [
-		//'localhost' 			=> 'es-ES',
-		'localhost' 			=> 'en-EN',
+		'localhost' 			=> 'es-ES',
+		'enlocalhost' 			=> 'en-EN',
 		'english.codespace.us'	=> 'en-EN',
 		'english50.com'			=> 'en-EN',
 		'spanish.codespace.us'	=> 'es-ES',
@@ -60,9 +60,9 @@ class Tools
 		'spanish50.com'			=> LANGUAGE_ES,
 		'espdaily.com'			=> LANGUAGE_ES,
 		'speakclearer.com'		=> LANGUAGE_ALL,
-		'localhost'			    => LANGUAGE_ALL,
-		//'localhost'			=> LANGUAGE_EN,
-		//'localhost'           => LANGUAGE_ES,
+		'alllocalhost'			    => LANGUAGE_ALL,
+		'enlocalhost'			    => LANGUAGE_EN,
+		'localhost'             => LANGUAGE_ES,
 	];
 
     static public function getAccentChars()
@@ -731,7 +731,7 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 		switch($siteId)
 		{
 			case SITE_ID_SPEAKCLEARER:
-			case SITE_ID_LOCALHOST:
+			//case SITE_ID_LOCALHOST:
 				$rc = 'index-record';
 				break;
 
@@ -750,7 +750,7 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 		switch($siteId)
 		{
 			case SITE_ID_SPEAKCLEARER:
-			case SITE_ID_LOCALHOST:
+			//case SITE_ID_LOCALHOST:
 				$rc = ($feature == ID_FEATURE_RECORD
 				    || $feature == ID_FEATURE_ARTICLES
 				    );
@@ -773,7 +773,7 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 
 			case SITE_ID_SPANISH50:
 			case SITE_ID_ESPDAILY:
-			//case SITE_ID_LOCALHOST:
+			case SITE_ID_LOCALHOST:
 				$rc = ($feature == ID_FEATURE_ARTICLES
 				    || $feature == ID_FEATURE_BOOKS
 				    || $feature == ID_FEATURE_DICTIONARY
@@ -1390,6 +1390,7 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 		{
 			$rc['url'] = $_SERVER["HTTP_REFERER"];
 			$rc['input'] = new HtmlString("<input name='referrer' type='hidden' value='" . $rc['url'] . "' />");
+
 		}
 
 		return $rc;

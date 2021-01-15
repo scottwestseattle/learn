@@ -198,4 +198,5 @@ return [
 'SiteTitle-speakclearer.com' => 'Tools for improving your accent',
 'Practice Text' => 'Practice Text',
 'Show All' => 'Show All',
+'Enter text to read' => 'Enter text to read',
 ];

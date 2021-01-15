@@ -198,4 +198,5 @@ return [
 'SiteTitle-speakclearer.com' => 'Herramientas para mejorar su acento',
 'Practice Text' => 'Texto de práctica',
 'Show All' => 'Mostrar todo',
+'Enter text to read' => 'Ingrese texto para leer',
 ];
