@@ -37,8 +37,8 @@ class Tools
 	];
 
 	static private $_sitesLanguages = [
-		'localhost' 			=> 'es-ES',
-		'enlocalhost' 			=> 'en-EN',
+		'eslocalhost' 			=> 'es-ES',
+		'localhost' 			=> 'en-EN',
 		'english.codespace.us'	=> 'en-EN',
 		'english50.com'			=> 'en-EN',
 		'spanish.codespace.us'	=> 'es-ES',
@@ -61,8 +61,8 @@ class Tools
 		'espdaily.com'			=> LANGUAGE_ES,
 		'speakclearer.com'		=> LANGUAGE_ALL,
 		'alllocalhost'			    => LANGUAGE_ALL,
-		'enlocalhost'			    => LANGUAGE_EN,
-		'localhost'             => LANGUAGE_ES,
+		'localhost'			    => LANGUAGE_EN,
+		'eslocalhost'             => LANGUAGE_ES,
 	];
 
     static public function getAccentChars()
@@ -109,7 +109,6 @@ class Tools
 		$key = "/" . $key . '=\"([^\"]*)/';
 		if (preg_match($key, $options, $matches))
 		{
-			//dd($matches);
 			if (count($matches) > 1)
 			{
 				$r = $matches[1];
@@ -183,7 +182,6 @@ class Tools
 		$v = preg_replace('#style="(.*?)"#is', "", $text); // remove styles
 		$v = preg_replace('#<p >#is', "<p>", $v); // fix <p>
 		//one time fix: $v = self::convertParens($v);
-		//dd($v);
 
 		return $v;
 	}
@@ -194,7 +192,6 @@ class Tools
 
 		$v = preg_replace('/\(/is', "[", $v);	// change ( to [
 		$v = preg_replace('/\)/is', "]", $v);	// change ) to ]
-		//dd($v);
 
 		return $v;
 	}
@@ -367,7 +364,6 @@ class Tools
 
 						$row .= $rowEnd;
 						$f .= $row;
-						//dd($row);
 					}
 					else
 					{
@@ -382,9 +378,7 @@ class Tools
 				}
 
 			}
-			//dd($table);
 			$v = $f;
-			//dd($v);
 		}
 		else if (strpos($v, '[') !== false)
 		{
@@ -653,15 +647,11 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 	{
 		$siteId = -1;
 		$domain = self::getDomainName();
+
 		if (array_key_exists($domain, self::$_sites))
 		{
 			$siteId = self::$_sites[$domain];
 		}
-
-		//if ($siteId == SITE_ID_ESPDAILY)
-		//    $siteId = SITE_ID_SPANISH50; //todo: fix me asap!!
-
-		//dump($domain . " " . $siteId);
 
 		return $siteId;
 	}
@@ -773,7 +763,7 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 
 			case SITE_ID_SPANISH50:
 			case SITE_ID_ESPDAILY:
-			case SITE_ID_LOCALHOST:
+			//case SITE_ID_LOCALHOST:
 				$rc = ($feature == ID_FEATURE_ARTICLES
 				    || $feature == ID_FEATURE_BOOKS
 				    || $feature == ID_FEATURE_DICTIONARY
@@ -784,6 +774,9 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 				    );
 				break;
 
+			case SITE_ID_LOCALHOST:
+				$rc = true; // show all
+				break;
 			default:
 				break;
 		}
