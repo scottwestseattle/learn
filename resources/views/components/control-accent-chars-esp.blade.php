@@ -25,6 +25,8 @@
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('¿', '{{$id}}', '{{$tinymce}}')">¿</button>
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('¡', '{{$id}}', '{{$tinymce}}')">¡</button>
 		<button tabindex="-1" onclick="event.preventDefault(); insertChar('&rarr;', '{{$id}}', '{{$tinymce}}')">&rarr;</button>
+		<button tabindex="-1" onclick="event.preventDefault(); insertChar('&#xab;', '{{$id}}', '{{$tinymce}}')">&#xab;</button>
+		<button tabindex="-1" onclick="event.preventDefault(); insertChar('&#xbb;', '{{$id}}', '{{$tinymce}}')">&#xbb;</button>
 
 	</div>
 
@@ -50,6 +52,8 @@
 			<button onclick="event.preventDefault(); insertChar('Ñ', '{{$id}}', '{{$tinymce}}')">Ñ</button>
 			<button onclick="event.preventDefault(); insertChar('¿', '{{$id}}', '{{$tinymce}}')">¿</button>
 			<button onclick="event.preventDefault(); insertChar('¡', '{{$id}}', '{{$tinymce}}')">¡</button>
+			<button onclick="event.preventDefault(); insertChar('&#xab;', '{{$id}}', '{{$tinymce}}')">&#xab;</button>
+			<button onclick="event.preventDefault(); insertChar('&#xbb;', '{{$id}}', '{{$tinymce}}')">&#xbb;</button>
 		</div>
 	</div>
 </div>

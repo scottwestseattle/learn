@@ -191,8 +191,7 @@ Bootstrap Samples
 </div>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-// MacBook - How mysql root password
-
+// MacBook - How to change mysql root password
 sudo mysqladmin password [newPassword]
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -206,11 +205,12 @@ look for DocumentRoot and <Directory ...>
 DocumentRoot "/Users/scottwilkinson/Documents/GitHub/learn/public"
 Restart apache webserver:
 sudo apachectl stop
-Sudo apachectl start
+sudo apachectl start
 sudo apachectl restart
 
 // check apache errors:
 cat /var/log/apache2/error_log
+cat /var/log/apache2/access_log
 
 // find a file from root:
 find / filename 2>/dev/null | grep filename

@@ -26,24 +26,28 @@ class Tools
 	static private $_accents = 'áÁéÉíÍóÓúÚüÜñÑ';
 
 	static private $_sites = [
-		'localhost' 			=> SITE_ID_LOCALHOST,
-		'english.codespace.us'	=> SITE_ID_ENGLISH,
-		'english50.com'			=> SITE_ID_ENGLISH50,
-		'spanish50.com'			=> SITE_ID_SPANISH50,
-		'spanish.codespace.us'	=> SITE_ID_SPANISH,
-		'plancha.codespace.us'	=> SITE_ID_PLANCHA,
-		'espdaily.com'			=> SITE_ID_ESPDAILY,
-		'speakclearer.com'		=> SITE_ID_SPEAKCLEARER,
+		'localhost' 			    => SITE_ID_LOCALHOST,
+		'english.codespace.us'	    => SITE_ID_ENGLISH,
+		'english50.com'			    => SITE_ID_ENGLISH50,
+		'english50.language4.me'	=> SITE_ID_ENGLISH50,
+		'spanish50.com'			    => SITE_ID_SPANISH50,
+		'spanish.codespace.us'	    => SITE_ID_SPANISH,
+		'plancha.codespace.us'	    => SITE_ID_PLANCHA,
+		'espdaily.com'			    => SITE_ID_ESPDAILY,
+		'speakclearer.com'		    => SITE_ID_SPEAKCLEARER,
+		'espdaily.language4.me'	    => SITE_ID_ESPDAILY,
 	];
 
 	static private $_sitesLanguages = [
-		'eslocalhost' 			=> 'es-ES',
-		'localhost' 			=> 'en-EN',
-		'english.codespace.us'	=> 'en-EN',
-		'english50.com'			=> 'en-EN',
-		'spanish.codespace.us'	=> 'es-ES',
-		'spanish50.com'			=> 'es-ES',
-		'espdaily.com'			=> 'es-ES',
+		'localhost' 			    => 'es-ES',
+		'en_localhost' 			    => 'en-EN',
+		'english.codespace.us'	    => 'en-EN',
+		'english50.com'             => 'en-EN',
+		'english50.language4.me'    => 'en-EN',
+		'spanish.codespace.us'	    => 'es-ES',
+		'spanish50.com'			    => 'es-ES',
+		'espdaily.com'			    => 'es-ES',
+		'espdaily.language4.me'	    => 'es-ES',
 	];
 
     // NOT USED YET, NEED?
@@ -57,12 +61,14 @@ class Tools
 		'english.codespace.us'	=> LANGUAGE_EN,
 		'spanish.codespace.us'	=> LANGUAGE_ES,
 		'english50.com'			=> LANGUAGE_EN,
+		'english50.language.me'	=> LANGUAGE_EN,
 		'spanish50.com'			=> LANGUAGE_ES,
 		'espdaily.com'			=> LANGUAGE_ES,
+		'espdaily.language4.me'	=> LANGUAGE_ES,
 		'speakclearer.com'		=> LANGUAGE_ALL,
 		'alllocalhost'			    => LANGUAGE_ALL,
-		'localhost'			    => LANGUAGE_EN,
-		'eslocalhost'             => LANGUAGE_ES,
+		'en-localhost'			    => LANGUAGE_EN,
+		'localhost'             => LANGUAGE_ES,
 	];
 
     static public function getAccentChars()
@@ -763,7 +769,6 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 
 			case SITE_ID_SPANISH50:
 			case SITE_ID_ESPDAILY:
-			//case SITE_ID_LOCALHOST:
 				$rc = ($feature == ID_FEATURE_ARTICLES
 				    || $feature == ID_FEATURE_BOOKS
 				    || $feature == ID_FEATURE_DICTIONARY
@@ -776,7 +781,8 @@ Speak [Clearer] (one) ist für Sprachlerner gedacht, um das Sprechen zu üben un
 
 			case SITE_ID_LOCALHOST:
 				$rc = true; // show all
-				break;
+			    break;
+
 			default:
 				break;
 		}
