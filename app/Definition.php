@@ -308,6 +308,7 @@ class Definition extends Base
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')
+    			    ->where('type_flag', DEFTYPE_DICTIONARY)
 					->where(function ($query) {$query
 						->where('title', 'like', '%ar')
 						->orWhere('title', 'like', '%er')
@@ -322,6 +323,7 @@ class Definition extends Base
 			else if ($sort === DEFINITIONS_SEARCH_MISSING_TRANSLATION)
 			{
 				$records = Definition::select()
+        			->where('type_flag', DEFTYPE_DICTIONARY)
 					->whereNull('deleted_at')
 					->whereNull('translation_en')
 					->orderByRaw($orderBy)
@@ -331,6 +333,7 @@ class Definition extends Base
 			else if ($sort == DEFINITIONS_SEARCH_MISSING_DEFINITION)
 			{
 				$records = Definition::select()
+        			->where('type_flag', DEFTYPE_DICTIONARY)
 					->whereNull('deleted_at')
 					->whereNull('definition')
 					->orderByRaw($orderBy)
@@ -341,6 +344,7 @@ class Definition extends Base
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')
+        			->where('type_flag', DEFTYPE_DICTIONARY)
 					->where('wip_flag', '<', WIP_FINISHED)
 					->where(function ($query) {$query
 						->where('title', 'like', '%ar')
@@ -359,6 +363,7 @@ class Definition extends Base
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')
+        			->where('type_flag', DEFTYPE_DICTIONARY)
 					->where('wip_flag', '<', WIP_FINISHED)
 					->orderByRaw($orderBy)
 					->limit($limit)
@@ -368,6 +373,7 @@ class Definition extends Base
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')
+        			->where('type_flag', DEFTYPE_DICTIONARY)
 					->whereNotNull('definition')
 					->whereNotNull('translation_en')
 					->orderByRaw($orderBy)
@@ -378,6 +384,7 @@ class Definition extends Base
 			{
 				$records = Definition::select()
 					->whereNull('deleted_at')
+        			->where('type_flag', DEFTYPE_DICTIONARY)
 					->orderByRaw($orderBy)
 					->limit($limit)
 					->get();
@@ -401,6 +408,7 @@ class Definition extends Base
 		{
 			$count = Definition::select()
 				->where('deleted_at', null)
+        		->where('type_flag', DEFTYPE_DICTIONARY)
 				->whereNotNull('definition')
 				->whereNotNull('translation_en')
 				->where('wip_flag', '>=', WIP_FINISHED)
@@ -410,6 +418,7 @@ class Definition extends Base
 
 			$record = Definition::select()
 				->where('deleted_at', null)
+        		->where('type_flag', DEFTYPE_DICTIONARY)
 				->whereNotNull('definition')
 				->whereNotNull('translation_en')
 				->where('wip_flag', '>=', WIP_FINISHED)
@@ -458,6 +467,7 @@ class Definition extends Base
 		{
 			$record = Definition::select()
 				//->whereRaw("`title` = '$word' collate utf8mb4_bin") // to distinguish between accent chars
+        		->where('type_flag', DEFTYPE_DICTIONARY)
 				->where('title', $word)
 				->where('deleted_at', null)
 				->first();
@@ -483,6 +493,7 @@ class Definition extends Base
 		try
 		{
 			$rc = Definition::select()
+        		->where('type_flag', DEFTYPE_DICTIONARY)
 				->where('title', $word)
 				->where('deleted_at', null)
 				->count();
@@ -1190,6 +1201,7 @@ class Definition extends Base
 		{
 			$records = Definition::select()
 				->where('deleted_at', null)
+    			->where('type_flag', DEFTYPE_DICTIONARY)
 				->where(function ($query) use ($word){$query
 					->where('title', 'LIKE', $word . '%')							// exact match of title
 					->orWhere('forms', 'LIKE', '%;' . $word . ';%')					// exact match of ";word;"
@@ -1231,6 +1243,7 @@ class Definition extends Base
 		{
 			$records = Definition::select()
 				->where('deleted_at', null)
+    			->where('type_flag', DEFTYPE_DICTIONARY)
 				->where(function ($query) use ($word){$query
 					->where('title', 'LIKE', $word . '%')
 					->orWhere('forms', 'LIKE', '%' . $word . '%')
@@ -1267,6 +1280,7 @@ class Definition extends Base
 		{
 			$record = Definition::select()
 				->where('deleted_at', null)
+    			->where('type_flag', DEFTYPE_DICTIONARY)
 				->where(function ($query) use ($word){$query
 					->where('title', $word)											// exact match of title
 					->orWhere('forms', 'LIKE', '%;' . $word . ';%')					// exact match of ";word;"
@@ -1323,6 +1337,7 @@ class Definition extends Base
 			// we're only looking for verbs at this point
 			$record = Definition::select()
 				->where('deleted_at', null)
+    			->where('type_flag', DEFTYPE_DICTIONARY)
 				->where(function ($query) use ($word, $wordReflexive){$query
 					->where('title', $word)											// exact match of title
 					->orWhere('title', $wordReflexive)								// exact match of reflexive
@@ -1410,6 +1425,7 @@ class Definition extends Base
 			// get prev or next word by id, null is okay
 			$record = Definition::select()
 				->where('id', $prev ? '<' : '>', $id)
+        		->where('type_flag', DEFTYPE_DICTIONARY)
 				->whereNull('deleted_at')
 				->orderBy('title')
 				->first();

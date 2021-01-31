@@ -11,6 +11,12 @@ define('LANGUAGE_RU', 6);
 define('LANGUAGE_ZH', 7);
 define('LANGUAGE_KO', 8);
 
+// defintion types
+define('DEFTYPE_NOTSET',        0);
+define('DEFTYPE_SNIPPET',       1);
+define('DEFTYPE_DICTIONARY',    10);
+define('DEFTYPE_OTHER',         100);
+
 return [
     'language' => [  // not used yet
 		'all' => -1,
