@@ -13,7 +13,7 @@
 		</a>
 	</div>
 	@endif
-	
+
 	<!-- Top nav buttons -->
 	@if (isset($prev) || isset($next))
 	<div class="page-nav-buttons">
@@ -46,7 +46,7 @@
 					<div class="small-thin-text mt-2"><a href="/{{PREFIX . '/edit/' . $record->id}}/">fix conjugation</a>
 				@endif
 			@endif
-			
+
 		</h3>
 	</div>
 
@@ -57,9 +57,6 @@
 		@if (isset($record->translation_en))
 			<p style="font-size:1.2em;">{{$record->translation_en}}</p>
 		@endif
-		@if (isset($record->translation_es))
-			<p style="font-size:1.2em;">{{$record->translation_es}}</p>
-		@endif
 		@if (isset($record->examples))
 		@foreach($record->examples as $example)
 			<p><i>{{$example}}</i></p>
@@ -67,7 +64,7 @@
 		@endif
 	<div>
 	@else
-		
+
 	<div style="mt-3">
 		<h3>{{$word}}</h3>
 	</div>
@@ -78,7 +75,7 @@
 		<p><a target='_blank' href="https://translate.google.com/#view=home&op=translate&sl=es&tl=en&text={{$word}}">Google Translate: {{$word}}</a></p>
 		<p><a target='_blank' href="https://www.spanishdict.com/translate/{{$word}}">Span¡shD!ct.com: {{$word}}</a></p>
 	</div>
-	
+
 	@endif
 
 	<!-- Bottom nav buttons -->

@@ -1365,7 +1365,7 @@ class Definition extends Base
 		$record->definition		= $definition;
 		$record->translation_en = $translation;
 		$record->examples		= $examples;
-		$record->language_id	= LANGUAGE_ES;
+		$record->language_flag	= LANGUAGE_ES;
 		$record->permalink		= Tools::createPermalink($title);
 
 		try

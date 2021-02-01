@@ -266,12 +266,12 @@ class DefinitionController extends Controller
 		$record = new Definition();
 
 		$record->user_id 		= Auth::id();
-		$record->language_id 	= LANGUAGE_ES;
+		$record->language_flag 	= LANGUAGE_ES;
+		$record->type_flag      = DEFTYPE_DICTIONARY;
 		$record->title 			= $request->title;
 		$record->forms 			= Definition::formatForms($request->forms);
 		$record->definition		= $request->definition;
 		$record->translation_en	= $request->translation_en;
-		$record->translation_es	= $request->translation_es;
 		$record->examples		= $request->examples;
 		$record->permalink		= Tools::createPermalink($request->title);
 		$record->wip_flag		= WIP_DEFAULT;
@@ -377,12 +377,12 @@ class DefinitionController extends Controller
 		$record->title = Tools::copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->definition = Tools::copyDirty($record->definition, $request->definition, $isDirty, $changes);
 		$record->translation_en = Tools::copyDirty($record->translation_en, $request->translation_en, $isDirty, $changes);
-		$record->translation_es = Tools::copyDirty($record->translation_es, $request->translation_es, $isDirty, $changes);
 		$record->examples = Tools::copyDirty($record->examples, $request->examples, $isDirty, $changes);
 		//$record->wip_flag = Tools::copyDirty($record->wip_flag, $request->wip_flag, $isDirty, $changes);
 
 		$forms 	= Definition::formatForms($request->forms);
 		$record->forms = Tools::copyDirty($record->forms, $forms, $isDirty, $changes);
+		$record->type_flag = DEFTYPE_DICTIONARY;
 
 		try
 		{
