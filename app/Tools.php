@@ -35,7 +35,7 @@ class Tools
 		'plancha.codespace.us'	    => SITE_ID_PLANCHA,
 		'espdaily.com'			    => SITE_ID_ESPDAILY,
 		'speakclearer.com'		    => SITE_ID_SPEAKCLEARER,
-		'espdaily.language4.me'	    => SITE_ID_ESPDAILY,
+		'language4.me'	            => SITE_ID_ESPDAILY,
 	];
 
 	static private $_sitesLanguages = [
@@ -47,7 +47,7 @@ class Tools
 		'spanish.codespace.us'	    => 'es-ES',
 		'spanish50.com'			    => 'es-ES',
 		'espdaily.com'			    => 'es-ES',
-		'espdaily.language4.me'	    => 'es-ES',
+		'language4.me'	            => 'es-ES',
 	];
 
     // NOT USED YET, NEED?
@@ -64,7 +64,7 @@ class Tools
 		'english50.language.me'	=> LANGUAGE_EN,
 		'spanish50.com'			=> LANGUAGE_ES,
 		'espdaily.com'			=> LANGUAGE_ES,
-		'espdaily.language4.me'	=> LANGUAGE_ES,
+		'language4.me'	        => LANGUAGE_ES,
 		'speakclearer.com'		=> LANGUAGE_ALL,
 		'alllocalhost'			    => LANGUAGE_ALL,
 		'en-localhost'			    => LANGUAGE_EN,
